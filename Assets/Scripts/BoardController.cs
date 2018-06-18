@@ -1,18 +1,26 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class BoardController : MonoBehaviour {
 
     int boardWidth = 5;
+    public int BoardWidth { get { return boardWidth; } }
     Transform[,] boardSpaces;
+    Image[,] boardContents;
+
+    SpriteManager spriteManager;
 
     private void Awake()
     {
-        boardSpaces = GetSpaces();
+        InitializeBoardStructures();
+
+        spriteManager = GetComponentInParent<SpriteManager>();
     }
 
-    Transform[,] GetSpaces()
+    void InitializeBoardStructures()
     {
-        Transform[,] spaces = new Transform[boardWidth, boardWidth];
+        boardSpaces = new Transform[boardWidth, boardWidth];
+        boardContents = new Image[boardWidth, boardWidth];
 
         int childCount = transform.childCount;
 
@@ -21,8 +29,10 @@ public class BoardController : MonoBehaviour {
         for (int i = 0; i < childCount; i++)
         {
             Transform space = transform.GetChild(i);
+            boardSpaces[xCounter, yCounter] = space;
 
-            spaces[xCounter, yCounter] = space;
+            Image spaceContents = space.GetChild(0).GetComponent<Image>();
+            boardContents[xCounter, yCounter] = spaceContents;
 
             xCounter++;
 
@@ -32,7 +42,31 @@ public class BoardController : MonoBehaviour {
                 xCounter = 0;
             }
         }
+    }
 
-        return spaces;
+    public void DrawBoard(SpaceContents[,] boardState)
+    {
+        if (boardState.Length > BoardWidth * BoardWidth)
+        {
+            Debug.LogError("BoardController asked to draw board state larger than current board.");
+        }
+
+        for (int yCounter = 0; yCounter < boardWidth; yCounter++)
+        {
+            for (int xCounter = 0; xCounter < boardWidth; xCounter++)
+            {
+                Image contentsImage = boardContents[xCounter, yCounter];
+                if (boardState[xCounter, yCounter] != SpaceContents.None)
+                {
+                    contentsImage.sprite = spriteManager.GetSpaceSprite(boardState[xCounter, yCounter]);
+                    contentsImage.color = new Color(1f, 1f, 1f, 1f);
+                }
+                else
+                {
+                    contentsImage.sprite = null;
+                    contentsImage.color = new Color(1f, 1f, 1f, 0f);
+                }
+            }
+        }
     }
 }
