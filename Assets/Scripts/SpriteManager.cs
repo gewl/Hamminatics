@@ -6,10 +6,10 @@ using Sirenix.OdinInspector;
 public class SpriteManager : SerializedMonoBehaviour {
 
     [SerializeField]
-    Dictionary<SpaceContents, Sprite> boardSpaceSprites;
+    Dictionary<CellContents, Sprite> boardCellSprites;
 
-    public Sprite GetSpaceSprite(SpaceContents contents)
+    public Sprite GetCellSprite(CellContents contents)
     {
-        return boardSpaceSprites[contents];
+        return boardCellSprites[contents];
     }
 }

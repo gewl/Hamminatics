@@ -5,8 +5,8 @@ public class BoardController : MonoBehaviour {
 
     int boardWidth = 5;
     public int BoardWidth { get { return boardWidth; } }
-    Transform[,] boardSpaces;
-    Image[,] boardContents;
+    Transform[,] boardCells;
+    Image[,] cellContentImages;
 
     SpriteManager spriteManager;
 
@@ -19,8 +19,8 @@ public class BoardController : MonoBehaviour {
 
     void InitializeBoardStructures()
     {
-        boardSpaces = new Transform[boardWidth, boardWidth];
-        boardContents = new Image[boardWidth, boardWidth];
+        boardCells = new Transform[boardWidth, boardWidth];
+        cellContentImages = new Image[boardWidth, boardWidth];
 
         int childCount = transform.childCount;
 
@@ -28,11 +28,11 @@ public class BoardController : MonoBehaviour {
 
         for (int i = 0; i < childCount; i++)
         {
-            Transform space = transform.GetChild(i);
-            boardSpaces[xCounter, yCounter] = space;
+            Transform cell = transform.GetChild(i);
+            boardCells[xCounter, yCounter] = cell;
 
-            Image spaceContents = space.GetChild(0).GetComponent<Image>();
-            boardContents[xCounter, yCounter] = spaceContents;
+            Image cellContents = cell.GetChild(0).GetComponent<Image>();
+            cellContentImages[xCounter, yCounter] = cellContents;
 
             xCounter++;
 
@@ -44,7 +44,7 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public void DrawBoard(SpaceContents[,] boardState)
+    public void DrawBoard(CellContents[,] boardState)
     {
         if (boardState.Length > BoardWidth * BoardWidth)
         {
@@ -55,10 +55,10 @@ public class BoardController : MonoBehaviour {
         {
             for (int xCounter = 0; xCounter < boardWidth; xCounter++)
             {
-                Image contentsImage = boardContents[xCounter, yCounter];
-                if (boardState[xCounter, yCounter] != SpaceContents.None)
+                Image contentsImage = cellContentImages[xCounter, yCounter];
+                if (boardState[xCounter, yCounter] != CellContents.None)
                 {
-                    contentsImage.sprite = spriteManager.GetSpaceSprite(boardState[xCounter, yCounter]);
+                    contentsImage.sprite = spriteManager.GetCellSprite(boardState[xCounter, yCounter]);
                     contentsImage.color = new Color(1f, 1f, 1f, 1f);
                 }
                 else
@@ -68,5 +68,10 @@ public class BoardController : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void HighlightCell(Vector2Int position)
+    {
+        cellContentImages[position.x, position.y].color = new Color(1f, 1f, 0f);
     }
 }

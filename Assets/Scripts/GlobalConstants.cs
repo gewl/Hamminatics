@@ -1,10 +1,24 @@
-﻿public enum SpaceContents {
+﻿public enum CellContents {
     None,
     Player,
     Enemy
 }
 
-public enum AbilityDirections
+public enum AbilityType
+{
+    Movement,
+    Attack
+}
+
+public enum AbilityTarget
+{
+    Self,
+    Targeted,
+    Line,
+    Anywhere
+}
+
+public enum AbilityDirection
 {
     Right,
     Left,

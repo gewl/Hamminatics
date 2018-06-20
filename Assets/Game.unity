@@ -305,7 +305,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 91724324}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1996713820}
+        m_MethodName: ShowAvailableCardPlays
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &97159959
@@ -500,7 +511,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 100126164}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1996713820}
+        m_MethodName: ShowAvailableCardPlays
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &226760135
@@ -826,13 +848,13 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: boardSpaceSprites
+    - Name: boardCellSprites
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[SpaceContents, Assembly-CSharp],[UnityEngine.Sprite,
+      Data: 0|System.Collections.Generic.Dictionary`2[[CellContents, Assembly-CSharp],[UnityEngine.Sprite,
         UnityEngine.CoreModule]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[SpaceContents,
+      Data: 1|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[CellContents,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 8
@@ -1926,7 +1948,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 679050794}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1996713820}
+        m_MethodName: ShowAvailableCardPlays
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &681161252
@@ -3398,7 +3431,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1318869540}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1996713820}
+        m_MethodName: ShowAvailableCardPlays
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &1329895632
@@ -4890,6 +4934,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1996713818}
   - component: {fileID: 1996713819}
+  - component: {fileID: 1996713820}
   m_Layer: 5
   m_Name: Cards
   m_TagString: Untagged
@@ -4942,6 +4987,31 @@ MonoBehaviour:
   m_Spacing: {x: 10, y: 10}
   m_Constraint: 1
   m_ConstraintCount: 2
+--- !u!114 &1996713820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1996713817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78a34deb6239e7047a1a19ffa51570ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  equippedCards:
+  - {fileID: 11400000, guid: d795a7befc81c354dbe74ba6b07573d5, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &2051296338
 GameObject:
   m_ObjectHideFlags: 0
@@ -5025,6 +5095,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2063671479}
   - component: {fileID: 2063671480}
+  - component: {fileID: 2063671481}
   m_Layer: 5
   m_Name: GameBoard
   m_TagString: Untagged
@@ -5098,6 +5169,17 @@ MonoBehaviour:
   m_Spacing: {x: 5, y: 5}
   m_Constraint: 1
   m_ConstraintCount: 5
+--- !u!114 &2063671481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2063671478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dec0245d954a8d4da26bec9a22194ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2111268432
 GameObject:
   m_ObjectHideFlags: 0
