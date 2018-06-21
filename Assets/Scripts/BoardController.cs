@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class BoardController : MonoBehaviour {
+    GameStateManager gameStateManager;
 
     int boardWidth = 5;
     public int BoardWidth { get { return boardWidth; } }
@@ -12,12 +14,14 @@ public class BoardController : MonoBehaviour {
 
     private void Awake()
     {
-        InitializeBoardStructures();
+        InitializeBoard();
+
+        gameStateManager = GetComponentInParent<GameStateManager>();
 
         spriteManager = GetComponentInParent<SpriteManager>();
     }
 
-    void InitializeBoardStructures()
+    void InitializeBoard()
     {
         boardCells = new Transform[boardWidth, boardWidth];
         cellContentImages = new Image[boardWidth, boardWidth];
@@ -33,6 +37,7 @@ public class BoardController : MonoBehaviour {
 
             Image cellContents = cell.GetChild(0).GetComponent<Image>();
             cellContentImages[xCounter, yCounter] = cellContents;
+            cellContents.GetComponent<Button>().onClick.AddListener(GenerateCellClickListener(xCounter, yCounter));
 
             xCounter++;
 
@@ -44,28 +49,26 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public void DrawBoard(CellContents[,] boardState)
+    public void DrawBoard(EntityData[] entities)
     {
-        if (boardState.Length > BoardWidth * BoardWidth)
-        {
-            Debug.LogError("BoardController asked to draw board state larger than current board.");
-        }
-
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
         {
             for (int xCounter = 0; xCounter < boardWidth; xCounter++)
             {
                 Image contentsImage = cellContentImages[xCounter, yCounter];
-                if (boardState[xCounter, yCounter] != CellContents.None)
-                {
-                    contentsImage.sprite = spriteManager.GetCellSprite(boardState[xCounter, yCounter]);
-                    contentsImage.color = new Color(1f, 1f, 1f, 1f);
-                }
-                else
-                {
-                    contentsImage.sprite = null;
-                    contentsImage.color = new Color(1f, 1f, 1f, 0f);
-                }
+                contentsImage.sprite = null;
+                contentsImage.color = new Color(1f, 1f, 1f, 0f);
+            }
+        }
+
+        for (int i = 0; i < entities.Length; i++)
+        {
+            EntityData entity = entities[i];
+            if (entity != null)
+            {
+                Image contentsImage = cellContentImages[entity.Position.x, entity.Position.y];
+                contentsImage.sprite = entity.EntitySprite;
+                contentsImage.color = new Color(1f, 1f, 1f, 1f);
             }
         }
     }
@@ -73,5 +76,15 @@ public class BoardController : MonoBehaviour {
     public void HighlightCell(Vector2Int position)
     {
         cellContentImages[position.x, position.y].color = new Color(1f, 1f, 0f);
+    }
+
+    UnityAction GenerateCellClickListener(int x, int y)
+    {
+        Vector2Int cellPosition = new Vector2Int(x, y);
+
+        return () =>
+        {
+            gameStateManager.RegisterCellInteraction(cellPosition);
+        };
     }
 }

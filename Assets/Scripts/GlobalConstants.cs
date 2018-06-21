@@ -4,7 +4,7 @@
     Enemy
 }
 
-public enum AbilityType
+public enum CardCategory
 {
     Movement,
     Attack
@@ -16,6 +16,14 @@ public enum AbilityTarget
     Targeted,
     Line,
     Anywhere
+}
+
+public enum Direction
+{
+    Up,
+    Down,
+    Left,
+    Right
 }
 
 public enum AbilityDirection

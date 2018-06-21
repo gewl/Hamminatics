@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName="Card/MovementCard")]
+[CreateAssetMenu(menuName="Data/Card/MovementCard")]
 public class MovementCardData : CardData {
-    AbilityType abilityType = AbilityType.Movement;
+    public override CardCategory Category { get { return CardCategory.Movement; } }
 }
