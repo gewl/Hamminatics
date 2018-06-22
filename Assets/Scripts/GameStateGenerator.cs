@@ -13,7 +13,7 @@ public class GameStateGenerator {
         player.Position = new Vector2Int(3, 3);
 
         EntityData squid = DataManager.GetEntityData(SQUID_ID);
-        squid.Position = new Vector2Int(4, 4);
+        squid.Position = new Vector2Int(2, 2);
         List<EntityData> enemies = new List<EntityData>()
         {
             squid

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,15 +12,18 @@ public class BoardController : MonoBehaviour {
     Transform[,] boardCells;
     Image[,] cellContentImages;
 
-    SpriteManager spriteManager;
+    ImageManager spriteManager;
+    Canvas canvas;
 
     private void Awake()
     {
+        canvas = GetComponentInParent<Canvas>();
+
         InitializeBoard();
 
         gameStateManager = GetComponentInParent<GameStateManager>();
 
-        spriteManager = GetComponentInParent<SpriteManager>();
+        spriteManager = GetComponentInParent<ImageManager>();
     }
 
     void InitializeBoard()
@@ -92,5 +95,29 @@ public class BoardController : MonoBehaviour {
         {
             gameStateManager.RegisterCellInteraction(cellPosition);
         };
+    }
+
+    public Vector2 GetCellEdgePosition(Vector2Int position, Direction edgeDirection)
+    {
+        RectTransform cellRectTransform = boardCells[position.x, position.y].GetComponent<RectTransform>();
+        Vector3[] worldCorners = new Vector3[4];
+        cellRectTransform.GetWorldCorners(worldCorners);
+
+        float averageX = (worldCorners[2].x + worldCorners[1].x) / 2f;
+        float averageY = (worldCorners[3].y + worldCorners[2].y) / 2f;
+
+        switch (edgeDirection)
+        {
+            case Direction.Up:
+                return new Vector2(averageX, worldCorners[1].y);
+            case Direction.Down:
+                return new Vector2(averageX, worldCorners[0].y);
+            case Direction.Left:
+                return new Vector2(worldCorners[0].x, averageY);
+            case Direction.Right:
+                return new Vector2(worldCorners[2].x, averageY);
+            default:
+                return new Vector2(averageX, averageY);
+        }
     }
 }

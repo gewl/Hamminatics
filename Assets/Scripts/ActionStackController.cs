@@ -4,7 +4,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ActionQueueController : MonoBehaviour {
+public class ActionStackController : MonoBehaviour {
+
+    public delegate void ActionsDelegate(List<Action> actions);
+    public ActionsDelegate OnActionStackUpdate;
 
     const string PLAYER_ID = "Player";
 
@@ -30,6 +33,8 @@ public class ActionQueueController : MonoBehaviour {
     {
         actionStack.Push(newAction);
         endTurnButton.interactable = DoesActionStackContainPlayerAction();
+
+        OnActionStackUpdate(new List<Action>(actionStack));
     }
 
     public void AddPlayerAction(CardData card, EntityData entity, Direction direction, int distance)
@@ -55,6 +60,11 @@ public class ActionQueueController : MonoBehaviour {
         }
         actionList[oldPlayerActionIndex] = newAction;
         actionStack = new Stack<Action>(actionList);
+
+        if (OnActionStackUpdate != null)
+        {
+            OnActionStackUpdate(actionList);
+        }
     }
 
     public Action GetNextAction()
@@ -62,6 +72,11 @@ public class ActionQueueController : MonoBehaviour {
         Action nextAction = actionStack.Pop();
 
         endTurnButton.interactable = !IsActionStackEmpty;
+
+        if (OnActionStackUpdate != null)
+        {
+            OnActionStackUpdate(new List<Action>(actionStack));
+        }
 
         return nextAction;
     }

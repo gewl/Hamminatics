@@ -5,14 +5,14 @@ using System.Linq;
 
 public class GameStateManager : MonoBehaviour {
 
-    ActionQueueController _actionQueueController;
-    ActionQueueController actionQueueController
+    ActionStackController _actionQueueController;
+    ActionStackController actionQueueController
     {
         get
         {
             if (_actionQueueController == null)
             {
-                _actionQueueController = GetComponent<ActionQueueController>();
+                _actionQueueController = GetComponent<ActionStackController>();
             }
 
             return _actionQueueController;
@@ -74,6 +74,12 @@ public class GameStateManager : MonoBehaviour {
     private void Start()
     {
         currentGameState = GameStateGenerator.GenerateNewGameState();
+        // This has to be delayed so layout group can space accordingly.
+        Invoke("SetBoardUp", 0.1f);
+    }
+
+    void SetBoardUp()
+    {
         enemyActionCalculator.CalculateAndQueueActions(currentGameState);
         ResetBoard();
     }

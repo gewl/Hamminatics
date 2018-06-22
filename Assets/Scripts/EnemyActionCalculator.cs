@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class EnemyActionCalculator : MonoBehaviour {
 
-    ActionQueueController actionQueueController;
+    ActionStackController actionQueueController;
 
     private void Awake()
     {
-        actionQueueController = GetComponent<ActionQueueController>();
+        actionQueueController = GetComponent<ActionStackController>();
     }
 
     public void CalculateAndQueueActions(GameState gameState)
