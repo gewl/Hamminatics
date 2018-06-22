@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
@@ -49,7 +51,7 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public void DrawBoard(EntityData[] entities)
+    public void DrawBoard(List<EntityData> entities)
     {
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
         {
@@ -61,7 +63,7 @@ public class BoardController : MonoBehaviour {
             }
         }
 
-        for (int i = 0; i < entities.Length; i++)
+        for (int i = 0; i < entities.Count; i++)
         {
             EntityData entity = entities[i];
             if (entity != null)

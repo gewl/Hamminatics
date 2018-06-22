@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class GameStateManager : MonoBehaviour {
 
     const string PLAYER_ID = "Player";
-
-    CellContents[,] currentBoardState;
 
     ActionQueueController _actionQueueController;
     ActionQueueController actionQueueController
@@ -50,7 +49,7 @@ public class GameStateManager : MonoBehaviour {
 
     int boardWidth;
 
-    EntityData[] entitiesOnBoard;
+    List<EntityData> entitiesOnBoard;
     EntityData Player { get { return entitiesOnBoard[0]; } }
     List<Vector2Int> potentialCardTargets;
 
@@ -58,32 +57,17 @@ public class GameStateManager : MonoBehaviour {
     {
         potentialCardTargets = new List<Vector2Int>();
         boardWidth = boardController.BoardWidth;
-        currentBoardState = new CellContents[boardWidth, boardWidth];
 
-        entitiesOnBoard = new EntityData[5];
-        entitiesOnBoard[0] = DataManager.GetEntityData(PLAYER_ID);
+        entitiesOnBoard = new List<EntityData>
+        {
+            DataManager.GetEntityData(PLAYER_ID)
+        };
     }
 
     private void Start()
     {
         Player.Position = new Vector2Int(3, 3);
-        GenerateBoardState();
         ResetBoard();
-    }
-
-    void GenerateBoardState()
-    {
-        currentBoardState = new CellContents[boardWidth, boardWidth];
-        currentBoardState[Player.Position.x, Player.Position.y] = CellContents.Player;
-
-        for (int i = 1; i < entitiesOnBoard.Length; i++)
-        {
-            EntityData entity = entitiesOnBoard[i];
-            if (entity != null)
-            {
-                currentBoardState[entity.Position.x, entity.Position.y] = CellContents.Enemy;
-            }
-        }
     }
 
     public void HighlightPotentialCardTargets(CardData card)
@@ -152,7 +136,6 @@ public class GameStateManager : MonoBehaviour {
         {
             Action nextAction = actionQueueController.GetNextAction();
 
-            Debug.Log(nextAction.card.Category);
             switch (nextAction.card.Category)
             {
                 case CardCategory.Movement:
@@ -229,7 +212,7 @@ public class GameStateManager : MonoBehaviour {
 
     public bool IsCellOccupied(Vector2Int position)
     {
-        return currentBoardState[position.x, position.y] != CellContents.None;
+        return entitiesOnBoard.Any<EntityData>(entityData => entityData.Position == position);
     }
     #endregion
 }
