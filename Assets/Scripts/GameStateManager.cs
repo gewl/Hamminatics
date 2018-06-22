@@ -138,11 +138,87 @@ public class GameStateManager : MonoBehaviour {
     {
         if (potentialCardTargets.Contains(cellPosition))
         {
-            //actionQueueController.AddNewAction(equippedCardsManager.GetSelectedCard(), )
+            actionQueueController.AddNewAction(equippedCardsManager.GetSelectedCard(), Player, GetDirectionFromPlayer(cellPosition), GetCellDistanceFromPlayer(cellPosition));
+            ResetBoard();
         }
         else
         {
         }
+    }
+
+    public void EndTurn()
+    {
+        while (!actionQueueController.IsActionStackEmpty)
+        {
+            Action nextAction = actionQueueController.GetNextAction();
+
+            Debug.Log(nextAction.card.Category);
+            switch (nextAction.card.Category)
+            {
+                case CardCategory.Movement:
+                    HandleMovementAction(nextAction.entity, nextAction.direction, nextAction.distance);
+                    break;
+                case CardCategory.Attack:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        ResetBoard();
+    }
+
+    void HandleMovementAction(EntityData entity, Direction direction, int distance)
+    {
+        switch (direction)
+        {
+            case Direction.Up:
+                entity.Position.y -= distance; 
+                break;
+            case Direction.Down:
+                entity.Position.y += distance;
+                break;
+            case Direction.Left:
+                entity.Position.x -= distance;
+                break;
+            case Direction.Right:
+                entity.Position.x += distance;
+                break;
+            default:
+                break;
+        }
+    }
+
+    Direction GetDirectionFromPlayer(Vector2Int cellPosition)
+    {
+        if (cellPosition.x > Player.Position.x && cellPosition.y == Player.Position.y)
+        {
+            return Direction.Right;
+        }
+        else if (cellPosition.x < Player.Position.x && cellPosition.y == Player.Position.y)
+        {
+            return Direction.Left;
+        }
+        else if (cellPosition.x == Player.Position.x && cellPosition.y > Player.Position.y)
+        {
+            return Direction.Down;
+        }
+        else if (cellPosition.x == Player.Position.x && cellPosition.y < Player.Position.y)
+        {
+            return Direction.Up;
+        }
+        else
+        {
+            Debug.LogError("Cell was not a cardinal direction from player.");
+            return Direction.Right;
+        }
+    }
+
+    int GetCellDistanceFromPlayer(Vector2Int cellPosition)
+    {
+        int xDifference = Mathf.Abs(cellPosition.x - Player.Position.x);
+
+        return xDifference != 0 ? xDifference : Mathf.Abs(cellPosition.y - Player.Position.y);
     }
 
     #region Cell helper functions
