@@ -51,7 +51,7 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public void DrawBoard(List<EntityData> entities)
+    public void DrawBoard(GameState gameState)
     {
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
         {
@@ -63,9 +63,13 @@ public class BoardController : MonoBehaviour {
             }
         }
 
-        for (int i = 0; i < entities.Count; i++)
+        Image playerCellImage = cellContentImages[gameState.player.Position.x, gameState.player.Position.y];
+        playerCellImage.sprite = gameState.player.EntitySprite;
+        playerCellImage.color = new Color(1f, 1f, 1f, 1f);
+
+        for (int i = 0; i < gameState.enemies.Count; i++)
         {
-            EntityData entity = entities[i];
+            EntityData entity = gameState.enemies[i];
             if (entity != null)
             {
                 Image contentsImage = cellContentImages[entity.Position.x, entity.Position.y];

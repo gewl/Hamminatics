@@ -32,6 +32,12 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
         UpdateCardDisplays();
     }
 
+    public void ClearSelectedCard()
+    {
+        selectedCardSlot = -1;
+        boardStateManager.ResetBoard();
+    }
+
     public CardData GetSelectedCard()
     {
         return equippedCards[selectedCardSlot];
@@ -48,7 +54,7 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
             }
             else
             {
-                cardTitles[i].text = equippedCards[i].Name;
+                cardTitles[i].text = equippedCards[i].ID;
                 cardDisplays[i].GetComponent<Button>().interactable = true;
             }
         }
@@ -58,8 +64,8 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
     {
         if (selectedCardSlot == cardSlot)
         {
-            boardStateManager.ResetBoard();
-            selectedCardSlot = -1;
+            Debug.Log(selectedCardSlot + " " + cardSlot);
+            ClearSelectedCard();
         }
         else
         {

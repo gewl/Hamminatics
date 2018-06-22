@@ -5,8 +5,6 @@ using System.Linq;
 
 public class GameStateManager : MonoBehaviour {
 
-    const string PLAYER_ID = "Player";
-
     ActionQueueController _actionQueueController;
     ActionQueueController actionQueueController
     {
@@ -46,27 +44,37 @@ public class GameStateManager : MonoBehaviour {
             return _equippedCardsManager;
         }
     }
+    EnemyActionCalculator _enemyActionCalculator;
+    EnemyActionCalculator enemyActionCalculator
+    {
+        get
+        {
+            if (_enemyActionCalculator == null)
+            {
+                _enemyActionCalculator = GetComponent<EnemyActionCalculator>();
+            }
+
+            return _enemyActionCalculator;
+        }
+    }
 
     int boardWidth;
 
-    List<EntityData> entitiesOnBoard;
-    EntityData Player { get { return entitiesOnBoard[0]; } }
+    GameState currentGameState;
+    public EntityData Player { get { return currentGameState.player; } }
+
     List<Vector2Int> potentialCardTargets;
 
     private void Awake()
     {
         potentialCardTargets = new List<Vector2Int>();
         boardWidth = boardController.BoardWidth;
-
-        entitiesOnBoard = new List<EntityData>
-        {
-            DataManager.GetEntityData(PLAYER_ID)
-        };
     }
 
     private void Start()
     {
-        Player.Position = new Vector2Int(3, 3);
+        currentGameState = GameStateGenerator.GenerateNewGameState();
+        enemyActionCalculator.CalculateAndQueueActions(currentGameState);
         ResetBoard();
     }
 
@@ -114,7 +122,7 @@ public class GameStateManager : MonoBehaviour {
 
     public void ResetBoard()
     {
-        boardController.DrawBoard(entitiesOnBoard);
+        boardController.DrawBoard(currentGameState);
         potentialCardTargets.Clear();
     }
 
@@ -122,8 +130,8 @@ public class GameStateManager : MonoBehaviour {
     {
         if (potentialCardTargets.Contains(cellPosition))
         {
-            actionQueueController.AddNewAction(equippedCardsManager.GetSelectedCard(), Player, GetDirectionFromPlayer(cellPosition), GetCellDistanceFromPlayer(cellPosition));
-            ResetBoard();
+            actionQueueController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GetDirectionFromPlayer(cellPosition), GetCellDistanceFromPlayer(cellPosition));
+            equippedCardsManager.ClearSelectedCard();
         }
         else
         {
@@ -148,6 +156,7 @@ public class GameStateManager : MonoBehaviour {
             }
         }
 
+        enemyActionCalculator.CalculateAndQueueActions(currentGameState);
         ResetBoard();
     }
 
@@ -197,6 +206,7 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
+    #region Cell helper functions
     int GetCellDistanceFromPlayer(Vector2Int cellPosition)
     {
         int xDifference = Mathf.Abs(cellPosition.x - Player.Position.x);
@@ -204,7 +214,6 @@ public class GameStateManager : MonoBehaviour {
         return xDifference != 0 ? xDifference : Mathf.Abs(cellPosition.y - Player.Position.y);
     }
 
-    #region Cell helper functions
     public bool IsCellValid(Vector2Int position)
     {
         return position.x >= 0 && position.x < boardWidth && position.y >= 0 && position.y < boardWidth;
@@ -212,7 +221,7 @@ public class GameStateManager : MonoBehaviour {
 
     public bool IsCellOccupied(Vector2Int position)
     {
-        return entitiesOnBoard.Any<EntityData>(entityData => entityData.Position == position);
+        return currentGameState.player.Position == position || currentGameState.enemies.Any<EntityData>(entityData => entityData.Position == position);
     }
     #endregion
 }

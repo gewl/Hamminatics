@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class CardData : ScriptableObject {
     public abstract CardCategory Category { get; }
-    public string Name = "_NewCard";
+    public string ID = "_NewCard";
     public int Cost = 0;
     public AbilityDirection Direction = AbilityDirection.AllDirections;
     public int Range = 1;

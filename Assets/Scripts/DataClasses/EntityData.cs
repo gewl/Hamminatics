@@ -2,9 +2,13 @@
 
 [CreateAssetMenu(menuName="Data/Entity")]
 public class EntityData : ScriptableObject {
-    public string Name;
+    public string ID;
     public int Health = 1;
     public Sprite EntitySprite;
+    public int Speed = 1;
     [HideInInspector]
     public Vector2Int Position;
+
+    public CardData MovementCard;
+    public AttackCardData attackCard;
 }

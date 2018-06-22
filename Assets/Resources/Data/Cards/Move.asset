@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89c15fc49055fbd47b1ee00511a769ff, type: 3}
   m_Name: Move
   m_EditorClassIdentifier: 
-  Name: Move
+  ID: Move
   Cost: 0
   Direction: 6
   Range: 1

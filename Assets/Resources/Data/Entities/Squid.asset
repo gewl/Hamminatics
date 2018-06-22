@@ -9,12 +9,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e174c53b44b9ae4582d787d13eebd90, type: 3}
-  m_Name: Player
+  m_Name: Squid
   m_EditorClassIdentifier: 
-  ID: Player
-  Health: 5
-  EntitySprite: {fileID: 21300000, guid: f7d5eb75cc0dadc44a083625e41f3c5f, type: 3}
+  ID: Squid
+  Health: 3
+  EntitySprite: {fileID: 21300000, guid: 66951e7437876234f8e9cb0dd70c483e, type: 3}
   Speed: 1
   Position: {x: 0, y: 0}
-  MovementCard: {fileID: 0}
+  MovementCard: {fileID: 11400000, guid: d795a7befc81c354dbe74ba6b07573d5, type: 2}
   attackCard: {fileID: 0}
