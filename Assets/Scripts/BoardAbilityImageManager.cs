@@ -7,8 +7,6 @@ public class BoardAbilityImageManager : MonoBehaviour {
     [SerializeField]
     ActionStackController actionStackController;
     [SerializeField]
-    ImageManager imageManager;
-    [SerializeField]
     BoardController boardController;
 
     Dictionary<int, GameObject> actionHashToQueuedImageDict;
@@ -73,9 +71,9 @@ public class BoardAbilityImageManager : MonoBehaviour {
         switch (cardCategory)
         {
             case CardCategory.Movement:
-                return GameObject.Instantiate(imageManager.GetDirectionImage(direction));
+                return GameObject.Instantiate(ImageManager.GetDirectionPrefab(direction));
             case CardCategory.Attack:
-                return GameObject.Instantiate(imageManager.GetDirectionImage(direction));
+                return GameObject.Instantiate(ImageManager.GetDirectionPrefab(direction));
             default:
                 return null;
         }
