@@ -38,6 +38,7 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
         boardStateManager.ResetBoard();
     }
 
+
     public CardData GetSelectedCard()
     {
         return equippedCards[selectedCardSlot];

@@ -65,6 +65,9 @@ public class GameStateManager : MonoBehaviour {
 
     List<Vector2Int> potentialCardTargets;
 
+    bool isHandlingActions = false;
+    public bool IsHandlingActions { get { return isHandlingActions; } }
+
     private void Awake()
     {
         potentialCardTargets = new List<Vector2Int>();
@@ -134,6 +137,10 @@ public class GameStateManager : MonoBehaviour {
 
     public void RegisterCellInteraction(Vector2Int cellPosition)
     {
+        if (isHandlingActions)
+        {
+            return;      
+        }
         if (potentialCardTargets.Contains(cellPosition))
         {
             actionQueueController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GetDirectionFromPlayer(cellPosition), GetCellDistanceFromPlayer(cellPosition));
@@ -146,6 +153,12 @@ public class GameStateManager : MonoBehaviour {
 
     public void EndTurn()
     {
+        StartCoroutine(ProcessTurnActions());
+    }
+
+    IEnumerator ProcessTurnActions()
+    {
+        isHandlingActions = true;
         while (!actionQueueController.IsActionStackEmpty)
         {
             Action nextAction = actionQueueController.GetNextAction();
@@ -160,10 +173,14 @@ public class GameStateManager : MonoBehaviour {
                 default:
                     break;
             }
+
+            ResetBoard();
+            yield return new WaitForSeconds(0.5f);
         }
 
         enemyActionCalculator.CalculateAndQueueActions(currentGameState);
         ResetBoard();
+        isHandlingActions = false;
     }
 
     void HandleMovementAction(EntityData entity, Direction direction, int distance)
