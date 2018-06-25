@@ -20,7 +20,7 @@ public class DataManager : MonoBehaviour {
     {
         if (cachedEntityData.ContainsKey(entityName))
         {
-            return cachedEntityData[entityName];
+            return Instantiate(cachedEntityData[entityName]);
         }
         else
         {

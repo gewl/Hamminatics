@@ -9,8 +9,6 @@ public class ActionStackController : MonoBehaviour {
     public delegate void ActionsDelegate(List<Action> actions);
     public ActionsDelegate OnActionStackUpdate;
 
-    const string PLAYER_ID = "Player";
-
     Stack<Action> actionStack;
     public bool IsActionStackEmpty { get { return actionStack.Count == 0; } }
 
@@ -53,7 +51,7 @@ public class ActionStackController : MonoBehaviour {
     public void ReplacePlayerAction(Action newAction)
     {
         List<Action> actionList = actionStack.ToList<Action>();
-        int oldPlayerActionIndex = actionList.FindIndex(action => action.entity.ID == PLAYER_ID);
+        int oldPlayerActionIndex = actionList.FindIndex(action => action.entity.ID == Constants.PLAYER_ID);
         if (actionList[oldPlayerActionIndex] == newAction)
         {
             return;
@@ -83,7 +81,7 @@ public class ActionStackController : MonoBehaviour {
 
     public bool DoesActionStackContainPlayerAction()
     {
-        return actionStack.Any<Action>(action => action.entity.ID == PLAYER_ID);
+        return actionStack.Any<Action>(action => action.entity.ID == Constants.PLAYER_ID);
     }
 
 }

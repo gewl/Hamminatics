@@ -8256,3 +8256,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionStack: {fileID: 323374608}
+  playerActionColor: {r: 0.3339965, g: 0.5735294, b: 0.27411333, a: 1}
+  enemyActionColor: {r: 0.71323526, g: 0.71323526, b: 0.71323526, a: 1}

@@ -36,3 +36,8 @@ public enum AbilityDirection
     Vertical,
     AllDirections
 }
+
+public struct Constants
+{
+    public const string PLAYER_ID = "Player";
+}

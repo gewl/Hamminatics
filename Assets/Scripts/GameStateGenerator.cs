@@ -13,10 +13,16 @@ public class GameStateGenerator {
         player.Position = new Vector2Int(3, 3);
 
         EntityData squid = DataManager.GetEntityData(SQUID_ID);
+        EntityData squid2 = DataManager.GetEntityData(SQUID_ID);
+        EntityData squid3 = DataManager.GetEntityData(SQUID_ID);
         squid.Position = new Vector2Int(2, 2);
+        squid2.Position = new Vector2Int(2, 0);
+        squid3.Position = new Vector2Int(4, 4);
         List<EntityData> enemies = new List<EntityData>()
         {
-            squid
+            squid,
+            squid2,
+            squid3
         };
 
         SpeedComparer comparer = new SpeedComparer();
