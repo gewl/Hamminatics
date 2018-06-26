@@ -9,6 +9,7 @@ public class QueuedActionController : MonoBehaviour, IBeginDragHandler, IDragHan
     RectTransform rect;
 
     ActionQueueDash queueDash;
+    public bool isPlayerAction;
 
     [SerializeField]
     Image subjectIcon;
@@ -54,18 +55,30 @@ public class QueuedActionController : MonoBehaviour, IBeginDragHandler, IDragHan
 
     public void OnBeginDrag(PointerEventData pointerEventData)
     {
+        if (!isPlayerAction)
+        {
+            return;
+        }
         queueDash.OnQueuedActionBeginDrag(transform);
         transform.SetAsLastSibling();
     }
 
     public void OnDrag(PointerEventData pointerEventData)
     {
+        if (!isPlayerAction)
+        {
+            return;
+        }
         transform.position = new Vector2(pointerEventData.position.x, transform.position.y);
         queueDash.OnQueuedActionDrag();
     }
 
     public void OnEndDrag(PointerEventData pointerEventData)
     {
+        if (!isPlayerAction)
+        {
+            return;
+        }
         queueDash.OnQueuedActionDrop();
         transform.SetSiblingIndex(cachedSiblingIndex);
     }

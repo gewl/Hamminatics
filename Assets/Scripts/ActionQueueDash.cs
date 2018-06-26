@@ -57,10 +57,12 @@ public class ActionQueueDash : MonoBehaviour {
 
             if (actions[i].entity.ID == Constants.PLAYER_ID)
             {
+                queuedActionControllers[i].isPlayerAction = true;
                 actionBackgroundImages[i].color = playerActionColor;
             }
             else
             {
+                queuedActionControllers[i].isPlayerAction = false;
                 actionBackgroundImages[i].color = enemyActionColor;
             }
         }
@@ -86,6 +88,10 @@ public class ActionQueueDash : MonoBehaviour {
         for (int i = 0; i < actionBackgroundImages.Length; i++)
         {
             Image actionBackgroundImage = actionBackgroundImages[i];
+            if (actionBackgroundImage.transform == draggingAction)
+            {
+                continue; 
+            }
             if (!actionBackgroundImage.IsActive())
             {
                 break;
@@ -110,7 +116,23 @@ public class ActionQueueDash : MonoBehaviour {
         {
             queuedActionControllers[i].OnOtherActionDragEnded();
         }
+
+        // If any of the non-player actions are budged, shuffle player action between last budged
+        // & first un-budged actions. Checking first two because one of them could be player action,
+        // and actually finding the player action's index is way more expensive.
+        if (actionsAreBudged[0] || actionsAreBudged[1])
+        {
+            int lastBudgedActionIndex = 0, peekedActionIndex = 1;
+            while (peekedActionIndex < actionsAreBudged.Length && actionsAreBudged[peekedActionIndex])
+            {
+                lastBudgedActionIndex = peekedActionIndex;
+                peekedActionIndex++;
+            }
+
+            actionStack.ChangePlayerActionPosition(lastBudgedActionIndex);
+        }
         draggingAction = null;
+
         layoutGroup.enabled = true;
     }
 

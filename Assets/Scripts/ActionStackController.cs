@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;   
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -65,6 +66,41 @@ public class ActionStackController : MonoBehaviour {
         }
     }
 
+    public void ChangePlayerActionPosition(int newIndex)
+    {
+        List<Action> actionList = actionStack.ToList();
+
+        Action playerAction = actionList.Find(IsPlayerActionPredicate);
+
+        Stack<Action> newActionStack = new Stack<Action>();
+        for (int i = 0; i < newIndex; i++)
+        {
+            Action action = actionList[i];
+            if (IsPlayerAction(action))
+            {
+                continue;
+            }
+
+            newActionStack.Push(action);
+        }
+
+        newActionStack.Push(playerAction);
+
+        for (int i = newIndex; i < actionList.Count; i++)
+        {
+            Action action = actionList[i];
+            if (IsPlayerAction(action))
+            {
+                continue;
+            }
+
+            newActionStack.Push(action);
+        }
+
+        actionStack = newActionStack;
+        OnActionStackUpdate(actionStack.ToList<Action>());
+    }
+
     public Action GetNextAction()
     {
         Action nextAction = actionStack.Pop();
@@ -81,7 +117,10 @@ public class ActionStackController : MonoBehaviour {
 
     public bool DoesActionStackContainPlayerAction()
     {
-        return actionStack.Any<Action>(action => action.entity.ID == Constants.PLAYER_ID);
+        return actionStack.Any<Action>(IsPlayerAction);
     }
+
+    static Func<Action, bool> IsPlayerAction = (Action action) => action.entity.ID == Constants.PLAYER_ID;
+    Predicate<Action> IsPlayerActionPredicate = new Predicate<Action>(IsPlayerAction);
 
 }
