@@ -5,6 +5,9 @@ using System.Linq;
 
 public class GameStateManager : MonoBehaviour {
 
+    public delegate void GameStateChangeDelegate(GameState updatedGameState);
+    public GameStateChangeDelegate OnGameStateChange;
+
     ActionStackController _actionQueueController;
     ActionStackController actionQueueController
     {
@@ -85,6 +88,7 @@ public class GameStateManager : MonoBehaviour {
     {
         enemyActionCalculator.CalculateAndQueueActions(currentGameState);
         ResetBoard();
+        OnGameStateChange(currentGameState);
     }
 
     public void HighlightPotentialCardTargets(CardData card)
