@@ -73,7 +73,7 @@ public class ActionStackController : MonoBehaviour {
         Action playerAction = actionList.Find(IsPlayerActionPredicate);
 
         Stack<Action> newActionStack = new Stack<Action>();
-        for (int i = 0; i < newIndex; i++)
+        for (int i = actionList.Count - 1; i >= newIndex; i--)
         {
             Action action = actionList[i];
             if (IsPlayerAction(action))
@@ -86,7 +86,7 @@ public class ActionStackController : MonoBehaviour {
 
         newActionStack.Push(playerAction);
 
-        for (int i = newIndex; i < actionList.Count; i++)
+        for (int i = newIndex-1; i >= 0; i--)
         {
             Action action = actionList[i];
             if (IsPlayerAction(action))
@@ -96,6 +96,7 @@ public class ActionStackController : MonoBehaviour {
 
             newActionStack.Push(action);
         }
+
 
         actionStack = newActionStack;
         OnActionStackUpdate(actionStack.ToList<Action>());

@@ -6,6 +6,7 @@ public class GameStateGenerator {
 
     const string PLAYER_ID = "Player";
     const string SQUID_ID = "Squid";
+    const string WASP_ID = "Wasp";
 
     public static GameState GenerateNewGameState()
     {
@@ -14,15 +15,15 @@ public class GameStateGenerator {
 
         EntityData squid = DataManager.GetEntityData(SQUID_ID);
         EntityData squid2 = DataManager.GetEntityData(SQUID_ID);
-        EntityData squid3 = DataManager.GetEntityData(SQUID_ID);
+        EntityData wasp = DataManager.GetEntityData(WASP_ID);
         squid.Position = new Vector2Int(2, 2);
         squid2.Position = new Vector2Int(2, 0);
-        squid3.Position = new Vector2Int(4, 4);
+        wasp.Position = new Vector2Int(4, 4);
         List<EntityData> enemies = new List<EntityData>()
         {
             squid,
             squid2,
-            squid3
+            wasp
         };
 
         SpeedComparer comparer = new SpeedComparer();

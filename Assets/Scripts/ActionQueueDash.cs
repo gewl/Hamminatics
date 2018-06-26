@@ -76,7 +76,8 @@ public class ActionQueueDash : MonoBehaviour {
     #region Queued action event handlers
     public void OnQueuedActionBeginDrag(Transform queuedAction)
     {
-        ResetBudgeTracker();
+        int actionIndex = queuedAction.GetSiblingIndex();
+        ResetBudgeTracker(actionIndex);
         draggingAction = queuedAction;
         layoutGroup.enabled = false;
     }
@@ -117,30 +118,41 @@ public class ActionQueueDash : MonoBehaviour {
             queuedActionControllers[i].OnOtherActionDragEnded();
         }
 
-        // If any of the non-player actions are budged, shuffle player action between last budged
-        // & first un-budged actions. Checking first two because one of them could be player action,
-        // and actually finding the player action's index is way more expensive.
-        if (actionsAreBudged[0] || actionsAreBudged[1])
+        int newPlayerActionIndex = 0;
+        for (int i = 0; i < queuedActionControllers.Length; i++)
         {
-            int lastBudgedActionIndex = 0, peekedActionIndex = 1;
-            while (peekedActionIndex < actionsAreBudged.Length && actionsAreBudged[peekedActionIndex])
+            Transform actionTransform = queuedActionControllers[i].transform;
+
+            if (actionTransform == draggingAction)
             {
-                lastBudgedActionIndex = peekedActionIndex;
-                peekedActionIndex++;
+                continue;
             }
 
-            actionStack.ChangePlayerActionPosition(lastBudgedActionIndex);
+            if (!actionTransform.gameObject.activeSelf || actionTransform.position.x > draggingAction.position.x)
+            {
+                newPlayerActionIndex = i;
+                break;
+            }
         }
+
+        actionStack.ChangePlayerActionPosition(newPlayerActionIndex);
+
         draggingAction = null;
 
         layoutGroup.enabled = true;
     }
 
-    void ResetBudgeTracker()
+    void ResetBudgeTracker(int actionIndex)
     {
-        for (int i = 0; i < actionsAreBudged.Length; i++)
+        for (int i = 0; i < actionIndex; i++)
+        {
+            actionsAreBudged[i] = true;
+            queuedActionControllers[i].RecalculateBudgedPosition(true);
+        }
+        for (int i = actionIndex; i < actionsAreBudged.Length; i++)
         {
             actionsAreBudged[i] = false;
+            queuedActionControllers[i].RecalculateBudgedPosition(false);
         }
     }
     #endregion

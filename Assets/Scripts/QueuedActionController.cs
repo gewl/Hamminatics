@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 public class QueuedActionController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
 
     RectTransform rect;
+    Action currentDepictedAction;
 
     ActionQueueDash queueDash;
     public bool isPlayerAction;
@@ -19,20 +20,7 @@ public class QueuedActionController : MonoBehaviour, IBeginDragHandler, IDragHan
     int cachedSiblingIndex;
 
     float budgingTime = 0.2f;
-    float _unbudgedXPosition, budgedXPosition;
-    float unbudgedXPosition
-    {
-        get
-        {
-            if (_unbudgedXPosition == 0)
-            {
-                _unbudgedXPosition = transform.position.x;
-                budgedXPosition = transform.position.x - rect.rect.width;
-            }
-
-            return _unbudgedXPosition;
-        }
-    }
+    float unbudgedXPosition, budgedXPosition;
 
     private void Awake()
     {
@@ -42,15 +30,29 @@ public class QueuedActionController : MonoBehaviour, IBeginDragHandler, IDragHan
         rect = GetComponent<RectTransform>();
     }
 
+    public void RecalculateBudgedPosition(bool isAlreadyBudged)
+    {
+        if (isAlreadyBudged)
+        {
+            budgedXPosition = transform.position.x;
+            unbudgedXPosition = budgedXPosition + rect.rect.width;
+        }
+        else
+        {
+            unbudgedXPosition = transform.position.x;
+            budgedXPosition = unbudgedXPosition - rect.rect.width;
+        }
+    }
+
     public void UpdateDepictedAction(Action action)
     {
+        currentDepictedAction = action;
+
         Sprite subjectSprite = action.entity.EntitySprite;
         subjectIcon.sprite = subjectSprite;
 
         Sprite actionSprite = ImageManager.GetActionSprite(action.card.Category, action.direction);
         actionIcon.sprite = actionSprite;
-
-        _unbudgedXPosition = 0f;
     }
 
     public void OnBeginDrag(PointerEventData pointerEventData)
@@ -102,14 +104,14 @@ public class QueuedActionController : MonoBehaviour, IBeginDragHandler, IDragHan
         }
     }
 
-    IEnumerator Budge(bool isBudgingLeft)
+    IEnumerator Budge(bool isBudging)
     {
         float timeElapsed = 0.0f;
 
         float initialX = unbudgedXPosition;
         float destinationX = budgedXPosition;
 
-        if (!isBudgingLeft)
+        if (!isBudging)
         {
             initialX = budgedXPosition;
             destinationX = unbudgedXPosition;
