@@ -1454,6 +1454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endTurnButton: {fileID: 341573501}
+  energyManager: {fileID: 955059609}
 --- !u!114 &323374609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4230,6 +4231,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 955059608}
+  - component: {fileID: 955059609}
   m_Layer: 5
   m_Name: EnergyDisplay
   m_TagString: Untagged
@@ -4257,6 +4259,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &955059609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 955059607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478762e953f71a54ead083450789df6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameStateManager: {fileID: 323374607}
+  emptyEnergyBub: {fileID: 21300000, guid: 9a23f6d38f7cfcc419b8b3cce3ba6ffa, type: 3}
+  fullEnergyBub: {fileID: 21300000, guid: 0eb03d535b3dfdc46bbcdb4270f82d52, type: 3}
+  ProjectedEnergyGain: 0
 --- !u!1 &958688822
 GameObject:
   m_ObjectHideFlags: 0

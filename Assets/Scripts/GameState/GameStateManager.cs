@@ -7,6 +7,7 @@ public class GameStateManager : MonoBehaviour {
 
     public delegate void GameStateChangeDelegate(GameState updatedGameState);
     public GameStateChangeDelegate OnGameStateChange;
+    public GameStateChangeDelegate OnTurnEnded;
 
     ActionStackController _actionQueueController;
     ActionStackController actionQueueController
@@ -190,7 +191,16 @@ public class GameStateManager : MonoBehaviour {
         }
 
         enemyActionCalculator.CalculateAndQueueActions(currentGameState);
-        OnGameStateChange(currentGameState);
+
+        if (OnGameStateChange != null)
+        {
+            OnGameStateChange(currentGameState);
+        }
+
+        if (OnTurnEnded != null)
+        {
+            OnTurnEnded(currentGameState);
+        }
         isHandlingActions = false;
     }
 

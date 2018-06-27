@@ -15,6 +15,8 @@ public class ActionStackController : MonoBehaviour {
 
     [SerializeField]
     Button endTurnButton;
+    [SerializeField]
+    EnergyManager energyManager;
 
     private void Awake()
     {
@@ -100,6 +102,7 @@ public class ActionStackController : MonoBehaviour {
 
 
         actionStack = newActionStack;
+        energyManager.ProjectedEnergyGain = newIndex - 1;
         OnActionStackUpdate(actionStack.ToList<Action>());
     }
 
