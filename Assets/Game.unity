@@ -1241,10 +1241,6 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 1913382652620346, guid: 0650bf1828418584495ae5167a3e3560, type: 2}
-    - {fileID: 1394549432790720, guid: 1dbb20f4af294974fa14b7e308edfef8, type: 2}
-    - {fileID: 1579808612205204, guid: c73e3be7abe2ab84f8021bd5a968c522, type: 2}
-    - {fileID: 1398260970479948, guid: 0bb92232be2bf5b4482fe20f8e7ad967, type: 2}
     - {fileID: 21300000, guid: 231b70999e6a5f844ad173dc0425dc43, type: 3}
     - {fileID: 21300000, guid: 37ba5c764cfceaa4a803e4b238a0079d, type: 3}
     - {fileID: 21300000, guid: 0305b1c7d09ae6d478cd8102ef99cf84, type: 3}
@@ -1258,13 +1254,34 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: directionPrefabs
+    - Name: abilityImages
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[Direction, Assembly-CSharp],[UnityEngine.GameObject,
+      Data: 0|System.Collections.Generic.Dictionary`2[[CardCategory, Assembly-CSharp],[System.Collections.Generic.Dictionary`2[[Direction,
+        Assembly-CSharp],[UnityEngine.Sprite, UnityEngine.CoreModule]], mscorlib]],
+        mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[CardCategory,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[Direction, Assembly-CSharp],[UnityEngine.Sprite,
         UnityEngine.CoreModule]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[Direction,
+      Data: 3|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[Direction,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 8
@@ -1301,7 +1318,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 10
       Data: 2
@@ -1313,7 +1330,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 3
-      Data: 3
+      Data: 2
     - Name: 
       Entry: 10
       Data: 3
@@ -1326,27 +1343,15 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: abilityImages
-      Entry: 7
-      Data: 2|System.Collections.Generic.Dictionary`2[[CardCategory, Assembly-CSharp],[System.Collections.Generic.Dictionary`2[[Direction,
-        Assembly-CSharp],[UnityEngine.Sprite, UnityEngine.CoreModule]], mscorlib]],
-        mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 3|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[CardCategory,
-        Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 12
-      Data: 2
     - Name: 
       Entry: 7
       Data: 
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 1
     - Name: 
       Entry: 7
       Data: 4|System.Collections.Generic.Dictionary`2[[Direction, Assembly-CSharp],[UnityEngine.Sprite,
@@ -1390,7 +1395,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 3
-      Data: 3
+      Data: 2
     - Name: 
       Entry: 10
       Data: 6
@@ -1402,87 +1407,10 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 10
-      Data: 7
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 6|System.Collections.Generic.Dictionary`2[[Direction, Assembly-CSharp],[UnityEngine.Sprite,
-        UnityEngine.CoreModule]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 7|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[Direction,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 4
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 10
-      Data: 8
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 9
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 10
-      Data: 10
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 3
       Data: 3
     - Name: 
       Entry: 10
-      Data: 11
+      Data: 7
     - Name: 
       Entry: 8
       Data: 

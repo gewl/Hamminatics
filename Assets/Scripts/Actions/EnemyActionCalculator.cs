@@ -17,9 +17,9 @@ public class EnemyActionCalculator : MonoBehaviour {
 
         foreach (EntityData enemy in enemies)
         {
-            CardData enemyMovementCard = enemy.MovementCard;
+            CardData enemyAttackCard = enemy.attackCard;
 
-            actionQueueController.AddNewAction(enemyMovementCard, enemy, Direction.Left, enemyMovementCard.Range);
+            actionQueueController.AddNewAction(enemyAttackCard, enemy, Direction.Down, enemyAttackCard.Range);
         }
     }
 }

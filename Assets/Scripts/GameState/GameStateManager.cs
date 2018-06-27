@@ -80,6 +80,7 @@ public class GameStateManager : MonoBehaviour {
     private void Start()
     {
         currentGameState = GameStateGenerator.GenerateNewGameState();
+        OnGameStateChange += ResetBoard;
         // This has to be delayed so layout group can space accordingly.
         Invoke("SetBoardUp", 0.1f);
     }
@@ -87,13 +88,12 @@ public class GameStateManager : MonoBehaviour {
     void SetBoardUp()
     {
         enemyActionCalculator.CalculateAndQueueActions(currentGameState);
-        ResetBoard();
         OnGameStateChange(currentGameState);
     }
 
     public void HighlightPotentialCardTargets(CardData card)
     {
-        ResetBoard();
+        ResetBoard(currentGameState);
 
         int cardRange = card.Range;
 
@@ -133,7 +133,7 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
-    public void ResetBoard()
+    public void ResetBoard(GameState currentGameState)
     {
         boardController.DrawBoard(currentGameState);
         potentialCardTargets.Clear();
@@ -149,6 +149,7 @@ public class GameStateManager : MonoBehaviour {
         {
             actionQueueController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GetDirectionFromPlayer(cellPosition), GetCellDistanceFromPlayer(cellPosition));
             equippedCardsManager.ClearSelectedCard();
+            OnGameStateChange(currentGameState);
         }
         else
         {
@@ -173,17 +174,18 @@ public class GameStateManager : MonoBehaviour {
                     HandleMovementAction(nextAction.entity, nextAction.direction, nextAction.distance);
                     break;
                 case CardCategory.Attack:
+                    HandleAttackAction(nextAction.entity, nextAction.card as AttackCardData, nextAction.direction, nextAction.distance);
                     break;
                 default:
                     break;
             }
 
-            ResetBoard();
+            OnGameStateChange(currentGameState);
             yield return new WaitForSeconds(0.5f);
         }
 
         enemyActionCalculator.CalculateAndQueueActions(currentGameState);
-        ResetBoard();
+        OnGameStateChange(currentGameState);
         isHandlingActions = false;
     }
 
@@ -206,6 +208,19 @@ public class GameStateManager : MonoBehaviour {
             default:
                 break;
         }
+    }
+
+    void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance)
+    {
+        Vector2Int targetCellPosition = GetCellPosition(entity.Position, direction, distance);
+        if (!IsCellValid(targetCellPosition) || !IsCellOccupied(targetCellPosition))
+        {
+            return;
+        }
+
+        EntityData targetEntity = currentGameState.GetOccupantOfCell(targetCellPosition);
+
+        targetEntity.Health -= card.Damage;
     }
 
     Direction GetDirectionFromPlayer(Vector2Int cellPosition)
@@ -246,9 +261,64 @@ public class GameStateManager : MonoBehaviour {
         return position.x >= 0 && position.x < boardWidth && position.y >= 0 && position.y < boardWidth;
     }
 
+    public Vector2Int GetCellPosition(Vector2Int origin, Direction direction, int distance)
+    {
+        Vector2Int updatedPosition = origin;
+
+        switch (direction)
+        {
+            case Direction.Up:
+                updatedPosition.y -= distance;
+                break;
+            case Direction.Down:
+                updatedPosition.y += distance;
+                break;
+            case Direction.Left:
+                updatedPosition.x -= distance;
+                break;
+            case Direction.Right:
+                updatedPosition.x += distance;
+                break;
+            default:
+                break;
+        }
+
+        return updatedPosition;
+    }
+
+    public bool IsCellOccupied(int x, int y)
+    {
+        return IsCellOccupied(new Vector2Int(x, y));
+    }
+
     public bool IsCellOccupied(Vector2Int position)
     {
         return currentGameState.player.Position == position || currentGameState.enemies.Any<EntityData>(entityData => entityData.Position == position);
+    }
+
+    public bool IsCellOccupied(Vector2Int originPosition, Direction directionFromOrigin, int distanceFromOrigin)
+    {
+        Vector2Int updatedPosition = originPosition;
+
+        switch (directionFromOrigin)
+        {
+            case Direction.Up:
+                updatedPosition.y -= distanceFromOrigin;
+                break;
+            case Direction.Down:
+                updatedPosition.y += distanceFromOrigin;
+                break;
+            case Direction.Left:
+                updatedPosition.x -= distanceFromOrigin;
+                break;
+            case Direction.Right:
+                updatedPosition.x += distanceFromOrigin;
+                break;
+            default:
+                break;
+        }
+
+        return IsCellOccupied(updatedPosition.x, updatedPosition.y);
     }
     #endregion
 }

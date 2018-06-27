@@ -35,9 +35,7 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
     public void ClearSelectedCard()
     {
         selectedCardSlot = -1;
-        boardStateManager.ResetBoard();
     }
-
 
     public CardData GetSelectedCard()
     {
