@@ -1249,6 +1249,10 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 37ba5c764cfceaa4a803e4b238a0079d, type: 3}
     - {fileID: 21300000, guid: 0305b1c7d09ae6d478cd8102ef99cf84, type: 3}
     - {fileID: 21300000, guid: 97fe63f47747b534bae75eb7cd9232c7, type: 3}
+    - {fileID: 21300000, guid: 06bb56dab4b3a2846893847b6014b02a, type: 3}
+    - {fileID: 21300000, guid: ad4bf67ed6a6e0842ad546422c882f41, type: 3}
+    - {fileID: 21300000, guid: 68f90e57f41fa5a47895ae35b6124aa4, type: 3}
+    - {fileID: 21300000, guid: c34f19fe6fd99734890e667579e5b405, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -1336,7 +1340,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 7
       Data: 
@@ -1415,11 +1419,90 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 6|System.Collections.Generic.Dictionary`2[[Direction, Assembly-CSharp],[UnityEngine.Sprite,
+        UnityEngine.CoreModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 7|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[Direction,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  abilityPointerPrefab: {fileID: 1913382652620346, guid: 846bbc2c4028bec488a19f7e5c9c5985,
+    type: 2}
 --- !u!114 &323374607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3249,9 +3332,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 97fe63f47747b534bae75eb7cd9232c7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 68f90e57f41fa5a47895ae35b6124aa4, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -5964,9 +6047,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 97fe63f47747b534bae75eb7cd9232c7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 68f90e57f41fa5a47895ae35b6124aa4, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -6252,9 +6335,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 97fe63f47747b534bae75eb7cd9232c7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 68f90e57f41fa5a47895ae35b6124aa4, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -7742,9 +7825,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 97fe63f47747b534bae75eb7cd9232c7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 68f90e57f41fa5a47895ae35b6124aa4, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -8036,9 +8119,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 97fe63f47747b534bae75eb7cd9232c7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 68f90e57f41fa5a47895ae35b6124aa4, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1

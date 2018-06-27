@@ -58,7 +58,8 @@ public class ActionStackController : MonoBehaviour {
             return;
         }
         actionList[oldPlayerActionIndex] = newAction;
-        actionStack = new Stack<Action>(actionList);
+
+        actionStack = ConvertListToStack(actionList);
 
         if (OnActionStackUpdate != null)
         {
@@ -100,6 +101,18 @@ public class ActionStackController : MonoBehaviour {
 
         actionStack = newActionStack;
         OnActionStackUpdate(actionStack.ToList<Action>());
+    }
+
+    public Stack<Action> ConvertListToStack(List<Action> actionList)
+    {
+        Stack<Action> newStack = new Stack<Action>();
+
+        for (int i = actionList.Count - 1; i >= 0; i--)
+        {
+            newStack.Push(actionList[i]);
+        }
+
+        return newStack;
     }
 
     public Action GetNextAction()

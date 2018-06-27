@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Sirenix.OdinInspector;
 
 public class ImageManager : SerializedMonoBehaviour {
     [SerializeField]
-    Dictionary<Direction, GameObject> directionPrefabs;
+    GameObject abilityPointerPrefab;
 
     [SerializeField]
     Dictionary<CardCategory, Dictionary<Direction, Sprite>> abilityImages;
@@ -17,9 +18,13 @@ public class ImageManager : SerializedMonoBehaviour {
         instance = this;
     }
 
-    public static GameObject GetDirectionPrefab(Direction direction)
+    public static GameObject GetAbilityPointer(CardCategory cardCategory, Direction direction)
     {
-        return instance.directionPrefabs[direction];
+        GameObject abilityPointer = GameObject.Instantiate(instance.abilityPointerPrefab);
+
+        abilityPointer.GetComponent<Image>().sprite = GetActionSprite(cardCategory, direction);
+
+        return abilityPointer;
     }
 
     public static Sprite GetActionSprite(CardCategory cardCategory, Direction direction)
