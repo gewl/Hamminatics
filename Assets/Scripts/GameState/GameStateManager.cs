@@ -126,14 +126,19 @@ public class GameStateManager : MonoBehaviour {
 
     void AttemptToHighlightCell(Vector2Int position)
     {
-        if (IsCellValid(position) && !IsCellOccupied(position))
+        if (IsCellValid(position) && Player.Position != position)
         {
             boardController.HighlightCell(position);
             potentialCardTargets.Add(position);
         }
     }
 
-    public void ResetBoard(GameState currentGameState)
+    public void ResetBoard()
+    {
+        ResetBoard(currentGameState);
+    }
+
+    void ResetBoard(GameState currentGameState)
     {
         boardController.DrawBoard(currentGameState);
         potentialCardTargets.Clear();
@@ -191,22 +196,33 @@ public class GameStateManager : MonoBehaviour {
 
     void HandleMovementAction(EntityData entity, Direction direction, int distance)
     {
-        switch (direction)
+        Vector2Int projectedPosition = GetCellPosition(entity.Position, direction, distance);
+
+        if (!IsCellValid(projectedPosition))
         {
-            case Direction.Up:
-                entity.Position.y -= distance; 
-                break;
-            case Direction.Down:
-                entity.Position.y += distance;
-                break;
-            case Direction.Left:
-                entity.Position.x -= distance;
-                break;
-            case Direction.Right:
-                entity.Position.x += distance;
-                break;
-            default:
-                break;
+            return;
+        }
+
+        if (IsCellOccupied(projectedPosition))
+        {
+            EntityData cellOccupant = currentGameState.GetOccupantOfCell(projectedPosition);
+
+            Vector2Int projectedBumpPosition = GetCellPosition(projectedPosition, direction, 1);
+
+            bool canBump = IsCellValid(projectedBumpPosition) && !IsCellOccupied(projectedBumpPosition);
+
+            if (canBump)
+            {
+                cellOccupant.Position = projectedBumpPosition;
+                entity.Position = projectedPosition;
+            }
+
+            cellOccupant.Health -= 1;
+            entity.Health -= 1;
+        }
+        else
+        {
+            entity.Position = projectedPosition;
         }
     }
 

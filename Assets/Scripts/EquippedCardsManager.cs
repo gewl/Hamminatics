@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 
 public class EquippedCardsManager : SerializedMonoBehaviour {
-    GameStateManager boardStateManager;
+    GameStateManager gameStateManager;
 
     int maximumEquippedCards = 4;
     int selectedCardSlot = -1;
@@ -18,7 +18,7 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
 
     private void Awake()
     {
-        boardStateManager = GetComponentInParent<GameStateManager>();
+        gameStateManager = GetComponentInParent<GameStateManager>();
 
         cardDisplays = new GameObject[maximumEquippedCards];
         cardTitles = new Text[maximumEquippedCards];
@@ -35,6 +35,7 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
     public void ClearSelectedCard()
     {
         selectedCardSlot = -1;
+        gameStateManager.ResetBoard();
     }
 
     public CardData GetSelectedCard()
@@ -63,7 +64,6 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
     {
         if (selectedCardSlot == cardSlot)
         {
-            Debug.Log(selectedCardSlot + " " + cardSlot);
             ClearSelectedCard();
         }
         else
@@ -75,6 +75,6 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
 
     void ShowAvailableCardPlays(int cardSlot)
     {
-        boardStateManager.HighlightPotentialCardTargets(equippedCards[cardSlot]);
+        gameStateManager.HighlightPotentialCardTargets(equippedCards[cardSlot]);
     }
 }
