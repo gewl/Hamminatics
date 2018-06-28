@@ -159,14 +159,9 @@ public class GameStateManager : MonoBehaviour {
     {
         if (!isHandlingActions)
         {
-            Debug.Log(IsHandlingActions);
             ProjectedGameState = CalculateFollowingGameState(currentGameState);
-            boardController.DrawBoard(currentGameState, ProjectedGameState);
         }
-        else
-        {
-            boardController.DrawBoard(currentGameState);
-        }
+        boardController.DrawBoard(currentGameState, ProjectedGameState);
         potentialCardTargets.Clear();
     }
 

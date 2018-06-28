@@ -54,7 +54,7 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public void DrawBoard(GameState currentGameState)
+    public void DrawBoard(GameState currentGameState, GameState projectedGameState)
     {
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
         {
@@ -63,6 +63,22 @@ public class BoardController : MonoBehaviour {
                 Image contentsImage = cellContentImages[xCounter, yCounter];
                 contentsImage.sprite = null;
                 contentsImage.color = new Color(1f, 1f, 1f, 0f);
+            }
+        }
+
+        Vector2Int projectedPlayerPosition = projectedGameState.player.Position;
+        Image projectedPlayerCellImage = cellContentImages[projectedGameState.player.Position.x, projectedGameState.player.Position.y];
+        projectedPlayerCellImage.sprite = currentGameState.player.EntitySprite;
+        projectedPlayerCellImage.color = new Color(1f, 1f, 1f, 0.5f);
+
+        for (int i = 0; i < projectedGameState.enemies.Count; i++)
+        {
+            EntityData entity = projectedGameState.enemies[i];
+            if (entity != null)
+            {
+                Image contentsImage = cellContentImages[entity.Position.x, entity.Position.y];
+                contentsImage.sprite = entity.EntitySprite;
+                contentsImage.color = new Color(1f, 1f, 1f, 0.5f);
             }
         }
 
@@ -81,20 +97,7 @@ public class BoardController : MonoBehaviour {
                 contentsImage.color = new Color(1f, 1f, 1f, 1f);
             }
         }
-    }
 
-    public void DrawBoard(GameState currentGameState, GameState projectedGameState)
-    {
-        DrawBoard(currentGameState);
-
-        Vector2Int playerPosition = currentGameState.player.Position;
-        Vector2Int projectedPlayerPosition = projectedGameState.player.Position;
-        if (playerPosition != projectedPlayerPosition)
-        {
-            Image projectedPlayerCellImage = cellContentImages[projectedGameState.player.Position.x, projectedGameState.player.Position.y];
-            projectedPlayerCellImage.sprite = currentGameState.player.EntitySprite;
-            projectedPlayerCellImage.color = new Color(1f, 1f, 1f, 0.5f);
-        }
     }
 
     public void HighlightCell(Vector2Int position)
