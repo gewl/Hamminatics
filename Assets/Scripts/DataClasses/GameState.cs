@@ -6,35 +6,26 @@ public struct GameState {
     public EntityData player;
     public List<EntityData> enemies;
 
+    public Stack<Action> actionStack;
+
     public GameState(EntityData _player, List<EntityData> _enemies)
     {
         player = _player;
         enemies = _enemies;
+
+        actionStack = new Stack<Action>();
     }
 
-    public GameState Duplicate()
+    public GameState(EntityData _player, List<EntityData> _enemies, Stack<Action> _actions)
     {
-        return new GameState(player, enemies);
+        player = _player;
+        enemies = _enemies;
+        actionStack = _actions;
     }
 
-    public EntityData GetOccupantOfCell(Vector2Int position)
+    public void UpdateActionStack(Stack<Action> newActionStack)
     {
-        if (player.Position == position)
-        {
-            return player;  
-        }
-
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            EntityData entity = enemies[i];
-
-            if (entity.Position == position)
-            {
-                return entity;
-            }
-        }
-
-        Debug.LogError("Occupant of cell not found.");
-        return null;
+        actionStack = newActionStack;
     }
+
 }

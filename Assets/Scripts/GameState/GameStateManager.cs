@@ -65,6 +65,7 @@ public class GameStateManager : MonoBehaviour {
     int boardWidth;
 
     GameState currentGameState;
+    public GameState CurrentGameState { get { return currentGameState; } }
     public EntityData Player { get { return currentGameState.player; } }
 
     List<Vector2Int> potentialCardTargets;
@@ -153,7 +154,7 @@ public class GameStateManager : MonoBehaviour {
         }
         if (potentialCardTargets.Contains(cellPosition))
         {
-            actionQueueController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GetDirectionFromPlayer(cellPosition), GetCellDistanceFromPlayer(cellPosition));
+            actionQueueController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GameStateHelperFunctions.GetDirectionFromPlayer(cellPosition, currentGameState), GameStateHelperFunctions.GetCellDistanceFromPlayer(cellPosition, currentGameState));
             equippedCardsManager.ClearSelectedCard();
             OnGameStateChange(currentGameState);
         }
@@ -213,13 +214,13 @@ public class GameStateManager : MonoBehaviour {
             return;
         }
 
-        if (IsCellOccupied(projectedPosition))
+        if (GameStateHelperFunctions.IsCellOccupied(projectedPosition, currentGameState))
         {
-            EntityData cellOccupant = currentGameState.GetOccupantOfCell(projectedPosition);
+            EntityData cellOccupant = GameStateHelperFunctions.GetOccupantOfCell(projectedPosition, currentGameState);
 
             Vector2Int projectedBumpPosition = GetCellPosition(projectedPosition, direction, 1);
 
-            bool canBump = IsCellValid(projectedBumpPosition) && !IsCellOccupied(projectedBumpPosition);
+            bool canBump = IsCellValid(projectedBumpPosition) && !GameStateHelperFunctions.IsCellOccupied(projectedBumpPosition, currentGameState);
 
             if (canBump)
             {
@@ -239,48 +240,18 @@ public class GameStateManager : MonoBehaviour {
     void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance)
     {
         Vector2Int targetCellPosition = GetCellPosition(entity.Position, direction, distance);
-        if (!IsCellValid(targetCellPosition) || !IsCellOccupied(targetCellPosition))
+        if (!IsCellValid(targetCellPosition) || !GameStateHelperFunctions.IsCellOccupied(targetCellPosition, currentGameState))
         {
             return;
         }
 
-        EntityData targetEntity = currentGameState.GetOccupantOfCell(targetCellPosition);
+        EntityData targetEntity = GameStateHelperFunctions.GetOccupantOfCell(targetCellPosition, currentGameState);
 
         targetEntity.Health -= card.Damage;
     }
 
-    Direction GetDirectionFromPlayer(Vector2Int cellPosition)
-    {
-        if (cellPosition.x > Player.Position.x && cellPosition.y == Player.Position.y)
-        {
-            return Direction.Right;
-        }
-        else if (cellPosition.x < Player.Position.x && cellPosition.y == Player.Position.y)
-        {
-            return Direction.Left;
-        }
-        else if (cellPosition.x == Player.Position.x && cellPosition.y > Player.Position.y)
-        {
-            return Direction.Down;
-        }
-        else if (cellPosition.x == Player.Position.x && cellPosition.y < Player.Position.y)
-        {
-            return Direction.Up;
-        }
-        else
-        {
-            Debug.LogError("Cell was not a cardinal direction from player.");
-            return Direction.Right;
-        }
-    }
 
     #region Cell helper functions
-    int GetCellDistanceFromPlayer(Vector2Int cellPosition)
-    {
-        int xDifference = Mathf.Abs(cellPosition.x - Player.Position.x);
-
-        return xDifference != 0 ? xDifference : Mathf.Abs(cellPosition.y - Player.Position.y);
-    }
 
     public bool IsCellValid(Vector2Int position)
     {
@@ -312,39 +283,5 @@ public class GameStateManager : MonoBehaviour {
         return updatedPosition;
     }
 
-    public bool IsCellOccupied(int x, int y)
-    {
-        return IsCellOccupied(new Vector2Int(x, y));
-    }
-
-    public bool IsCellOccupied(Vector2Int position)
-    {
-        return currentGameState.player.Position == position || currentGameState.enemies.Any<EntityData>(entityData => entityData.Position == position);
-    }
-
-    public bool IsCellOccupied(Vector2Int originPosition, Direction directionFromOrigin, int distanceFromOrigin)
-    {
-        Vector2Int updatedPosition = originPosition;
-
-        switch (directionFromOrigin)
-        {
-            case Direction.Up:
-                updatedPosition.y -= distanceFromOrigin;
-                break;
-            case Direction.Down:
-                updatedPosition.y += distanceFromOrigin;
-                break;
-            case Direction.Left:
-                updatedPosition.x -= distanceFromOrigin;
-                break;
-            case Direction.Right:
-                updatedPosition.x += distanceFromOrigin;
-                break;
-            default:
-                break;
-        }
-
-        return IsCellOccupied(updatedPosition.x, updatedPosition.y);
-    }
     #endregion
 }

@@ -7,21 +7,28 @@ using UnityEngine.UI;
 
 public class ActionStackController : MonoBehaviour {
 
+    [SerializeField]
+    GameStateManager gameStateManager;
+
     public delegate void ActionsDelegate(List<Action> actions);
     public ActionsDelegate OnActionStackUpdate;
 
-    Stack<Action> actionStack;
-    public bool IsActionStackEmpty { get { return actionStack.Count == 0; } }
+    public Stack<Action> ActionStack {
+        get
+        {
+            return gameStateManager.CurrentGameState.actionStack; 
+        }
+        set
+        {
+            gameStateManager.CurrentGameState.UpdateActionStack(value);
+        }
+    }
+    public bool IsActionStackEmpty { get { return ActionStack.Count == 0; } }
 
     [SerializeField]
     Button endTurnButton;
     [SerializeField]
     EnergyManager energyManager;
-
-    private void Awake()
-    {
-        actionStack = new Stack<Action>();
-    }
 
     public void AddNewAction(CardData card, EntityData entity, Direction direction, int distance)
     {
@@ -32,10 +39,10 @@ public class ActionStackController : MonoBehaviour {
 
     public void AddNewAction(Action newAction)
     {
-        actionStack.Push(newAction);
+        ActionStack.Push(newAction);
         endTurnButton.interactable = DoesActionStackContainPlayerAction();
 
-        OnActionStackUpdate(new List<Action>(actionStack));
+        OnActionStackUpdate(new List<Action>(ActionStack));
     }
 
     public void AddPlayerAction(CardData card, EntityData entity, Direction direction, int distance)
@@ -53,7 +60,7 @@ public class ActionStackController : MonoBehaviour {
 
     public void ReplacePlayerAction(Action newAction)
     {
-        List<Action> actionList = actionStack.ToList<Action>();
+        List<Action> actionList = ActionStack.ToList<Action>();
         int oldPlayerActionIndex = actionList.FindIndex(action => action.entity.ID == Constants.PLAYER_ID);
         if (actionList[oldPlayerActionIndex] == newAction)
         {
@@ -61,7 +68,7 @@ public class ActionStackController : MonoBehaviour {
         }
         actionList[oldPlayerActionIndex] = newAction;
 
-        actionStack = ConvertListToStack(actionList);
+        ActionStack = ConvertListToStack(actionList);
 
         if (OnActionStackUpdate != null)
         {
@@ -71,7 +78,7 @@ public class ActionStackController : MonoBehaviour {
 
     public void ChangePlayerActionPosition(int newIndex)
     {
-        List<Action> actionList = actionStack.ToList();
+        List<Action> actionList = ActionStack.ToList();
 
         Action playerAction = actionList.Find(IsPlayerActionPredicate);
 
@@ -101,9 +108,9 @@ public class ActionStackController : MonoBehaviour {
         }
 
 
-        actionStack = newActionStack;
+        ActionStack = newActionStack;
         energyManager.ProjectedEnergyGain = newIndex - 1;
-        OnActionStackUpdate(actionStack.ToList<Action>());
+        OnActionStackUpdate(ActionStack.ToList<Action>());
     }
 
     public Stack<Action> ConvertListToStack(List<Action> actionList)
@@ -120,13 +127,13 @@ public class ActionStackController : MonoBehaviour {
 
     public Action GetNextAction()
     {
-        Action nextAction = actionStack.Pop();
+        Action nextAction = ActionStack.Pop();
 
         endTurnButton.interactable = !IsActionStackEmpty;
 
         if (OnActionStackUpdate != null)
         {
-            OnActionStackUpdate(new List<Action>(actionStack));
+            OnActionStackUpdate(new List<Action>(ActionStack));
         }
 
         return nextAction;
@@ -134,7 +141,7 @@ public class ActionStackController : MonoBehaviour {
 
     public bool DoesActionStackContainPlayerAction()
     {
-        return actionStack.Any<Action>(IsPlayerAction);
+        return ActionStack.Any<Action>(IsPlayerAction);
     }
 
     static Func<Action, bool> IsPlayerAction = (Action action) => action.entity.ID == Constants.PLAYER_ID;
