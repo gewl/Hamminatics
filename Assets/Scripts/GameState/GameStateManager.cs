@@ -6,7 +6,7 @@ using System.Linq;
 public class GameStateManager : MonoBehaviour {
 
     public delegate void GameStateChangeDelegate(GameState updatedGameState);
-    public GameStateChangeDelegate OnGameStateChange;
+    public GameStateChangeDelegate OnCurrentGameStateChange;
     public GameStateChangeDelegate OnTurnEnded;
 
     ActionStackController _actionQueueController;
@@ -65,6 +65,7 @@ public class GameStateManager : MonoBehaviour {
     int boardWidth;
 
     public GameState CurrentGameState { get; private set; }
+    public GameState ProjectedGameState { get; private set; }
     public EntityData Player { get { return CurrentGameState.player; } }
 
     List<Vector2Int> potentialCardTargets;
@@ -81,7 +82,7 @@ public class GameStateManager : MonoBehaviour {
     private void Start()
     {
         CurrentGameState = GameStateGenerator.GenerateNewGameState();
-        OnGameStateChange += ResetBoard;
+        OnCurrentGameStateChange += ResetBoard;
         // This has to be delayed so layout group can space accordingly.
         Invoke("SetBoardUp", 0.1f);
     }
@@ -89,7 +90,7 @@ public class GameStateManager : MonoBehaviour {
     void SetBoardUp()
     {
         enemyActionCalculator.CalculateAndQueueActions(CurrentGameState);
-        OnGameStateChange(CurrentGameState);
+        OnCurrentGameStateChange(CurrentGameState);
     }
 
     public void HighlightPotentialCardTargets(CardData card)
@@ -141,7 +142,8 @@ public class GameStateManager : MonoBehaviour {
 
     void ResetBoard(GameState currentGameState)
     {
-        boardController.DrawBoard(currentGameState);
+        ProjectedGameState = CalculateFollowingGameState(currentGameState);
+        boardController.DrawBoard(currentGameState, ProjectedGameState);
         potentialCardTargets.Clear();
     }
 
@@ -155,7 +157,7 @@ public class GameStateManager : MonoBehaviour {
         {
             actionQueueController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GameStateHelperFunctions.GetDirectionFromPlayer(cellPosition, CurrentGameState), GameStateHelperFunctions.GetCellDistanceFromPlayer(cellPosition, CurrentGameState));
             equippedCardsManager.ClearSelectedCard();
-            OnGameStateChange(CurrentGameState);
+            OnCurrentGameStateChange(CurrentGameState);
         }
         else
         {
@@ -164,37 +166,27 @@ public class GameStateManager : MonoBehaviour {
 
     public void EndTurn()
     {
-        StartCoroutine(ProcessTurnActions());
+        StartCoroutine(ProcessCurrentTurnActions());
     }
 
-    IEnumerator ProcessTurnActions()
+    IEnumerator ProcessCurrentTurnActions()
     {
         isHandlingActions = true;
         while (!actionQueueController.IsActionStackEmpty)
         {
             Action nextAction = actionQueueController.GetNextAction();
 
-            switch (nextAction.card.Category)
-            {
-                case CardCategory.Movement:
-                    HandleMovementAction(nextAction.entity, nextAction.direction, nextAction.distance, CurrentGameState);
-                    break;
-                case CardCategory.Attack:
-                    HandleAttackAction(nextAction.entity, nextAction.card as AttackCardData, nextAction.direction, nextAction.distance, CurrentGameState);
-                    break;
-                default:
-                    break;
-            }
+            ProcessAction(nextAction, CurrentGameState);
 
-            OnGameStateChange(CurrentGameState);
+            OnCurrentGameStateChange(CurrentGameState);
             yield return new WaitForSeconds(0.5f);
         }
 
         enemyActionCalculator.CalculateAndQueueActions(CurrentGameState);
 
-        if (OnGameStateChange != null)
+        if (OnCurrentGameStateChange != null)
         {
-            OnGameStateChange(CurrentGameState);
+            OnCurrentGameStateChange(CurrentGameState);
         }
 
         if (OnTurnEnded != null)
@@ -202,6 +194,21 @@ public class GameStateManager : MonoBehaviour {
             OnTurnEnded(CurrentGameState);
         }
         isHandlingActions = false;
+    }
+
+    void ProcessAction(Action action, GameState state)
+    {
+        switch (action.card.Category)
+        {
+            case CardCategory.Movement:
+                HandleMovementAction(action.entity, action.direction, action.distance, state);
+                break;
+            case CardCategory.Attack:
+                HandleAttackAction(action.entity, action.card as AttackCardData, action.direction, action.distance, state);
+                break;
+            default:
+                break;
+        }
     }
 
     void HandleMovementAction(EntityData entity, Direction direction, int distance, GameState gameState)
@@ -249,6 +256,19 @@ public class GameStateManager : MonoBehaviour {
         targetEntity.Health -= card.Damage;
     }
 
+    GameState CalculateFollowingGameState(GameState currentState)
+    {
+        GameState projectedState = GameStateHelperFunctions.DeepCopyGameState(currentState);
+
+        while (projectedState.actionStack.Count > 0)
+        {
+            Action nextAction = projectedState.actionStack.Pop();
+
+            ProcessAction(nextAction, projectedState);
+        }
+
+        return projectedState;
+    }
 
     #region Cell helper functions
 

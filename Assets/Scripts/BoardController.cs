@@ -54,7 +54,7 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public void DrawBoard(GameState gameState)
+    public void DrawBoard(GameState currentGameState, GameState projectedGameState)
     {
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
         {
@@ -66,19 +66,28 @@ public class BoardController : MonoBehaviour {
             }
         }
 
-        Image playerCellImage = cellContentImages[gameState.player.Position.x, gameState.player.Position.y];
-        playerCellImage.sprite = gameState.player.EntitySprite;
+        Vector2Int playerPosition = currentGameState.player.Position;
+        Image playerCellImage = cellContentImages[playerPosition.x, playerPosition.y];
+        playerCellImage.sprite = currentGameState.player.EntitySprite;
         playerCellImage.color = new Color(1f, 1f, 1f, 1f);
 
-        for (int i = 0; i < gameState.enemies.Count; i++)
+        for (int i = 0; i < currentGameState.enemies.Count; i++)
         {
-            EntityData entity = gameState.enemies[i];
+            EntityData entity = currentGameState.enemies[i];
             if (entity != null)
             {
                 Image contentsImage = cellContentImages[entity.Position.x, entity.Position.y];
                 contentsImage.sprite = entity.EntitySprite;
                 contentsImage.color = new Color(1f, 1f, 1f, 1f);
             }
+        }
+
+        Vector2Int projectedPlayerPosition = projectedGameState.player.Position;
+        if (playerPosition != projectedPlayerPosition)
+        {
+            Image projectedPlayerCellImage = cellContentImages[projectedGameState.player.Position.x, projectedGameState.player.Position.y];
+            projectedPlayerCellImage.sprite = currentGameState.player.EntitySprite;
+            projectedPlayerCellImage.color = new Color(1f, 1f, 1f, 0.5f);
         }
     }
 

@@ -22,12 +22,12 @@ public class HealthDisplayController : MonoBehaviour {
 
     private void OnEnable()
     {
-        gameStateManager.OnGameStateChange += OnGameStateChange;
+        gameStateManager.OnCurrentGameStateChange += OnGameStateChange;
     }
 
     private void OnDisable()
     {
-        gameStateManager.OnGameStateChange -= OnGameStateChange;
+        gameStateManager.OnCurrentGameStateChange -= OnGameStateChange;
     }
 
     void OnGameStateChange(GameState updatedGameState)
