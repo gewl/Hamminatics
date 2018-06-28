@@ -1453,6 +1453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fac2751ec129204e93172a06acc7d8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameStateManager: {fileID: 323374607}
   endTurnButton: {fileID: 341573501}
   energyManager: {fileID: 955059609}
 --- !u!114 &323374609

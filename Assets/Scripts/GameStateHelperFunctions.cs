@@ -92,4 +92,45 @@ public class GameStateHelperFunctions {
         return IsCellOccupied(updatedPosition.x, updatedPosition.y, state);
     }
 
+    public static GameState DeepCopyGameState(GameState originalState)
+    {
+        EntityData playerCopy = ScriptableObject.Instantiate(originalState.player);
+
+        List<EntityData> enemyCopies = new List<EntityData>();
+
+        for (int i = 0; i < originalState.enemies.Count; i++)
+        {
+            EntityData enemyCopy = ScriptableObject.Instantiate(originalState.enemies[i]);
+            enemyCopies.Add(enemyCopy);
+        }
+
+        List<Action> newActionList = new List<Action>();
+
+        foreach (Action action in originalState.actionStack)
+        {
+            Action newAction = action;
+            EntityData actionSubject = action.entity;
+
+            if (actionSubject == originalState.player)
+            {
+                newAction.entity = playerCopy;
+            }
+            else
+            {
+                int originalActionSubjectIndex = originalState.enemies.FindIndex(enemy => enemy == actionSubject);
+                newAction.entity = enemyCopies[originalActionSubjectIndex];
+            }
+
+            newActionList.Add(newAction);
+        }
+
+        Stack<Action> newActionStack = new Stack<Action>();
+
+        for (int i = newActionList.Count - 1; i >= 0; i--)
+        {
+            newActionStack.Push(newActionList[i]);
+        }
+
+        return new GameState(playerCopy, enemyCopies, newActionStack);
+    }
 }
