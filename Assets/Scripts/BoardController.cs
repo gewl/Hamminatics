@@ -54,7 +54,7 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public void DrawBoard(GameState currentGameState, GameState projectedGameState)
+    public void DrawBoard(GameState currentGameState)
     {
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
         {
@@ -81,7 +81,13 @@ public class BoardController : MonoBehaviour {
                 contentsImage.color = new Color(1f, 1f, 1f, 1f);
             }
         }
+    }
 
+    public void DrawBoard(GameState currentGameState, GameState projectedGameState)
+    {
+        DrawBoard(currentGameState);
+
+        Vector2Int playerPosition = currentGameState.player.Position;
         Vector2Int projectedPlayerPosition = projectedGameState.player.Position;
         if (playerPosition != projectedPlayerPosition)
         {

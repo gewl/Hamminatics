@@ -9,17 +9,17 @@ public class GameStateManager : MonoBehaviour {
     public GameStateChangeDelegate OnCurrentGameStateChange;
     public GameStateChangeDelegate OnTurnEnded;
 
-    ActionStackController _actionQueueController;
-    ActionStackController actionQueueController
+    ActionStackController _actionStackController;
+    ActionStackController actionStackController
     {
         get
         {
-            if (_actionQueueController == null)
+            if (_actionStackController == null)
             {
-                _actionQueueController = GetComponent<ActionStackController>();
+                _actionStackController = GetComponent<ActionStackController>();
             }
 
-            return _actionQueueController;
+            return _actionStackController;
         }
     }
     BoardController _boardController;
@@ -87,6 +87,16 @@ public class GameStateManager : MonoBehaviour {
         Invoke("SetBoardUp", 0.1f);
     }
 
+    private void OnEnable()
+    {
+        actionStackController.OnActionStackUpdate += ResetBoard; 
+    }
+
+    private void OnDisable()
+    {
+        actionStackController.OnActionStackUpdate -= ResetBoard; 
+    }
+
     void SetBoardUp()
     {
         enemyActionCalculator.CalculateAndQueueActions(CurrentGameState);
@@ -135,6 +145,11 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
+    public void ResetBoard(List<Action> actionList)
+    {
+        ResetBoard(CurrentGameState);
+    }
+
     public void ResetBoard()
     {
         ResetBoard(CurrentGameState);
@@ -142,8 +157,16 @@ public class GameStateManager : MonoBehaviour {
 
     void ResetBoard(GameState currentGameState)
     {
-        ProjectedGameState = CalculateFollowingGameState(currentGameState);
-        boardController.DrawBoard(currentGameState, ProjectedGameState);
+        if (!isHandlingActions)
+        {
+            Debug.Log(IsHandlingActions);
+            ProjectedGameState = CalculateFollowingGameState(currentGameState);
+            boardController.DrawBoard(currentGameState, ProjectedGameState);
+        }
+        else
+        {
+            boardController.DrawBoard(currentGameState);
+        }
         potentialCardTargets.Clear();
     }
 
@@ -155,7 +178,7 @@ public class GameStateManager : MonoBehaviour {
         }
         if (potentialCardTargets.Contains(cellPosition))
         {
-            actionQueueController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GameStateHelperFunctions.GetDirectionFromPlayer(cellPosition, CurrentGameState), GameStateHelperFunctions.GetCellDistanceFromPlayer(cellPosition, CurrentGameState));
+            actionStackController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GameStateHelperFunctions.GetDirectionFromPlayer(cellPosition, CurrentGameState), GameStateHelperFunctions.GetCellDistanceFromPlayer(cellPosition, CurrentGameState));
             equippedCardsManager.ClearSelectedCard();
             OnCurrentGameStateChange(CurrentGameState);
         }
@@ -172,9 +195,9 @@ public class GameStateManager : MonoBehaviour {
     IEnumerator ProcessCurrentTurnActions()
     {
         isHandlingActions = true;
-        while (!actionQueueController.IsActionStackEmpty)
+        while (!actionStackController.IsActionStackEmpty)
         {
-            Action nextAction = actionQueueController.GetNextAction();
+            Action nextAction = actionStackController.GetNextAction();
 
             ProcessAction(nextAction, CurrentGameState);
 

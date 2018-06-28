@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-public struct GameState {
+public class GameState {
     public EntityData player;
     public List<EntityData> enemies;
 
