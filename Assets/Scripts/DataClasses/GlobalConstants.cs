@@ -21,9 +21,9 @@ public enum AbilityTarget
 public enum Direction
 {
     Up,
+    Right,
     Down,
-    Left,
-    Right
+    Left
 }
 
 public enum AbilityDirection

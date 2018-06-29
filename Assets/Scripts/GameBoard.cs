@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,6 +28,25 @@ public class GameBoard {
         }
 
         Tiles = _tiles;
+
+        for (int y = 0; y < boardWidth; y++)
+        {
+            for (int x = 0; x < boardWidth; x++)
+            {
+                Tile tile = Tiles[x, y];
+
+                if (x < boardWidth - 1)
+                {
+                    Tile rightNeighbor = Tiles[x + 1, y];
+                    tile.AddNeighbor(rightNeighbor);
+                }
+                if (y < boardWidth - 1)
+                {
+                    Tile bottomNeighbor = Tiles[x, y + 1];
+                    tile.AddNeighbor(bottomNeighbor);
+                }
+            }
+        }
 
         Entrance = GenerateEntrance(boardWidth);
     }
@@ -77,54 +98,87 @@ public class GameBoard {
     }
 }
 
-public struct Tile
+public class Tile
 {
-    bool[] openPathways;
-    public string ID { get; private set; }
+    public Vector2Int Position { get; private set; }
+    List<Tile> neighbors;
+
+    public string ID
+    {
+        get
+        {
+            string idString = "";
+
+            for (int i = 0; i < 4; i++)
+            {
+                Direction direction = (Direction)i;
+                if (ConnectsToNeighbor(direction))
+                {
+                    idString += "1";
+                }
+                else
+                {
+                    idString += "0";
+                }
+            }
+
+            return idString;
+        }
+    }
 
     public Tile(int x, int y)
     {
-        openPathways = new bool[4]
-        {
-            true,
-            true,
-            true,
-            true
-        };
+        Position = new Vector2Int(x, y);
+        neighbors = new List<Tile>();
+    }
 
-        if (x == 0)
+    public void AddNeighbor(Tile tile, bool addFromNeighbor = true)
+    {
+        if (neighbors.Contains(tile))
         {
-            openPathways[3] = false;
+            Debug.LogError("Tile at " + Position + " is already connected to tile at " + tile.Position);
+            return;
         }
-        else if (x == BoardController.BoardWidth - 1)
+        neighbors.Add(tile);
+        if (addFromNeighbor)
         {
-            openPathways[1] = false;
+            tile.AddNeighbor(this, false);
+        }
+    }
+
+    public bool IsConnectedToTile(Tile tile)
+    {
+        return neighbors.Contains(tile);
+    }
+
+    public bool IsConnectedToTile(Vector2Int position)
+    {
+        return neighbors.Any(neighbor => neighbor.Position == position);
+    }
+
+    public bool ConnectsToNeighbor(Direction testDirection)
+    {
+        Vector2Int testPosition = Position;
+
+        switch (testDirection)
+        {
+            case Direction.Up:
+                testPosition.y--;
+                break;
+            case Direction.Down:
+                testPosition.y++;
+                break;
+            case Direction.Left:
+                testPosition.x--;
+                break;
+            case Direction.Right:
+                testPosition.x++;
+                break;
+            default:
+                break;
         }
 
-        if (y == 0)
-        {
-            openPathways[0] = false;
-        }
-        else if (y == BoardController.BoardWidth - 1)
-        {
-            openPathways[2] = false;
-        }
-
-        string generatedID = "";
-
-        for (int i = 0; i < openPathways.Length; i++)
-        {
-            if (openPathways[i])
-            {
-                generatedID += "1";
-            }
-            else
-            {
-                generatedID += "0";
-            }
-        }
-
-        ID = generatedID;
+        return IsConnectedToTile(testPosition);
     }
 
 }
