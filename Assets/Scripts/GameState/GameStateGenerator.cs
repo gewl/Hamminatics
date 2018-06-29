@@ -16,9 +16,9 @@ public class GameStateGenerator {
         EntityData squid = DataManager.GetEntityData(SQUID_ID);
         EntityData squid2 = DataManager.GetEntityData(SQUID_ID);
         EntityData wasp = DataManager.GetEntityData(WASP_ID);
-        squid.Position = new Vector2Int(2, 2);
+        squid.Position = new Vector2Int(2, 1);
         squid2.Position = new Vector2Int(2, 0);
-        wasp.Position = new Vector2Int(4, 4);
+        wasp.Position = new Vector2Int(0, 4);
         List<EntityData> enemies = new List<EntityData>()
         {
             squid,

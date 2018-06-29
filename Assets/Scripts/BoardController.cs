@@ -10,6 +10,7 @@ public class BoardController : MonoBehaviour {
     static int boardWidth = 5;
     public static int BoardWidth { get { return boardWidth; } }
     Transform[,] boardCells;
+    Image[,] boardCellImages;
     Image[,] cellContentImages;
 
     ImageManager spriteManager;
@@ -29,6 +30,7 @@ public class BoardController : MonoBehaviour {
     void InitializeBoard()
     {
         boardCells = new Transform[boardWidth, boardWidth];
+        boardCellImages = new Image[boardWidth, boardWidth];
         cellContentImages = new Image[boardWidth, boardWidth];
 
         int childCount = transform.childCount;
@@ -40,6 +42,8 @@ public class BoardController : MonoBehaviour {
             Transform cell = transform.GetChild(i);
             boardCells[xCounter, yCounter] = cell;
 
+            boardCellImages[xCounter, yCounter] = cell.GetComponent<Image>();
+
             Image cellContents = cell.GetChild(0).GetComponent<Image>();
             cellContentImages[xCounter, yCounter] = cellContents;
             cellContents.GetComponent<Button>().onClick.AddListener(GenerateCellClickListener(xCounter, yCounter));
@@ -50,6 +54,16 @@ public class BoardController : MonoBehaviour {
             {
                 yCounter++;
                 xCounter = 0;
+            }
+        }
+
+        Tile[,] board = BoardGenerator.GenerateBoard();
+
+        for (int y = 0; y < boardWidth; y++)
+        {
+            for (int x = 0; x < boardWidth; x++)
+            {
+                boardCellImages[x, y].sprite = DataManager.GetTileSprite(board[x, y].ID);
             }
         }
     }
