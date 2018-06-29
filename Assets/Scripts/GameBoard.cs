@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GameBoard {
 
+    int boardWidth;
+
     int minNumberOfWalls = 8;
     int maxNumberOfWalls = 12;
 
@@ -15,7 +17,7 @@ public class GameBoard {
 
     public GameBoard()
     {
-        int boardWidth = BoardController.BoardWidth;
+        boardWidth = BoardController.BoardWidth;
 
         Tile[,] _tiles = new Tile[boardWidth, boardWidth];
 
@@ -47,6 +49,8 @@ public class GameBoard {
                 }
             }
         }
+
+        GenerateWalls();
 
         Entrance = GenerateEntrance(boardWidth);
     }
@@ -95,90 +99,13 @@ public class GameBoard {
         System.Random rand = new System.Random();
 
         int numberOfWalls = rand.Next(minNumberOfWalls, maxNumberOfWalls);
-    }
-}
 
-public class Tile
-{
-    public Vector2Int Position { get; private set; }
-    List<Tile> neighbors;
-
-    public string ID
-    {
-        get
+        for (int i = 0; i < numberOfWalls; i++)
         {
-            string idString = "";
+            int x = rand.Next(0, boardWidth);
+            int y = rand.Next(0, boardWidth);
 
-            for (int i = 0; i < 4; i++)
-            {
-                Direction direction = (Direction)i;
-                if (ConnectsToNeighbor(direction))
-                {
-                    idString += "1";
-                }
-                else
-                {
-                    idString += "0";
-                }
-            }
-
-            return idString;
+            Tiles[x, y].RemoveRandomNeighbor();
         }
     }
-
-    public Tile(int x, int y)
-    {
-        Position = new Vector2Int(x, y);
-        neighbors = new List<Tile>();
-    }
-
-    public void AddNeighbor(Tile tile, bool addFromNeighbor = true)
-    {
-        if (neighbors.Contains(tile))
-        {
-            Debug.LogError("Tile at " + Position + " is already connected to tile at " + tile.Position);
-            return;
-        }
-        neighbors.Add(tile);
-        if (addFromNeighbor)
-        {
-            tile.AddNeighbor(this, false);
-        }
-    }
-
-    public bool IsConnectedToTile(Tile tile)
-    {
-        return neighbors.Contains(tile);
-    }
-
-    public bool IsConnectedToTile(Vector2Int position)
-    {
-        return neighbors.Any(neighbor => neighbor.Position == position);
-    }
-
-    public bool ConnectsToNeighbor(Direction testDirection)
-    {
-        Vector2Int testPosition = Position;
-
-        switch (testDirection)
-        {
-            case Direction.Up:
-                testPosition.y--;
-                break;
-            case Direction.Down:
-                testPosition.y++;
-                break;
-            case Direction.Left:
-                testPosition.x--;
-                break;
-            case Direction.Right:
-                testPosition.x++;
-                break;
-            default:
-                break;
-        }
-
-        return IsConnectedToTile(testPosition);
-    }
-
 }
