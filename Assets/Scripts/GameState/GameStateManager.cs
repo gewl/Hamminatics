@@ -79,9 +79,9 @@ public class GameStateManager : MonoBehaviour {
         projectedAttackCoordinates = new List<Vector2Int>();
     }
 
-    private void Start()
+    public void InitializeGameState(GameBoard board)
     {
-        CurrentGameState = GameStateGenerator.GenerateNewGameState();
+        CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance);
         OnCurrentGameStateChange += ResetBoard;
         // This has to be delayed so layout group can space accordingly.
         Invoke("SetBoardUp", 0.1f);

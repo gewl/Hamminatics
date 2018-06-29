@@ -16,15 +16,16 @@ public class BoardController : MonoBehaviour {
     ImageManager spriteManager;
     Canvas canvas;
 
+    public GameBoard CurrentBoard { get; private set;  }
+
     private void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
+        gameStateManager = GetComponentInParent<GameStateManager>();
+        spriteManager = GetComponentInParent<ImageManager>();
 
         InitializeBoard();
-
-        gameStateManager = GetComponentInParent<GameStateManager>();
-
-        spriteManager = GetComponentInParent<ImageManager>();
+        gameStateManager.InitializeGameState(CurrentBoard);
     }
 
     void InitializeBoard()
@@ -57,13 +58,13 @@ public class BoardController : MonoBehaviour {
             }
         }
 
-        Tile[,] board = BoardGenerator.GenerateBoard();
+        CurrentBoard = new GameBoard();
 
         for (int y = 0; y < boardWidth; y++)
         {
             for (int x = 0; x < boardWidth; x++)
             {
-                boardCellImages[x, y].sprite = DataManager.GetTileSprite(board[x, y].ID);
+                boardCellImages[x, y].sprite = DataManager.GetTileSprite(CurrentBoard.Tiles[x, y].ID);
             }
         }
     }

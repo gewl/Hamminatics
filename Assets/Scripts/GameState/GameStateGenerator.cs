@@ -8,17 +8,17 @@ public class GameStateGenerator {
     const string SQUID_ID = "Squid";
     const string WASP_ID = "Wasp";
 
-    public static GameState GenerateNewGameState()
+    public static GameState GenerateNewGameState(Vector2Int entrance)
     {
         EntityData player = DataManager.GetEntityData(PLAYER_ID);
-        player.Position = new Vector2Int(3, 3);
+        player.Position = entrance;
 
         EntityData squid = DataManager.GetEntityData(SQUID_ID);
         EntityData squid2 = DataManager.GetEntityData(SQUID_ID);
         EntityData wasp = DataManager.GetEntityData(WASP_ID);
         squid.Position = new Vector2Int(2, 1);
-        squid2.Position = new Vector2Int(2, 0);
-        wasp.Position = new Vector2Int(0, 4);
+        squid2.Position = new Vector2Int(2, 3);
+        wasp.Position = new Vector2Int(3, 2);
         List<EntityData> enemies = new List<EntityData>()
         {
             squid,
