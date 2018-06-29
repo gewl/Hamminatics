@@ -92,6 +92,116 @@ public class GameStateHelperFunctions {
         return IsCellOccupied(updatedPosition.x, updatedPosition.y, state);
     }
 
+    public static GameState CalculateFollowingGameState(GameState currentState)
+    {
+        GameState projectedState = GameStateHelperFunctions.DeepCopyGameState(currentState);
+
+        while (projectedState.actionStack.Count > 0)
+        {
+            Action nextAction = projectedState.actionStack.Pop();
+
+            ProcessAction(nextAction, projectedState);
+
+            if (nextAction.card.Category == CardCategory.Attack)
+            {
+                Vector2Int targetCellPosition = GetCellPosition(nextAction.entity.Position, nextAction.direction, nextAction.distance);
+            }
+        }
+
+        return projectedState;
+    }
+
+    public static bool IsCellValid(Vector2Int position)
+    {
+        return position.x >= 0 && position.x < BoardController.BoardWidth && position.y >= 0 && position.y < BoardController.BoardWidth;
+    }
+
+    public static void ProcessAction(Action action, GameState state)
+    {
+        switch (action.card.Category)
+        {
+            case CardCategory.Movement:
+                HandleMovementAction(action.entity, action.direction, action.distance, state);
+                break;
+            case CardCategory.Attack:
+                HandleAttackAction(action.entity, action.card as AttackCardData, action.direction, action.distance, state);
+                break;
+            default:
+                break;
+        }
+    }
+
+    static void HandleMovementAction(EntityData entity, Direction direction, int distance, GameState gameState)
+    {
+        Vector2Int projectedPosition = GetCellPosition(entity.Position, direction, distance);
+
+        if (!IsCellValid(projectedPosition))
+        {
+            return;
+        }
+
+        if (IsCellOccupied(projectedPosition, gameState))
+        {
+            EntityData cellOccupant = GetOccupantOfCell(projectedPosition, gameState);
+
+            Vector2Int projectedBumpPosition = GetCellPosition(projectedPosition, direction, 1);
+
+            bool canBump = IsCellValid(projectedBumpPosition) && !IsCellOccupied(projectedBumpPosition, gameState);
+
+            if (canBump)
+            {
+                cellOccupant.Position = projectedBumpPosition;
+                entity.Position = projectedPosition;
+            }
+
+            cellOccupant.Health -= 1;
+            entity.Health -= 1;
+        }
+        else
+        {
+            entity.Position = projectedPosition;
+        }
+    }
+
+    static void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance, GameState gameState)
+    {
+        Vector2Int targetCellPosition = GetCellPosition(entity.Position, direction, distance);
+        if (!IsCellValid(targetCellPosition) || !GameStateHelperFunctions.IsCellOccupied(targetCellPosition, gameState))
+        {
+            return;
+        }
+
+        EntityData targetEntity = GameStateHelperFunctions.GetOccupantOfCell(targetCellPosition, gameState);
+
+        targetEntity.Health -= card.Damage;
+    }
+
+    public static Vector2Int GetCellPosition(Vector2Int origin, Direction direction, int distance)
+    {
+        Vector2Int updatedPosition = origin;
+
+        switch (direction)
+        {
+            case Direction.Up:
+                updatedPosition.y -= distance;
+                break;
+            case Direction.Down:
+                updatedPosition.y += distance;
+                break;
+            case Direction.Left:
+                updatedPosition.x -= distance;
+                break;
+            case Direction.Right:
+                updatedPosition.x += distance;
+                break;
+            default:
+                break;
+        }
+
+        return updatedPosition;
+    }
+
+
     public static GameState DeepCopyGameState(GameState originalState)
     {
         EntityData playerCopy = ScriptableObject.Instantiate(originalState.player);

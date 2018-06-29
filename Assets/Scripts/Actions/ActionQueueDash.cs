@@ -11,7 +11,6 @@ public class ActionQueueDash : MonoBehaviour {
     QueuedActionController[] queuedActionControllers;
     Image[] actionBackgroundImages;
 
-    RectTransform rect;
     LayoutGroup layoutGroup;
     bool[] actionsAreBudged;
 
@@ -34,7 +33,6 @@ public class ActionQueueDash : MonoBehaviour {
 
         actionsAreBudged = new bool[queuedActionControllers.Length];
 
-        rect = GetComponent<RectTransform>();
         layoutGroup = GetComponent<LayoutGroup>();
     }
 

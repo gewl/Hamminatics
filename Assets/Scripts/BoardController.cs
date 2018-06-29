@@ -7,8 +7,8 @@ using UnityEngine.Events;
 public class BoardController : MonoBehaviour {
     GameStateManager gameStateManager;
 
-    int boardWidth = 5;
-    public int BoardWidth { get { return boardWidth; } }
+    static int boardWidth = 5;
+    public static int BoardWidth { get { return boardWidth; } }
     Transform[,] boardCells;
     Image[,] cellContentImages;
 
@@ -67,7 +67,7 @@ public class BoardController : MonoBehaviour {
         }
 
         Vector2Int projectedPlayerPosition = projectedGameState.player.Position;
-        Image projectedPlayerCellImage = cellContentImages[projectedGameState.player.Position.x, projectedGameState.player.Position.y];
+        Image projectedPlayerCellImage = cellContentImages[projectedPlayerPosition.x, projectedPlayerPosition.y];
         projectedPlayerCellImage.sprite = currentGameState.player.EntitySprite;
         projectedPlayerCellImage.color = new Color(1f, 1f, 1f, 0.5f);
 
@@ -120,7 +120,7 @@ public class BoardController : MonoBehaviour {
 
         return () =>
         {
-            gameStateManager.RegisterCellInteraction(cellPosition);
+            gameStateManager.RegisterCellClick(cellPosition);
         };
     }
 

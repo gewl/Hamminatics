@@ -62,8 +62,6 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
-    int boardWidth;
-
     public GameState CurrentGameState { get; private set; }
     public GameState ProjectedGameState { get; private set; }
     List<Vector2Int> projectedAttackCoordinates;
@@ -77,7 +75,6 @@ public class GameStateManager : MonoBehaviour {
     private void Awake()
     {
         potentialCardTargets = new List<Vector2Int>();
-        boardWidth = boardController.BoardWidth;
 
         projectedAttackCoordinates = new List<Vector2Int>();
     }
@@ -141,7 +138,7 @@ public class GameStateManager : MonoBehaviour {
 
     void AttemptToHighlightCell(Vector2Int position)
     {
-        if (IsCellValid(position) && Player.Position != position)
+        if (GameStateHelperFunctions.IsCellValid(position) && Player.Position != position)
         {
             boardController.HighlightSelectedCell(position);
             potentialCardTargets.Add(position);
@@ -162,13 +159,13 @@ public class GameStateManager : MonoBehaviour {
     {
         if (!isHandlingActions)
         {
-            ProjectedGameState = CalculateFollowingGameState(currentGameState);
+            ProjectedGameState = GameStateHelperFunctions.CalculateFollowingGameState(currentGameState);
         }
         boardController.DrawBoard(currentGameState, ProjectedGameState, projectedAttackCoordinates);
         potentialCardTargets.Clear();
     }
 
-    public void RegisterCellInteraction(Vector2Int cellPosition)
+    public void RegisterCellClick(Vector2Int cellPosition)
     {
         if (isHandlingActions)
         {
@@ -193,17 +190,17 @@ public class GameStateManager : MonoBehaviour {
     IEnumerator ProcessCurrentTurnActions()
     {
         isHandlingActions = true;
+        projectedAttackCoordinates.Clear();
         while (!actionStackController.IsActionStackEmpty)
         {
             Action nextAction = actionStackController.GetNextAction();
 
-            ProcessAction(nextAction, CurrentGameState);
+            GameStateHelperFunctions.ProcessAction(nextAction, CurrentGameState);
 
             OnCurrentGameStateChange(CurrentGameState);
             yield return new WaitForSeconds(0.5f);
         }
 
-        projectedAttackCoordinates.Clear();
         enemyActionCalculator.CalculateAndQueueActions(CurrentGameState);
 
         isHandlingActions = false;
@@ -217,123 +214,4 @@ public class GameStateManager : MonoBehaviour {
             OnTurnEnded(CurrentGameState);
         }
     }
-
-    void ProcessAction(Action action, GameState state)
-    {
-        switch (action.card.Category)
-        {
-            case CardCategory.Movement:
-                HandleMovementAction(action.entity, action.direction, action.distance, state);
-                break;
-            case CardCategory.Attack:
-                HandleAttackAction(action.entity, action.card as AttackCardData, action.direction, action.distance, state);
-                break;
-            default:
-                break;
-        }
-    }
-
-    void HandleMovementAction(EntityData entity, Direction direction, int distance, GameState gameState)
-    {
-        Vector2Int projectedPosition = GetCellPosition(entity.Position, direction, distance);
-
-        if (!IsCellValid(projectedPosition))
-        {
-            return;
-        }
-
-        if (GameStateHelperFunctions.IsCellOccupied(projectedPosition, gameState))
-        {
-            EntityData cellOccupant = GameStateHelperFunctions.GetOccupantOfCell(projectedPosition, gameState);
-
-            Vector2Int projectedBumpPosition = GetCellPosition(projectedPosition, direction, 1);
-
-            bool canBump = IsCellValid(projectedBumpPosition) && !GameStateHelperFunctions.IsCellOccupied(projectedBumpPosition, gameState);
-
-            if (canBump)
-            {
-                cellOccupant.Position = projectedBumpPosition;
-                entity.Position = projectedPosition;
-            }
-
-            cellOccupant.Health -= 1;
-            entity.Health -= 1;
-        }
-        else
-        {
-            entity.Position = projectedPosition;
-        }
-    }
-
-    void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance, GameState gameState)
-    {
-        Vector2Int targetCellPosition = GetCellPosition(entity.Position, direction, distance);
-        if (!IsCellValid(targetCellPosition) || !GameStateHelperFunctions.IsCellOccupied(targetCellPosition, gameState))
-        {
-            return;
-        }
-
-        EntityData targetEntity = GameStateHelperFunctions.GetOccupantOfCell(targetCellPosition, gameState);
-
-        targetEntity.Health -= card.Damage;
-    }
-
-    GameState CalculateFollowingGameState(GameState currentState)
-    {
-        GameState projectedState = GameStateHelperFunctions.DeepCopyGameState(currentState);
-        projectedAttackCoordinates.Clear();
-
-        while (projectedState.actionStack.Count > 0)
-        {
-            Action nextAction = projectedState.actionStack.Pop();
-
-            ProcessAction(nextAction, projectedState);
-
-            if (nextAction.card.Category == CardCategory.Attack)
-            {
-                Vector2Int targetCellPosition = GetCellPosition(nextAction.entity.Position, nextAction.direction, nextAction.distance);
-
-                if (IsCellValid(targetCellPosition))
-                {
-                    projectedAttackCoordinates.Add(targetCellPosition);
-                }
-            }
-        }
-
-        return projectedState;
-    }
-
-    #region Cell helper functions
-
-    public bool IsCellValid(Vector2Int position)
-    {
-        return position.x >= 0 && position.x < boardWidth && position.y >= 0 && position.y < boardWidth;
-    }
-
-    public Vector2Int GetCellPosition(Vector2Int origin, Direction direction, int distance)
-    {
-        Vector2Int updatedPosition = origin;
-
-        switch (direction)
-        {
-            case Direction.Up:
-                updatedPosition.y -= distance;
-                break;
-            case Direction.Down:
-                updatedPosition.y += distance;
-                break;
-            case Direction.Left:
-                updatedPosition.x -= distance;
-                break;
-            case Direction.Right:
-                updatedPosition.x += distance;
-                break;
-            default:
-                break;
-        }
-
-        return updatedPosition;
-    }
-
-    #endregion
 }
