@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameBoard {
 
+    int minNumberOfWalls = 8;
+    int maxNumberOfWalls = 12;
+
     public Tile[,] Tiles { get; private set; }
 
     public Vector2Int Entrance { get; private set; }
@@ -64,6 +67,13 @@ public class GameBoard {
         }
 
         return position;
+    }
+
+    void GenerateWalls()
+    {
+        System.Random rand = new System.Random();
+
+        int numberOfWalls = rand.Next(minNumberOfWalls, maxNumberOfWalls);
     }
 }
 
