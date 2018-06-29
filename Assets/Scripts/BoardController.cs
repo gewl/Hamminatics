@@ -54,7 +54,7 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public void DrawBoard(GameState currentGameState, GameState projectedGameState)
+    public void DrawBoard(GameState currentGameState, GameState projectedGameState, List<Vector2Int> projectedDamagePositions)
     {
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
         {
@@ -98,11 +98,20 @@ public class BoardController : MonoBehaviour {
             }
         }
 
+        foreach (Vector2Int position in projectedDamagePositions)
+        {
+            HighlightDamageCell(position);
+        }
     }
 
-    public void HighlightCell(Vector2Int position)
+    public void HighlightSelectedCell(Vector2Int position)
     {
         cellContentImages[position.x, position.y].color = new Color(1f, 1f, 0f);
+    }
+
+    public void HighlightDamageCell(Vector2Int position)
+    {
+        cellContentImages[position.x, position.y].color = new Color(1f, 0f, 0f, 0.5f);
     }
 
     UnityAction GenerateCellClickListener(int x, int y)

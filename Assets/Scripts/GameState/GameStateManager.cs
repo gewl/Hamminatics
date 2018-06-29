@@ -66,6 +66,7 @@ public class GameStateManager : MonoBehaviour {
 
     public GameState CurrentGameState { get; private set; }
     public GameState ProjectedGameState { get; private set; }
+    List<Vector2Int> projectedAttackCoordinates;
     public EntityData Player { get { return CurrentGameState.player; } }
 
     List<Vector2Int> potentialCardTargets;
@@ -77,6 +78,8 @@ public class GameStateManager : MonoBehaviour {
     {
         potentialCardTargets = new List<Vector2Int>();
         boardWidth = boardController.BoardWidth;
+
+        projectedAttackCoordinates = new List<Vector2Int>();
     }
 
     private void Start()
@@ -140,7 +143,7 @@ public class GameStateManager : MonoBehaviour {
     {
         if (IsCellValid(position) && Player.Position != position)
         {
-            boardController.HighlightCell(position);
+            boardController.HighlightSelectedCell(position);
             potentialCardTargets.Add(position);
         }
     }
@@ -161,7 +164,7 @@ public class GameStateManager : MonoBehaviour {
         {
             ProjectedGameState = CalculateFollowingGameState(currentGameState);
         }
-        boardController.DrawBoard(currentGameState, ProjectedGameState);
+        boardController.DrawBoard(currentGameState, ProjectedGameState, projectedAttackCoordinates);
         potentialCardTargets.Clear();
     }
 
@@ -200,8 +203,10 @@ public class GameStateManager : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
         }
 
+        projectedAttackCoordinates.Clear();
         enemyActionCalculator.CalculateAndQueueActions(CurrentGameState);
 
+        isHandlingActions = false;
         if (OnCurrentGameStateChange != null)
         {
             OnCurrentGameStateChange(CurrentGameState);
@@ -211,7 +216,6 @@ public class GameStateManager : MonoBehaviour {
         {
             OnTurnEnded(CurrentGameState);
         }
-        isHandlingActions = false;
     }
 
     void ProcessAction(Action action, GameState state)
@@ -277,12 +281,23 @@ public class GameStateManager : MonoBehaviour {
     GameState CalculateFollowingGameState(GameState currentState)
     {
         GameState projectedState = GameStateHelperFunctions.DeepCopyGameState(currentState);
+        projectedAttackCoordinates.Clear();
 
         while (projectedState.actionStack.Count > 0)
         {
             Action nextAction = projectedState.actionStack.Pop();
 
             ProcessAction(nextAction, projectedState);
+
+            if (nextAction.card.Category == CardCategory.Attack)
+            {
+                Vector2Int targetCellPosition = GetCellPosition(nextAction.entity.Position, nextAction.direction, nextAction.distance);
+
+                if (IsCellValid(targetCellPosition))
+                {
+                    projectedAttackCoordinates.Add(targetCellPosition);
+                }
+            }
         }
 
         return projectedState;
