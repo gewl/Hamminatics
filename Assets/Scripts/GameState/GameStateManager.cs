@@ -81,7 +81,7 @@ public class GameStateManager : MonoBehaviour {
 
     public void InitializeGameState(GameBoard board)
     {
-        CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance);
+        CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance.Position);
         OnCurrentGameStateChange += ResetBoard;
         // This has to be delayed so layout group can space accordingly.
         Invoke("SetBoardUp", 0.1f);

@@ -13,7 +13,7 @@ public class GameBoard {
 
     public Tile[,] Tiles { get; private set; }
 
-    public Vector2Int Entrance { get; private set; }
+    public Tile Entrance { get; private set; }
 
     public GameBoard()
     {
@@ -53,9 +53,26 @@ public class GameBoard {
         GenerateWalls();
 
         Entrance = GenerateEntrance(boardWidth);
+
+        ProcessTileDistancesToPlayer(Entrance);
     }
 
-    Vector2Int GenerateEntrance(int boardWidth)
+    void GenerateWalls()
+    {
+        System.Random rand = new System.Random();
+
+        int numberOfWalls = rand.Next(minNumberOfWalls, maxNumberOfWalls);
+
+        for (int i = 0; i < numberOfWalls; i++)
+        {
+            int x = rand.Next(0, boardWidth);
+            int y = rand.Next(0, boardWidth);
+
+            Tiles[x, y].RemoveRandomNeighbor();
+        }
+    }
+
+    Tile GenerateEntrance(int boardWidth)
     {
         Vector2Int position = new Vector2Int(-1, -1);
 
@@ -91,21 +108,42 @@ public class GameBoard {
             position[1] = otherValue;
         }
 
-        return position;
+        Tile entranceTile = Tiles[position.x, position.y];
+
+        return entranceTile;
     }
 
-    void GenerateWalls()
+    void ProcessTileDistancesToPlayer(Tile playerTile, bool initializeTileDistances = true)
     {
-        System.Random rand = new System.Random();
+        playerTile.DistanceFromPlayer = 0;
+        playerTile.VisitedByPathfinding = true;
 
-        int numberOfWalls = rand.Next(minNumberOfWalls, maxNumberOfWalls);
+        Queue<Tile> tilesToProcess = new Queue<Tile>();
 
-        for (int i = 0; i < numberOfWalls; i++)
+        for (int i = 0; i < playerTile.Neighbors.Count; i++)
         {
-            int x = rand.Next(0, boardWidth);
-            int y = rand.Next(0, boardWidth);
+            tilesToProcess.Enqueue(playerTile.Neighbors[i]);
+        }
 
-            Tiles[x, y].RemoveRandomNeighbor();
+        while (tilesToProcess.Peek() != null)
+        {
+            Tile nextTile = tilesToProcess.Dequeue();
+            List<Tile> nextTileNeighbors = nextTile.Neighbors;
+
+            Tile closestNeighbor = nextTileNeighbors.Select(tile => new { tiles = tile, distance = tile.DistanceFromPlayer }).Min().tiles;
+            nextTile.DistanceFromPlayer = closestNeighbor.DistanceFromPlayer + 1;
+
+            for (int i = 0; i < nextTileNeighbors.Count; i++)
+            {
+                Tile thisNeighbor = nextTileNeighbors[i];
+
+                if (!thisNeighbor.VisitedByPathfinding)
+                {
+                    thisNeighbor.VisitedByPathfinding = true;
+                    tilesToProcess.Enqueue(thisNeighbor);
+                }
+            }
         }
     }
+
 }

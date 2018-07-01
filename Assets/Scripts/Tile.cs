@@ -7,6 +7,10 @@ public class Tile
 {
     public Vector2Int Position { get; private set; }
     List<Tile> neighbors;
+    public List<Tile> Neighbors { get { return neighbors; } }
+
+    public int DistanceFromPlayer;
+    public bool VisitedByPathfinding;
 
     public string ID
     {
@@ -35,6 +39,8 @@ public class Tile
     {
         Position = new Vector2Int(x, y);
         neighbors = new List<Tile>();
+        DistanceFromPlayer = int.MaxValue;
+        VisitedByPathfinding = false;
     }
 
     public void AddNeighbor(Tile tile, bool addFromNeighbor = true)
@@ -54,6 +60,11 @@ public class Tile
     public int GetNumberOfNeighbors()
     {
         return neighbors.Count;
+    }
+
+    public bool HasNeighbors(int numberOfNeighbors)
+    {
+        return neighbors.Count >= numberOfNeighbors;
     }
 
     public void RemoveNeighbor(Tile tile, bool removeFromNeighbor = true)
