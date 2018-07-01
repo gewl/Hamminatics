@@ -16,6 +16,9 @@ public class BoardController : MonoBehaviour {
     ImageManager spriteManager;
     Canvas canvas;
 
+    [SerializeField]
+    GameObject debugText;
+
     public GameBoard CurrentBoard { get; private set;  }
 
     private void Awake()
@@ -65,6 +68,8 @@ public class BoardController : MonoBehaviour {
             for (int x = 0; x < boardWidth; x++)
             {
                 boardCellImages[x, y].sprite = DataManager.GetTileSprite(CurrentBoard.Tiles[x, y].ID);
+                GameObject thisText = Instantiate(debugText, boardCells[x,y], false);
+                thisText.GetComponent<Text>().text = CurrentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
             }
         }
     }

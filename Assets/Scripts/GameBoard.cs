@@ -122,16 +122,17 @@ public class GameBoard {
 
         for (int i = 0; i < playerTile.Neighbors.Count; i++)
         {
-            tilesToProcess.Enqueue(playerTile.Neighbors[i]);
+            Tile playerNeighbor = playerTile.Neighbors[i];
+            tilesToProcess.Enqueue(playerNeighbor);
+            playerNeighbor.VisitedByPathfinding = true;
         }
 
-        while (tilesToProcess.Peek() != null)
+        while (tilesToProcess.Count > 0)
         {
             Tile nextTile = tilesToProcess.Dequeue();
             List<Tile> nextTileNeighbors = nextTile.Neighbors;
 
-            Tile closestNeighbor = nextTileNeighbors.Select(tile => new { tiles = tile, distance = tile.DistanceFromPlayer }).Min().tiles;
-            nextTile.DistanceFromPlayer = closestNeighbor.DistanceFromPlayer + 1;
+            int closestNeighborDistance = int.MaxValue;
 
             for (int i = 0; i < nextTileNeighbors.Count; i++)
             {
@@ -142,7 +143,13 @@ public class GameBoard {
                     thisNeighbor.VisitedByPathfinding = true;
                     tilesToProcess.Enqueue(thisNeighbor);
                 }
+                else if (thisNeighbor.DistanceFromPlayer < closestNeighborDistance)
+                {
+                    closestNeighborDistance = thisNeighbor.DistanceFromPlayer;
+                }
             }
+
+            nextTile.DistanceFromPlayer = closestNeighborDistance + 1;
         }
     }
 
