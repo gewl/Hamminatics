@@ -6,26 +6,26 @@ public class GameState {
     public EntityData player;
     public List<EntityData> enemies;
 
-    public Stack<Action> actionStack;
+    public Stack<Turn> turnStack;
 
     public GameState(EntityData _player, List<EntityData> _enemies)
     {
         player = _player;
         enemies = _enemies;
 
-        actionStack = new Stack<Action>();
+        turnStack = new Stack<Turn>();
     }
 
-    public GameState(EntityData _player, List<EntityData> _enemies, Stack<Action> _actions)
+    public GameState(EntityData _player, List<EntityData> _enemies, Stack<Turn> _turns)
     {
         player = _player;
         enemies = _enemies;
-        actionStack = _actions;
+        turnStack = _turns;
     }
 
-    public void UpdateActionStack(Stack<Action> newActionStack)
+    public void UpdateTurnStack(Stack<Turn> newTurnStack)
     {
-        actionStack = newActionStack;
+        turnStack = newTurnStack;
     }
 
 }

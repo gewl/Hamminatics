@@ -4,22 +4,27 @@ using UnityEngine;
 using System.Linq;
 
 public class GameStateHelperFunctions {
-    public static Direction GetDirectionFromEntity(EntityData entity, Vector2Int cellPosition)
+    public static Direction GetDirectionFromEntity(EntityData entity, Vector2Int targetPosition)
     {
         Vector2Int entityPosition = entity.Position;
-        if (cellPosition.x > entityPosition.x && cellPosition.y == entityPosition.y)
+        return GetDirectionFromPosition(entityPosition, targetPosition);
+    }
+
+    public static Direction GetDirectionFromPosition(Vector2Int startingPosition, Vector2Int targetPosition)
+    {
+        if (targetPosition.x > startingPosition.x && targetPosition.y == startingPosition.y)
         {
             return Direction.Right;
         }
-        else if (cellPosition.x < entityPosition.x && cellPosition.y == entityPosition.y)
+        else if (targetPosition.x < startingPosition.x && targetPosition.y == startingPosition.y)
         {
             return Direction.Left;
         }
-        else if (cellPosition.x == entityPosition.x && cellPosition.y > entityPosition.y)
+        else if (targetPosition.x == startingPosition.x && targetPosition.y > startingPosition.y)
         {
             return Direction.Down;
         }
-        else if (cellPosition.x == entityPosition.x && cellPosition.y < entityPosition.y)
+        else if (targetPosition.x == startingPosition.x && targetPosition.y < startingPosition.y)
         {
             return Direction.Up;
         }
@@ -28,6 +33,7 @@ public class GameStateHelperFunctions {
             Debug.LogError("Cell was not a cardinal direction from entity.");
             return Direction.Right;
         }
+
     }
 
     public static EntityData GetOccupantOfCell(Vector2Int position, GameState state)
@@ -97,16 +103,17 @@ public class GameStateHelperFunctions {
     {
         GameState projectedState = GameStateHelperFunctions.DeepCopyGameState(currentState);
 
-        while (projectedState.actionStack.Count > 0)
+        while (projectedState.turnStack.Count > 0)
         {
-            Action nextAction = projectedState.actionStack.Pop();
+            Turn nextTurn = projectedState.turnStack.Pop();
 
-            ProcessAction(nextAction, projectedState);
+            ProcessTurn(nextTurn, projectedState);
 
-            if (nextAction.card.Category == CardCategory.Attack)
-            {
-                Vector2Int targetCellPosition = GetCellPosition(nextAction.entity.Position, nextAction.direction, nextAction.distance);
-            }
+            // TODO: used for indicating squares to be attacked
+            //if (nextAction.card.Category == CardCategory.Attack)
+            //{
+            //    Vector2Int targetCellPosition = GetCellPosition(nextAction.entity.Position, nextAction.direction, nextAction.distance);
+            //}
         }
 
         return projectedState;
@@ -115,6 +122,12 @@ public class GameStateHelperFunctions {
     public static bool IsCellValid(Vector2Int position)
     {
         return position.x >= 0 && position.x < BoardController.BoardWidth && position.y >= 0 && position.y < BoardController.BoardWidth;
+    }
+
+    public static void ProcessTurn(Turn turn, GameState state)
+    {
+        ProcessAction(turn.FirstAction, state);
+        ProcessAction(turn.SecondAction, state);
     }
 
     public static void ProcessAction(Action action, GameState state)
@@ -215,33 +228,37 @@ public class GameStateHelperFunctions {
             enemyCopies.Add(enemyCopy);
         }
 
-        List<Action> newActionList = new List<Action>();
+        List<Turn> newTurnList = new List<Turn>();
 
-        foreach (Action action in originalState.actionStack)
+        foreach (Turn turn in originalState.turnStack)
         {
-            Action newAction = action;
-            EntityData actionSubject = action.entity;
+            Turn newTurn = turn;
+            EntityData turnSubject = newTurn.Entity;
 
-            if (actionSubject == originalState.player)
+            if (turnSubject == originalState.player)
             {
-                newAction.entity = playerCopy;
+                newTurn.Entity = playerCopy;
             }
             else
             {
-                int originalActionSubjectIndex = originalState.enemies.FindIndex(enemy => enemy == actionSubject);
-                newAction.entity = enemyCopies[originalActionSubjectIndex];
+                int originalTurnSubjectIndex = originalState.enemies.FindIndex(enemy => enemy == turnSubject);
+                if (originalTurnSubjectIndex == -1)
+                {
+                    originalState.enemies.ForEach(enemy => Debug.Log(enemy.ID));
+                }
+                newTurn.Entity = enemyCopies[originalTurnSubjectIndex];
             }
 
-            newActionList.Add(newAction);
+            newTurnList.Add(newTurn);
         }
 
-        Stack<Action> newActionStack = new Stack<Action>();
+        Stack<Turn> newTurnStack = new Stack<Turn>();
 
-        for (int i = newActionList.Count - 1; i >= 0; i--)
+        for (int i = newTurnList.Count - 1; i >= 0; i--)
         {
-            newActionStack.Push(newActionList[i]);
+            newTurnStack.Push(newTurnList[i]);
         }
 
-        return new GameState(playerCopy, enemyCopies, newActionStack);
+        return new GameState(playerCopy, enemyCopies, newTurnStack);
     }
 }

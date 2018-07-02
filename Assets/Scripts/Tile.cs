@@ -164,6 +164,14 @@ public class Tile
         return IsConnectedToTile(testPosition);
     }
 
+    public override int GetHashCode()
+    {
+        int result = 0;
+        result = (result * 418) ^ Position.x;
+        result = (result * 418) ^ Position.y;
+        return result;
+    }
+
     public override bool Equals(object obj)
     {
         if (obj == null || GetType() != obj.GetType())

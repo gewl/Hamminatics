@@ -4,18 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class QueuedActionController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+public class QueuedTurnController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
 
     RectTransform rect;
-    Action currentDepictedAction;
+    Turn depictedTurn;
 
-    ActionQueueDash queueDash;
-    public bool isPlayerAction;
+    TurnQueueDash queueDash;
+    public bool isPlayerTurn;
 
     [SerializeField]
     Image subjectIcon;
     [SerializeField]
-    Image actionIcon;
+    Image firstActionIcon;
+    [SerializeField]
+    Image secondActionIcon;
 
     int cachedSiblingIndex;
 
@@ -24,7 +26,7 @@ public class QueuedActionController : MonoBehaviour, IBeginDragHandler, IDragHan
 
     private void Awake()
     {
-        queueDash = GetComponentInParent<ActionQueueDash>();
+        queueDash = GetComponentInParent<TurnQueueDash>();
         cachedSiblingIndex = transform.GetSiblingIndex();
 
         rect = GetComponent<RectTransform>();
@@ -44,48 +46,51 @@ public class QueuedActionController : MonoBehaviour, IBeginDragHandler, IDragHan
         }
     }
 
-    public void UpdateDepictedAction(Action action)
+    public void UpdateDepictedTurn(Turn turn)
     {
-        currentDepictedAction = action;
+        depictedTurn = turn;
 
-        Sprite subjectSprite = action.entity.EntitySprite;
+        Sprite subjectSprite = turn.Entity.EntitySprite;
         subjectIcon.sprite = subjectSprite;
 
-        Sprite actionSprite = ImageManager.GetActionSprite(action.card.Category, action.direction);
-        actionIcon.sprite = actionSprite;
+        Sprite firstActionSprite = ImageManager.GetActionSprite(turn.FirstAction.card.Category, turn.FirstAction.direction);
+        firstActionIcon.sprite = firstActionSprite;
+
+        Sprite secondActionSprite = ImageManager.GetActionSprite(turn.SecondAction.card.Category, turn.SecondAction.direction);
+        secondActionIcon.sprite = secondActionSprite;
     }
 
     public void OnBeginDrag(PointerEventData pointerEventData)
     {
-        if (!isPlayerAction)
+        if (!isPlayerTurn)
         {
             return;
         }
-        queueDash.OnQueuedActionBeginDrag(transform);
+        queueDash.OnQueuedTurnBeginDrag(transform);
         transform.SetAsLastSibling();
     }
 
     public void OnDrag(PointerEventData pointerEventData)
     {
-        if (!isPlayerAction)
+        if (!isPlayerTurn)
         {
             return;
         }
         transform.position = new Vector2(pointerEventData.position.x, transform.position.y);
-        queueDash.OnQueuedActionDrag();
+        queueDash.OnQueuedTurnDrag();
     }
 
     public void OnEndDrag(PointerEventData pointerEventData)
     {
-        if (!isPlayerAction)
+        if (!isPlayerTurn)
         {
             return;
         }
-        queueDash.OnQueuedActionDrop();
+        queueDash.OnQueuedTurnDrop();
         transform.SetSiblingIndex(cachedSiblingIndex);
     }
 
-    public void OnOtherActionDragEnded()
+    public void OnOtherTurnDragEnded()
     {
         StopAllCoroutines();
     }

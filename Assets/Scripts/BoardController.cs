@@ -35,12 +35,12 @@ public class BoardController : MonoBehaviour {
 
     private void OnEnable()
     {
-        gameStateManager.OnTurnEnded += RecalculateTileDistances;   
+        gameStateManager.OnRoundEnded += RecalculateTileDistances;   
     }
 
     private void OnDisable()
     {
-        gameStateManager.OnTurnEnded -= RecalculateTileDistances;   
+        gameStateManager.OnRoundEnded -= RecalculateTileDistances;   
     }
     #endregion
 

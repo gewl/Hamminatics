@@ -7,19 +7,19 @@ public class GameStateManager : MonoBehaviour {
 
     public delegate void GameStateChangeDelegate(GameState updatedGameState);
     public GameStateChangeDelegate OnCurrentGameStateChange;
-    public GameStateChangeDelegate OnTurnEnded;
+    public GameStateChangeDelegate OnRoundEnded;
 
-    ActionStackController _actionStackController;
-    ActionStackController actionStackController
+    TurnStackController _turnStackController;
+    TurnStackController turnStackController
     {
         get
         {
-            if (_actionStackController == null)
+            if (_turnStackController == null)
             {
-                _actionStackController = GetComponent<ActionStackController>();
+                _turnStackController = GetComponent<TurnStackController>();
             }
 
-            return _actionStackController;
+            return _turnStackController;
         }
     }
     BoardController _boardController;
@@ -48,17 +48,17 @@ public class GameStateManager : MonoBehaviour {
             return _equippedCardsManager;
         }
     }
-    EnemyActionCalculator _enemyActionCalculator;
-    EnemyActionCalculator enemyActionCalculator
+    EnemyTurnCalculator _enemyTurnCalculator;
+    EnemyTurnCalculator enemyTurnCalculator
     {
         get
         {
-            if (_enemyActionCalculator == null)
+            if (_enemyTurnCalculator == null)
             {
-                _enemyActionCalculator = GetComponent<EnemyActionCalculator>();
+                _enemyTurnCalculator = GetComponent<EnemyTurnCalculator>();
             }
 
-            return _enemyActionCalculator;
+            return _enemyTurnCalculator;
         }
     }
 
@@ -69,8 +69,8 @@ public class GameStateManager : MonoBehaviour {
 
     List<Vector2Int> potentialCardTargets;
 
-    bool isHandlingActions = false;
-    public bool IsHandlingActions { get { return isHandlingActions; } }
+    bool isHandlingTurn = false;
+    public bool IsHandlingActions { get { return isHandlingTurn; } }
     public Vector2Int ProjectedPlayerPosition { get { return Player.Position; } }
 
     private void Awake()
@@ -90,17 +90,17 @@ public class GameStateManager : MonoBehaviour {
 
     private void OnEnable()
     {
-        actionStackController.OnActionStackUpdate += ResetBoard; 
+        turnStackController.OnTurnStackUpdate += ResetBoard; 
     }
 
     private void OnDisable()
     {
-        actionStackController.OnActionStackUpdate -= ResetBoard; 
+        turnStackController.OnTurnStackUpdate -= ResetBoard; 
     }
 
     void SetBoardUp()
     {
-        enemyActionCalculator.CalculateAndQueueActions(CurrentGameState);
+        enemyTurnCalculator.CalculateAndQueueEnemyTurns(CurrentGameState);
         OnCurrentGameStateChange(CurrentGameState);
     }
 
@@ -154,7 +154,7 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
-    public void ResetBoard(List<Action> actionList)
+    public void ResetBoard(List<Turn> turnList)
     {
         ResetBoard(CurrentGameState);
     }
@@ -166,7 +166,7 @@ public class GameStateManager : MonoBehaviour {
 
     void ResetBoard(GameState currentGameState)
     {
-        if (!isHandlingActions)
+        if (!isHandlingTurn)
         {
             ProjectedGameState = GameStateHelperFunctions.CalculateFollowingGameState(currentGameState);
         }
@@ -176,13 +176,13 @@ public class GameStateManager : MonoBehaviour {
 
     public void RegisterCellClick(Vector2Int cellPosition)
     {
-        if (isHandlingActions)
+        if (isHandlingTurn)
         {
             return;      
         }
         if (potentialCardTargets.Contains(cellPosition))
         {
-            actionStackController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GameStateHelperFunctions.GetDirectionFromEntity(CurrentGameState.player, cellPosition), GameStateHelperFunctions.GetCellDistanceFromPlayer(cellPosition, CurrentGameState));
+            //turnStackController.AddPlayerTurn(equippedCardsManager.GetSelectedCard(), Player, GameStateHelperFunctions.GetDirectionFromEntity(CurrentGameState.player, cellPosition), GameStateHelperFunctions.GetCellDistanceFromPlayer(cellPosition, CurrentGameState));
             equippedCardsManager.ClearSelectedCard();
             OnCurrentGameStateChange(CurrentGameState);
         }
@@ -191,36 +191,36 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
-    public void EndTurn()
+    public void EndRound()
     {
-        StartCoroutine(ProcessCurrentTurnActions());
+        StartCoroutine(ProcessCurrentRoundActions());
     }
 
-    IEnumerator ProcessCurrentTurnActions()
+    IEnumerator ProcessCurrentRoundActions()
     {
-        isHandlingActions = true;
+        isHandlingTurn = true;
         projectedAttackCoordinates.Clear();
-        while (!actionStackController.IsActionStackEmpty)
+        while (!turnStackController.IsTurnStackEmpty)
         {
-            Action nextAction = actionStackController.GetNextAction();
+            Turn nextTurn = turnStackController.GetNextTurn();
 
-            GameStateHelperFunctions.ProcessAction(nextAction, CurrentGameState);
+            GameStateHelperFunctions.ProcessTurn(nextTurn, CurrentGameState);
 
             OnCurrentGameStateChange(CurrentGameState);
             yield return new WaitForSeconds(0.5f);
         }
 
-        enemyActionCalculator.CalculateAndQueueActions(CurrentGameState);
+        enemyTurnCalculator.CalculateAndQueueEnemyTurns(CurrentGameState);
 
-        isHandlingActions = false;
+        isHandlingTurn = false;
         if (OnCurrentGameStateChange != null)
         {
             OnCurrentGameStateChange(CurrentGameState);
         }
 
-        if (OnTurnEnded != null)
+        if (OnRoundEnded != null)
         {
-            OnTurnEnded(CurrentGameState);
+            OnRoundEnded(CurrentGameState);
         }
     }
 }

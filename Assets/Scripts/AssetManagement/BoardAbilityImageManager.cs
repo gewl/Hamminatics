@@ -5,7 +5,7 @@ using UnityEngine;
 public class BoardAbilityImageManager : MonoBehaviour {
 
     [SerializeField]
-    ActionStackController actionStackController;
+    TurnStackController actionStackController;
     [SerializeField]
     BoardController boardController;
 
@@ -15,38 +15,35 @@ public class BoardAbilityImageManager : MonoBehaviour {
 
     private void OnEnable()
     {
-        actionStackController.OnActionStackUpdate += DrawActions;            
+        actionStackController.OnTurnStackUpdate += DrawTurns;            
     }
 
     private void OnDisable()
     {
-        actionStackController.OnActionStackUpdate -= DrawActions;
+        actionStackController.OnTurnStackUpdate -= DrawTurns;
     }
 
-    void DrawActions(List<Action> actions)
+    void DrawTurns(List<Turn> turns)
     {
-
         foreach (Transform child in transform)
         {
             GameObject.Destroy(child.gameObject);
         }
 
-        for (int i = 0; i < actions.Count; i++)
+        for (int i = 0; i < turns.Count; i++)
         {
-            Action action = actions[i];
-            GameObject newActionImage = GenerateNewActionImage(action);
+            Turn turn = turns[i];
+            GenerateNewActionImage(turn.FirstAction, turn.FirstAction.entity.Position, turn.FirstAction.direction);
         }
     }
 
-    GameObject GenerateNewActionImage(Action action)
+    void GenerateNewActionImage(Action action, Vector2Int position, Direction direction)
     {
         GameObject instantiatedActionImage = ImageManager.GetAbilityPointer(action.card.Category, action.direction);
 
         instantiatedActionImage.transform.SetParent(this.transform);
-        Vector2 cellEdgePosition = boardController.GetCellEdgePosition(action.entity.Position, action.direction);
+        Vector2 cellEdgePosition = boardController.GetCellEdgePosition(position, direction);
         instantiatedActionImage.transform.position = cellEdgePosition;
-
-        return instantiatedActionImage;
     }
 
 }

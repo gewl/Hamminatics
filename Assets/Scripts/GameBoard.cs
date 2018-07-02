@@ -52,9 +52,9 @@ public class GameBoard {
             }
         }
 
-        GenerateWalls();
-
         Entrance = GenerateEntrance(boardWidth);
+
+        GenerateWalls();
 
         ProcessTileDistancesToPlayer(Entrance);
 
@@ -93,7 +93,7 @@ public class GameBoard {
             Tile neighborOne = Tiles[x, y];
             Tile neighborTwo = neighborOne.GetRandomNeighbor(true);
 
-            if (neighborTwo == null)
+            if (neighborTwo == null || neighborOne == Entrance || neighborTwo == Entrance)
             {
                 continue;
             }
