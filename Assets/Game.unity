@@ -1465,6 +1465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d3f338fac6c4ce4485b45040b4c3b2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boardController: {fileID: 2063671481}
 --- !u!1 &341573497
 GameObject:
   m_ObjectHideFlags: 0
@@ -9211,6 +9212,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dec0245d954a8d4da26bec9a22194ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugText: {fileID: 1066388608230824, guid: fdfdcbd17824e54499f99d063a4b8470, type: 2}
+  DebuggingTileDistances: 1
 --- !u!1 &2085946288
 GameObject:
   m_ObjectHideFlags: 0

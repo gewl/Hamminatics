@@ -173,7 +173,7 @@ public class GameStateManager : MonoBehaviour {
         }
         if (potentialCardTargets.Contains(cellPosition))
         {
-            actionStackController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GameStateHelperFunctions.GetDirectionFromPlayer(cellPosition, CurrentGameState), GameStateHelperFunctions.GetCellDistanceFromPlayer(cellPosition, CurrentGameState));
+            actionStackController.AddPlayerAction(equippedCardsManager.GetSelectedCard(), Player, GameStateHelperFunctions.GetDirectionFromEntity(CurrentGameState.player, cellPosition), GameStateHelperFunctions.GetCellDistanceFromPlayer(cellPosition, CurrentGameState));
             equippedCardsManager.ClearSelectedCard();
             OnCurrentGameStateChange(CurrentGameState);
         }

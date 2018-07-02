@@ -14,12 +14,14 @@ public class GameBoard {
     public Tile[,] Tiles { get; private set; }
 
     public Tile Entrance { get; private set; }
+    List<Wall> walls;
 
     public GameBoard()
     {
         boardWidth = BoardController.BoardWidth;
 
         Tile[,] _tiles = new Tile[boardWidth, boardWidth];
+        walls = new List<Wall>();
 
         for (int y = 0; y < boardWidth; y++)
         {
@@ -55,6 +57,26 @@ public class GameBoard {
         Entrance = GenerateEntrance(boardWidth);
 
         ProcessTileDistancesToPlayer(Entrance);
+
+        while (AnyTilesNotReachable())
+        {
+            for (int i = 0; i < walls.Count; i++)
+            {
+                walls[i].DestroyWall();
+            }
+            walls.Clear();
+
+            GenerateWalls();
+
+            Entrance = GenerateEntrance(boardWidth);
+
+            ProcessTileDistancesToPlayer(Entrance);
+        }
+    }
+
+    bool AnyTilesNotReachable()
+    {
+        return Tiles.Cast<Tile>().Any<Tile>(tile => tile.VisitedByPathfinding == false);
     }
 
     void GenerateWalls()
@@ -68,7 +90,14 @@ public class GameBoard {
             int x = rand.Next(0, boardWidth);
             int y = rand.Next(0, boardWidth);
 
-            Tiles[x, y].RemoveRandomNeighbor();
+            Tile neighborOne = Tiles[x, y];
+            Tile neighborTwo = neighborOne.GetRandomNeighbor(true);
+
+            if (neighborTwo == null)
+            {
+                continue;
+            }
+            walls.Add(new Wall(neighborOne, neighborTwo));
         }
     }
 
@@ -113,8 +142,20 @@ public class GameBoard {
         return entranceTile;
     }
 
-    void ProcessTileDistancesToPlayer(Tile playerTile, bool initializeTileDistances = true)
+    public void ProcessTileDistancesToPlayer(Tile playerTile, bool initializeTileDistances = true)
     {
+        if (initializeTileDistances)
+        {
+            for (int y = 0; y < boardWidth; y++)
+            {
+                for (int x = 0; x < boardWidth; x++)
+                {
+                    Tiles[x, y].DistanceFromPlayer = int.MaxValue;
+                    Tiles[x, y].VisitedByPathfinding = false;
+                }
+            }
+        }
+
         playerTile.DistanceFromPlayer = 0;
         playerTile.VisitedByPathfinding = true;
 
@@ -153,4 +194,23 @@ public class GameBoard {
         }
     }
 
+}
+
+class Wall
+{
+    Tile neighborOne;
+    Tile neighborTwo;
+
+    public Wall(Tile _neighborOne, Tile _neighborTwo)
+    {
+        neighborOne = _neighborOne;
+        neighborTwo = _neighborTwo;
+
+        neighborOne.RemoveNeighbor(neighborTwo);
+    }
+
+    public void DestroyWall()
+    {
+        neighborOne.AddNeighbor(neighborTwo);
+    }
 }

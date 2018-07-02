@@ -20,7 +20,9 @@ public class BoardController : MonoBehaviour {
     GameObject debugText;
 
     public GameBoard CurrentBoard { get; private set;  }
+    public bool DebuggingTileDistances = false;
 
+    #region Lifecycle
     private void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
@@ -30,6 +32,17 @@ public class BoardController : MonoBehaviour {
         InitializeBoard();
         gameStateManager.InitializeGameState(CurrentBoard);
     }
+
+    private void OnEnable()
+    {
+        gameStateManager.OnTurnEnded += RecalculateTileDistances;   
+    }
+
+    private void OnDisable()
+    {
+        gameStateManager.OnTurnEnded -= RecalculateTileDistances;   
+    }
+    #endregion
 
     void InitializeBoard()
     {
@@ -63,17 +76,46 @@ public class BoardController : MonoBehaviour {
 
         CurrentBoard = new GameBoard();
 
-        for (int y = 0; y < boardWidth; y++)
+#if UNITY_EDITOR
+        if (DebuggingTileDistances)
         {
-            for (int x = 0; x < boardWidth; x++)
+            for (int y = 0; y < boardWidth; y++)
             {
-                boardCellImages[x, y].sprite = DataManager.GetTileSprite(CurrentBoard.Tiles[x, y].ID);
-                GameObject thisText = Instantiate(debugText, boardCells[x,y], false);
-                thisText.GetComponent<Text>().text = CurrentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
+                for (int x = 0; x < boardWidth; x++)
+                {
+                    boardCellImages[x, y].sprite = DataManager.GetTileSprite(CurrentBoard.Tiles[x, y].ID);
+                    GameObject thisText = Instantiate(debugText, boardCells[x,y], false);
+                    thisText.GetComponent<Text>().text = CurrentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
+                }
             }
         }
+#endif
     }
 
+    void RecalculateTileDistances(GameState updatedGameState)
+    {
+        Vector2Int playerPosition = updatedGameState.player.Position;
+
+        Tile playerTile = CurrentBoard.Tiles[playerPosition.x, playerPosition.y];
+
+        CurrentBoard.ProcessTileDistancesToPlayer(playerTile);
+
+#if UNITY_EDITOR
+        if (DebuggingTileDistances)
+        {
+            for (int y = 0; y < boardWidth; y++)
+            {
+                for (int x = 0; x < boardWidth; x++)
+                {
+                    Text thisText = boardCellImages[x, y].GetComponentInChildren<Text>();
+                    thisText.text = CurrentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
+                }
+            }
+        }
+#endif
+    }
+
+    #region GUI manipulation
     public void DrawBoard(GameState currentGameState, GameState projectedGameState, List<Vector2Int> projectedDamagePositions)
     {
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
@@ -144,6 +186,14 @@ public class BoardController : MonoBehaviour {
         };
     }
 
+    #endregion
+
+    #region Exposed methods for data retrieval
+    public Tile GetTileAtPosition(Vector2Int position)
+    {
+        return CurrentBoard.Tiles[position.x, position.y];
+    }
+
     public Vector2 GetCellEdgePosition(Vector2Int position, Direction edgeDirection)
     {
         RectTransform cellRectTransform = boardCells[position.x, position.y].GetComponent<RectTransform>();
@@ -167,4 +217,48 @@ public class BoardController : MonoBehaviour {
                 return new Vector2(averageX, averageY);
         }
     }
+
+    // TODO: Currently only supports 1-range moves, need to refactor for longer/more complex moves.
+    public List<Tile> GetPotentialMoves(Vector2Int startingPosition, int range)
+    {
+        Tile startingTile = GetTileAtPosition(startingPosition);
+
+        return GetPotentialMoves(startingTile, range);
+    }
+
+    public List<Tile> GetPotentialMoves(Tile startingTile, int range, List<Tile> checkedTiles = null)
+    {
+        List<Tile> potentialTargets = new List<Tile>();
+        if (range == 0)
+        {
+            return potentialTargets;
+        }
+
+        if (checkedTiles == null)
+        {
+            checkedTiles = new List<Tile> { startingTile };
+        }
+
+        for (int i = 0; i < startingTile.Neighbors.Count; i++)
+        {
+            Tile potentialTarget = startingTile.Neighbors[i];
+
+            if (checkedTiles.Contains(potentialTarget))
+            {
+                continue; 
+            }
+
+            potentialTargets.Add(potentialTarget);
+            checkedTiles.Add(potentialTarget);
+        }
+
+        for (int i = 0; i < potentialTargets.Count; i++)
+        {
+            potentialTargets.AddRange(GetPotentialMoves(potentialTargets[i], range - 1, checkedTiles));
+        }
+
+        return potentialTargets;
+    }
+
+    #endregion
 }

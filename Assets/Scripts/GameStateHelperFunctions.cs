@@ -4,27 +4,28 @@ using UnityEngine;
 using System.Linq;
 
 public class GameStateHelperFunctions {
-    public static Direction GetDirectionFromPlayer(Vector2Int cellPosition, GameState state)
+    public static Direction GetDirectionFromEntity(EntityData entity, Vector2Int cellPosition)
     {
-        if (cellPosition.x > state.player.Position.x && cellPosition.y == state.player.Position.y)
+        Vector2Int entityPosition = entity.Position;
+        if (cellPosition.x > entityPosition.x && cellPosition.y == entityPosition.y)
         {
             return Direction.Right;
         }
-        else if (cellPosition.x < state.player.Position.x && cellPosition.y == state.player.Position.y)
+        else if (cellPosition.x < entityPosition.x && cellPosition.y == entityPosition.y)
         {
             return Direction.Left;
         }
-        else if (cellPosition.x == state.player.Position.x && cellPosition.y > state.player.Position.y)
+        else if (cellPosition.x == entityPosition.x && cellPosition.y > entityPosition.y)
         {
             return Direction.Down;
         }
-        else if (cellPosition.x == state.player.Position.x && cellPosition.y < state.player.Position.y)
+        else if (cellPosition.x == entityPosition.x && cellPosition.y < entityPosition.y)
         {
             return Direction.Up;
         }
         else
         {
-            Debug.LogError("Cell was not a cardinal direction from player.");
+            Debug.LogError("Cell was not a cardinal direction from entity.");
             return Direction.Right;
         }
     }

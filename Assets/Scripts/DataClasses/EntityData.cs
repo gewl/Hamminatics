@@ -9,6 +9,6 @@ public class EntityData : ScriptableObject {
     [HideInInspector]
     public Vector2Int Position;
 
-    public CardData MovementCard;
+    public MovementCardData MovementCard;
     public AttackCardData attackCard;
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic; 
-using System.Linq;  
+using System.Linq;
 
 public class Tile
 {
@@ -76,6 +76,18 @@ public class Tile
         }
     }
 
+    public Tile GetRandomNeighbor(bool checkForWallEligibility = false)
+    {
+        int neighborIndex = new System.Random().Next(0, neighbors.Count);
+        Tile neighborToRemove = neighbors[neighborIndex];
+
+        if (checkForWallEligibility && neighbors.Count < 2 || neighborToRemove.GetNumberOfNeighbors() < 2)
+        {
+            return null;
+        }
+        return neighborToRemove;
+    }
+
     public void RemoveRandomNeighbor()
     {
         int neighborIndex = new System.Random().Next(0, neighbors.Count);
@@ -124,4 +136,14 @@ public class Tile
         return IsConnectedToTile(testPosition);
     }
 
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+        Tile otherTile = (Tile)obj;
+
+        return otherTile.Position.x == Position.x && otherTile.Position.y == Position.y;
+    }
 }
