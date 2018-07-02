@@ -62,6 +62,45 @@ public class Tile
         return neighbors.Count;
     }
 
+    public Tile GetNeighborWhere(System.Predicate<Tile> predicate)
+    {
+        return Neighbors.Find(predicate);
+    }
+
+    public Tile GetDirectionalNeighbor(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Up:
+                return GetNeighborWhere(tile => tile.Position.y == Position.y - 1);
+            case Direction.Right:
+                return GetNeighborWhere(tile => tile.Position.x == Position.x + 1);
+            case Direction.Down:
+                return GetNeighborWhere(tile => tile.Position.y == Position.y + 1);
+            case Direction.Left:
+                return GetNeighborWhere(tile => tile.Position.x == Position.x - 1);
+            default:
+                return null;
+        }
+    }
+
+    public bool HasNeighborWhere(System.Predicate<Tile> predicate)
+    {
+        return Neighbors.Exists(predicate);
+    }
+
+    public Tile GetRandomNeighbor(bool checkForWallEligibility = false)
+    {
+        int neighborIndex = new System.Random().Next(0, neighbors.Count);
+        Tile neighborToRemove = neighbors[neighborIndex];
+
+        if (checkForWallEligibility && neighbors.Count < 2 || neighborToRemove.GetNumberOfNeighbors() < 2)
+        {
+            return null;
+        }
+        return neighborToRemove;
+    }
+
     public bool HasNeighbors(int numberOfNeighbors)
     {
         return neighbors.Count >= numberOfNeighbors;
@@ -76,17 +115,6 @@ public class Tile
         }
     }
 
-    public Tile GetRandomNeighbor(bool checkForWallEligibility = false)
-    {
-        int neighborIndex = new System.Random().Next(0, neighbors.Count);
-        Tile neighborToRemove = neighbors[neighborIndex];
-
-        if (checkForWallEligibility && neighbors.Count < 2 || neighborToRemove.GetNumberOfNeighbors() < 2)
-        {
-            return null;
-        }
-        return neighborToRemove;
-    }
 
     public void RemoveRandomNeighbor()
     {

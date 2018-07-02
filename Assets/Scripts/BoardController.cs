@@ -260,5 +260,64 @@ public class BoardController : MonoBehaviour {
         return potentialTargets;
     }
 
+    public bool IsTileDirectlyReachable(Vector2Int position1, Vector2Int position2)
+    {
+        return IsTileDirectlyReachable(CurrentBoard.GetTileAt(position1), CurrentBoard.GetTileAt(position2));
+    }
+
+    public bool IsTileDirectlyReachable(Tile tile1, Tile tile2)
+    {
+        if (tile1.Position.x != tile2.Position.x && tile1.Position.y != tile2.Position.y)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public List<Tile> GetDirectlyReachableTiles(Vector2Int position)
+    {
+        return GetDirectlyReachableTiles(CurrentBoard.GetTileAt(position));
+    }
+
+    public List<Tile> GetDirectlyReachableTiles(Tile startingTile)
+    {
+        List<Tile> reachableTiles = new List<Tile>();
+
+        Tile leftNeighbor = startingTile.GetDirectionalNeighbor(Direction.Left);
+        while (leftNeighbor != null)
+        {
+            reachableTiles.Add(leftNeighbor);
+
+            leftNeighbor = leftNeighbor.GetDirectionalNeighbor(Direction.Left);
+        }
+            
+        Tile upNeighbor = startingTile.GetDirectionalNeighbor(Direction.Up);
+        while (upNeighbor != null)
+        {
+            reachableTiles.Add(upNeighbor);
+
+            upNeighbor = upNeighbor.GetDirectionalNeighbor(Direction.Up);
+        }
+
+        Tile downNeighbor = startingTile.GetDirectionalNeighbor(Direction.Down);
+        while (downNeighbor != null)
+        {
+            reachableTiles.Add(downNeighbor);
+
+            downNeighbor = downNeighbor.GetDirectionalNeighbor(Direction.Down);
+        }
+
+        Tile rightNeighbor = startingTile.GetDirectionalNeighbor(Direction.Right);
+        while (rightNeighbor != null)
+        {
+            reachableTiles.Add(rightNeighbor);
+
+            rightNeighbor = rightNeighbor.GetDirectionalNeighbor(Direction.Right);
+        }
+
+        return reachableTiles;
+    }
+
     #endregion
 }

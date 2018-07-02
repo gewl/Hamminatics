@@ -194,6 +194,15 @@ public class GameBoard {
         }
     }
 
+    public Tile GetTileAt(Vector2Int position)
+    {
+        return GetTileAt(position.x, position.y);
+    }
+
+    public Tile GetTileAt(int x, int y)
+    {
+        return Tiles[x, y];
+    }
 }
 
 class Wall

@@ -71,6 +71,7 @@ public class GameStateManager : MonoBehaviour {
 
     bool isHandlingActions = false;
     public bool IsHandlingActions { get { return isHandlingActions; } }
+    public Vector2Int ProjectedPlayerPosition { get { return Player.Position; } }
 
     private void Awake()
     {
@@ -107,6 +108,8 @@ public class GameStateManager : MonoBehaviour {
     {
         ResetBoard(CurrentGameState);
 
+        List<Tile> reachableTiles = boardController.GetDirectlyReachableTiles(ProjectedPlayerPosition);
+
         int cardRange = card.Range;
 
         int leftMaximumX = Player.Position.x - cardRange;
@@ -121,7 +124,10 @@ public class GameStateManager : MonoBehaviour {
         {
             Vector2Int testPosition = new Vector2Int(testX, Player.Position.y);
 
-            AttemptToHighlightCell(testPosition);
+            if (reachableTiles.Exists(tile => tile.Position == testPosition))
+            {
+                AttemptToHighlightCell(testPosition);
+            }
 
             testX++;
         }
@@ -130,7 +136,10 @@ public class GameStateManager : MonoBehaviour {
         {
             Vector2Int testPosition = new Vector2Int(Player.Position.x, testY);
 
-            AttemptToHighlightCell(testPosition);
+            if (reachableTiles.Exists(tile => tile.Position == testPosition))
+            {
+                AttemptToHighlightCell(testPosition);
+            }
 
             testY++;
         }
