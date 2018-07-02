@@ -4,9 +4,20 @@ using UnityEngine;
 
 public struct Turn {
 
-    public EntityData Entity;
-    public Action FirstAction { get; private set; }
-    public Action SecondAction { get; private set; }
+    public EntityData Entity
+    {
+        get; private set;
+    }
+
+    public void UpdateEntity(EntityData newEntity)
+    {
+        Entity = newEntity;
+        FirstAction.entity = newEntity;
+        SecondAction.entity = newEntity;
+    }
+
+    public Action FirstAction;
+    public Action SecondAction;
 
     public Turn(EntityData _entity, Action _firstAction, Action _secondAction)
     {

@@ -232,21 +232,17 @@ public class GameStateHelperFunctions {
 
         foreach (Turn turn in originalState.turnStack)
         {
-            Turn newTurn = turn;
+            Turn newTurn = new Turn(turn.Entity, turn.FirstAction, turn.SecondAction);
             EntityData turnSubject = newTurn.Entity;
 
             if (turnSubject == originalState.player)
             {
-                newTurn.Entity = playerCopy;
+                newTurn.UpdateEntity(playerCopy);
             }
             else
             {
                 int originalTurnSubjectIndex = originalState.enemies.FindIndex(enemy => enemy == turnSubject);
-                if (originalTurnSubjectIndex == -1)
-                {
-                    originalState.enemies.ForEach(enemy => Debug.Log(enemy.ID));
-                }
-                newTurn.Entity = enemyCopies[originalTurnSubjectIndex];
+                newTurn.UpdateEntity(enemyCopies[originalTurnSubjectIndex]);
             }
 
             newTurnList.Add(newTurn);
