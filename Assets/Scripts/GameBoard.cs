@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GameBoard {
 
-    int boardWidth;
+    public int BoardWidth { get; private set; }
 
     int minNumberOfWalls = 8;
     int maxNumberOfWalls = 12;
@@ -18,14 +18,14 @@ public class GameBoard {
 
     public GameBoard()
     {
-        boardWidth = BoardController.BoardWidth;
+        BoardWidth = BoardController.BoardWidth;
 
-        Tile[,] _tiles = new Tile[boardWidth, boardWidth];
+        Tile[,] _tiles = new Tile[BoardWidth, BoardWidth];
         walls = new List<Wall>();
 
-        for (int y = 0; y < boardWidth; y++)
+        for (int y = 0; y < BoardWidth; y++)
         {
-            for (int x = 0; x < boardWidth; x++)
+            for (int x = 0; x < BoardWidth; x++)
             {
                 _tiles[x, y] = new Tile(x, y);
             }
@@ -33,18 +33,18 @@ public class GameBoard {
 
         Tiles = _tiles;
 
-        for (int y = 0; y < boardWidth; y++)
+        for (int y = 0; y < BoardWidth; y++)
         {
-            for (int x = 0; x < boardWidth; x++)
+            for (int x = 0; x < BoardWidth; x++)
             {
                 Tile tile = Tiles[x, y];
 
-                if (x < boardWidth - 1)
+                if (x < BoardWidth - 1)
                 {
                     Tile rightNeighbor = Tiles[x + 1, y];
                     tile.AddNeighbor(rightNeighbor);
                 }
-                if (y < boardWidth - 1)
+                if (y < BoardWidth - 1)
                 {
                     Tile bottomNeighbor = Tiles[x, y + 1];
                     tile.AddNeighbor(bottomNeighbor);
@@ -52,7 +52,7 @@ public class GameBoard {
             }
         }
 
-        Entrance = GenerateEntrance(boardWidth);
+        Entrance = GenerateEntrance(BoardWidth);
 
         GenerateWalls();
 
@@ -68,7 +68,7 @@ public class GameBoard {
 
             GenerateWalls();
 
-            Entrance = GenerateEntrance(boardWidth);
+            Entrance = GenerateEntrance(BoardWidth);
 
             ProcessTileDistancesToPlayer(Entrance);
         }
@@ -87,8 +87,8 @@ public class GameBoard {
 
         for (int i = 0; i < numberOfWalls; i++)
         {
-            int x = rand.Next(0, boardWidth);
-            int y = rand.Next(0, boardWidth);
+            int x = rand.Next(0, BoardWidth);
+            int y = rand.Next(0, BoardWidth);
 
             Tile neighborOne = Tiles[x, y];
             Tile neighborTwo = neighborOne.GetRandomNeighbor(true);
@@ -126,7 +126,7 @@ public class GameBoard {
                 break;
         }
 
-        int otherValue = random.Next(0, boardWidth - 1);
+        int otherValue = random.Next(1, boardWidth - 2);
 
         if (position[0] == -1)
         {
@@ -146,9 +146,9 @@ public class GameBoard {
     {
         if (initializeTileDistances)
         {
-            for (int y = 0; y < boardWidth; y++)
+            for (int y = 0; y < BoardWidth; y++)
             {
-                for (int x = 0; x < boardWidth; x++)
+                for (int x = 0; x < BoardWidth; x++)
                 {
                     Tiles[x, y].DistanceFromPlayer = int.MaxValue;
                     Tiles[x, y].VisitedByPathfinding = false;

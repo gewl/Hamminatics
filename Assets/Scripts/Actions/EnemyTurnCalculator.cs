@@ -12,12 +12,15 @@ public class EnemyTurnCalculator : MonoBehaviour {
 
     List<Tile> projectedEnemyMovementTiles;
     List<Tile> projectedEnemyAttackTiles;
+    List<Tile> currentlyOccupiedTiles;
 
     private void Awake()
     {
         turnStackController = GetComponent<TurnStackController>();
         projectedEnemyAttackTiles = new List<Tile>();
         projectedEnemyMovementTiles = new List<Tile>();
+
+        currentlyOccupiedTiles = new List<Tile>();
     }
 
     // TODO: This needs to work with 2-subaction actions, etc.
@@ -26,6 +29,8 @@ public class EnemyTurnCalculator : MonoBehaviour {
         List<EntityData> enemies = gameState.enemies;
         projectedEnemyMovementTiles.Clear();
         projectedEnemyAttackTiles.Clear();
+
+        currentlyOccupiedTiles = enemies.Select(enemy => BoardController.GetTileAtPosition(enemy.Position)).ToList<Tile>();
 
         foreach (EntityData enemy in enemies)
         {
@@ -51,7 +56,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
             // IF enemy is projected to move into player's tile:
             // THEN attack as if enemy is NOT moving (to account for projected player displacement)
             // ELSE attack from projected movement tile
-            Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? boardController.GetTileAtPosition(enemyPosition) : targetMovementTile;
+            Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardController.GetTileAtPosition(enemyPosition) : targetMovementTile;
 
             List<Tile> potentialAttackTargetTiles = boardController.GetPotentialMoves(projectedMovementTile.Position, enemyAttackRange);
             List<Tile> sortedPotentialAttackTargets = SortTilesByEligibility(potentialAttackTargetTiles);
@@ -72,9 +77,22 @@ public class EnemyTurnCalculator : MonoBehaviour {
     List<Tile> SortTilesByEligibility(List<Tile> unsortedList)
     {
         return unsortedList
-            .OrderBy(tile => !projectedEnemyAttackTiles.Contains(tile) ? 0 : 1)
-            .ThenBy(tile => !projectedEnemyMovementTiles.Contains(tile) ? 0 : 1)
-            .ThenBy(tile => tile.DistanceFromPlayer)
+            .OrderBy(tile => CalculateTileValue(tile))
+            .ThenBy(tile => Random.Range(0f, 1f))
             .ToList<Tile>();
     }
+
+    // OrderBy is ascending, so higher result = lower value
+    int CalculateTileValue(Tile tile)
+    {
+        int result = 0;
+
+        result += tile.DistanceFromPlayer;
+        result += projectedEnemyAttackTiles.Contains(tile) ? 0 : 3;
+        result += projectedEnemyMovementTiles.Contains(tile) ? 0 : 2;
+        result += currentlyOccupiedTiles.Contains(tile) ? 0 : 2;
+
+        return result;
+    }
+
 }

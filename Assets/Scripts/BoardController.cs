@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public class BoardController : MonoBehaviour {
     GameStateManager gameStateManager;
+    static BoardController instance;
 
     static int boardWidth = 5;
     public static int BoardWidth { get { return boardWidth; } }
@@ -31,6 +32,8 @@ public class BoardController : MonoBehaviour {
 
         InitializeBoard();
         gameStateManager.InitializeGameState(CurrentBoard);
+
+        instance = this;
     }
 
     private void OnEnable()
@@ -189,9 +192,9 @@ public class BoardController : MonoBehaviour {
     #endregion
 
     #region Exposed methods for data retrieval
-    public Tile GetTileAtPosition(Vector2Int position)
+    static public Tile GetTileAtPosition(Vector2Int position)
     {
-        return CurrentBoard.Tiles[position.x, position.y];
+        return instance.CurrentBoard.Tiles[position.x, position.y];
     }
 
     public Vector2 GetCellEdgePosition(Vector2Int position, Direction edgeDirection)

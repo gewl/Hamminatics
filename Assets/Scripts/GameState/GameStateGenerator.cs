@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class GameStateGenerator {
 
+    static System.Random rnd;
+    private static readonly object syncLock = new object();
+
     const string PLAYER_ID = "Player";
     const string SQUID_ID = "Squid";
     const string WASP_ID = "Wasp";
 
-    public static GameState GenerateNewGameState(Vector2Int entrance)
+    public static GameState GenerateNewGameState(Vector2Int entrance, int boardWidth)
     {
         EntityData player = DataManager.GetEntityData(PLAYER_ID);
         player.Position = entrance;
@@ -16,9 +19,6 @@ public class GameStateGenerator {
         EntityData squid = DataManager.GetEntityData(SQUID_ID);
         EntityData squid2 = DataManager.GetEntityData(SQUID_ID);
         EntityData wasp = DataManager.GetEntityData(WASP_ID);
-        squid.Position = new Vector2Int(1, 1);
-        squid2.Position = new Vector2Int(2, 1);
-        wasp.Position = new Vector2Int(3, 1);
         List<EntityData> enemies = new List<EntityData>()
         {
             squid,
@@ -26,11 +26,29 @@ public class GameStateGenerator {
             wasp
         };
 
+        squid.Position = GenerateRandomStartingCoordinates(boardWidth);
+        squid2.Position = GenerateRandomStartingCoordinates(boardWidth);
+        wasp.Position = GenerateRandomStartingCoordinates(boardWidth);
+
         SpeedComparer comparer = new SpeedComparer();
 
         enemies.Sort(comparer);
 
         return new GameState(player, enemies);
+    }
+
+    static Vector2Int GenerateRandomStartingCoordinates(int boardWidth)
+    {
+        if (rnd == null)
+        {
+            rnd = new System.Random();
+        }
+
+        lock(syncLock)
+        {
+            Vector2Int results = new Vector2Int(rnd.Next(0, boardWidth - 1), rnd.Next(0, boardWidth - 1));
+            return results;
+        }
     }
 }
 

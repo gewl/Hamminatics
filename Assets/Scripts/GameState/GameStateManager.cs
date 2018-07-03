@@ -82,7 +82,7 @@ public class GameStateManager : MonoBehaviour {
 
     public void InitializeGameState(GameBoard board)
     {
-        CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance.Position);
+        CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance.Position, board.BoardWidth);
         OnCurrentGameStateChange += ResetBoard;
         // This has to be delayed so layout group can space accordingly.
         Invoke("SetBoardUp", 0.1f);
@@ -147,7 +147,7 @@ public class GameStateManager : MonoBehaviour {
 
     void AttemptToHighlightCell(Vector2Int position)
     {
-        if (GameStateHelperFunctions.IsCellValid(position) && Player.Position != position)
+        if (GameStateHelperFunctions.isTileValid(position) && Player.Position != position)
         {
             boardController.HighlightSelectedCell(position);
             potentialCardTargets.Add(position);

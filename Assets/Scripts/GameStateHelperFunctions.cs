@@ -66,10 +66,10 @@ public class GameStateHelperFunctions {
 
     public static bool IsCellOccupied(int x, int y, GameState state)
     {
-        return IsCellOccupied(new Vector2Int(x, y), state);
+        return isTileOccupied(new Vector2Int(x, y), state);
     }
 
-    public static bool IsCellOccupied(Vector2Int position, GameState state)
+    public static bool isTileOccupied(Vector2Int position, GameState state)
     {
         return state.player.Position == position || state.enemies.Any<EntityData>(entityData => entityData.Position == position);
     }
@@ -119,7 +119,7 @@ public class GameStateHelperFunctions {
         return projectedState;
     }
 
-    public static bool IsCellValid(Vector2Int position)
+    public static bool isTileValid(Vector2Int position)
     {
         return position.x >= 0 && position.x < BoardController.BoardWidth && position.y >= 0 && position.y < BoardController.BoardWidth;
     }
@@ -147,28 +147,28 @@ public class GameStateHelperFunctions {
 
     static void HandleMovementAction(EntityData entity, Direction direction, int distance, GameState gameState)
     {
-        Vector2Int projectedPosition = GetCellPosition(entity.Position, direction, distance);
+        Vector2Int projectedPosition = GetTilePosition(entity.Position, direction, distance);
 
-        if (!IsCellValid(projectedPosition))
+        if (!isTileValid(projectedPosition))
         {
             return;
         }
 
-        if (IsCellOccupied(projectedPosition, gameState))
+        if (isTileOccupied(projectedPosition, gameState))
         {
-            EntityData cellOccupant = GetOccupantOfCell(projectedPosition, gameState);
+            EntityData tileOccupant = GetOccupantOfCell(projectedPosition, gameState);
 
-            Vector2Int projectedBumpPosition = GetCellPosition(projectedPosition, direction, 1);
+            Vector2Int projectedBumpPosition = GetTilePosition(projectedPosition, direction, 1);
 
-            bool canBump = IsCellValid(projectedBumpPosition) && !IsCellOccupied(projectedBumpPosition, gameState);
+            bool canBump = BoardController.GetTileAtPosition(projectedPosition).HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition) && !isTileOccupied(projectedBumpPosition, gameState);
 
             if (canBump)
             {
-                cellOccupant.Position = projectedBumpPosition;
+                tileOccupant.Position = projectedBumpPosition;
                 entity.Position = projectedPosition;
             }
 
-            cellOccupant.Health -= 1;
+            tileOccupant.Health -= 1;
             entity.Health -= 1;
         }
         else
@@ -179,8 +179,8 @@ public class GameStateHelperFunctions {
 
     static void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance, GameState gameState)
     {
-        Vector2Int targetCellPosition = GetCellPosition(entity.Position, direction, distance);
-        if (!IsCellValid(targetCellPosition) || !GameStateHelperFunctions.IsCellOccupied(targetCellPosition, gameState))
+        Vector2Int targetCellPosition = GetTilePosition(entity.Position, direction, distance);
+        if (!isTileValid(targetCellPosition) || !GameStateHelperFunctions.isTileOccupied(targetCellPosition, gameState))
         {
             return;
         }
@@ -190,7 +190,7 @@ public class GameStateHelperFunctions {
         targetEntity.Health -= card.Damage;
     }
 
-    public static Vector2Int GetCellPosition(Vector2Int origin, Direction direction, int distance)
+    public static Vector2Int GetTilePosition(Vector2Int origin, Direction direction, int distance)
     {
         Vector2Int updatedPosition = origin;
 
