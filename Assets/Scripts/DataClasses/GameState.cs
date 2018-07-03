@@ -8,12 +8,15 @@ public class GameState {
 
     public Stack<Turn> turnStack;
 
+    public List<Tile> tilesAttackedLastRound;
+
     public GameState(EntityData _player, List<EntityData> _enemies)
     {
         player = _player;
         enemies = _enemies;
 
         turnStack = new Stack<Turn>();
+        tilesAttackedLastRound = new List<Tile>();
     }
 
     public GameState(EntityData _player, List<EntityData> _enemies, Stack<Turn> _turns)
@@ -21,6 +24,8 @@ public class GameState {
         player = _player;
         enemies = _enemies;
         turnStack = _turns;
+
+        tilesAttackedLastRound = new List<Tile>();
     }
 
     public void UpdateTurnStack(Stack<Turn> newTurnStack)

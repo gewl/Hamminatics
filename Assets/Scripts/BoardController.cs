@@ -119,7 +119,7 @@ public class BoardController : MonoBehaviour {
     }
 
     #region GUI manipulation
-    public void DrawBoard(GameState currentGameState, GameState projectedGameState, List<Vector2Int> projectedDamagePositions)
+    public void DrawBoard(GameState currentGameState, GameState projectedGameState)
     {
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
         {
@@ -163,9 +163,9 @@ public class BoardController : MonoBehaviour {
             }
         }
 
-        foreach (Vector2Int position in projectedDamagePositions)
+        foreach (Tile tile in projectedGameState.tilesAttackedLastRound)
         {
-            HighlightDamageCell(position);
+            HighlightDamageCell(tile.Position);
         }
     }
 

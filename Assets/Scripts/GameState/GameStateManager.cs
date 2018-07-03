@@ -64,7 +64,6 @@ public class GameStateManager : MonoBehaviour {
 
     public GameState CurrentGameState { get; private set; }
     public GameState ProjectedGameState { get; private set; }
-    List<Vector2Int> projectedAttackCoordinates;
     public EntityData Player { get { return CurrentGameState.player; } }
 
     List<Vector2Int> potentialCardTargets;
@@ -76,8 +75,6 @@ public class GameStateManager : MonoBehaviour {
     private void Awake()
     {
         potentialCardTargets = new List<Vector2Int>();
-
-        projectedAttackCoordinates = new List<Vector2Int>();
     }
 
     public void InitializeGameState(GameBoard board)
@@ -170,7 +167,7 @@ public class GameStateManager : MonoBehaviour {
         {
             ProjectedGameState = GameStateHelperFunctions.CalculateFollowingGameState(currentGameState);
         }
-        boardController.DrawBoard(currentGameState, ProjectedGameState, projectedAttackCoordinates);
+        boardController.DrawBoard(currentGameState, ProjectedGameState);
         potentialCardTargets.Clear();
     }
 
@@ -199,7 +196,7 @@ public class GameStateManager : MonoBehaviour {
     IEnumerator ProcessCurrentRoundActions()
     {
         isHandlingTurn = true;
-        projectedAttackCoordinates.Clear();
+        CurrentGameState.tilesAttackedLastRound.Clear();
         while (!turnStackController.IsTurnStackEmpty)
         {
             Turn nextTurn = turnStackController.GetNextTurn();

@@ -102,18 +102,13 @@ public class GameStateHelperFunctions {
     public static GameState CalculateFollowingGameState(GameState currentState)
     {
         GameState projectedState = GameStateHelperFunctions.DeepCopyGameState(currentState);
+        projectedState.tilesAttackedLastRound.Clear();
 
         while (projectedState.turnStack.Count > 0)
         {
             Turn nextTurn = projectedState.turnStack.Pop();
 
             ProcessTurn(nextTurn, projectedState);
-
-            // TODO: used for indicating squares to be attacked
-            //if (nextAction.card.Category == CardCategory.Attack)
-            //{
-            //    Vector2Int targetCellPosition = GetCellPosition(nextAction.entity.Position, nextAction.direction, nextAction.distance);
-            //}
         }
 
         return projectedState;
@@ -180,11 +175,15 @@ public class GameStateHelperFunctions {
     static void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance, GameState gameState)
     {
         Vector2Int targetCellPosition = GetTilePosition(entity.Position, direction, distance);
-        if (!isTileValid(targetCellPosition) || !GameStateHelperFunctions.isTileOccupied(targetCellPosition, gameState))
+        if (!isTileValid(targetCellPosition)) 
         {
             return;
         }
-
+        gameState.tilesAttackedLastRound.Add(BoardController.GetTileAtPosition(targetCellPosition));
+        if (!GameStateHelperFunctions.isTileOccupied(targetCellPosition, gameState))
+        {
+            return;
+        }
         EntityData targetEntity = GameStateHelperFunctions.GetOccupantOfCell(targetCellPosition, gameState);
 
         targetEntity.Health -= card.Damage;
