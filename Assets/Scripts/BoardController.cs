@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -121,6 +122,7 @@ public class BoardController : MonoBehaviour {
     #region GUI manipulation
     public void DrawBoard(GameState currentGameState, GameState projectedGameState)
     {
+        // Clear board.
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
         {
             for (int xCounter = 0; xCounter < boardWidth; xCounter++)
@@ -131,11 +133,13 @@ public class BoardController : MonoBehaviour {
             }
         }
 
+        // Draw future player position.
         Vector2Int projectedPlayerPosition = projectedGameState.player.Position;
         Image projectedPlayerCellImage = cellContentImages[projectedPlayerPosition.x, projectedPlayerPosition.y];
         projectedPlayerCellImage.sprite = currentGameState.player.EntitySprite;
         projectedPlayerCellImage.color = new Color(1f, 1f, 1f, 0.5f);
 
+        // Draw future enemy positions.
         for (int i = 0; i < projectedGameState.enemies.Count; i++)
         {
             EntityData entity = projectedGameState.enemies[i];
@@ -147,11 +151,13 @@ public class BoardController : MonoBehaviour {
             }
         }
 
+        // Draw current player position.
         Vector2Int playerPosition = currentGameState.player.Position;
         Image playerCellImage = cellContentImages[playerPosition.x, playerPosition.y];
         playerCellImage.sprite = currentGameState.player.EntitySprite;
         playerCellImage.color = new Color(1f, 1f, 1f, 1f);
 
+        // Draw current enemy positions.
         for (int i = 0; i < currentGameState.enemies.Count; i++)
         {
             EntityData entity = currentGameState.enemies[i];
@@ -163,6 +169,7 @@ public class BoardController : MonoBehaviour {
             }
         }
 
+        // Draw cells to be attacked in next round.
         foreach (Tile tile in projectedGameState.tilesAttackedLastRound)
         {
             HighlightDamageCell(tile.Position);
@@ -176,7 +183,10 @@ public class BoardController : MonoBehaviour {
 
     public void HighlightDamageCell(Vector2Int position)
     {
-        cellContentImages[position.x, position.y].color = new Color(1f, 0f, 0f, 0.5f);
+        Image cellImage = cellContentImages[position.x, position.y];
+        // If cell is already opaque (because e.g. it contains an entity), it remains opaque.
+        float damageCellAlpha = Mathf.Max(cellImage.color.a, 0.5f);
+        cellImage.color = new Color(.8f, 0f, 0f, damageCellAlpha);
     }
 
     UnityAction GenerateCellClickListener(int x, int y)
@@ -221,15 +231,36 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    // TODO: Currently only supports 1-range moves, need to refactor for longer/more complex moves.
-    public List<Tile> GetPotentialMoves(Vector2Int startingPosition, int range)
+    public List<Tile> GetPotentialTargets(Vector2Int startingPosition, int range)
     {
         Tile startingTile = GetTileAtPosition(startingPosition);
 
-        return GetPotentialMoves(startingTile, range);
+        return GetPotentialTargets(startingTile, range);
     }
 
-    public List<Tile> GetPotentialMoves(Tile startingTile, int range, List<Tile> checkedTiles = null)
+    public List<Tile> GetPotentialTargets(Tile startingTile, int range)
+    {
+        List<Tile> potentialTargets = new List<Tile>();
+
+        foreach (Direction direction in Enum.GetValues(typeof(Direction)))
+        {
+            int rangeRemaining = range;
+            Tile nextTile = startingTile.GetDirectionalNeighbor(direction);
+
+            while (rangeRemaining > 0 && nextTile != null)
+            {
+                potentialTargets.Add(nextTile);
+
+                nextTile = nextTile.GetDirectionalNeighbor(direction);
+                rangeRemaining--;
+            }
+        }
+
+        return potentialTargets;
+    }
+
+    // For branching/multidirectional searching, not used right now, also needs refactoring before use.
+    public List<Tile> GetPotentialTargetsRecursively(Tile startingTile, int range, List<Tile> checkedTiles = null)
     {
         List<Tile> potentialTargets = new List<Tile>();
         if (range == 0)
@@ -257,18 +288,18 @@ public class BoardController : MonoBehaviour {
 
         for (int i = 0; i < potentialTargets.Count; i++)
         {
-            potentialTargets.AddRange(GetPotentialMoves(potentialTargets[i], range - 1, checkedTiles));
+            potentialTargets.AddRange(GetPotentialTargetsRecursively(potentialTargets[i], range - 1, checkedTiles));
         }
 
         return potentialTargets;
     }
 
-    public bool IsTileDirectlyReachable(Vector2Int position1, Vector2Int position2)
+    public bool AreTwoPositionsLinear(Vector2Int position1, Vector2Int position2)
     {
-        return IsTileDirectlyReachable(CurrentBoard.GetTileAt(position1), CurrentBoard.GetTileAt(position2));
+        return AreTwoTilesLinear(CurrentBoard.GetTileAt(position1), CurrentBoard.GetTileAt(position2));
     }
 
-    public bool IsTileDirectlyReachable(Tile tile1, Tile tile2)
+    public bool AreTwoTilesLinear(Tile tile1, Tile tile2)
     {
         if (tile1.Position.x != tile2.Position.x && tile1.Position.y != tile2.Position.y)
         {
@@ -276,6 +307,20 @@ public class BoardController : MonoBehaviour {
         }
 
         return true;
+    }
+
+    public int GetLinearDistanceBetweenTiles(Tile tile1, Tile tile2)
+    {
+        Vector2Int position1 = tile1.Position;
+        Vector2Int position2 = tile2.Position;
+
+        if (position1.x == position2.x && position1.y == position2.y)
+        {
+            Debug.LogError("Attempted to find linear distance between non-linear tiles.");
+            return 0;
+        }
+
+        return Math.Max(Math.Abs(position1.x - position2.x), Math.Abs(position1.y - position2.y));
     }
 
     public List<Tile> GetDirectlyReachableTiles(Vector2Int position)

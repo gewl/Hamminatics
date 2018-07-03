@@ -17,4 +17,4 @@ MonoBehaviour:
   Speed: 2
   Position: {x: 0, y: 0}
   MovementCard: {fileID: 11400000, guid: d795a7befc81c354dbe74ba6b07573d5, type: 2}
-  attackCard: {fileID: 11400000, guid: 7976fce2e91140948b5bcce173f85f1b, type: 2}
+  attackCard: {fileID: 11400000, guid: e1df8ea6f83e9f44daf04f84e149c83f, type: 2}

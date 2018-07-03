@@ -114,7 +114,7 @@ public class GameStateHelperFunctions {
         return projectedState;
     }
 
-    public static bool isTileValid(Vector2Int position)
+    public static bool IsTileValid(Vector2Int position)
     {
         return position.x >= 0 && position.x < BoardController.BoardWidth && position.y >= 0 && position.y < BoardController.BoardWidth;
     }
@@ -144,7 +144,7 @@ public class GameStateHelperFunctions {
     {
         Vector2Int projectedPosition = GetTilePosition(entity.Position, direction, distance);
 
-        if (!isTileValid(projectedPosition))
+        if (!IsTileValid(projectedPosition))
         {
             return;
         }
@@ -175,7 +175,7 @@ public class GameStateHelperFunctions {
     static void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance, GameState gameState)
     {
         Vector2Int targetCellPosition = GetTilePosition(entity.Position, direction, distance);
-        if (!isTileValid(targetCellPosition)) 
+        if (!IsTileValid(targetCellPosition)) 
         {
             return;
         }

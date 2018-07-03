@@ -27,7 +27,7 @@ public class BoardAbilityImageManager : MonoBehaviour {
     {
         foreach (Transform child in transform)
         {
-            GameObject.Destroy(child.gameObject);
+            Destroy(child.gameObject);
         }
 
         for (int i = 0; i < turns.Count; i++)
@@ -41,7 +41,7 @@ public class BoardAbilityImageManager : MonoBehaviour {
     {
         GameObject instantiatedActionImage = ImageManager.GetAbilityPointer(action.card.Category, action.direction);
 
-        instantiatedActionImage.transform.SetParent(this.transform);
+        instantiatedActionImage.transform.SetParent(transform);
         Vector2 cellEdgePosition = boardController.GetCellEdgePosition(position, direction);
         instantiatedActionImage.transform.position = cellEdgePosition;
     }

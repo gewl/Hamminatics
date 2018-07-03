@@ -39,7 +39,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
             MovementCardData enemyMovementCard = enemy.MovementCard;
             int enemyMoveRange = enemyMovementCard.Range;
 
-            List<Tile> potentialMoveTargetTiles = boardController.GetPotentialMoves(enemyPosition, enemyMoveRange);
+            List<Tile> potentialMoveTargetTiles = boardController.GetPotentialTargets(enemyPosition, enemyMoveRange);
 
             List<Tile> sortedPotentialMoveTargets = SortTilesByMoveEligibility(potentialMoveTargetTiles);
 
@@ -58,15 +58,16 @@ public class EnemyTurnCalculator : MonoBehaviour {
             // ELSE attack from projected movement tile
             Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardController.GetTileAtPosition(enemyPosition) : targetMovementTile;
 
-            List<Tile> potentialAttackTargetTiles = boardController.GetPotentialMoves(projectedMovementTile.Position, enemyAttackRange);
+            List<Tile> potentialAttackTargetTiles = boardController.GetPotentialTargets(projectedMovementTile.Position, enemyAttackRange);
             List<Tile> sortedPotentialAttackTargets = SortTilesByMoveEligibility(potentialAttackTargetTiles);
             Tile targetAttackTile = sortedPotentialAttackTargets[0];
 
             projectedEnemyAttackTiles.Add(targetAttackTile);
 
+            int rangeOfProjectedAttack = boardController.GetLinearDistanceBetweenTiles(projectedMovementTile, targetAttackTile);
             Direction attackDirection = GameStateHelperFunctions.GetDirectionFromPosition(projectedMovementTile.Position, targetAttackTile.Position);
 
-            Action secondAction = new Action(enemyAttackCard, enemy, attackDirection, enemyAttackRange);
+            Action secondAction = new Action(enemyAttackCard, enemy, attackDirection, rangeOfProjectedAttack);
 
             Turn enemyTurn = new Turn(enemy, firstAction, secondAction);
 
@@ -77,7 +78,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
     List<Tile> SortTilesByMoveEligibility(List<Tile> unsortedList)
     {
         return unsortedList
-            .OrderBy(tile => CalculateTileMovementValue(tile))
+            .OrderBy(tile => CalculateTileAttackValue(tile))
             .ThenBy(tile => Random.Range(0f, 1f))
             .ToList<Tile>();
     }
@@ -99,12 +100,12 @@ public class EnemyTurnCalculator : MonoBehaviour {
     List<Tile> SortTilesByAttackEligibility(List<Tile> unsortedList)
     {
         return unsortedList
-            .OrderBy(tile => CalculateTileMovementValue(tile))
+            .OrderBy(tile => CalculateTileAttackValue(tile))
             .ThenBy(tile => Random.Range(0f, 1f))
             .ToList<Tile>();
     }
 
-    int CalculateTileMovementValue(Tile tile)
+    int CalculateTileAttackValue(Tile tile)
     {
         int result = 0;
 

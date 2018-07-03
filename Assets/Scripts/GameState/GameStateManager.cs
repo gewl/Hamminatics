@@ -144,7 +144,7 @@ public class GameStateManager : MonoBehaviour {
 
     void AttemptToHighlightCell(Vector2Int position)
     {
-        if (GameStateHelperFunctions.isTileValid(position) && Player.Position != position)
+        if (GameStateHelperFunctions.IsTileValid(position) && Player.Position != position)
         {
             boardController.HighlightSelectedCell(position);
             potentialCardTargets.Add(position);

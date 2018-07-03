@@ -17,13 +17,13 @@ public class GameStateGenerator {
         EntityData player = DataManager.GetEntityData(PLAYER_ID);
         player.Position = entrance;
 
-        EntityData squid = DataManager.GetEntityData(SQUID_ID);
-        EntityData squid2 = DataManager.GetEntityData(SQUID_ID);
+        //EntityData squid = DataManager.GetEntityData(SQUID_ID);
+        //EntityData squid2 = DataManager.GetEntityData(SQUID_ID);
         EntityData wasp = DataManager.GetEntityData(WASP_ID);
         List<EntityData> enemies = new List<EntityData>()
         {
-            squid,
-            squid2,
+            //squid,
+            //squid2,
             wasp
         };
 
