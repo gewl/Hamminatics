@@ -38,8 +38,9 @@ public class TurnStackController : MonoBehaviour {
         OnTurnStackUpdate(new List<Turn>(TurnStack));
     }
 
-    public void AddPlayerTurn()
+    public void AddEmptyPlayerTurn()
     {
+        //Turn newTurn = new Turn(gameStateManager.Player);
         //Turn newTurn = new Action(card, entity, direction, distance);
         //if (DoesTurnStackContainCompletePlayerTurn())
         //{

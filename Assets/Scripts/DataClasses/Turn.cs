@@ -19,6 +19,16 @@ public struct Turn {
     public Action FirstAction;
     public Action SecondAction;
 
+    //public Turn(EntityData _entity)
+    //{
+    //    if (_entity.ID != "Player")
+    //    {
+    //        Debug.LogError("Creating empty turn for non-player entity.");
+    //    }
+
+    //    Entity = _entity;
+    //}
+
     public Turn(EntityData _entity, Action _firstAction, Action _secondAction)
     {
         Entity = _entity;
