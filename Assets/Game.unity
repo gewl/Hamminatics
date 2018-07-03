@@ -9795,8 +9795,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnStack: {fileID: 323374608}
-  playerTurnColor: {r: 0, g: 0.37931037, b: 1, a: 0}
-  enemyTurnColor: {r: 0.71323526, g: 0.71323526, b: 0.71323526, a: 0}
+  playerTurnColor: {r: 0, g: 0.37931037, b: 1, a: 1}
+  enemyTurnColor: {r: 0.71323526, g: 0.71323526, b: 0.71323526, a: 1}
 --- !u!1 &2133868599
 GameObject:
   m_ObjectHideFlags: 0
