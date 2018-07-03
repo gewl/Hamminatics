@@ -121,8 +121,14 @@ public class GameStateHelperFunctions {
 
     public static void ProcessTurn(Turn turn, GameState state)
     {
-        ProcessAction(turn.FirstAction, state);
-        ProcessAction(turn.SecondAction, state);
+        ProcessMoves(turn.moves, turn.Entity, state);
+        ProcessAction(turn.action, state);
+    }
+
+    // TODO: Fill this out
+    public static void ProcessMoves(List<Move> moves, EntityData entity, GameState state)
+    {
+
     }
 
     public static void ProcessAction(Action action, GameState state)
@@ -155,7 +161,7 @@ public class GameStateHelperFunctions {
 
             Vector2Int projectedBumpPosition = GetTilePosition(projectedPosition, direction, 1);
 
-            bool canBump = BoardController.GetTileAtPosition(projectedPosition).HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition) && !isTileOccupied(projectedBumpPosition, gameState);
+            bool canBump = BoardHelperFunctions.GetTileAtPosition(projectedPosition).HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition) && !isTileOccupied(projectedBumpPosition, gameState);
 
             if (canBump)
             {
@@ -179,7 +185,7 @@ public class GameStateHelperFunctions {
         {
             return;
         }
-        gameState.tilesAttackedLastRound.Add(BoardController.GetTileAtPosition(targetCellPosition));
+        gameState.tilesAttackedLastRound.Add(BoardHelperFunctions.GetTileAtPosition(targetCellPosition));
         if (!GameStateHelperFunctions.isTileOccupied(targetCellPosition, gameState))
         {
             return;
@@ -231,7 +237,7 @@ public class GameStateHelperFunctions {
 
         foreach (Turn turn in originalState.turnStack)
         {
-            Turn newTurn = new Turn(turn.Entity, turn.FirstAction, turn.SecondAction);
+            Turn newTurn = new Turn(turn.Entity, turn.moves.GetRange(0, turn.moves.Count), turn.action);
             EntityData turnSubject = newTurn.Entity;
 
             if (turnSubject == originalState.player)

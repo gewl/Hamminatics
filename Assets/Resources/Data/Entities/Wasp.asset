@@ -16,5 +16,5 @@ MonoBehaviour:
   EntitySprite: {fileID: 21300000, guid: 177bc482176a21d4bb0e4c3b4a23bde2, type: 3}
   Speed: 2
   Position: {x: 0, y: 0}
-  MovementCard: {fileID: 11400000, guid: d795a7befc81c354dbe74ba6b07573d5, type: 2}
+  MovementCard: {fileID: 11400000, guid: 7eb599ec2e87a724f909c00b1e5184ea, type: 2}
   attackCard: {fileID: 11400000, guid: e1df8ea6f83e9f44daf04f84e149c83f, type: 2}

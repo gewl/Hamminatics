@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class EnemyTurnCalculator : MonoBehaviour {
 
-    [SerializeField]
-    BoardController boardController;
-
     TurnStackController turnStackController;
 
     List<Tile> projectedEnemyMovementTiles;
@@ -23,14 +20,15 @@ public class EnemyTurnCalculator : MonoBehaviour {
         currentlyOccupiedTiles = new List<Tile>();
     }
 
-    // TODO: This needs to work with 2-subaction actions, etc.
+    // TODO: Very rudimentary AI rn, assumes all enemies rushing at player, need some
+    // switch logic for different AI types.
     public void CalculateAndQueueEnemyTurns(GameState gameState)
     {
         List<EntityData> enemies = gameState.enemies;
         projectedEnemyMovementTiles.Clear();
         projectedEnemyAttackTiles.Clear();
 
-        currentlyOccupiedTiles = enemies.Select(enemy => BoardController.GetTileAtPosition(enemy.Position)).ToList<Tile>();
+        currentlyOccupiedTiles = enemies.Select(enemy => BoardHelperFunctions.GetTileAtPosition(enemy.Position)).ToList<Tile>();
 
         foreach (EntityData enemy in enemies)
         {
@@ -39,57 +37,58 @@ public class EnemyTurnCalculator : MonoBehaviour {
             MovementCardData enemyMovementCard = enemy.MovementCard;
             int enemyMoveRange = enemyMovementCard.Range;
 
-            List<Tile> potentialMoveTargetTiles = boardController.GetPotentialTargets(enemyPosition, enemyMoveRange);
+            List<Tile> potentialMoveTargetTiles = BoardHelperFunctions.GetPotentialTargetsRecursively(enemyPosition, enemyMoveRange);
 
             List<Tile> sortedPotentialMoveTargets = SortTilesByMoveEligibility(potentialMoveTargetTiles);
 
             Tile targetMovementTile = sortedPotentialMoveTargets[0];
-            projectedEnemyMovementTiles.Add(targetMovementTile);
+            BoardController.TurnTileColor(targetMovementTile, Color.blue);
+            //projectedEnemyMovementTiles.Add(targetMovementTile);
 
-            Direction moveDirection = GameStateHelperFunctions.GetDirectionFromEntity(enemy, targetMovementTile.Position);
+            //Direction moveDirection = GameStateHelperFunctions.GetDirectionFromEntity(enemy, targetMovementTile.Position);
 
-            Action firstAction = new Action(enemyMovementCard, enemy, moveDirection, enemyMoveRange);
+            //Action firstAction = new Action(enemyMovementCard, enemy, moveDirection, enemyMoveRange);
 
-            AttackCardData enemyAttackCard = enemy.attackCard;
-            int enemyAttackRange = enemyAttackCard.Range;
+            //AttackCardData enemyAttackCard = enemy.attackCard;
+            //int enemyAttackRange = enemyAttackCard.Range;
 
-            // IF enemy is projected to move into player's tile:
-            // THEN attack as if enemy is NOT moving (to account for projected player displacement)
-            // ELSE attack from projected movement tile
-            Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardController.GetTileAtPosition(enemyPosition) : targetMovementTile;
+            //// IF enemy is projected to move into player's tile:
+            //// THEN attack as if enemy is NOT moving (to account for projected player displacement)
+            //// ELSE attack from projected movement tile
+            //Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardHelperFunctions.GetTileAtPosition(enemyPosition) : targetMovementTile;
 
-            List<Tile> potentialAttackTargetTiles = boardController.GetPotentialTargets(projectedMovementTile.Position, enemyAttackRange);
-            List<Tile> sortedPotentialAttackTargets = SortTilesByMoveEligibility(potentialAttackTargetTiles);
-            Tile targetAttackTile = sortedPotentialAttackTargets[0];
+            //List<Tile> potentialAttackTargetTiles = BoardHelperFunctions.GetPotentialTargets(projectedMovementTile.Position, enemyAttackRange);
+            //List<Tile> sortedPotentialAttackTargets = SortTilesByMoveEligibility(potentialAttackTargetTiles);
+            //Tile targetAttackTile = sortedPotentialAttackTargets[0];
 
-            projectedEnemyAttackTiles.Add(targetAttackTile);
+            //projectedEnemyAttackTiles.Add(targetAttackTile);
 
-            int rangeOfProjectedAttack = boardController.GetLinearDistanceBetweenTiles(projectedMovementTile, targetAttackTile);
-            Direction attackDirection = GameStateHelperFunctions.GetDirectionFromPosition(projectedMovementTile.Position, targetAttackTile.Position);
+            //int rangeOfProjectedAttack = BoardHelperFunctions.GetLinearDistanceBetweenTiles(projectedMovementTile, targetAttackTile);
+            //Direction attackDirection = GameStateHelperFunctions.GetDirectionFromPosition(projectedMovementTile.Position, targetAttackTile.Position);
 
-            Action secondAction = new Action(enemyAttackCard, enemy, attackDirection, rangeOfProjectedAttack);
+            //Action secondAction = new Action(enemyAttackCard, enemy, attackDirection, rangeOfProjectedAttack);
 
-            Turn enemyTurn = new Turn(enemy, firstAction, secondAction);
+            //Turn enemyTurn = new Turn(enemy, firstAction, secondAction);
 
-            turnStackController.AddNewTurn(enemyTurn);
+            //turnStackController.AddNewTurn(enemyTurn);
         }
     }
 
     List<Tile> SortTilesByMoveEligibility(List<Tile> unsortedList)
     {
         return unsortedList
-            .OrderBy(tile => CalculateTileAttackValue(tile))
+            .OrderBy(tile => CalculateTileMovementValue(tile))
             .ThenBy(tile => Random.Range(0f, 1f))
             .ToList<Tile>();
     }
 
-    // OrderBy is ascending, so higher result = lower value
-    int CalculateTileMovementValue(Tile tile, Vector2Int lastEntityPosition)
+    // OrderBy is ascending, so higher result = lower calculated value
+    int CalculateTileMovementValue(Tile tile)
     {
         int result = 0;
 
         result += tile.DistanceFromPlayer;
-        result += lastEntityPosition == tile.Position ? 2 : 0;
+        result += tile.DistanceFromPlayer == 0 ? 10 : 0;
         result += projectedEnemyAttackTiles.Contains(tile) ? 3 : 0;
         result += projectedEnemyMovementTiles.Contains(tile) ? 5 : 0;
         result += currentlyOccupiedTiles.Contains(tile) ? 10 : 0;

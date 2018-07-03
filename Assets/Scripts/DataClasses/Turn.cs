@@ -9,31 +9,19 @@ public struct Turn {
         get; private set;
     }
 
+    public List<Move> moves;
+    public Action action;
+
     public void UpdateEntity(EntityData newEntity)
     {
         Entity = newEntity;
-        FirstAction.entity = newEntity;
-        SecondAction.entity = newEntity;
     }
 
-    public Action FirstAction;
-    public Action SecondAction;
-
-    //public Turn(EntityData _entity)
-    //{
-    //    if (_entity.ID != "Player")
-    //    {
-    //        Debug.LogError("Creating empty turn for non-player entity.");
-    //    }
-
-    //    Entity = _entity;
-    //}
-
-    public Turn(EntityData _entity, Action _firstAction, Action _secondAction)
+    public Turn(EntityData _entity, List<Move> _moves, Action _action)
     {
         Entity = _entity;
-        FirstAction = _firstAction;
-        SecondAction = _secondAction;
+        moves = _moves;
+        action = _action;
     }
 
     public override bool Equals(object obj)
@@ -45,14 +33,14 @@ public struct Turn {
 
         Turn turn = (Turn)obj;
 
-        return FirstAction.GetHashCode() == turn.FirstAction.GetHashCode() && SecondAction.GetHashCode() == turn.SecondAction.GetHashCode();
+        return turn.GetHashCode() == GetHashCode();
     }
 
     public override int GetHashCode()
     {
         int result = 0;
-        result = (result * 297) ^ FirstAction.GetHashCode();
-        result = (result * 297) ^ SecondAction.GetHashCode();
+        result = (result * 297) ^ Entity.ID.GetHashCode();
+        result = (result * 297) ^ action.GetHashCode();
         return result;
     }
 

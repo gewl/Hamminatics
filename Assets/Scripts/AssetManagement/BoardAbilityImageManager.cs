@@ -33,8 +33,20 @@ public class BoardAbilityImageManager : MonoBehaviour {
         for (int i = 0; i < turns.Count; i++)
         {
             Turn turn = turns[i];
-            GenerateNewActionImage(turn.FirstAction, turn.FirstAction.entity.Position, turn.FirstAction.direction);
+            GenerateNewMoveImage(turn.Entity.Position, turn.moves[0].direction);
+
+            // TODO: Generate action image at right place, facing right direction
+            //GenerateNewActionImage(turn.action, turn.action.entity.Position, turn.action.direction);
         }
+    }
+
+    void GenerateNewMoveImage(Vector2Int position, Direction direction)
+    {
+        GameObject instantiatedActionImage = ImageManager.GetAbilityPointer(CardCategory.Movement, direction);
+
+        instantiatedActionImage.transform.SetParent(transform);
+        Vector2 cellEdgePosition = boardController.GetCellEdgePosition(position, direction);
+        instantiatedActionImage.transform.position = cellEdgePosition;
     }
 
     void GenerateNewActionImage(Action action, Vector2Int position, Direction direction)

@@ -21,7 +21,8 @@ public class BoardController : MonoBehaviour {
     [SerializeField]
     GameObject debugText;
 
-    public GameBoard CurrentBoard { get; private set;  }
+    public GameBoard currentBoard { get; private set;  }
+    public static GameBoard CurrentBoard { get { return instance.currentBoard; } }
     public bool DebuggingTileDistances = false;
 
     #region Lifecycle
@@ -32,7 +33,7 @@ public class BoardController : MonoBehaviour {
         spriteManager = GetComponentInParent<ImageManager>();
 
         InitializeBoard();
-        gameStateManager.InitializeGameState(CurrentBoard);
+        gameStateManager.InitializeGameState(currentBoard);
 
         instance = this;
     }
@@ -78,7 +79,7 @@ public class BoardController : MonoBehaviour {
             }
         }
 
-        CurrentBoard = new GameBoard();
+        currentBoard = new GameBoard();
 
 #if UNITY_EDITOR
         if (DebuggingTileDistances)
@@ -87,9 +88,9 @@ public class BoardController : MonoBehaviour {
             {
                 for (int x = 0; x < boardWidth; x++)
                 {
-                    boardCellImages[x, y].sprite = DataManager.GetTileSprite(CurrentBoard.Tiles[x, y].ID);
+                    boardCellImages[x, y].sprite = DataManager.GetTileSprite(currentBoard.Tiles[x, y].ID);
                     GameObject thisText = Instantiate(debugText, boardCells[x,y], false);
-                    thisText.GetComponent<Text>().text = CurrentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
+                    thisText.GetComponent<Text>().text = currentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
                 }
             }
         }
@@ -100,9 +101,9 @@ public class BoardController : MonoBehaviour {
     {
         Vector2Int playerPosition = updatedGameState.player.Position;
 
-        Tile playerTile = CurrentBoard.Tiles[playerPosition.x, playerPosition.y];
+        Tile playerTile = currentBoard.Tiles[playerPosition.x, playerPosition.y];
 
-        CurrentBoard.ProcessTileDistancesToPlayer(playerTile);
+        currentBoard.ProcessTileDistancesToPlayer(playerTile);
 
 #if UNITY_EDITOR
         if (DebuggingTileDistances)
@@ -112,7 +113,7 @@ public class BoardController : MonoBehaviour {
                 for (int x = 0; x < boardWidth; x++)
                 {
                     Text thisText = boardCellImages[x, y].GetComponentInChildren<Text>();
-                    thisText.text = CurrentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
+                    thisText.text = currentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
                 }
             }
         }
@@ -201,12 +202,6 @@ public class BoardController : MonoBehaviour {
 
     #endregion
 
-    #region Exposed methods for data retrieval
-    static public Tile GetTileAtPosition(Vector2Int position)
-    {
-        return instance.CurrentBoard.Tiles[position.x, position.y];
-    }
-
     public Vector2 GetCellEdgePosition(Vector2Int position, Direction edgeDirection)
     {
         RectTransform cellRectTransform = boardCells[position.x, position.y].GetComponent<RectTransform>();
@@ -231,140 +226,10 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public List<Tile> GetPotentialTargets(Vector2Int startingPosition, int range)
+    #region DEBUG ONLY
+    public static void TurnTileColor(Tile tile, Color color)
     {
-        Tile startingTile = GetTileAtPosition(startingPosition);
-
-        return GetPotentialTargets(startingTile, range);
-    }
-
-    public List<Tile> GetPotentialTargets(Tile startingTile, int range)
-    {
-        List<Tile> potentialTargets = new List<Tile>();
-
-        foreach (Direction direction in Enum.GetValues(typeof(Direction)))
-        {
-            int rangeRemaining = range;
-            Tile nextTile = startingTile.GetDirectionalNeighbor(direction);
-
-            while (rangeRemaining > 0 && nextTile != null)
-            {
-                potentialTargets.Add(nextTile);
-
-                nextTile = nextTile.GetDirectionalNeighbor(direction);
-                rangeRemaining--;
-            }
-        }
-
-        return potentialTargets;
-    }
-
-    // For branching/multidirectional searching, not used right now, also needs refactoring before use.
-    public List<Tile> GetPotentialTargetsRecursively(Tile startingTile, int range, List<Tile> checkedTiles = null)
-    {
-        List<Tile> potentialTargets = new List<Tile>();
-        if (range == 0)
-        {
-            return potentialTargets;
-        }
-
-        if (checkedTiles == null)
-        {
-            checkedTiles = new List<Tile> { startingTile };
-        }
-
-        for (int i = 0; i < startingTile.Neighbors.Count; i++)
-        {
-            Tile potentialTarget = startingTile.Neighbors[i];
-
-            if (checkedTiles.Contains(potentialTarget))
-            {
-                continue; 
-            }
-
-            potentialTargets.Add(potentialTarget);
-            checkedTiles.Add(potentialTarget);
-        }
-
-        for (int i = 0; i < potentialTargets.Count; i++)
-        {
-            potentialTargets.AddRange(GetPotentialTargetsRecursively(potentialTargets[i], range - 1, checkedTiles));
-        }
-
-        return potentialTargets;
-    }
-
-    public bool AreTwoPositionsLinear(Vector2Int position1, Vector2Int position2)
-    {
-        return AreTwoTilesLinear(CurrentBoard.GetTileAt(position1), CurrentBoard.GetTileAt(position2));
-    }
-
-    public bool AreTwoTilesLinear(Tile tile1, Tile tile2)
-    {
-        if (tile1.Position.x != tile2.Position.x && tile1.Position.y != tile2.Position.y)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    public int GetLinearDistanceBetweenTiles(Tile tile1, Tile tile2)
-    {
-        Vector2Int position1 = tile1.Position;
-        Vector2Int position2 = tile2.Position;
-
-        if (position1.x == position2.x && position1.y == position2.y)
-        {
-            Debug.LogError("Attempted to find linear distance between non-linear tiles.");
-            return 0;
-        }
-
-        return Math.Max(Math.Abs(position1.x - position2.x), Math.Abs(position1.y - position2.y));
-    }
-
-    public List<Tile> GetDirectlyReachableTiles(Vector2Int position)
-    {
-        return GetDirectlyReachableTiles(CurrentBoard.GetTileAt(position));
-    }
-
-    public List<Tile> GetDirectlyReachableTiles(Tile startingTile)
-    {
-        List<Tile> reachableTiles = new List<Tile>();
-
-        Tile leftNeighbor = startingTile.GetDirectionalNeighbor(Direction.Left);
-        while (leftNeighbor != null)
-        {
-            reachableTiles.Add(leftNeighbor);
-
-            leftNeighbor = leftNeighbor.GetDirectionalNeighbor(Direction.Left);
-        }
-            
-        Tile upNeighbor = startingTile.GetDirectionalNeighbor(Direction.Up);
-        while (upNeighbor != null)
-        {
-            reachableTiles.Add(upNeighbor);
-
-            upNeighbor = upNeighbor.GetDirectionalNeighbor(Direction.Up);
-        }
-
-        Tile downNeighbor = startingTile.GetDirectionalNeighbor(Direction.Down);
-        while (downNeighbor != null)
-        {
-            reachableTiles.Add(downNeighbor);
-
-            downNeighbor = downNeighbor.GetDirectionalNeighbor(Direction.Down);
-        }
-
-        Tile rightNeighbor = startingTile.GetDirectionalNeighbor(Direction.Right);
-        while (rightNeighbor != null)
-        {
-            reachableTiles.Add(rightNeighbor);
-
-            rightNeighbor = rightNeighbor.GetDirectionalNeighbor(Direction.Right);
-        }
-
-        return reachableTiles;
+        instance.boardCellImages[tile.Position.x, tile.Position.y].color = color;
     }
 
     #endregion

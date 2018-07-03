@@ -53,11 +53,9 @@ public class QueuedTurnController : MonoBehaviour, IBeginDragHandler, IDragHandl
         Sprite subjectSprite = turn.Entity.EntitySprite;
         subjectIcon.sprite = subjectSprite;
 
-        Sprite firstActionSprite = ImageManager.GetActionSprite(turn.FirstAction.card.Category, turn.FirstAction.direction);
-        firstActionIcon.sprite = firstActionSprite;
-
-        Sprite secondActionSprite = ImageManager.GetActionSprite(turn.SecondAction.card.Category, turn.SecondAction.direction);
-        secondActionIcon.sprite = secondActionSprite;
+        // TODO: Rearrange this for one-action turns
+        Sprite actionSprite = ImageManager.GetActionSprite(turn.action.card.Category, turn.action.direction);
+        firstActionIcon.sprite = actionSprite;
     }
 
     public void OnBeginDrag(PointerEventData pointerEventData)

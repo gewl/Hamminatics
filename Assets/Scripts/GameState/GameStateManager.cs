@@ -105,7 +105,7 @@ public class GameStateManager : MonoBehaviour {
     {
         ResetBoard(CurrentGameState);
 
-        List<Tile> reachableTiles = boardController.GetDirectlyReachableTiles(ProjectedPlayerPosition);
+        List<Tile> reachableTiles = BoardHelperFunctions.GetDirectlyReachableTiles(ProjectedPlayerPosition);
 
         int cardRange = card.Range;
 
