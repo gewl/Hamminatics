@@ -41,7 +41,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
 
             List<Tile> potentialMoveTargetTiles = boardController.GetPotentialMoves(enemyPosition, enemyMoveRange);
 
-            List<Tile> sortedPotentialMoveTargets = SortTilesByEligibility(potentialMoveTargetTiles);
+            List<Tile> sortedPotentialMoveTargets = SortTilesByMoveEligibility(potentialMoveTargetTiles);
 
             Tile targetMovementTile = sortedPotentialMoveTargets[0];
             projectedEnemyMovementTiles.Add(targetMovementTile);
@@ -59,7 +59,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
             Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardController.GetTileAtPosition(enemyPosition) : targetMovementTile;
 
             List<Tile> potentialAttackTargetTiles = boardController.GetPotentialMoves(projectedMovementTile.Position, enemyAttackRange);
-            List<Tile> sortedPotentialAttackTargets = SortTilesByEligibility(potentialAttackTargetTiles);
+            List<Tile> sortedPotentialAttackTargets = SortTilesByMoveEligibility(potentialAttackTargetTiles);
             Tile targetAttackTile = sortedPotentialAttackTargets[0];
 
             projectedEnemyAttackTiles.Add(targetAttackTile);
@@ -74,25 +74,45 @@ public class EnemyTurnCalculator : MonoBehaviour {
         }
     }
 
-    List<Tile> SortTilesByEligibility(List<Tile> unsortedList)
+    List<Tile> SortTilesByMoveEligibility(List<Tile> unsortedList)
     {
         return unsortedList
-            .OrderBy(tile => CalculateTileValue(tile))
+            .OrderBy(tile => CalculateTileMovementValue(tile))
             .ThenBy(tile => Random.Range(0f, 1f))
             .ToList<Tile>();
     }
 
     // OrderBy is ascending, so higher result = lower value
-    int CalculateTileValue(Tile tile)
+    int CalculateTileMovementValue(Tile tile, Vector2Int lastEntityPosition)
     {
         int result = 0;
 
         result += tile.DistanceFromPlayer;
-        result += projectedEnemyAttackTiles.Contains(tile) ? 0 : 3;
-        result += projectedEnemyMovementTiles.Contains(tile) ? 0 : 2;
-        result += currentlyOccupiedTiles.Contains(tile) ? 0 : 2;
+        result += lastEntityPosition == tile.Position ? 2 : 0;
+        result += projectedEnemyAttackTiles.Contains(tile) ? 3 : 0;
+        result += projectedEnemyMovementTiles.Contains(tile) ? 5 : 0;
+        result += currentlyOccupiedTiles.Contains(tile) ? 10 : 0;
 
         return result;
     }
 
+    List<Tile> SortTilesByAttackEligibility(List<Tile> unsortedList)
+    {
+        return unsortedList
+            .OrderBy(tile => CalculateTileMovementValue(tile))
+            .ThenBy(tile => Random.Range(0f, 1f))
+            .ToList<Tile>();
+    }
+
+    int CalculateTileMovementValue(Tile tile)
+    {
+        int result = 0;
+
+        result += tile.DistanceFromPlayer;
+        result += projectedEnemyAttackTiles.Contains(tile) ? 3 : 0;
+        result += projectedEnemyMovementTiles.Contains(tile) ? 5 : 0;
+        result += currentlyOccupiedTiles.Contains(tile) ? 10 : 0;
+
+        return result;
+    }
 }

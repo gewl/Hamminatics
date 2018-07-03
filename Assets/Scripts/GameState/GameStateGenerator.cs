@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameStateGenerator {
@@ -26,9 +27,7 @@ public class GameStateGenerator {
             wasp
         };
 
-        squid.Position = GenerateRandomStartingCoordinates(boardWidth);
-        squid2.Position = GenerateRandomStartingCoordinates(boardWidth);
-        wasp.Position = GenerateRandomStartingCoordinates(boardWidth);
+        RandomizeEntityStartingCoordinates(enemies, boardWidth, player);
 
         SpeedComparer comparer = new SpeedComparer();
 
@@ -37,7 +36,22 @@ public class GameStateGenerator {
         return new GameState(player, enemies);
     }
 
-    static Vector2Int GenerateRandomStartingCoordinates(int boardWidth)
+    static void RandomizeEntityStartingCoordinates(List<EntityData> entities, int boardWidth, EntityData player)
+    {
+        for (int i = 0; i < entities.Count; i++)
+        {
+            Vector2Int newPosition = GenerateRandomVector2IntInBounds(boardWidth);
+
+            while (player.Position == newPosition || entities.Any<EntityData>(entity => entity.Position == newPosition))
+            {
+                newPosition = GenerateRandomVector2IntInBounds(boardWidth);
+            }
+
+            entities[i].Position = newPosition;
+        }
+    }
+
+    static Vector2Int GenerateRandomVector2IntInBounds(int maxValue)
     {
         if (rnd == null)
         {
@@ -46,7 +60,8 @@ public class GameStateGenerator {
 
         lock(syncLock)
         {
-            Vector2Int results = new Vector2Int(rnd.Next(0, boardWidth - 1), rnd.Next(0, boardWidth - 1));
+            Vector2Int results = new Vector2Int(rnd.Next(0, maxValue - 1), rnd.Next(0, maxValue - 1));
+
             return results;
         }
     }
