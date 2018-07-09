@@ -43,34 +43,32 @@ public class EnemyTurnCalculator : MonoBehaviour {
 
             Tile targetMovementTile = sortedPotentialMoveTargets[0];
             BoardController.TurnTileColor(targetMovementTile, Color.blue);
-            //projectedEnemyMovementTiles.Add(targetMovementTile);
+            projectedEnemyMovementTiles.Add(targetMovementTile);
 
-            //Direction moveDirection = GameStateHelperFunctions.GetDirectionFromEntity(enemy, targetMovementTile.Position);
+            List<Direction> movesToTargetMovementTile = BoardHelperFunctions.GetPathToTile(BoardHelperFunctions.GetTileAtPosition(enemyPosition), targetMovementTile);
 
-            //Action firstAction = new Action(enemyMovementCard, enemy, moveDirection, enemyMoveRange);
+            AttackCardData enemyAttackCard = enemy.attackCard;
+            int enemyAttackRange = enemyAttackCard.Range;
 
-            //AttackCardData enemyAttackCard = enemy.attackCard;
-            //int enemyAttackRange = enemyAttackCard.Range;
+            // IF enemy is projected to move into player's tile:
+            // THEN attack as if enemy is NOT moving (to account for projected player displacement)
+            // ELSE attack from projected movement tile
+            Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardHelperFunctions.GetTileAtPosition(enemyPosition) : targetMovementTile;
 
-            //// IF enemy is projected to move into player's tile:
-            //// THEN attack as if enemy is NOT moving (to account for projected player displacement)
-            //// ELSE attack from projected movement tile
-            //Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardHelperFunctions.GetTileAtPosition(enemyPosition) : targetMovementTile;
+            List<Tile> potentialAttackTargetTiles = BoardHelperFunctions.GetPotentialTargets(projectedMovementTile.Position, enemyAttackRange);
+            List<Tile> sortedPotentialAttackTargets = SortTilesByMoveEligibility(potentialAttackTargetTiles);
+            Tile targetAttackTile = sortedPotentialAttackTargets[0];
 
-            //List<Tile> potentialAttackTargetTiles = BoardHelperFunctions.GetPotentialTargets(projectedMovementTile.Position, enemyAttackRange);
-            //List<Tile> sortedPotentialAttackTargets = SortTilesByMoveEligibility(potentialAttackTargetTiles);
-            //Tile targetAttackTile = sortedPotentialAttackTargets[0];
+            projectedEnemyAttackTiles.Add(targetAttackTile);
 
-            //projectedEnemyAttackTiles.Add(targetAttackTile);
+            int rangeOfProjectedAttack = BoardHelperFunctions.GetLinearDistanceBetweenTiles(projectedMovementTile, targetAttackTile);
+            Direction attackDirection = GameStateHelperFunctions.GetDirectionFromPosition(projectedMovementTile.Position, targetAttackTile.Position);
 
-            //int rangeOfProjectedAttack = BoardHelperFunctions.GetLinearDistanceBetweenTiles(projectedMovementTile, targetAttackTile);
-            //Direction attackDirection = GameStateHelperFunctions.GetDirectionFromPosition(projectedMovementTile.Position, targetAttackTile.Position);
+            Action secondAction = new Action(enemyAttackCard, enemy, attackDirection, rangeOfProjectedAttack);
 
-            //Action secondAction = new Action(enemyAttackCard, enemy, attackDirection, rangeOfProjectedAttack);
+            Turn enemyTurn = new Turn(enemy, movesToTargetMovementTile, secondAction);
 
-            //Turn enemyTurn = new Turn(enemy, firstAction, secondAction);
-
-            //turnStackController.AddNewTurn(enemyTurn);
+            turnStackController.AddNewTurn(enemyTurn);
         }
     }
 

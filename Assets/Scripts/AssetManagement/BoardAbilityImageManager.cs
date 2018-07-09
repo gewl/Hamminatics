@@ -33,7 +33,7 @@ public class BoardAbilityImageManager : MonoBehaviour {
         for (int i = 0; i < turns.Count; i++)
         {
             Turn turn = turns[i];
-            GenerateNewMoveImage(turn.Entity.Position, turn.moves[0].direction);
+            GenerateNewMoveImage(turn.Entity.Position, turn.moves[0]);
 
             // TODO: Generate action image at right place, facing right direction
             //GenerateNewActionImage(turn.action, turn.action.entity.Position, turn.action.direction);

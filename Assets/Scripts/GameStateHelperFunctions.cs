@@ -126,7 +126,7 @@ public class GameStateHelperFunctions {
     }
 
     // TODO: Fill this out
-    public static void ProcessMoves(List<Move> moves, EntityData entity, GameState state)
+    public static void ProcessMoves(List<Direction> moves, EntityData entity, GameState state)
     {
 
     }

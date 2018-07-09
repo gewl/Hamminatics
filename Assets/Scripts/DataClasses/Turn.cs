@@ -9,7 +9,7 @@ public struct Turn {
         get; private set;
     }
 
-    public List<Move> moves;
+    public List<Direction> moves;
     public Action action;
 
     public void UpdateEntity(EntityData newEntity)
@@ -17,7 +17,7 @@ public struct Turn {
         Entity = newEntity;
     }
 
-    public Turn(EntityData _entity, List<Move> _moves, Action _action)
+    public Turn(EntityData _entity, List<Direction> _moves, Action _action)
     {
         Entity = _entity;
         moves = _moves;

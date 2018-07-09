@@ -111,6 +111,35 @@ public class BoardHelperFunctions : MonoBehaviour {
         return Mathf.Max(Math.Abs(position1.x - position2.x), Mathf.Abs(position1.y - position2.y));
     }
 
+    static public Direction GetDirectionBetweenTiles(Tile startingTile, Tile destinationTile)
+    {
+        if (!AreTwoTilesLinear(startingTile, destinationTile))
+        {
+            Debug.LogError("Tried to find direction between non-linear tiles.");
+            return Direction.Down;
+        }
+
+        int xDifference = destinationTile.Position.x - startingTile.Position.x;
+        int yDifference = destinationTile.Position.y - startingTile.Position.y;
+
+        if (xDifference < 0)
+        {
+            return Direction.Left;
+        }
+        else if (xDifference > 0)
+        {
+            return Direction.Right;
+        }
+        else if (yDifference > 0)
+        {
+            return Direction.Down;
+        }
+        else
+        {
+            return Direction.Up;
+        }
+    }
+
     static public List<Tile> GetDirectlyReachableTiles(Vector2Int position)
     {
         return GetDirectlyReachableTiles(BoardController.CurrentBoard.GetTileAt(position));
@@ -153,6 +182,57 @@ public class BoardHelperFunctions : MonoBehaviour {
         }
 
         return reachableTiles;
+    }
+
+    static public List<Direction> GetPathToTile(Tile startingTile, Tile destinationTile)
+    {
+        bool tileFound = false;
+        // Key: Reachable tile
+        // Value: Tile from which Key can be reached ('parent' tile)
+        Dictionary<Tile, Tile> reachableTiles = new Dictionary<Tile, Tile>();
+
+        Queue<Tile> tilesToCheck = new Queue<Tile>();
+        tilesToCheck.Enqueue(startingTile);
+
+        // Breadth-first search starting from initial tile until destination tile found.
+        while (!tileFound)
+        {
+            Tile nextTile = tilesToCheck.Dequeue();
+
+            foreach (Tile neighbor in nextTile.Neighbors)
+            {
+                if (reachableTiles.ContainsKey(neighbor))
+                {
+                    continue;
+                }
+
+                reachableTiles[neighbor] = nextTile;
+
+                if (neighbor == destinationTile)
+                {
+                    tileFound = true;
+                    break;
+                }
+                tilesToCheck.Enqueue(neighbor);
+            }
+        }
+
+        List<Direction> path = new List<Direction>();
+
+        // Work backwards from destination tile, adding a step to path with each step backward.
+        Tile currentTile = destinationTile;
+        Tile nextParent = reachableTiles[currentTile];
+
+        while (currentTile != startingTile)
+        {
+            path.Add(GetDirectionBetweenTiles(nextParent, currentTile));
+            currentTile = nextParent;
+            nextParent = reachableTiles[currentTile];
+        }
+
+        path.Reverse();
+
+        return path;
     }
 
     #endregion
