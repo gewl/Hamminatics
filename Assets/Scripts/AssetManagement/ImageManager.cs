@@ -31,4 +31,9 @@ public class ImageManager : SerializedMonoBehaviour {
     {
         return instance.abilityImages[cardCategory][direction];
     }
+
+    public static Sprite GetMovementSprite(Direction direction)
+    {
+        return instance.abilityImages[CardCategory.Movement][direction];
+    }
 }

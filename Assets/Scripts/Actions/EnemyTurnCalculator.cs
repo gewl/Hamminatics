@@ -33,19 +33,20 @@ public class EnemyTurnCalculator : MonoBehaviour {
         foreach (EntityData enemy in enemies)
         {
             Vector2Int enemyPosition = enemy.Position;
+            Tile enemyTile = BoardHelperFunctions.GetTileAtPosition(enemyPosition);
 
             MovementCardData enemyMovementCard = enemy.MovementCard;
             int enemyMoveRange = enemyMovementCard.Range;
 
             List<Tile> potentialMoveTargetTiles = BoardHelperFunctions.GetPotentialTargetsRecursively(enemyPosition, enemyMoveRange);
 
-            List<Tile> sortedPotentialMoveTargets = SortTilesByMoveEligibility(potentialMoveTargetTiles);
+            List<Tile> sortedPotentialMoveTargets = SortTilesByMoveEligibility(enemyTile, potentialMoveTargetTiles);
 
             Tile targetMovementTile = sortedPotentialMoveTargets[0];
             BoardController.TurnTileColor(targetMovementTile, Color.blue);
             projectedEnemyMovementTiles.Add(targetMovementTile);
 
-            List<Direction> movesToTargetMovementTile = BoardHelperFunctions.GetPathToTile(BoardHelperFunctions.GetTileAtPosition(enemyPosition), targetMovementTile);
+            List<Direction> movesToTargetMovementTile = BoardHelperFunctions.GetPathToTile(enemyTile, targetMovementTile);
 
             AttackCardData enemyAttackCard = enemy.attackCard;
             int enemyAttackRange = enemyAttackCard.Range;
@@ -56,7 +57,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
             Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardHelperFunctions.GetTileAtPosition(enemyPosition) : targetMovementTile;
 
             List<Tile> potentialAttackTargetTiles = BoardHelperFunctions.GetPotentialTargets(projectedMovementTile.Position, enemyAttackRange);
-            List<Tile> sortedPotentialAttackTargets = SortTilesByMoveEligibility(potentialAttackTargetTiles);
+            List<Tile> sortedPotentialAttackTargets = SortTilesByAttackEligibility(potentialAttackTargetTiles);
             Tile targetAttackTile = sortedPotentialAttackTargets[0];
 
             projectedEnemyAttackTiles.Add(targetAttackTile);
@@ -72,24 +73,31 @@ public class EnemyTurnCalculator : MonoBehaviour {
         }
     }
 
-    List<Tile> SortTilesByMoveEligibility(List<Tile> unsortedList)
+    List<Tile> SortTilesByMoveEligibility(Tile startingTile, List<Tile> unsortedList)
     {
         return unsortedList
-            .OrderBy(tile => CalculateTileMovementValue(tile))
+            .OrderBy(tile => CalculateTileMovementValue(startingTile, tile))
             .ThenBy(tile => Random.Range(0f, 1f))
             .ToList<Tile>();
     }
 
     // OrderBy is ascending, so higher result = lower calculated value
-    int CalculateTileMovementValue(Tile tile)
+    int CalculateTileMovementValue(Tile startingTile, Tile destinationTile)
     {
         int result = 0;
 
-        result += tile.DistanceFromPlayer;
-        result += tile.DistanceFromPlayer == 0 ? 10 : 0;
-        result += projectedEnemyAttackTiles.Contains(tile) ? 3 : 0;
-        result += projectedEnemyMovementTiles.Contains(tile) ? 5 : 0;
-        result += currentlyOccupiedTiles.Contains(tile) ? 10 : 0;
+        result += destinationTile.DistanceFromPlayer * 10;
+
+        // Super rough addition to increase value of tiles closer to origin tile
+        // without having to perform redundant path-mapping just to find exact distance.
+
+        result += Mathf.Abs(startingTile.Position.x - destinationTile.Position.x);
+        result += Mathf.Abs(startingTile.Position.y - destinationTile.Position.y);
+
+        result += destinationTile.DistanceFromPlayer == 0 ? 100 : 0;
+        result += projectedEnemyAttackTiles.Contains(destinationTile) ? 30 : 0;
+        result += projectedEnemyMovementTiles.Contains(destinationTile) ? 50 : 0;
+        result += currentlyOccupiedTiles.Contains(destinationTile) ? 100 : 0;
 
         return result;
     }
