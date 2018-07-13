@@ -125,10 +125,43 @@ public class GameStateHelperFunctions {
         ProcessAction(turn.action, state);
     }
 
-    // TODO: Fill this out
     public static void ProcessMoves(List<Direction> moves, EntityData entity, GameState state)
     {
+        for (int i = 0; i < moves.Count; i++)
+        {
+            Direction nextMove = moves[i];
+            TryToMoveEntityInDirection(entity, nextMove);
+        }
+    }
 
+    static void TryToMoveEntityInDirection(EntityData entity, Direction direction)
+    {
+        Tile currentTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
+
+        Vector2Int intendedNextPosition = entity.Position;
+
+        switch (direction)
+        {
+            case Direction.Up:
+                intendedNextPosition.y--;
+                break;
+            case Direction.Right:
+                intendedNextPosition.x++;
+                break;
+            case Direction.Down:
+                intendedNextPosition.y++;
+                break;
+            case Direction.Left:
+                intendedNextPosition.x--;
+                break;
+            default:
+                break;
+        }
+
+        if (currentTile.HasNeighborWhere(t => t.Position == intendedNextPosition))
+        {
+            entity.Position = intendedNextPosition; 
+        }
     }
 
     public static void ProcessAction(Action action, GameState state)
@@ -186,11 +219,11 @@ public class GameStateHelperFunctions {
             return;
         }
         gameState.tilesAttackedLastRound.Add(BoardHelperFunctions.GetTileAtPosition(targetCellPosition));
-        if (!GameStateHelperFunctions.IsTileOccupied(targetCellPosition, gameState))
+        if (!IsTileOccupied(targetCellPosition, gameState))
         {
             return;
         }
-        EntityData targetEntity = GameStateHelperFunctions.GetOccupantOfCell(targetCellPosition, gameState);
+        EntityData targetEntity = GetOccupantOfCell(targetCellPosition, gameState);
 
         targetEntity.Health -= card.Damage;
     }

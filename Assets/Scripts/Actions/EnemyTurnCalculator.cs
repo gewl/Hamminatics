@@ -46,7 +46,6 @@ public class EnemyTurnCalculator : MonoBehaviour {
             List<Tile> sortedPotentialMoveTargets = SortTilesByMoveEligibility(enemyTile, potentialMoveTargetTiles, enemyAttackRange);
 
             Tile targetMovementTile = sortedPotentialMoveTargets[0];
-            BoardController.TurnTileColor(targetMovementTile, Color.blue);
             projectedEnemyMovementTiles.Add(targetMovementTile);
 
             List<Direction> movesToTargetMovementTile = BoardHelperFunctions.GetPathToTile(enemyTile, targetMovementTile);

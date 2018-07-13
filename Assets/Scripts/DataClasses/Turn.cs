@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Turn {
+public class Turn {
 
     public EntityData Entity
     {
@@ -15,6 +15,7 @@ public struct Turn {
     public void UpdateEntity(EntityData newEntity)
     {
         Entity = newEntity;
+        action.entity = newEntity;
     }
 
     public Turn(EntityData _entity, List<Direction> _moves, Action _action)
