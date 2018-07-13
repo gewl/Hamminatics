@@ -197,16 +197,16 @@ public class BoardHelperFunctions : MonoBehaviour {
         // Breadth-first search starting from initial tile until destination tile found.
         while (!tileFound)
         {
-            Tile nextTile = tilesToCheck.Dequeue();
+            Tile currentTile = tilesToCheck.Dequeue();
 
-            foreach (Tile neighbor in nextTile.Neighbors)
+            foreach (Tile neighbor in currentTile.Neighbors)
             {
                 if (reachableTiles.ContainsKey(neighbor))
                 {
                     continue;
                 }
 
-                reachableTiles[neighbor] = nextTile;
+                reachableTiles[neighbor] = currentTile;
 
                 if (neighbor == destinationTile)
                 {
@@ -220,14 +220,14 @@ public class BoardHelperFunctions : MonoBehaviour {
         List<Direction> path = new List<Direction>();
 
         // Work backwards from destination tile, adding a step to path with each step backward.
-        Tile currentTile = destinationTile;
-        Tile nextParent = reachableTiles[currentTile];
+        Tile tile = destinationTile;
+        Tile parent = reachableTiles[tile];
 
-        while (currentTile != startingTile)
+        while (tile != startingTile)
         {
-            path.Add(GetDirectionBetweenTiles(nextParent, currentTile));
-            currentTile = nextParent;
-            nextParent = reachableTiles[currentTile];
+            parent = reachableTiles[tile];
+            path.Add(GetDirectionBetweenTiles(parent, tile));
+            tile = parent;
         }
 
         path.Reverse();

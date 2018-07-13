@@ -57,24 +57,24 @@ public class GameStateHelperFunctions {
         return null;
     }
 
-    public static int GetCellDistanceFromPlayer(Vector2Int cellPosition, GameState state)
+    public static int GetTileDistanceFromPlayer(Vector2Int cellPosition, GameState state)
     {
         int xDifference = Mathf.Abs(cellPosition.x - state.player.Position.x);
 
         return xDifference != 0 ? xDifference : Mathf.Abs(cellPosition.y - state.player.Position.y);
     }
 
-    public static bool IsCellOccupied(int x, int y, GameState state)
+    public static bool IsTileOccupied(int x, int y, GameState state)
     {
-        return isTileOccupied(new Vector2Int(x, y), state);
+        return IsTileOccupied(new Vector2Int(x, y), state);
     }
 
-    public static bool isTileOccupied(Vector2Int position, GameState state)
+    public static bool IsTileOccupied(Vector2Int position, GameState state)
     {
         return state.player.Position == position || state.enemies.Any<EntityData>(entityData => entityData.Position == position);
     }
 
-    public static bool IsCellOccupied(Vector2Int originPosition, Direction directionFromOrigin, int distanceFromOrigin, GameState state)
+    public static bool IsTileOccupied(Vector2Int originPosition, Direction directionFromOrigin, int distanceFromOrigin, GameState state)
     {
         Vector2Int updatedPosition = originPosition;
 
@@ -96,7 +96,7 @@ public class GameStateHelperFunctions {
                 break;
         }
 
-        return IsCellOccupied(updatedPosition.x, updatedPosition.y, state);
+        return IsTileOccupied(updatedPosition.x, updatedPosition.y, state);
     }
 
     public static GameState CalculateFollowingGameState(GameState currentState)
@@ -155,13 +155,13 @@ public class GameStateHelperFunctions {
             return;
         }
 
-        if (isTileOccupied(projectedPosition, gameState))
+        if (IsTileOccupied(projectedPosition, gameState))
         {
             EntityData tileOccupant = GetOccupantOfCell(projectedPosition, gameState);
 
             Vector2Int projectedBumpPosition = GetTilePosition(projectedPosition, direction, 1);
 
-            bool canBump = BoardHelperFunctions.GetTileAtPosition(projectedPosition).HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition) && !isTileOccupied(projectedBumpPosition, gameState);
+            bool canBump = BoardHelperFunctions.GetTileAtPosition(projectedPosition).HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition) && !IsTileOccupied(projectedBumpPosition, gameState);
 
             if (canBump)
             {
@@ -186,7 +186,7 @@ public class GameStateHelperFunctions {
             return;
         }
         gameState.tilesAttackedLastRound.Add(BoardHelperFunctions.GetTileAtPosition(targetCellPosition));
-        if (!GameStateHelperFunctions.isTileOccupied(targetCellPosition, gameState))
+        if (!GameStateHelperFunctions.IsTileOccupied(targetCellPosition, gameState))
         {
             return;
         }

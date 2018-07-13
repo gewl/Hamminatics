@@ -38,9 +38,12 @@ public class EnemyTurnCalculator : MonoBehaviour {
             MovementCardData enemyMovementCard = enemy.MovementCard;
             int enemyMoveRange = enemyMovementCard.Range;
 
+            AttackCardData enemyAttackCard = enemy.attackCard;
+            int enemyAttackRange = enemyAttackCard.Range;
+
             List<Tile> potentialMoveTargetTiles = BoardHelperFunctions.GetPotentialTargetsRecursively(enemyPosition, enemyMoveRange);
 
-            List<Tile> sortedPotentialMoveTargets = SortTilesByMoveEligibility(enemyTile, potentialMoveTargetTiles);
+            List<Tile> sortedPotentialMoveTargets = SortTilesByMoveEligibility(enemyTile, potentialMoveTargetTiles, enemyAttackRange);
 
             Tile targetMovementTile = sortedPotentialMoveTargets[0];
             BoardController.TurnTileColor(targetMovementTile, Color.blue);
@@ -48,8 +51,6 @@ public class EnemyTurnCalculator : MonoBehaviour {
 
             List<Direction> movesToTargetMovementTile = BoardHelperFunctions.GetPathToTile(enemyTile, targetMovementTile);
 
-            AttackCardData enemyAttackCard = enemy.attackCard;
-            int enemyAttackRange = enemyAttackCard.Range;
 
             // IF enemy is projected to move into player's tile:
             // THEN attack as if enemy is NOT moving (to account for projected player displacement)
@@ -73,20 +74,20 @@ public class EnemyTurnCalculator : MonoBehaviour {
         }
     }
 
-    List<Tile> SortTilesByMoveEligibility(Tile startingTile, List<Tile> unsortedList)
+    List<Tile> SortTilesByMoveEligibility(Tile startingTile, List<Tile> unsortedList, int attackRange)
     {
         return unsortedList
-            .OrderBy(tile => CalculateTileMovementValue(startingTile, tile))
+            .OrderBy(tile => CalculateTileMovementValue(startingTile, tile, attackRange))
             .ThenBy(tile => Random.Range(0f, 1f))
             .ToList<Tile>();
     }
 
     // OrderBy is ascending, so higher result = lower calculated value
-    int CalculateTileMovementValue(Tile startingTile, Tile destinationTile)
+    int CalculateTileMovementValue(Tile startingTile, Tile destinationTile, int attackRange)
     {
         int result = 0;
 
-        result += destinationTile.DistanceFromPlayer * 10;
+        result += Mathf.Abs(destinationTile.DistanceFromPlayer - attackRange) * 10;
 
         // Super rough addition to increase value of tiles closer to origin tile
         // without having to perform redundant path-mapping just to find exact distance.
