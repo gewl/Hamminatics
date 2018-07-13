@@ -6,6 +6,9 @@ using Sirenix.OdinInspector;
 
 public class ImageManager : SerializedMonoBehaviour {
     [SerializeField]
+    Sprite emptyActionSprite;
+
+    [SerializeField]
     GameObject abilityPointerPrefab;
 
     [SerializeField]
@@ -25,6 +28,11 @@ public class ImageManager : SerializedMonoBehaviour {
         abilityPointer.GetComponent<Image>().sprite = GetActionSprite(cardCategory, direction);
 
         return abilityPointer;
+    }
+
+    public static Sprite GetEmptyActionSprite()
+    {
+        return instance.emptyActionSprite;
     }
 
     public static Sprite GetActionSprite(CardCategory cardCategory, Direction direction)

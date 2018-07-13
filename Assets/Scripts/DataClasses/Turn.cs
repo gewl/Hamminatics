@@ -18,6 +18,12 @@ public class Turn {
         action.entity = newEntity;
     }
 
+    public Turn(EntityData _entity)
+    {
+        Entity = _entity;
+        moves = new List<Direction>();
+    }   
+
     public Turn(EntityData _entity, List<Direction> _moves, Action _action)
     {
         Entity = _entity;

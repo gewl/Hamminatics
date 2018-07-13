@@ -101,7 +101,7 @@ public class GameStateHelperFunctions {
 
     public static GameState CalculateFollowingGameState(GameState currentState)
     {
-        GameState projectedState = GameStateHelperFunctions.DeepCopyGameState(currentState);
+        GameState projectedState = DeepCopyGameState(currentState);
         projectedState.tilesAttackedLastRound.Clear();
 
         while (projectedState.turnStack.Count > 0)
@@ -119,10 +119,20 @@ public class GameStateHelperFunctions {
         return position.x >= 0 && position.x < BoardController.BoardWidth && position.y >= 0 && position.y < BoardController.BoardWidth;
     }
 
+    // Currently, this silently fails if the turn is 'empty' so that the game can extrapolate
+    // following gamestates regardless of whether the player has chosen their turn yet.
+    // If there's ever an empty turn for any other reason, this is going to be a problem—
+    // but there *should* (lol) never be an empty turn for any other reason.
     public static void ProcessTurn(Turn turn, GameState state)
     {
-        ProcessMoves(turn.moves, turn.Entity, state);
-        ProcessAction(turn.action, state);
+        if (turn.moves.Count > 0)
+        {
+            ProcessMoves(turn.moves, turn.Entity, state);
+        }
+        if (turn.action != null && turn.action.card != null)
+        {
+            ProcessAction(turn.action, state);
+        }
     }
 
     public static void ProcessMoves(List<Direction> moves, EntityData entity, GameState state)

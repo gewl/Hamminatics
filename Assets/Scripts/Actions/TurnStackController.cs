@@ -40,16 +40,8 @@ public class TurnStackController : MonoBehaviour {
 
     public void AddEmptyPlayerTurn()
     {
-        //Turn newTurn = new Turn(gameStateManager.Player);
-        //Turn newTurn = new Action(card, entity, direction, distance);
-        //if (DoesTurnStackContainCompletePlayerTurn())
-        //{
-        //    ReplacePlayerAction(newTurn);
-        //}
-        //else
-        //{
-        //    AddNewTurn(newTurn);
-        //}
+        Turn newTurn = new Turn(gameStateManager.Player);
+        AddNewTurn(newTurn);
     }
 
     public void ReplacePlayerTurn()

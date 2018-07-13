@@ -53,10 +53,10 @@ public class QueuedTurnController : MonoBehaviour, IBeginDragHandler, IDragHandl
         Sprite subjectSprite = turn.Entity.EntitySprite;
         subjectIcon.sprite = subjectSprite;
 
-        Sprite directionSprite = ImageManager.GetMovementSprite(turn.moves[0]);
+        Sprite directionSprite = turn.moves.Count > 0 ? ImageManager.GetMovementSprite(turn.moves[0]) : ImageManager.GetEmptyActionSprite();
         firstActionIcon.sprite = directionSprite;
 
-        Sprite actionSprite = ImageManager.GetActionSprite(turn.action.card.Category, turn.action.direction);
+        Sprite actionSprite = turn.action.card != null ? ImageManager.GetActionSprite(turn.action.card.Category, turn.action.direction) : ImageManager.GetEmptyActionSprite();
         secondActionIcon.sprite = actionSprite;
     }
 

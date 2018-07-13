@@ -97,7 +97,7 @@ public class GameStateManager : MonoBehaviour {
 
     void SetBoardUp()
     {
-        enemyTurnCalculator.CalculateAndQueueEnemyTurns(CurrentGameState);
+        GenerateNextTurnStack(CurrentGameState);
         OnCurrentGameStateChange(CurrentGameState);
     }
 
@@ -207,17 +207,24 @@ public class GameStateManager : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
         }
 
-        enemyTurnCalculator.CalculateAndQueueEnemyTurns(CurrentGameState);
-
-        isHandlingTurn = false;
-        if (OnCurrentGameStateChange != null)
-        {
-            OnCurrentGameStateChange(CurrentGameState);
-        }
+        GenerateNextTurnStack(CurrentGameState);
 
         if (OnRoundEnded != null)
         {
             OnRoundEnded(CurrentGameState);
         }
+
+        isHandlingTurn = false;
+
+        if (OnCurrentGameStateChange != null)
+        {
+            OnCurrentGameStateChange(CurrentGameState);
+        }
+    }
+
+    void GenerateNextTurnStack(GameState gameState)
+    {
+        enemyTurnCalculator.CalculateAndQueueEnemyTurns(CurrentGameState);
+        turnStackController.AddEmptyPlayerTurn();
     }
 }
