@@ -97,6 +97,30 @@ public class BoardHelperFunctions : MonoBehaviour {
         return true;
     }
 
+    static public bool AreTwoTilesLinearlyReachable(Tile tile1, Tile tile2)
+    {
+        if (!AreTwoTilesLinear(tile1, tile2))
+        {
+            return false;
+        }
+
+        Direction toTile2 = GetDirectionBetweenTiles(tile1, tile2);
+
+        Tile activeTile = tile1;
+
+        while (activeTile != tile2)
+        {
+            activeTile = activeTile.GetDirectionalNeighbor(toTile2);
+
+            if (activeTile == null)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     static public int GetLinearDistanceBetweenTiles(Tile tile1, Tile tile2)
     {
         Vector2Int position1 = tile1.Position;

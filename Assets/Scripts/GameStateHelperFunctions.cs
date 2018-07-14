@@ -223,17 +223,20 @@ public class GameStateHelperFunctions {
 
     static void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance, GameState gameState)
     {
-        Vector2Int targetCellPosition = GetTilePosition(entity.Position, direction, distance);
-        if (!IsTileValid(targetCellPosition)) 
+        Tile originTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
+        Vector2Int targetTilePosition = GetTilePosition(entity.Position, direction, distance);
+        Tile targetTile = BoardHelperFunctions.GetTileAtPosition(targetTilePosition);
+
+        if (!IsTileValid(targetTilePosition) || !BoardHelperFunctions.AreTwoTilesLinearlyReachable(originTile, targetTile))
         {
             return;
         }
-        gameState.tilesAttackedLastRound.Add(BoardHelperFunctions.GetTileAtPosition(targetCellPosition));
-        if (!IsTileOccupied(targetCellPosition, gameState))
+        gameState.tilesAttackedLastRound.Add(BoardHelperFunctions.GetTileAtPosition(targetTilePosition));
+        if (!IsTileOccupied(targetTilePosition, gameState))
         {
             return;
         }
-        EntityData targetEntity = GetOccupantOfCell(targetCellPosition, gameState);
+        EntityData targetEntity = GetOccupantOfCell(targetTilePosition, gameState);
 
         targetEntity.Health -= card.Damage;
     }

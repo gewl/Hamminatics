@@ -115,7 +115,6 @@ public class Tile
         }
     }
 
-
     public void RemoveRandomNeighbor()
     {
         int neighborIndex = new System.Random().Next(0, neighbors.Count);

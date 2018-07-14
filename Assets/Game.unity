@@ -9200,7 +9200,7 @@ MonoBehaviour:
     SerializationNodes: []
   equippedCards:
   - {fileID: 11400000, guid: d795a7befc81c354dbe74ba6b07573d5, type: 2}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 7976fce2e91140948b5bcce173f85f1b, type: 2}
   - {fileID: 0}
   - {fileID: 0}
 --- !u!1 &2051296338

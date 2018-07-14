@@ -70,7 +70,7 @@ public class GameStateManager : MonoBehaviour {
 
     bool isHandlingTurn = false;
     public bool IsHandlingActions { get { return isHandlingTurn; } }
-    public Vector2Int ProjectedPlayerPosition { get { return Player.Position; } }
+    public Vector2Int ProjectedPlayerPosition { get { return ProjectedGameState.player.Position; } }
 
     private void Awake()
     {
@@ -111,16 +111,13 @@ public class GameStateManager : MonoBehaviour {
         // Other actions are 'from' player's projected position.
         Vector2Int playerOrigin = card.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
 
-        BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => AttemptToHighlightCell(t.Position));
+        BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
     }
 
-    void AttemptToHighlightCell(Vector2Int position)
+    void HighlightCell(Vector2Int position)
     {
-        if (GameStateHelperFunctions.IsTileValid(position) && Player.Position != position)
-        {
-            boardController.HighlightSelectedCell(position);
-            potentialCardTargets.Add(position);
-        }
+        boardController.HighlightSelectedCell(position);
+        potentialCardTargets.Add(position);
     }
 
     public void ResetBoard(List<Turn> turnList)
