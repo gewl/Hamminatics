@@ -49,29 +49,29 @@ public class TurnStackController : MonoBehaviour {
         return TurnStack.First(t => t.Entity == gameStateManager.Player);
     }
 
-    public void AddToPlayerTurn(CardData card, EntityData player, Vector2Int targetPosition)
+    public void AddToPlayerTurn(CardData card, EntityData player, Vector2Int originPosition, Vector2Int targetPosition)
     {
         if (card.Category == CardCategory.Movement)
         {
-            UpdatePlayerTurn_Movement(player, targetPosition);
+            UpdatePlayerTurn_Movement(originPosition, targetPosition);
         }
         else
         {
-            UpdatePlayerTurn_Action(card, player, targetPosition);
+            UpdatePlayerTurn_Action(card, player, originPosition, targetPosition);
         }
         OnTurnStackUpdate(new List<Turn>(TurnStack));
     }
 
-    void UpdatePlayerTurn_Movement(EntityData player, Vector2Int targetPosition)
+    void UpdatePlayerTurn_Movement(Vector2Int originPosition, Vector2Int targetPosition)
     {
-        List<Direction> pathToPosition = BoardHelperFunctions.FindPathBetweenTiles(BoardHelperFunctions.GetTileAtPosition(player.Position), BoardHelperFunctions.GetTileAtPosition(targetPosition));
+        List<Direction> pathToPosition = BoardHelperFunctions.FindPathBetweenTiles(BoardHelperFunctions.GetTileAtPosition(originPosition), BoardHelperFunctions.GetTileAtPosition(targetPosition));
 
         GetPlayerTurn().moves = pathToPosition;
     }
 
-    void UpdatePlayerTurn_Action(CardData card, EntityData player, Vector2Int targetPosition)
+    void UpdatePlayerTurn_Action(CardData card, EntityData player, Vector2Int originPosition, Vector2Int targetPosition)
     {
-        Tile playerTile = BoardHelperFunctions.GetTileAtPosition(player.Position);
+        Tile playerTile = BoardHelperFunctions.GetTileAtPosition(originPosition);
         Tile targetTile = BoardHelperFunctions.GetTileAtPosition(targetPosition);
         GetPlayerTurn().action = new Action(card, player, BoardHelperFunctions.GetDirectionBetweenTiles(playerTile, targetTile), BoardHelperFunctions.GetLinearDistanceBetweenTiles(playerTile, targetTile));
     }

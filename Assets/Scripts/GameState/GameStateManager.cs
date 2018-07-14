@@ -106,7 +106,12 @@ public class GameStateManager : MonoBehaviour {
         ResetBoard(CurrentGameState);
 
         int cardRange = card.Range;
-        BoardHelperFunctions.GetPotentialBranchingTargets(Player.Position, cardRange).ForEach(t => AttemptToHighlightCell(t.Position));
+
+        // Movement availability is always 'from' player's current position.
+        // Other actions are 'from' player's projected position.
+        Vector2Int playerOrigin = card.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
+
+        BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => AttemptToHighlightCell(t.Position));
     }
 
     void AttemptToHighlightCell(Vector2Int position)
@@ -146,7 +151,9 @@ public class GameStateManager : MonoBehaviour {
         }
         if (potentialCardTargets.Contains(cellPosition))
         {
-            turnStackController.AddToPlayerTurn(equippedCardsManager.GetSelectedCard(), Player, cellPosition);
+            CardData selectedCard = equippedCardsManager.GetSelectedCard();
+            Vector2Int playerOrigin = selectedCard.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
+            turnStackController.AddToPlayerTurn(selectedCard, Player, playerOrigin, cellPosition);
             equippedCardsManager.ClearSelectedCard();
             OnCurrentGameStateChange(CurrentGameState);
         }
