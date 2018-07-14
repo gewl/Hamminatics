@@ -44,59 +44,73 @@ public class TurnStackController : MonoBehaviour {
         AddNewTurn(newTurn);
     }
 
-    public void ReplacePlayerTurn()
+    Turn GetPlayerTurn()
     {
-        //List<Action> actionList = TurnStack.ToList<Action>();
-        //int oldPlayerActionIndex = actionList.FindIndex(action => action.entity.ID == Constants.PLAYER_ID);
-        //if (actionList[oldPlayerActionIndex] == newAction)
-        //{
-        //    return;
-        //}
-        //actionList[oldPlayerActionIndex] = newAction;
+        return TurnStack.First(t => t.Entity == gameStateManager.Player);
+    }
 
-        //TurnStack = ConvertListToStack(actionList);
+    public void AddToPlayerTurn(CardData card, EntityData player, Vector2Int targetPosition)
+    {
+        if (card.Category == CardCategory.Movement)
+        {
+            UpdatePlayerTurn_Movement(player, targetPosition);
+        }
+        else
+        {
+            UpdatePlayerTurn_Action(card, player, targetPosition);
+        }
+        OnTurnStackUpdate(new List<Turn>(TurnStack));
+    }
 
-        //if (OnTurnStackUpdate != null)
-        //{
-        //    OnTurnStackUpdate(actionList);
-        //}
+    void UpdatePlayerTurn_Movement(EntityData player, Vector2Int targetPosition)
+    {
+        List<Direction> pathToPosition = BoardHelperFunctions.FindPathBetweenTiles(BoardHelperFunctions.GetTileAtPosition(player.Position), BoardHelperFunctions.GetTileAtPosition(targetPosition));
+
+        GetPlayerTurn().moves = pathToPosition;
+    }
+
+    void UpdatePlayerTurn_Action(CardData card, EntityData player, Vector2Int targetPosition)
+    {
+        Tile playerTile = BoardHelperFunctions.GetTileAtPosition(player.Position);
+        Tile targetTile = BoardHelperFunctions.GetTileAtPosition(targetPosition);
+        GetPlayerTurn().action = new Action(card, player, BoardHelperFunctions.GetDirectionBetweenTiles(playerTile, targetTile), BoardHelperFunctions.GetLinearDistanceBetweenTiles(playerTile, targetTile));
     }
 
     public void ChangePlayerTurnPosition(int newIndex)
     {
-        //List<Action> actionList = TurnStack.ToList();
+        List<Turn> turnList = TurnStack.ToList();
 
-        //Action playerAction = actionList.Find(IsPlayerActionPredicate);
+        Turn playerTurn = GetPlayerTurn();
 
-        //Stack<Action> newActionStack = new Stack<Action>();
-        //for (int i = actionList.Count - 1; i >= newIndex; i--)
-        //{
-        //    Action action = actionList[i];
-        //    if (IsPlayerAction(action))
-        //    {
-        //        continue;
-        //    }
+        Stack<Turn> newTurnStack = new Stack<Turn>();
 
-        //    newActionStack.Push(action);
-        //}
+        for (int i = turnList.Count - 1; i >= newIndex; i--) 
+        {
+            Turn turn = turnList[i];
+            if (IsPlayerTurn(turn))
+            {
+                continue;
+            }
 
-        //newActionStack.Push(playerAction);
+            newTurnStack.Push(turn);
+        }
 
-        //for (int i = newIndex-1; i >= 0; i--)
-        //{
-        //    Action action = actionList[i];
-        //    if (IsPlayerAction(action))
-        //    {
-        //        continue;
-        //    }
+        newTurnStack.Push(playerTurn);
 
-        //    newActionStack.Push(action);
-        //}
+        for (int i = newIndex - 1; i >= 0; i--)
+        {
+            Turn turn = turnList[i];
+            if (IsPlayerTurn(turn))
+            {
+                continue;
+            }
 
+            newTurnStack.Push(turn);
+        }
 
-        //TurnStack = newActionStack;
-        //energyManager.ProjectedEnergyGain = newIndex - 1;
-        //OnTurnStackUpdate(TurnStack.ToList<Action>());
+        TurnStack = newTurnStack;
+        energyManager.ProjectedEnergyGain = newIndex - 1;
+        OnTurnStackUpdate(TurnStack.ToList<Turn>());
     }
 
     public Stack<Turn> ConvertListToStack(List<Turn> turnList)

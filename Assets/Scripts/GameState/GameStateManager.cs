@@ -105,41 +105,8 @@ public class GameStateManager : MonoBehaviour {
     {
         ResetBoard(CurrentGameState);
 
-        List<Tile> reachableTiles = BoardHelperFunctions.GetDirectlyReachableTiles(ProjectedPlayerPosition);
-
         int cardRange = card.Range;
-
-        int leftMaximumX = Player.Position.x - cardRange;
-        int rightMaximumX = Player.Position.x + cardRange;
-        int topMaximumY = Player.Position.y - cardRange;
-        int bottomMaximumY = Player.Position.y + cardRange;
-
-        int testX = leftMaximumX;
-        int testY = topMaximumY;
-
-        while (testX <= rightMaximumX)
-        {
-            Vector2Int testPosition = new Vector2Int(testX, Player.Position.y);
-
-            if (reachableTiles.Exists(tile => tile.Position == testPosition))
-            {
-                AttemptToHighlightCell(testPosition);
-            }
-
-            testX++;
-        }
-
-        while (testY <= bottomMaximumY)
-        {
-            Vector2Int testPosition = new Vector2Int(Player.Position.x, testY);
-
-            if (reachableTiles.Exists(tile => tile.Position == testPosition))
-            {
-                AttemptToHighlightCell(testPosition);
-            }
-
-            testY++;
-        }
+        BoardHelperFunctions.GetPotentialBranchingTargets(Player.Position, cardRange).ForEach(t => AttemptToHighlightCell(t.Position));
     }
 
     void AttemptToHighlightCell(Vector2Int position)
@@ -179,7 +146,7 @@ public class GameStateManager : MonoBehaviour {
         }
         if (potentialCardTargets.Contains(cellPosition))
         {
-            //turnStackController.AddPlayerTurn(equippedCardsManager.GetSelectedCard(), Player, GameStateHelperFunctions.GetDirectionFromEntity(CurrentGameState.player, cellPosition), GameStateHelperFunctions.GetCellDistanceFromPlayer(cellPosition, CurrentGameState));
+            turnStackController.AddToPlayerTurn(equippedCardsManager.GetSelectedCard(), Player, cellPosition);
             equippedCardsManager.ClearSelectedCard();
             OnCurrentGameStateChange(CurrentGameState);
         }

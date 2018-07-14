@@ -12,14 +12,14 @@ public class BoardHelperFunctions : MonoBehaviour {
         return BoardController.CurrentBoard.Tiles[position.x, position.y];
     }
 
-    static public List<Tile> GetPotentialTargets(Vector2Int startingPosition, int range)
+    static public List<Tile> GetPotentialLinearTargets(Vector2Int startingPosition, int range)
     {
         Tile startingTile = GetTileAtPosition(startingPosition);
 
-        return GetPotentialTargets(startingTile, range);
+        return GetPotentialLinearTargets(startingTile, range);
     }
 
-    static public List<Tile> GetPotentialTargets(Tile startingTile, int range)
+    static public List<Tile> GetPotentialLinearTargets(Tile startingTile, int range)
     {
         List<Tile> potentialTargets = new List<Tile>();
 
@@ -40,13 +40,13 @@ public class BoardHelperFunctions : MonoBehaviour {
         return potentialTargets;
     }
 
-    static public List<Tile> GetPotentialTargetsRecursively(Vector2Int position, int range)
+    static public List<Tile> GetPotentialBranchingTargets(Vector2Int position, int range)
     {
-        return GetPotentialTargetsRecursively(GetTileAtPosition(position), range);
+        return GetPotentialBranchingTargets(GetTileAtPosition(position), range);
     }
 
     // For branching/multidirectional searching.
-    static public List<Tile> GetPotentialTargetsRecursively(Tile startingTile, int range, List<Tile> checkedTiles = null)
+    static public List<Tile> GetPotentialBranchingTargets(Tile startingTile, int range, List<Tile> checkedTiles = null)
     {
         if (range == 0)
         {
@@ -76,7 +76,7 @@ public class BoardHelperFunctions : MonoBehaviour {
         List<Tile> resultsOfRecursion = new List<Tile>();
         for (int i = 0; i < potentialTargets.Count; i++)
         {
-            resultsOfRecursion.AddRange(GetPotentialTargetsRecursively(potentialTargets[i], range, checkedTiles));
+            resultsOfRecursion.AddRange(GetPotentialBranchingTargets(potentialTargets[i], range, checkedTiles));
         }
 
         return potentialTargets.Union(resultsOfRecursion).ToList();
@@ -184,7 +184,7 @@ public class BoardHelperFunctions : MonoBehaviour {
         return reachableTiles;
     }
 
-    static public List<Direction> GetPathToTile(Tile startingTile, Tile destinationTile)
+    static public List<Direction> FindPathBetweenTiles(Tile startingTile, Tile destinationTile)
     {
         bool tileFound = false;
         // Key: Reachable tile

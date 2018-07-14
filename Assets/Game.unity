@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 12862603}
   - component: {fileID: 12862605}
   m_Layer: 5
-  m_Name: Space_0-3
+  m_Name: Space_3-0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -535,7 +535,7 @@ GameObject:
   - component: {fileID: 97159961}
   - component: {fileID: 97159963}
   m_Layer: 5
-  m_Name: Space_3-2
+  m_Name: Space_2-3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1465,6 +1465,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  emptyActionSprite: {fileID: 21300000, guid: 1a75093240ca2de46bcd8d2ccb56bec9, type: 3}
   abilityPointerPrefab: {fileID: 1913382652620346, guid: 846bbc2c4028bec488a19f7e5c9c5985,
     type: 2}
 --- !u!114 &323374607
@@ -1514,7 +1515,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d3f338fac6c4ce4485b45040b4c3b2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardController: {fileID: 2063671481}
 --- !u!1 &341573497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1649,7 +1649,7 @@ GameObject:
   - component: {fileID: 379670944}
   - component: {fileID: 379670946}
   m_Layer: 5
-  m_Name: Space_4-1
+  m_Name: Space_1-4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2685,7 +2685,7 @@ GameObject:
   - component: {fileID: 494028163}
   - component: {fileID: 494028165}
   m_Layer: 5
-  m_Name: Space_3-4
+  m_Name: Space_4-3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3325,7 +3325,7 @@ GameObject:
   - component: {fileID: 694111784}
   - component: {fileID: 694111786}
   m_Layer: 5
-  m_Name: Space_1-4
+  m_Name: Space_4-1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3784,7 +3784,7 @@ GameObject:
   - component: {fileID: 842781601}
   - component: {fileID: 842781603}
   m_Layer: 5
-  m_Name: Space_2-0
+  m_Name: Space_0-2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3942,7 +3942,7 @@ GameObject:
   - component: {fileID: 857506655}
   - component: {fileID: 857506657}
   m_Layer: 5
-  m_Name: Space_2-4
+  m_Name: Space_4-2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4123,7 +4123,7 @@ GameObject:
   - component: {fileID: 934705001}
   - component: {fileID: 934705003}
   m_Layer: 5
-  m_Name: Space_4-2
+  m_Name: Space_2-4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4379,7 +4379,7 @@ GameObject:
   - component: {fileID: 959626234}
   - component: {fileID: 959626236}
   m_Layer: 5
-  m_Name: Space_0-1
+  m_Name: Space_1-0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5301,7 +5301,7 @@ GameObject:
   - component: {fileID: 1074004657}
   - component: {fileID: 1074004659}
   m_Layer: 5
-  m_Name: Space_0-4
+  m_Name: Space_4-0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7141,7 +7141,7 @@ GameObject:
   - component: {fileID: 1559469690}
   - component: {fileID: 1559469692}
   m_Layer: 5
-  m_Name: Space_1-2
+  m_Name: Space_2-1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7225,7 +7225,7 @@ GameObject:
   - component: {fileID: 1658795036}
   - component: {fileID: 1658795038}
   m_Layer: 5
-  m_Name: Space_2-3
+  m_Name: Space_3-2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7309,7 +7309,7 @@ GameObject:
   - component: {fileID: 1665490719}
   - component: {fileID: 1665490721}
   m_Layer: 5
-  m_Name: Space_1-0
+  m_Name: Space_0-1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7393,7 +7393,7 @@ GameObject:
   - component: {fileID: 1701491206}
   - component: {fileID: 1701491208}
   m_Layer: 5
-  m_Name: Space_2-1
+  m_Name: Space_1-2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8322,7 +8322,7 @@ GameObject:
   - component: {fileID: 1815739243}
   - component: {fileID: 1815739245}
   m_Layer: 5
-  m_Name: Space_1-3
+  m_Name: Space_3-1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8595,7 +8595,7 @@ GameObject:
   - component: {fileID: 1830992120}
   - component: {fileID: 1830992122}
   m_Layer: 5
-  m_Name: Space_4-0
+  m_Name: Space_0-4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8740,7 +8740,7 @@ GameObject:
   - component: {fileID: 1892073292}
   - component: {fileID: 1892073294}
   m_Layer: 5
-  m_Name: Space_0-2
+  m_Name: Space_2-0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8824,7 +8824,7 @@ GameObject:
   - component: {fileID: 1921411624}
   - component: {fileID: 1921411626}
   m_Layer: 5
-  m_Name: Space_3-0
+  m_Name: Space_0-3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8908,7 +8908,7 @@ GameObject:
   - component: {fileID: 1927305237}
   - component: {fileID: 1927305239}
   m_Layer: 5
-  m_Name: Space_4-3
+  m_Name: Space_3-4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9502,7 +9502,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2063671478}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dec0245d954a8d4da26bec9a22194ee, type: 3}
   m_Name: 
@@ -9580,7 +9580,7 @@ GameObject:
   - component: {fileID: 2111268434}
   - component: {fileID: 2111268436}
   m_Layer: 5
-  m_Name: Space_3-1
+  m_Name: Space_1-3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
