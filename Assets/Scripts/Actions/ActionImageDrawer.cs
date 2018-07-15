@@ -2,40 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardAbilityImageManager : MonoBehaviour {
+public class ActionImageDrawer : MonoBehaviour {
 
     [SerializeField]
     TurnStackController actionStackController;
     [SerializeField]
     BoardController boardController;
 
-    private void OnEnable()
-    {
-        actionStackController.OnTurnStackUpdate += DrawTurns;            
-    }
-
-    private void OnDisable()
-    {
-        actionStackController.OnTurnStackUpdate -= DrawTurns;
-    }
-
-    void DrawTurns(List<Turn> turns)
+    public void Draw(List<CompletedMove> completedMoves, List<CompletedAction> completedActions)
     {
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
 
-        for (int i = 0; i < turns.Count; i++)
+        for (int i = 0; i < completedMoves.Count; i++)
         {
-            Turn turn = turns[i];
-            if (turn.moves.Count > 0)
+            CompletedMove move = completedMoves[i];
+            if (move.Moves.Count > 0)
             {
-                GenerateNewMoveImage(turn.Entity.Position, turn.moves[0]);
+                GenerateNewMoveImage(move.OriginTile.Position, move.Moves[0]);
             }
+        }
 
-            // TODO: Generate action image at right place, facing right direction
-            //GenerateNewActionImage(turn.action, turn.action.entity.Position, turn.action.direction);
+        for (int i = 0; i < completedActions.Count; i++)
+        {
+            CompletedAction completedAction = completedActions[i];
+
+            GenerateNewActionImage(completedAction.Category, completedAction.OriginTile.Position, completedAction.Direction);
         }
     }
 
@@ -48,9 +42,9 @@ public class BoardAbilityImageManager : MonoBehaviour {
         instantiatedActionImage.transform.position = cellEdgePosition;
     }
 
-    void GenerateNewActionImage(Action action, Vector2Int position, Direction direction)
+    void GenerateNewActionImage(CardCategory category, Vector2Int position, Direction direction)
     {
-        GameObject instantiatedActionImage = ImageManager.GetAbilityPointer(action.card.Category, action.direction);
+        GameObject instantiatedActionImage = ImageManager.GetAbilityPointer(category, direction);
 
         instantiatedActionImage.transform.SetParent(transform);
         Vector2 cellEdgePosition = boardController.GetCellEdgePosition(position, direction);

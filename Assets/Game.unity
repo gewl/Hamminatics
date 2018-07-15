@@ -4024,7 +4024,7 @@ GameObject:
   - component: {fileID: 929109534}
   - component: {fileID: 929109535}
   m_Layer: 5
-  m_Name: BoardAbilityImageLayer
+  m_Name: ActionImageLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9507,6 +9507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dec0245d954a8d4da26bec9a22194ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionImageDrawer: {fileID: 929109535}
   debugText: {fileID: 1066388608230824, guid: fdfdcbd17824e54499f99d063a4b8470, type: 2}
   DebuggingTileDistances: 1
 --- !u!1 &2085946288

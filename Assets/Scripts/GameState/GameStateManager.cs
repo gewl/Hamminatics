@@ -167,7 +167,7 @@ public class GameStateManager : MonoBehaviour {
     IEnumerator ProcessCurrentRoundActions()
     {
         isHandlingTurn = true;
-        CurrentGameState.tilesAttackedLastRound.Clear();
+        CurrentGameState.actionsCompletedLastRound.Clear();
         while (!turnStackController.IsTurnStackEmpty)
         {
             Turn nextTurn = turnStackController.GetNextTurn();

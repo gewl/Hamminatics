@@ -112,7 +112,7 @@ public class GameStateHelperFunctions {
     public static GameState CalculateFollowingGameState(GameState currentState)
     {
         GameState projectedState = DeepCopyGameState(currentState);
-        projectedState.tilesAttackedLastRound.Clear();
+        projectedState.actionsCompletedLastRound.Clear();
 
         while (projectedState.turnStack.Count > 0)
         {
@@ -147,11 +147,17 @@ public class GameStateHelperFunctions {
 
     public static void ProcessMoves(List<Direction> moves, EntityData entity, GameState state)
     {
+        Tile originTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
         for (int i = 0; i < moves.Count; i++)
         {
             Direction nextMove = moves[i];
             TryToMoveEntityInDirection(entity, nextMove, state);
         }
+
+        Tile destinationTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
+
+        CompletedMove completedMove = new CompletedMove(moves, entity, originTile, destinationTile);
+        state.movesCompletedLastRound.Add(completedMove);
     }
 
     static void TryToMoveEntityInDirection(EntityData entity, Direction direction, GameState state)
@@ -241,7 +247,8 @@ public class GameStateHelperFunctions {
         Tile originTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
         Tile targetTile = FindFirstOccupiedTileInDirection(originTile, direction, distance, gameState);
 
-        gameState.tilesAttackedLastRound.Add(targetTile);
+        CompletedAction completedAction = new CompletedAction(originTile, targetTile, direction, card.Category);
+        gameState.actionsCompletedLastRound.Add(completedAction);
 
         if (!IsTileOccupied(targetTile, gameState))
         {

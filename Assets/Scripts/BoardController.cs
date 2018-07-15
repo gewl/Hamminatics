@@ -16,6 +16,8 @@ public class BoardController : MonoBehaviour {
     Image[,] cellContentImages;
 
     ImageManager spriteManager;
+    [SerializeField]
+    ActionImageDrawer actionImageDrawer;
     Canvas canvas;
 
     [SerializeField]
@@ -171,10 +173,12 @@ public class BoardController : MonoBehaviour {
         }
 
         // Draw cells to be attacked in next round.
-        foreach (Tile tile in projectedGameState.tilesAttackedLastRound)
+        foreach (CompletedAction completedAction in projectedGameState.actionsCompletedLastRound)
         {
-            HighlightDamageCell(tile.Position);
+            HighlightDamageCell(completedAction.TargetTile.Position);
         }
+
+        actionImageDrawer.Draw(projectedGameState.movesCompletedLastRound, projectedGameState.actionsCompletedLastRound);
     }
 
     public void HighlightSelectedCell(Vector2Int position)
