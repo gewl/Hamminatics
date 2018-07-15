@@ -65,9 +65,9 @@ public class EnemyTurnCalculator : MonoBehaviour {
             int rangeOfProjectedAttack = BoardHelperFunctions.GetLinearDistanceBetweenTiles(projectedMovementTile, targetAttackTile);
             Direction attackDirection = GameStateHelperFunctions.GetDirectionFromPosition(projectedMovementTile.Position, targetAttackTile.Position);
 
-            Action secondAction = new Action(enemyAttackCard, enemy, attackDirection, rangeOfProjectedAttack);
+            Action enemyAction = new Action(enemyAttackCard, enemy, attackDirection, rangeOfProjectedAttack);
 
-            Turn enemyTurn = new Turn(enemy, movesToTargetMovementTile, secondAction);
+            Turn enemyTurn = new Turn(enemy, movesToTargetMovementTile, enemyAction);
 
             turnStackController.AddNewTurn(enemyTurn);
         }

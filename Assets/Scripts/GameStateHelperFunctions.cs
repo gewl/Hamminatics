@@ -36,7 +36,7 @@ public class GameStateHelperFunctions {
 
     }
 
-    public static EntityData GetOccupantOfCell(Vector2Int position, GameState state)
+    public static EntityData GetTileOccupant(Vector2Int position, GameState state)
     {
         if (state.player.Position == position)
         {
@@ -57,6 +57,11 @@ public class GameStateHelperFunctions {
         return null;
     }
 
+    public static EntityData GetTileOccupant(Tile tile, GameState state)
+    {
+        return GetTileOccupant(tile.Position, state);
+    }
+
     public static int GetTileDistanceFromPlayer(Vector2Int cellPosition, GameState state)
     {
         int xDifference = Mathf.Abs(cellPosition.x - state.player.Position.x);
@@ -67,6 +72,11 @@ public class GameStateHelperFunctions {
     public static bool IsTileOccupied(int x, int y, GameState state)
     {
         return IsTileOccupied(new Vector2Int(x, y), state);
+    }
+
+    public static bool IsTileOccupied(Tile tile, GameState state)
+    {
+        return IsTileOccupied(tile.Position, state);
     }
 
     public static bool IsTileOccupied(Vector2Int position, GameState state)
@@ -140,37 +150,42 @@ public class GameStateHelperFunctions {
         for (int i = 0; i < moves.Count; i++)
         {
             Direction nextMove = moves[i];
-            TryToMoveEntityInDirection(entity, nextMove);
+            TryToMoveEntityInDirection(entity, nextMove, state);
         }
     }
 
-    static void TryToMoveEntityInDirection(EntityData entity, Direction direction)
+    static void TryToMoveEntityInDirection(EntityData entity, Direction direction, GameState state)
     {
         Tile currentTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
 
-        Vector2Int intendedNextPosition = entity.Position;
-
-        switch (direction)
+        if (!currentTile.ConnectsToNeighbor(direction))
         {
-            case Direction.Up:
-                intendedNextPosition.y--;
-                break;
-            case Direction.Right:
-                intendedNextPosition.x++;
-                break;
-            case Direction.Down:
-                intendedNextPosition.y++;
-                break;
-            case Direction.Left:
-                intendedNextPosition.x--;
-                break;
-            default:
-                break;
+            return;
         }
 
-        if (currentTile.HasNeighborWhere(t => t.Position == intendedNextPosition))
+        Tile nextTile = currentTile.GetDirectionalNeighbor(direction);
+
+        if (IsTileOccupied(nextTile, state))
         {
-            entity.Position = intendedNextPosition; 
+            EntityData tileOccupant = GetTileOccupant(nextTile.Position, state);
+
+            Tile projectedBumpTile = nextTile.GetDirectionalNeighbor(direction);
+
+            bool canBump = projectedBumpTile != null && !IsTileOccupied(projectedBumpTile, state);
+
+            if (canBump)
+            {
+                Vector2Int projectedBumpPosition = projectedBumpTile.Position;
+                tileOccupant.Position = projectedBumpPosition;
+                entity.Position = nextTile.Position;
+            }
+
+            tileOccupant.Health -= 1;
+            entity.Health -= 1;
+        }
+        else
+        {
+            entity.Position = nextTile.Position;
         }
     }
 
@@ -200,7 +215,7 @@ public class GameStateHelperFunctions {
 
         if (IsTileOccupied(projectedPosition, gameState))
         {
-            EntityData tileOccupant = GetOccupantOfCell(projectedPosition, gameState);
+            EntityData tileOccupant = GetTileOccupant(projectedPosition, gameState);
 
             Vector2Int projectedBumpPosition = GetTilePosition(projectedPosition, direction, 1);
 
@@ -224,21 +239,39 @@ public class GameStateHelperFunctions {
     static void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance, GameState gameState)
     {
         Tile originTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
-        Vector2Int targetTilePosition = GetTilePosition(entity.Position, direction, distance);
-        Tile targetTile = BoardHelperFunctions.GetTileAtPosition(targetTilePosition);
+        Tile targetTile = FindFirstOccupiedTileInDirection(originTile, direction, distance, gameState);
 
-        if (!IsTileValid(targetTilePosition) || !BoardHelperFunctions.AreTwoTilesLinearlyReachable(originTile, targetTile))
+        gameState.tilesAttackedLastRound.Add(targetTile);
+
+        if (!IsTileOccupied(targetTile, gameState))
         {
             return;
         }
-        gameState.tilesAttackedLastRound.Add(BoardHelperFunctions.GetTileAtPosition(targetTilePosition));
-        if (!IsTileOccupied(targetTilePosition, gameState))
-        {
-            return;
-        }
-        EntityData targetEntity = GetOccupantOfCell(targetTilePosition, gameState);
+
+        EntityData targetEntity = GetTileOccupant(targetTile, gameState);
 
         targetEntity.Health -= card.Damage;
+    }
+
+    static Tile FindFirstOccupiedTileInDirection(Tile originTile, Direction direction, int distance, GameState state)
+    {
+        Tile currentTargetTile = originTile;
+        Tile testTargetTile = originTile.GetDirectionalNeighbor(direction);
+
+        while (distance > 0 && testTargetTile != null)
+        {
+            currentTargetTile = testTargetTile;
+            testTargetTile = currentTargetTile.GetDirectionalNeighbor(direction);
+
+            if (IsTileOccupied(currentTargetTile, state)) 
+            {
+                break;
+            }
+
+            distance--;
+        }
+
+        return currentTargetTile;
     }
 
     public static Vector2Int GetTilePosition(Vector2Int origin, Direction direction, int distance)

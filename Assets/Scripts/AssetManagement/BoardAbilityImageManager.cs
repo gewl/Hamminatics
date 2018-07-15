@@ -9,10 +9,6 @@ public class BoardAbilityImageManager : MonoBehaviour {
     [SerializeField]
     BoardController boardController;
 
-    private void Awake()
-    {
-    }
-
     private void OnEnable()
     {
         actionStackController.OnTurnStackUpdate += DrawTurns;            
