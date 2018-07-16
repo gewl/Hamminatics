@@ -132,11 +132,6 @@ public class TurnStackController : MonoBehaviour {
 
         endRoundButton.interactable = !IsTurnStackEmpty;
 
-        if (OnTurnStackUpdate != null)
-        {
-            OnTurnStackUpdate(new List<Turn>(TurnStack));
-        }
-
         return nextTurn;
     }
 

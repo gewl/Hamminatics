@@ -191,8 +191,8 @@ public class GameStateManager : MonoBehaviour {
             for (int i = 0; i < nextTurn.moves.Count; i++)
             {
                 GameStateHelperFunctions.ProcessMove(nextTurn.moves[i], nextTurn.Entity, CurrentGameState);
-
                 GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
+
                 if (i < nextTurn.moves.Count - 1)
                 {
                     actionImageDrawer.DrawSingleMove(nextTurn.Entity.Position, nextTurn.moves[i+1]);

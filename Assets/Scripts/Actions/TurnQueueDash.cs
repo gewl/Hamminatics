@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class TurnQueueDash : MonoBehaviour {
 
     [SerializeField]
     TurnStackController turnStack;
 
+    List<Turn> currentlyDepictedTurns;
+
     QueuedTurnController[] queuedTurnController;
-    Image[] turnBackgroundImages;
+    Image[] turnImages;
+    Outline[] turnOutlines;
 
     LayoutGroup layoutGroup;
     bool[] turnsAreBudged;
@@ -24,11 +28,13 @@ public class TurnQueueDash : MonoBehaviour {
     private void Awake()
     {
         queuedTurnController = GetComponentsInChildren<QueuedTurnController>();
-        turnBackgroundImages = new Image[queuedTurnController.Length];
+        turnImages = new Image[queuedTurnController.Length];
+        turnOutlines = new Outline[queuedTurnController.Length];
 
         for (int i = 0; i < queuedTurnController.Length; i++)
         {
-            turnBackgroundImages[i] = queuedTurnController[i].GetComponent<Image>();
+            turnImages[i] = queuedTurnController[i].GetComponent<Image>();
+            turnOutlines[i] = queuedTurnController[i].GetComponent<Outline>();
         }
 
         turnsAreBudged = new bool[queuedTurnController.Length];
@@ -50,11 +56,25 @@ public class TurnQueueDash : MonoBehaviour {
 
     void UpdateCurrentlyResolvingTurn(Turn turn)
     {
+        ResetTurnOutlines();
+        int turnIndex = currentlyDepictedTurns.FindIndex(t => t == turn);
 
+        turnOutlines[turnIndex].effectColor = Color.yellow;
+    }
+
+    void ResetTurnOutlines()
+    {
+        for (int i = 0; i < turnOutlines.Length; i++)
+        {
+            turnOutlines[i].effectColor = Color.black;
+        }
     }
 
     void UpdateTurnQueueDash(List<Turn> turns)
     {
+        ResetTurnOutlines();
+        currentlyDepictedTurns = turns;
+
         for (int i = 0; i < turns.Count; i++)
         {
             queuedTurnController[i].gameObject.SetActive(true);
@@ -63,12 +83,12 @@ public class TurnQueueDash : MonoBehaviour {
             if (turns[i].Entity.ID == Constants.PLAYER_ID)
             {
                 queuedTurnController[i].isPlayerTurn = true;
-                turnBackgroundImages[i].color = playerTurnColor;
+                turnImages[i].color = playerTurnColor;
             }
             else
             {
                 queuedTurnController[i].isPlayerTurn = false;
-                turnBackgroundImages[i].color = enemyTurnColor;
+                turnImages[i].color = enemyTurnColor;
             }
         }
 
@@ -91,9 +111,9 @@ public class TurnQueueDash : MonoBehaviour {
     {
         float draggingTurnX = draggingTurn.position.x;
 
-        for (int i = 0; i < turnBackgroundImages.Length; i++)
+        for (int i = 0; i < turnImages.Length; i++)
         {
-            Image turnBackgroundImage = turnBackgroundImages[i];
+            Image turnBackgroundImage = turnImages[i];
             if (turnBackgroundImage.transform == draggingTurn)
             {
                 continue; 

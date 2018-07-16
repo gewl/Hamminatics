@@ -4108,7 +4108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c22a02e1e9ba9874088c4b91f15329c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStateManager: {fileID: 323374607}
   emptyHealthBub: {fileID: 21300000, guid: 9a23f6d38f7cfcc419b8b3cce3ba6ffa, type: 3}
   fullHealthBub: {fileID: 21300000, guid: e866aed19b305a544a0dafca6cf006c5, type: 3}
 --- !u!1 &934704999
@@ -4242,7 +4241,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 478762e953f71a54ead083450789df6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStateManager: {fileID: 323374607}
   emptyEnergyBub: {fileID: 21300000, guid: 9a23f6d38f7cfcc419b8b3cce3ba6ffa, type: 3}
   fullEnergyBub: {fileID: 21300000, guid: 0eb03d535b3dfdc46bbcdb4270f82d52, type: 3}
   ProjectedEnergyGain: 0
