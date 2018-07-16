@@ -145,6 +145,13 @@ public class GameStateHelperFunctions {
         }
     }
 
+    // Used for incremental updating during actual-turn resolution.
+    public static void ProcessMove(Direction move, EntityData entity, GameState state)
+    {
+        TryToMoveEntityInDirection(entity, move, state);
+    }
+
+    // Used for extrapolating next turn.
     public static void ProcessMoves(List<Direction> moves, EntityData entity, GameState state)
     {
         Tile originTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
@@ -165,7 +172,7 @@ public class GameStateHelperFunctions {
         Tile currentTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
 
         if (!currentTile.ConnectsToNeighbor(direction))
-        {
+        { 
             return;
         }
 

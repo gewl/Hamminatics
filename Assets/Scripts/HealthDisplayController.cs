@@ -6,9 +6,6 @@ using UnityEngine.UI;
 public class HealthDisplayController : MonoBehaviour {
 
     [SerializeField]
-    GameStateManager gameStateManager;
-
-    [SerializeField]
     Sprite emptyHealthBub;
     [SerializeField]
     Sprite fullHealthBub;
@@ -22,12 +19,12 @@ public class HealthDisplayController : MonoBehaviour {
 
     private void OnEnable()
     {
-        gameStateManager.OnCurrentGameStateChange += OnGameStateChange;
+        GameStateDelegates.OnCurrentGameStateChange += OnGameStateChange;
     }
 
     private void OnDisable()
     {
-        gameStateManager.OnCurrentGameStateChange -= OnGameStateChange;
+        GameStateDelegates.OnCurrentGameStateChange -= OnGameStateChange;
     }
 
     void OnGameStateChange(GameState updatedGameState)

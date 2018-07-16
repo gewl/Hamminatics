@@ -9,12 +9,17 @@ public class ActionImageDrawer : MonoBehaviour {
     [SerializeField]
     BoardController boardController;
 
-    public void Draw(List<CompletedMove> completedMoves, List<CompletedAction> completedActions)
+    public void Clear()
     {
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
+    }
+
+    public void DrawEntireTurn(List<CompletedMove> completedMoves, List<CompletedAction> completedActions)
+    {
+        Clear();
 
         for (int i = 0; i < completedMoves.Count; i++)
         {
@@ -31,6 +36,20 @@ public class ActionImageDrawer : MonoBehaviour {
 
             GenerateNewActionImage(completedAction.Category, completedAction.OriginTile.Position, completedAction.Direction);
         }
+    }
+
+    public void DrawSingleMove(Vector2Int position, Direction direction)
+    {
+        Clear();
+
+        GenerateNewMoveImage(position, direction);
+    }
+
+    public void DrawSingleAction(Action action)
+    {
+        Clear();
+
+        GenerateNewActionImage(action.card.Category, action.entity.Position, action.direction);
     }
 
     void GenerateNewMoveImage(Vector2Int position, Direction direction)

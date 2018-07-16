@@ -39,11 +39,18 @@ public class TurnQueueDash : MonoBehaviour {
     private void OnEnable()
     {
         turnStack.OnTurnStackUpdate += UpdateTurnQueueDash;
+        GameStateDelegates.OnResolvingTurn += UpdateCurrentlyResolvingTurn;
     }
 
     private void OnDisable()
     {
         turnStack.OnTurnStackUpdate -= UpdateTurnQueueDash;
+        GameStateDelegates.OnResolvingTurn -= UpdateCurrentlyResolvingTurn;
+    }
+
+    void UpdateCurrentlyResolvingTurn(Turn turn)
+    {
+
     }
 
     void UpdateTurnQueueDash(List<Turn> turns)

@@ -6,9 +6,6 @@ using UnityEngine.UI;
 public class EnergyManager : MonoBehaviour {
 
     [SerializeField]
-    GameStateManager gameStateManager;
-
-    [SerializeField]
     Sprite emptyEnergyBub;
     [SerializeField]
     Sprite fullEnergyBub;
@@ -25,12 +22,12 @@ public class EnergyManager : MonoBehaviour {
 
     private void OnEnable()
     {
-        gameStateManager.OnRoundEnded += RoundEndHandler;
+        GameStateDelegates.OnRoundEnded += RoundEndHandler;
     }
 
     private void OnDisable()
     {
-        gameStateManager.OnRoundEnded -= RoundEndHandler;
+        GameStateDelegates.OnRoundEnded -= RoundEndHandler;
     }
 
     void RoundEndHandler(GameState updatedGameState)

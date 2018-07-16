@@ -42,12 +42,12 @@ public class BoardController : MonoBehaviour {
 
     private void OnEnable()
     {
-        gameStateManager.OnRoundEnded += RecalculateTileDistances;   
+        GameStateDelegates.OnRoundEnded += RecalculateTileDistances;   
     }
 
     private void OnDisable()
     {
-        gameStateManager.OnRoundEnded -= RecalculateTileDistances;   
+        GameStateDelegates.OnRoundEnded -= RecalculateTileDistances;   
     }
     #endregion
 
@@ -123,7 +123,7 @@ public class BoardController : MonoBehaviour {
     }
 
     #region GUI manipulation
-    public void DrawBoard(GameState currentGameState, GameState projectedGameState)
+    public void DrawBoard(GameState currentGameState, GameState projectedGameState, bool isResolvingTurn)
     {
         // Clear board.
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
@@ -178,7 +178,10 @@ public class BoardController : MonoBehaviour {
             HighlightDamageCell(completedAction.TargetTile.Position);
         }
 
-        actionImageDrawer.Draw(projectedGameState.movesCompletedLastRound, projectedGameState.actionsCompletedLastRound);
+        if (!isResolvingTurn)
+        {
+            actionImageDrawer.DrawEntireTurn(projectedGameState.movesCompletedLastRound, projectedGameState.actionsCompletedLastRound);
+        }
     }
 
     public void HighlightSelectedCell(Vector2Int position)

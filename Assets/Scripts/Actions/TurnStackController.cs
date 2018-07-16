@@ -33,7 +33,7 @@ public class TurnStackController : MonoBehaviour {
     public void AddNewTurn(Turn newTurn)
     {
         TurnStack.Push(newTurn);
-        endRoundButton.interactable = DoesTurnStackContainCompletePlayerTurn();
+        endRoundButton.interactable = IsPlayerTurnComplete();
 
         OnTurnStackUpdate(new List<Turn>(TurnStack));
     }
@@ -59,6 +59,7 @@ public class TurnStackController : MonoBehaviour {
         {
             UpdatePlayerTurn_Action(card, player, originPosition, targetPosition);
         }
+        endRoundButton.interactable = IsPlayerTurnComplete();
         OnTurnStackUpdate(new List<Turn>(TurnStack));
     }
 
@@ -87,7 +88,7 @@ public class TurnStackController : MonoBehaviour {
         for (int i = turnList.Count - 1; i >= newIndex; i--) 
         {
             Turn turn = turnList[i];
-            if (IsPlayerTurn(turn))
+            if (IsACompletePlayerTurn(turn))
             {
                 continue;
             }
@@ -100,7 +101,7 @@ public class TurnStackController : MonoBehaviour {
         for (int i = newIndex - 1; i >= 0; i--)
         {
             Turn turn = turnList[i];
-            if (IsPlayerTurn(turn))
+            if (IsACompletePlayerTurn(turn))
             {
                 continue;
             }
@@ -139,12 +140,16 @@ public class TurnStackController : MonoBehaviour {
         return nextTurn;
     }
 
-    public bool DoesTurnStackContainCompletePlayerTurn()
+    public bool IsPlayerTurnComplete()
     {
-        return TurnStack.Any<Turn>(IsPlayerTurn);
+        return TurnStack.Any(IsACompletePlayerTurn);
     }
 
-    static Func<Turn, bool> IsPlayerTurn = (Turn turn) => turn.Entity.ID == Constants.PLAYER_ID;
-    Predicate<Turn> IsPlayerActionPredicate = new Predicate<Turn>(IsPlayerTurn);
+    static Func<Turn, bool> IsACompletePlayerTurn = (Turn turn) => 
+        turn.Entity.ID == Constants.PLAYER_ID && 
+        turn.moves.Count > 0 && 
+        turn.action != null && 
+        turn.action.card != null;
+    Predicate<Turn> IsPlayerActionPredicate = new Predicate<Turn>(IsACompletePlayerTurn);
 
 }
