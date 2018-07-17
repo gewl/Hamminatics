@@ -1285,6 +1285,12 @@ MonoBehaviour:
     - {fileID: 21300000, guid: ad4bf67ed6a6e0842ad546422c882f41, type: 3}
     - {fileID: 21300000, guid: 68f90e57f41fa5a47895ae35b6124aa4, type: 3}
     - {fileID: 21300000, guid: c34f19fe6fd99734890e667579e5b405, type: 3}
+    - {fileID: 21300000, guid: 344c11c77bbc3044d9a94dfb5dee4af5, type: 3}
+    - {fileID: 21300000, guid: 0cca52634d71471438e8c996b01216ad, type: 3}
+    - {fileID: 21300000, guid: 6d2ebd7817f8ccf46ad57aa57ec72040, type: 3}
+    - {fileID: 21300000, guid: 431031389fe0f4745b58b2204dc974be, type: 3}
+    - {fileID: 21300000, guid: 676cb45a61391a34eab28ee97ff119b8, type: 3}
+    - {fileID: 21300000, guid: 37643e993bf12554b945e2175930820c, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -1456,6 +1462,98 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: pathSprites
+      Entry: 7
+      Data: 6|System.Collections.Generic.Dictionary`2[[PathDirection, Assembly-CSharp],[UnityEngine.Sprite,
+        UnityEngine.CoreModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 7|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[PathDirection,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 6
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 10
+      Data: 12
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 10
+      Data: 13
     - Name: 
       Entry: 8
       Data: 
@@ -9505,7 +9603,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dec0245d954a8d4da26bec9a22194ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionImageDrawer: {fileID: 929109535}
   debugText: {fileID: 1066388608230824, guid: fdfdcbd17824e54499f99d063a4b8470, type: 2}
   DebuggingTileDistances: 0
 --- !u!1 &2085946288

@@ -237,14 +237,21 @@ public class BoardController : MonoBehaviour {
 
     #endregion
 
+    public Vector2 GetCellPosition(Vector2Int position)
+    {
+        RectTransform cellRectTransform = boardCells[position.x, position.y].GetComponent<RectTransform>();
+
+        return cellRectTransform.position;
+    }
+
     public Vector2 GetCellEdgePosition(Vector2Int position, Direction edgeDirection)
     {
         RectTransform cellRectTransform = boardCells[position.x, position.y].GetComponent<RectTransform>();
         Vector3[] worldCorners = new Vector3[4];
         cellRectTransform.GetWorldCorners(worldCorners);
 
-        float averageX = (worldCorners[2].x + worldCorners[1].x) / 2f;
-        float averageY = (worldCorners[3].y + worldCorners[2].y) / 2f;
+        float averageX = cellRectTransform.position.x;
+        float averageY = cellRectTransform.position.y;
 
         switch (edgeDirection)
         {

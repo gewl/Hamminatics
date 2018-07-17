@@ -17,7 +17,7 @@ public class ActionImageDrawer : MonoBehaviour {
         }
     }
 
-    public void DrawEntireTurn(List<CompletedMove> completedMoves, List<CompletedAction> completedActions)
+    public void DrawEntireRound(List<CompletedMove> completedMoves, List<CompletedAction> completedActions)
     {
         Clear();
 
@@ -53,6 +53,11 @@ public class ActionImageDrawer : MonoBehaviour {
         Clear();
 
         GenerateNewActionImage(action.card.Category, action.entity.Position, action.direction);
+    }
+
+    void GenerateNewPathImage(Vector2Int position, PathDirection path)
+    {
+
     }
 
     void GenerateNewMoveImage(Vector2Int position, Direction direction)

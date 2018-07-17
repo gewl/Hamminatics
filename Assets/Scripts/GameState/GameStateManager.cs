@@ -148,7 +148,7 @@ public class GameStateManager : MonoBehaviour {
         if (!isResolvingTurn)
         {
             ProjectedGameState = GameStateHelperFunctions.CalculateFollowingGameState(currentGameState);
-            actionImageDrawer.DrawEntireTurn(ProjectedGameState.movesCompletedLastRound, ProjectedGameState.actionsCompletedLastRound);
+            actionImageDrawer.DrawEntireRound(ProjectedGameState.movesCompletedLastRound, ProjectedGameState.actionsCompletedLastRound);
         }
         boardController.DrawBoard_Standard(currentGameState, ProjectedGameState, isResolvingTurn);
         potentialCardTargets.Clear();

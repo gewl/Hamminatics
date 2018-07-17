@@ -37,6 +37,16 @@ public enum AbilityDirection
     AllDirections
 }
 
+public enum PathDirection
+{
+    Straight,
+    Left,
+    Right,
+    Terminating,
+    Beginning,
+    Bumped
+}
+
 public struct Constants
 {
     public const string PLAYER_ID = "Player";

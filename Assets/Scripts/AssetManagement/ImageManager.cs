@@ -14,6 +14,9 @@ public class ImageManager : SerializedMonoBehaviour {
     [SerializeField]
     Dictionary<CardCategory, Dictionary<Direction, Sprite>> abilityImages;
 
+    [SerializeField]
+    Dictionary<PathDirection, Sprite> pathSprites;
+
     static ImageManager instance;
 
     private void Awake()
@@ -44,4 +47,10 @@ public class ImageManager : SerializedMonoBehaviour {
     {
         return instance.abilityImages[CardCategory.Movement][direction];
     }
+
+    public static Sprite GetPathSprite(PathDirection path)
+    {
+        return instance.pathSprites[path];
+    }
+
 }
