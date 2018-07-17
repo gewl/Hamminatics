@@ -46,12 +46,22 @@ public class TurnQueueDash : MonoBehaviour {
     {
         turnStack.OnTurnStackUpdate += UpdateTurnQueueDash;
         GameStateDelegates.OnResolvingTurn += UpdateCurrentlyResolvingTurn;
+        GameStateDelegates.OnEntitySelected += UpdateSelectedEntityTurn;
+        GameStateDelegates.ReturnToDefaultBoard += ResetTurnOutlines;
     }
 
     private void OnDisable()
     {
         turnStack.OnTurnStackUpdate -= UpdateTurnQueueDash;
         GameStateDelegates.OnResolvingTurn -= UpdateCurrentlyResolvingTurn;
+        GameStateDelegates.OnEntitySelected -= UpdateSelectedEntityTurn;
+        GameStateDelegates.ReturnToDefaultBoard -= ResetTurnOutlines;
+    }
+
+    void UpdateSelectedEntityTurn(EntityData entity, GameState currentGameState, GameState projectedGameState)
+    {
+        int turnIndex = currentlyDepictedTurns.FindIndex(t => t.Entity == entity);
+        turnOutlines[turnIndex].effectColor = Color.yellow;
     }
 
     void UpdateCurrentlyResolvingTurn(Turn turn)

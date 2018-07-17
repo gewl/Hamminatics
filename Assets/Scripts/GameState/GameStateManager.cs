@@ -76,6 +76,7 @@ public class GameStateManager : MonoBehaviour {
     public EntityData Player { get { return CurrentGameState.player; } }
 
     List<Vector2Int> potentialCardTargets;
+    EntityData selectedEntity;
 
     bool isResolvingTurn = false;
     public bool IsResolvingTurn { get { return isResolvingTurn; } }
@@ -90,6 +91,7 @@ public class GameStateManager : MonoBehaviour {
     {
         CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance.Position, board.BoardWidth);
         GameStateDelegates.OnCurrentGameStateChange += ResetBoard;
+        GameStateDelegates.ReturnToDefaultBoard += ResetBoard;
         // This has to be delayed so layout group can space accordingly.
         Invoke("SetBoardUp", 0.1f);
     }
@@ -100,8 +102,9 @@ public class GameStateManager : MonoBehaviour {
     }
 
     private void OnDisable()
-
     {
+        GameStateDelegates.ReturnToDefaultBoard -= ResetBoard;
+        GameStateDelegates.OnCurrentGameStateChange -= ResetBoard;
         turnStackController.OnTurnStackUpdate -= ResetBoard; 
     }
 
@@ -145,28 +148,47 @@ public class GameStateManager : MonoBehaviour {
         if (!isResolvingTurn)
         {
             ProjectedGameState = GameStateHelperFunctions.CalculateFollowingGameState(currentGameState);
+            actionImageDrawer.DrawEntireTurn(ProjectedGameState.movesCompletedLastRound, ProjectedGameState.actionsCompletedLastRound);
         }
-        boardController.DrawBoard(currentGameState, ProjectedGameState, isResolvingTurn);
+        boardController.DrawBoard_Standard(currentGameState, ProjectedGameState, isResolvingTurn);
         potentialCardTargets.Clear();
     }
 
-    public void RegisterCellClick(Vector2Int cellPosition)
+    public void RegisterCellClick(Vector2Int tileClickedPosition)
     {
         if (isResolvingTurn)
         {
             return;      
         }
-        if (potentialCardTargets.Contains(cellPosition))
+        if (potentialCardTargets.Contains(tileClickedPosition))
         {
             CardData selectedCard = equippedCardsManager.GetSelectedCard();
             Vector2Int playerOrigin = selectedCard.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
-            turnStackController.AddToPlayerTurn(selectedCard, Player, playerOrigin, cellPosition);
+            turnStackController.AddToPlayerTurn(selectedCard, Player, playerOrigin, tileClickedPosition);
             equippedCardsManager.ClearSelectedCard();
             GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
         }
-        else
+        else if (selectedEntity != null)
         {
+            DeselectEntity();
         }
+        else if (GameStateHelperFunctions.IsTileOccupied(tileClickedPosition, CurrentGameState))
+        {
+            EntityData tileOccupant = GameStateHelperFunctions.GetTileOccupant(tileClickedPosition, CurrentGameState);
+            SelectEntity(tileOccupant);
+        }
+    }
+
+    void SelectEntity(EntityData entity)
+    {
+        selectedEntity = entity;
+        GameStateDelegates.OnEntitySelected(entity, CurrentGameState, ProjectedGameState);
+    }
+
+    void DeselectEntity()
+    {
+        selectedEntity = null;
+        GameStateDelegates.ReturnToDefaultBoard();
     }
 
     public void EndRound()

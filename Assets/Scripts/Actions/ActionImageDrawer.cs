@@ -38,9 +38,12 @@ public class ActionImageDrawer : MonoBehaviour {
         }
     }
 
-    public void DrawSingleMove(Vector2Int position, Direction direction)
+    public void DrawSingleMove(Vector2Int position, Direction direction, bool shouldClearFirst = true)
     {
-        Clear();
+        if (shouldClearFirst)
+        {
+            Clear();
+        }
 
         GenerateNewMoveImage(position, direction);
     }

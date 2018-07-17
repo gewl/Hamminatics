@@ -9507,7 +9507,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionImageDrawer: {fileID: 929109535}
   debugText: {fileID: 1066388608230824, guid: fdfdcbd17824e54499f99d063a4b8470, type: 2}
-  DebuggingTileDistances: 1
+  DebuggingTileDistances: 0
 --- !u!1 &2085946288
 GameObject:
   m_ObjectHideFlags: 0

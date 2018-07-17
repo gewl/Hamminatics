@@ -16,9 +16,11 @@ public class BoardController : MonoBehaviour {
     Image[,] cellContentImages;
 
     ImageManager spriteManager;
-    [SerializeField]
-    ActionImageDrawer actionImageDrawer;
     Canvas canvas;
+
+    Color invisible;
+    Color translucent;
+    Color opaque;
 
     [SerializeField]
     GameObject debugText;
@@ -37,17 +39,23 @@ public class BoardController : MonoBehaviour {
         InitializeBoard();
         gameStateManager.InitializeGameState(currentBoard);
 
+        translucent = new Color(1f, 1f, 1f, 0f);
+        translucent = new Color(1f, 1f, 1f, 0.5f);
+        opaque = new Color(1f, 1f, 1f, 1f);
+
         instance = this;
     }
 
     private void OnEnable()
     {
         GameStateDelegates.OnRoundEnded += RecalculateTileDistances;   
+        GameStateDelegates.OnEntitySelected += DrawBoard_SelectedEntity;   
     }
 
     private void OnDisable()
     {
         GameStateDelegates.OnRoundEnded -= RecalculateTileDistances;   
+        GameStateDelegates.OnEntitySelected -= DrawBoard_SelectedEntity;   
     }
     #endregion
 
@@ -83,20 +91,18 @@ public class BoardController : MonoBehaviour {
 
         currentBoard = new GameBoard();
 
-#if UNITY_EDITOR
-        if (DebuggingTileDistances)
+        for (int y = 0; y < boardWidth; y++)
         {
-            for (int y = 0; y < boardWidth; y++)
+            for (int x = 0; x < boardWidth; x++)
             {
-                for (int x = 0; x < boardWidth; x++)
+                boardCellImages[x, y].sprite = DataManager.GetTileSprite(currentBoard.Tiles[x, y].ID);
+                if (DebuggingTileDistances)
                 {
-                    boardCellImages[x, y].sprite = DataManager.GetTileSprite(currentBoard.Tiles[x, y].ID);
-                    GameObject thisText = Instantiate(debugText, boardCells[x,y], false);
+                    GameObject thisText = Instantiate(debugText, boardCells[x, y], false);
                     thisText.GetComponent<Text>().text = currentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
                 }
             }
         }
-#endif
     }
 
     void RecalculateTileDistances(GameState updatedGameState)
@@ -123,24 +129,25 @@ public class BoardController : MonoBehaviour {
     }
 
     #region GUI manipulation
-    public void DrawBoard(GameState currentGameState, GameState projectedGameState, bool isResolvingTurn)
+    void ClearBoard()
     {
-        // Clear board.
         for (int yCounter = 0; yCounter < boardWidth; yCounter++)
         {
             for (int xCounter = 0; xCounter < boardWidth; xCounter++)
             {
                 Image contentsImage = cellContentImages[xCounter, yCounter];
                 contentsImage.sprite = null;
-                contentsImage.color = new Color(1f, 1f, 1f, 0f);
+                contentsImage.color = invisible;
             }
         }
+    }
+
+    public void DrawBoard_Standard(GameState currentGameState, GameState projectedGameState, bool isResolvingTurn)
+    {
+        ClearBoard();
 
         // Draw future player position.
-        Vector2Int projectedPlayerPosition = projectedGameState.player.Position;
-        Image projectedPlayerCellImage = cellContentImages[projectedPlayerPosition.x, projectedPlayerPosition.y];
-        projectedPlayerCellImage.sprite = currentGameState.player.EntitySprite;
-        projectedPlayerCellImage.color = new Color(1f, 1f, 1f, 0.5f);
+        DrawSpriteAtPosition(projectedGameState.player.EntitySprite, projectedGameState.player.Position, translucent);
 
         // Draw future enemy positions.
         for (int i = 0; i < projectedGameState.enemies.Count; i++)
@@ -148,27 +155,20 @@ public class BoardController : MonoBehaviour {
             EntityData entity = projectedGameState.enemies[i];
             if (entity != null)
             {
-                Image contentsImage = cellContentImages[entity.Position.x, entity.Position.y];
-                contentsImage.sprite = entity.EntitySprite;
-                contentsImage.color = new Color(1f, 1f, 1f, 0.5f);
+                DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent);
             }
         }
 
-        // Draw current player position.
-        Vector2Int playerPosition = currentGameState.player.Position;
-        Image playerCellImage = cellContentImages[playerPosition.x, playerPosition.y];
-        playerCellImage.sprite = currentGameState.player.EntitySprite;
-        playerCellImage.color = new Color(1f, 1f, 1f, 1f);
+        // Draw current player at position.
+        DrawSpriteAtPosition(currentGameState.player.EntitySprite, currentGameState.player.Position, opaque);
 
-        // Draw current enemy positions.
+        // Draw current enemies at positions.
         for (int i = 0; i < currentGameState.enemies.Count; i++)
         {
             EntityData entity = currentGameState.enemies[i];
             if (entity != null)
             {
-                Image contentsImage = cellContentImages[entity.Position.x, entity.Position.y];
-                contentsImage.sprite = entity.EntitySprite;
-                contentsImage.color = new Color(1f, 1f, 1f, 1f);
+                DrawSpriteAtPosition(entity.EntitySprite, entity.Position, opaque);
             }
         }
 
@@ -177,11 +177,39 @@ public class BoardController : MonoBehaviour {
         {
             HighlightDamageCell(completedAction.TargetTile.Position);
         }
+    }
 
-        if (!isResolvingTurn)
+    void DrawBoard_SelectedEntity(EntityData selectedEntity, GameState currentGameState, GameState projectedGameState)
+    {
+        ClearBoard();
+
+        // Draw all current non-selected entities translucent.
+        if (currentGameState.player != selectedEntity)
         {
-            actionImageDrawer.DrawEntireTurn(projectedGameState.movesCompletedLastRound, projectedGameState.actionsCompletedLastRound);
+            DrawSpriteAtPosition(currentGameState.player.EntitySprite, currentGameState.player.Position, translucent);
         }
+
+        for (int i = 0; i < currentGameState.enemies.Count; i++)
+        {
+            EntityData entity = currentGameState.enemies[i];
+            if (entity != null && entity != selectedEntity)
+            {
+                DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent);
+            }
+        }
+
+        GameStateHelperFunctions
+            .GetAllPositionsThroughWhichEntityWillMove(selectedEntity, currentGameState)
+            .ForEach(position => DrawSpriteAtPosition(selectedEntity.EntitySprite, position, translucent));
+
+        DrawSpriteAtPosition(selectedEntity.EntitySprite, selectedEntity.Position, opaque);
+    }
+
+    void DrawSpriteAtPosition(Sprite sprite, Vector2Int position, Color color)
+    {
+        Image positionCellImage = cellContentImages[position.x, position.y];
+        positionCellImage.sprite = sprite;
+        positionCellImage.color = color;
     }
 
     public void HighlightSelectedCell(Vector2Int position)

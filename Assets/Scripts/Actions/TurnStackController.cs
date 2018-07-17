@@ -49,6 +49,11 @@ public class TurnStackController : MonoBehaviour {
         return TurnStack.First(t => t.Entity == gameStateManager.Player);
     }
 
+    Turn GetEntityTurn(EntityData entity)
+    {
+        return TurnStack.First(t => t.Entity == entity);
+    }
+
     public void AddToPlayerTurn(CardData card, EntityData player, Vector2Int originPosition, Vector2Int targetPosition)
     {
         if (card.Category == CardCategory.Movement)
@@ -140,7 +145,7 @@ public class TurnStackController : MonoBehaviour {
         return TurnStack.Any(IsACompletePlayerTurn);
     }
 
-    static Func<Turn, bool> IsACompletePlayerTurn = (Turn turn) => 
+    public static Func<Turn, bool> IsACompletePlayerTurn = (Turn turn) => 
         turn.Entity.ID == Constants.PLAYER_ID && 
         turn.moves.Count > 0 && 
         turn.action != null && 

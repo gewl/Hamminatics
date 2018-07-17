@@ -43,18 +43,7 @@ public class GameStateHelperFunctions {
             return state.player;  
         }
 
-        for (int i = 0; i < state.enemies.Count; i++)
-        {
-            EntityData entity = state.enemies[i];
-
-            if (entity.Position == position)
-            {
-                return entity;
-            }
-        }
-
-        Debug.LogError("Occupant of cell not found.");
-        return null;
+        return state.enemies.Find(enemy => enemy.Position == position);
     }
 
     public static EntityData GetTileOccupant(Tile tile, GameState state)
@@ -122,6 +111,46 @@ public class GameStateHelperFunctions {
         }
 
         return projectedState;
+    }
+
+    public static List<Vector2Int> GetAllPositionsThroughWhichEntityWillMove(EntityData entity, GameState currentGameState)
+    {
+        List<Vector2Int> results = new List<Vector2Int>();
+
+        GameState copiedGameState = DeepCopyGameState(currentGameState);
+        EntityData copiedEntity =
+            entity == currentGameState.player ?
+            copiedGameState.player :
+            copiedGameState.enemies.First(enemy => enemy == entity);
+        Vector2Int lastPosition = copiedEntity.Position;
+
+        Turn entityTurn = copiedGameState.turnStack.First(t => t.Entity == copiedEntity);
+
+        Turn nextTurn = copiedGameState.turnStack.Pop();
+
+        // Fast-forward to entity's turn.
+        while (nextTurn != entityTurn)
+        {
+            ProcessTurn(nextTurn, copiedGameState);
+            // If entity gets bumped around at all, add their new positions to the list.
+            if (copiedEntity.Position != lastPosition)
+            {
+                lastPosition = copiedEntity.Position;
+                results.Add(lastPosition);
+            }
+            nextTurn = copiedGameState.turnStack.Pop();
+        }
+
+        // Add every single position occupied to the list.
+        for (int i = 0; i < entityTurn.moves.Count; i++)
+        {
+            Direction move = entityTurn.moves[i];
+
+            ProcessMove(move, copiedEntity, copiedGameState);
+            results.Add(copiedEntity.Position);
+        }
+
+        return results;
     }
 
     public static bool IsTileValid(Vector2Int position)
@@ -312,7 +341,6 @@ public class GameStateHelperFunctions {
 
         return updatedPosition;
     }
-
 
     public static GameState DeepCopyGameState(GameState originalState)
     {

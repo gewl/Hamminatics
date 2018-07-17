@@ -46,8 +46,8 @@ public class Turn {
     public override int GetHashCode()
     {
         int result = 0;
-        result = (result * 297) ^ Entity.ID.GetHashCode();
-        result = (result * 297) ^ action.GetHashCode();
+        result = (result * 397) ^ Entity.ID.GetHashCode();
+        result = (result * 397) ^ action.GetHashCode();
         return result;
     }
 
