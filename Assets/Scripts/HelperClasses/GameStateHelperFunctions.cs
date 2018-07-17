@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class GameStateHelperFunctions {
+public static class GameStateHelperFunctions {
     public static Direction GetDirectionFromEntity(EntityData entity, Vector2Int targetPosition)
     {
         Vector2Int entityPosition = entity.Position;
@@ -36,7 +36,7 @@ public class GameStateHelperFunctions {
 
     }
 
-    public static EntityData GetTileOccupant(Vector2Int position, GameState state)
+    public static EntityData GetTileOccupant(this GameState state, Vector2Int position)
     {
         if (state.player.Position == position)
         {
@@ -46,9 +46,9 @@ public class GameStateHelperFunctions {
         return state.enemies.Find(enemy => enemy.Position == position);
     }
 
-    public static EntityData GetTileOccupant(Tile tile, GameState state)
+    public static EntityData GetTileOccupant(this GameState state, Tile tile)
     {
-        return GetTileOccupant(tile.Position, state);
+        return state.GetTileOccupant(tile.Position);
     }
 
     public static int GetTileDistanceFromPlayer(Vector2Int cellPosition, GameState state)
@@ -58,22 +58,22 @@ public class GameStateHelperFunctions {
         return xDifference != 0 ? xDifference : Mathf.Abs(cellPosition.y - state.player.Position.y);
     }
 
-    public static bool IsTileOccupied(int x, int y, GameState state)
+    public static bool IsTileOccupied(this GameState state, int x, int y)
     {
-        return IsTileOccupied(new Vector2Int(x, y), state);
+        return state.IsTileOccupied(new Vector2Int(x, y));
     }
 
-    public static bool IsTileOccupied(Tile tile, GameState state)
+    public static bool IsTileOccupied(this GameState state, Tile tile)
     {
-        return IsTileOccupied(tile.Position, state);
+        return state.IsTileOccupied(tile.Position);
     }
 
-    public static bool IsTileOccupied(Vector2Int position, GameState state)
+    public static bool IsTileOccupied(this GameState state, Vector2Int position)
     {
         return state.player.Position == position || state.enemies.Any<EntityData>(entityData => entityData.Position == position);
     }
 
-    public static bool IsTileOccupied(Vector2Int originPosition, Direction directionFromOrigin, int distanceFromOrigin, GameState state)
+    public static bool IsTileOccupied(this GameState state, Vector2Int originPosition, Direction directionFromOrigin, int distanceFromOrigin)
     {
         Vector2Int updatedPosition = originPosition;
 
@@ -95,12 +95,12 @@ public class GameStateHelperFunctions {
                 break;
         }
 
-        return IsTileOccupied(updatedPosition.x, updatedPosition.y, state);
+        return state.IsTileOccupied(updatedPosition.x, updatedPosition.y);
     }
 
     public static GameState CalculateFollowingGameState(GameState currentState)
     {
-        GameState projectedState = DeepCopyGameState(currentState);
+        GameState projectedState = currentState.DeepCopy();
         projectedState.actionsCompletedLastRound.Clear();
 
         while (projectedState.turnStack.Count > 0)
@@ -113,47 +113,50 @@ public class GameStateHelperFunctions {
         return projectedState;
     }
 
-    public static List<Vector2Int> GetAllPositionsThroughWhichEntityWillMove(EntityData entity, GameState currentGameState)
+    public static List<EntityData> GetAllEntities(this GameState state)
     {
-        List<Vector2Int> results = new List<Vector2Int>();
-
-        GameState copiedGameState = DeepCopyGameState(currentGameState);
-        EntityData copiedEntity =
-            entity == currentGameState.player ?
-            copiedGameState.player :
-            copiedGameState.enemies.Find(enemy => enemy.ID == entity.ID && enemy.Position == entity.Position);
-        Vector2Int lastPosition = copiedEntity.Position;
-
-        Turn entityTurn = copiedGameState.turnStack.First(t => t.Entity == copiedEntity);
-
-        Turn nextTurn = copiedGameState.turnStack.Pop();
-
-        // Fast-forward to entity's turn.
-        while (nextTurn != entityTurn)
-        {
-            ProcessAsMuchOfTurnAsPossible(nextTurn, copiedGameState);
-            // If entity gets bumped around at all, add their new positions to the list.
-            if (copiedEntity.Position != lastPosition)
-            {
-                lastPosition = copiedEntity.Position;
-                results.Add(lastPosition);
-            }
-            nextTurn = copiedGameState.turnStack.Pop();
-        }
-
-        // Add every single position occupied to the list.
-        for (int i = 0; i < entityTurn.moves.Count; i++)
-        {
-            Direction move = entityTurn.moves[i];
-
-            ProcessMove(move, copiedEntity, copiedGameState);
-            results.Add(copiedEntity.Position);
-        }
-
-        return results;
+        return state.enemies.Append(state.player).ToList();
     }
 
-    static void ProcessAsMuchOfTurnAsPossible(Turn turn, GameState state)
+    public static Dictionary<EntityData, List<PathStep>> GetAllEntityPaths(this GameState state)
+    {
+        GameState copiedState = state.DeepCopy();
+        Dictionary<EntityData, List<PathStep>> entityPathsMap = new Dictionary<EntityData, List<PathStep>>();
+
+        copiedState.GetAllEntities().ForEach(e => entityPathsMap.Add(e, new List<PathStep>()));
+
+        foreach (Turn turn in copiedState.turnStack)
+        {
+            EntityData thisEntity = turn.Entity;
+            if (turn.ContainsMoves())
+            {
+                List<PathStep> thisPath = turn.GetPathFromTurn(copiedState);
+                entityPathsMap[thisEntity].Concat(thisPath);
+
+                // If this path terminated with bumping an entity,
+                // add a "bumpedBy" pathstep to the impacted entity's path.
+                if (thisPath.Last().bumpedEntity != null)
+                {
+                    EntityData bumpedEntity = thisPath.Last().bumpedEntity;
+                    PathStep bumpedStep = new PathStep(bumpedEntity, bumpedEntity.Position)
+                    {
+                        bumpedBy = thisEntity
+                    };
+
+                    entityPathsMap[bumpedEntity].Add(bumpedStep);
+                }
+            }
+
+            if (turn.ContainsAction())
+            {
+                ProcessAction(turn.action, copiedState);
+            }
+        }
+
+        return entityPathsMap;
+    }
+
+    static void ProcessAsMuchOfTurnAsPossible(this GameState state, Turn turn)
     {
         if (turn.IsComplete())
         {
@@ -169,6 +172,137 @@ public class GameStateHelperFunctions {
             ProcessAction(turn.action, state);
         }
     }
+
+    static List<PathStep> GetPathFromTurn(this Turn turn, GameState state)
+    {
+        List<PathStep> pathSteps = new List<PathStep>();
+        List<Direction> turnMoves = turn.moves;
+
+        EntityData entity = turn.Entity;
+
+        if (turn.moves.Count == 0)
+        {
+            return pathSteps;
+        }
+
+        // Path start.
+        pathSteps.Add(new PathStep(entity, entity.Position));
+
+        // Add path steps until they end or a bump occurs.
+        for (int i = 0; i < turnMoves.Count; i++)
+        {
+            Direction move = turnMoves[i];
+            Vector2Int currentPosition = entity.Position;
+
+            PathStep thisStep = GetPathStepFromMove(entity, move, state);
+
+            pathSteps.Add(thisStep);
+
+            if (thisStep.bumpedEntity != null)
+            {
+                break;
+            }
+        }
+
+        // Prune null results (e.g. from trying to move into wall).
+        return pathSteps.Where(step => step != null).ToList();
+    }
+
+    static PathStep GetPathStepFromMove(EntityData entity, Direction direction, GameState state)
+    {
+        Tile currentTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
+        EntityData bumpedEntity = null;
+
+        if (!currentTile.ConnectsToNeighbor(direction))
+        {
+            return null;
+        }
+
+        Tile nextTile = currentTile.GetDirectionalNeighbor(direction);
+
+        if (state.IsTileOccupied(nextTile))
+        {
+            EntityData tileOccupant = state.GetTileOccupant(nextTile.Position);
+
+            Tile projectedBumpTile = nextTile.GetDirectionalNeighbor(direction);
+
+            bool canBump = projectedBumpTile != null && !state.IsTileOccupied(projectedBumpTile);
+
+            if (canBump)
+            {
+                Vector2Int projectedBumpPosition = projectedBumpTile.Position;
+                tileOccupant.Position = projectedBumpPosition;
+                entity.Position = nextTile.Position;
+            }
+
+            tileOccupant.Health -= 1;
+            entity.Health -= 1;
+            bumpedEntity = tileOccupant;
+        }
+        else
+        {
+            entity.Position = nextTile.Position;
+        }
+
+        return new PathStep(entity, entity.Position, bumpedEntity);
+    }
+
+    //public static List<Vector2Int> GetAllPositionsThroughWhichEntityWillMove(EntityData entity, GameState currentGameState)
+    //{
+    //    List<Vector2Int> results = new List<Vector2Int>();
+
+    //    GameState copiedGameState = currentGameState.DeepCopy();
+    //    EntityData copiedEntity =
+    //        entity == currentGameState.player ?
+    //        copiedGameState.player :
+    //        copiedGameState.enemies.Find(enemy => enemy.ID == entity.ID && enemy.Position == entity.Position);
+    //    Vector2Int lastPosition = copiedEntity.Position;
+
+    //    Turn entityTurn = copiedGameState.turnStack.First(t => t.Entity == copiedEntity);
+
+    //    Turn nextTurn = copiedGameState.turnStack.Pop();
+
+    //    // Fast-forward to entity's turn.
+    //    while (nextTurn != entityTurn)
+    //    {
+    //        ProcessAsMuchOfTurnAsPossible(nextTurn, copiedGameState);
+    //        // If entity gets bumped around at all, add their new positions to the list.
+    //        if (copiedEntity.Position != lastPosition)
+    //        {
+    //            lastPosition = copiedEntity.Position;
+    //            results.Add(lastPosition);
+    //        }
+    //        nextTurn = copiedGameState.turnStack.Pop();
+    //    }
+
+    //    // Add every single position occupied to the list.
+    //    for (int i = 0; i < entityTurn.moves.Count; i++)
+    //    {
+    //        Direction move = entityTurn.moves[i];
+
+    //        ProcessMove(move, copiedEntity, copiedGameState);
+    //        results.Add(copiedEntity.Position);
+    //    }
+
+    //    return results;
+    //}
+
+    //static void ProcessAsMuchOfTurnAsPossible(Turn turn, GameState state)
+    //{
+    //    if (turn.IsComplete())
+    //    {
+    //        ProcessTurn(turn, state);
+    //    }
+    //    else if (turn.ContainsMoves())
+    //    {
+    //        ProcessMoves(turn.moves, turn.Entity, state);
+
+    //    }
+    //    else if (turn.ContainsAction())
+    //    {
+    //        ProcessAction(turn.action, state);
+    //    }
+    //}
 
     public static bool IsTileValid(Vector2Int position)
     {
@@ -224,13 +358,13 @@ public class GameStateHelperFunctions {
 
         Tile nextTile = currentTile.GetDirectionalNeighbor(direction);
 
-        if (IsTileOccupied(nextTile, state))
+        if (state.IsTileOccupied(nextTile))
         {
-            EntityData tileOccupant = GetTileOccupant(nextTile.Position, state);
+            EntityData tileOccupant = state.GetTileOccupant(nextTile.Position);
 
             Tile projectedBumpTile = nextTile.GetDirectionalNeighbor(direction);
 
-            bool canBump = projectedBumpTile != null && !IsTileOccupied(projectedBumpTile, state);
+            bool canBump = projectedBumpTile != null && !state.IsTileOccupied(projectedBumpTile);
 
             if (canBump)
             {
@@ -272,13 +406,13 @@ public class GameStateHelperFunctions {
             return;
         }
 
-        if (IsTileOccupied(projectedPosition, gameState))
+        if (gameState.IsTileOccupied(projectedPosition))
         {
-            EntityData tileOccupant = GetTileOccupant(projectedPosition, gameState);
+            EntityData tileOccupant = gameState.GetTileOccupant(projectedPosition);
 
             Vector2Int projectedBumpPosition = GetTilePosition(projectedPosition, direction, 1);
 
-            bool canBump = BoardHelperFunctions.GetTileAtPosition(projectedPosition).HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition) && !IsTileOccupied(projectedBumpPosition, gameState);
+            bool canBump = BoardHelperFunctions.GetTileAtPosition(projectedPosition).HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition) && !gameState.IsTileOccupied(projectedBumpPosition);
 
             if (canBump)
             {
@@ -303,12 +437,12 @@ public class GameStateHelperFunctions {
         CompletedAction completedAction = new CompletedAction(originTile, targetTile, direction, card.Category);
         gameState.actionsCompletedLastRound.Add(completedAction);
 
-        if (!IsTileOccupied(targetTile, gameState))
+        if (!gameState.IsTileOccupied(targetTile))
         {
             return;
         }
 
-        EntityData targetEntity = GetTileOccupant(targetTile, gameState);
+        EntityData targetEntity = gameState.GetTileOccupant(targetTile);
 
         targetEntity.Health -= card.Damage;
     }
@@ -323,7 +457,7 @@ public class GameStateHelperFunctions {
             currentTargetTile = testTargetTile;
             testTargetTile = currentTargetTile.GetDirectionalNeighbor(direction);
 
-            if (IsTileOccupied(currentTargetTile, state)) 
+            if (state.IsTileOccupied(currentTargetTile)) 
             {
                 break;
             }
@@ -359,7 +493,7 @@ public class GameStateHelperFunctions {
         return updatedPosition;
     }
 
-    public static GameState DeepCopyGameState(GameState originalState)
+    public static GameState DeepCopy(this GameState originalState)
     {
         EntityData playerCopy = ScriptableObject.Instantiate(originalState.player);
 

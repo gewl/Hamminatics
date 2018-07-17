@@ -90,15 +90,14 @@ public class TurnQueueDash : MonoBehaviour {
             queuedTurnController[i].gameObject.SetActive(true);
             queuedTurnController[i].UpdateDepictedTurn(turns[i]);
 
+            turnImages[i].color = turns[i].Entity.IdentifyingColor;
             if (turns[i].Entity.ID == Constants.PLAYER_ID)
             {
                 queuedTurnController[i].isPlayerTurn = true;
-                turnImages[i].color = playerTurnColor;
             }
             else
             {
                 queuedTurnController[i].isPlayerTurn = false;
-                turnImages[i].color = enemyTurnColor;
             }
         }
 

@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class ActionImageDrawer : MonoBehaviour {
+public class TurnDrawer : MonoBehaviour {
 
     [SerializeField]
     TurnStackController actionStackController;
@@ -15,6 +16,14 @@ public class ActionImageDrawer : MonoBehaviour {
         {
             Destroy(child.gameObject);
         }
+    }
+
+    public void DrawRound(GameState gameState)
+    {
+        Clear();
+
+        gameState
+            .GetAllEntities();
     }
 
     public void DrawEntireRound(List<CompletedMove> completedMoves, List<CompletedAction> completedActions)
@@ -55,7 +64,7 @@ public class ActionImageDrawer : MonoBehaviour {
         GenerateNewActionImage(action.card.Category, action.entity.Position, action.direction);
     }
 
-    void GenerateNewPathImage(Vector2Int position, PathDirection path)
+    void GenerateNewPathImage()
     {
 
     }

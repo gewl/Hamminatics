@@ -1,17 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public struct Path {
+public class PathStep {
 
+    public EntityData pathingEntity;
     public Vector2Int position;
-    public PathDirection path;
-    public Direction entranceDirection;
+    public EntityData bumpedEntity;
+    public EntityData bumpedBy;
     
-    public Path(Vector2Int _position, PathDirection _path, Direction _entranceDirection)
+    public PathStep(EntityData _pathingEntity, Vector2Int _position, EntityData _bumpedEntity = null)
     {
+        pathingEntity = _pathingEntity;
         position = _position;
-        path = _path;
-        entranceDirection = _entranceDirection;
+        bumpedBy = null;
+        bumpedEntity = _bumpedEntity;
     }
 }

@@ -6,6 +6,7 @@ public class EntityData : ScriptableObject {
     public int Health = 1;
     public Sprite EntitySprite;
     public int Speed = 1;
+    public Color IdentifyingColor;
     [HideInInspector]
     public Vector2Int Position;
 

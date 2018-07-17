@@ -57,17 +57,17 @@ public class GameStateManager : MonoBehaviour {
             return _enemyTurnCalculator;
         }
     }
-    ActionImageDrawer _actionImageDrawer;
-    ActionImageDrawer actionImageDrawer
+    TurnDrawer _turnDrawer;
+    TurnDrawer turnDrawer
     {
         get
         {
-            if (_actionImageDrawer == null)
+            if (_turnDrawer == null)
             {
-                _actionImageDrawer = GetComponentInChildren<ActionImageDrawer>();
+                _turnDrawer = GetComponentInChildren<TurnDrawer>();
             }
 
-            return _actionImageDrawer;
+            return _turnDrawer;
         }
     }
 
@@ -148,7 +148,7 @@ public class GameStateManager : MonoBehaviour {
         if (!isResolvingTurn)
         {
             ProjectedGameState = GameStateHelperFunctions.CalculateFollowingGameState(currentGameState);
-            actionImageDrawer.DrawEntireRound(ProjectedGameState.movesCompletedLastRound, ProjectedGameState.actionsCompletedLastRound);
+            turnDrawer.DrawEntireRound(ProjectedGameState.movesCompletedLastRound, ProjectedGameState.actionsCompletedLastRound);
         }
         boardController.DrawBoard_Standard(currentGameState, ProjectedGameState, isResolvingTurn);
         potentialCardTargets.Clear();
@@ -172,9 +172,9 @@ public class GameStateManager : MonoBehaviour {
         {
             DeselectEntity();
         }
-        else if (GameStateHelperFunctions.IsTileOccupied(tileClickedPosition, CurrentGameState))
+        else if (CurrentGameState.IsTileOccupied(tileClickedPosition))
         {
-            EntityData tileOccupant = GameStateHelperFunctions.GetTileOccupant(tileClickedPosition, CurrentGameState);
+            EntityData tileOccupant = CurrentGameState.GetTileOccupant(tileClickedPosition);
             SelectEntity(tileOccupant);
         }
     }
@@ -203,7 +203,7 @@ public class GameStateManager : MonoBehaviour {
         CurrentGameState.movesCompletedLastRound.Clear();
         while (!turnStackController.IsTurnStackEmpty)
         {
-            actionImageDrawer.Clear();
+            turnDrawer.Clear();
             Turn nextTurn = turnStackController.GetNextTurn();
 
             GameStateDelegates.OnResolvingTurn(nextTurn);
@@ -217,11 +217,11 @@ public class GameStateManager : MonoBehaviour {
 
                 if (i < nextTurn.moves.Count - 1)
                 {
-                    actionImageDrawer.DrawSingleMove(nextTurn.Entity.Position, nextTurn.moves[i+1]);
+                    turnDrawer.DrawSingleMove(nextTurn.Entity.Position, nextTurn.moves[i+1]);
                 }
                 else
                 {
-                    actionImageDrawer.Clear();
+                    turnDrawer.Clear();
                 }
                 yield return new WaitForSeconds(0.5f);
             }
@@ -231,7 +231,7 @@ public class GameStateManager : MonoBehaviour {
 
             CurrentGameState.movesCompletedLastRound.Add(completedMove);
 
-            actionImageDrawer.DrawSingleAction(nextTurn.action);
+            turnDrawer.DrawSingleAction(nextTurn.action);
             GameStateHelperFunctions.ProcessAction(nextTurn.action, CurrentGameState);
 
             GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);

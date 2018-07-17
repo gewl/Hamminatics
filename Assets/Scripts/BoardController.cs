@@ -39,7 +39,7 @@ public class BoardController : MonoBehaviour {
         InitializeBoard();
         gameStateManager.InitializeGameState(currentBoard);
 
-        translucent = new Color(1f, 1f, 1f, 0f);
+        invisible = new Color(1f, 1f, 1f, 0f);
         translucent = new Color(1f, 1f, 1f, 0.5f);
         opaque = new Color(1f, 1f, 1f, 1f);
 
@@ -198,9 +198,9 @@ public class BoardController : MonoBehaviour {
             }
         }
 
-        GameStateHelperFunctions
-            .GetAllPositionsThroughWhichEntityWillMove(selectedEntity, currentGameState)
-            .ForEach(position => DrawSpriteAtPosition(selectedEntity.EntitySprite, position, translucent));
+        currentGameState
+            .GetAllEntityPaths()[selectedEntity]
+            .ForEach(pathStep => DrawSpriteAtPosition(selectedEntity.EntitySprite, pathStep.position, translucent));
 
         DrawSpriteAtPosition(selectedEntity.EntitySprite, selectedEntity.Position, opaque);
     }
