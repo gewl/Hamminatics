@@ -30,9 +30,19 @@ public struct Action {
 
     public override int GetHashCode()
     {
-        int result = 0;
-        result = (result * 397) ^ card.ID.GetHashCode();
-        result = (result * 397) ^ entity.ID.GetHashCode();
+        int result = 37;
+
+        result *= 397;
+        if (card != null)
+        {
+            result = (result * 397) ^ card.ID.GetHashCode();
+        }
+
+        if (entity != null)
+        {
+            result = (result * 397) ^ entity.ID.GetHashCode();
+        }
+
         result = (result * 397) ^ direction.GetHashCode();
         result = (result * 397) ^ distance;
         return result;

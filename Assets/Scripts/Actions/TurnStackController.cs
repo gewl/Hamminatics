@@ -93,7 +93,7 @@ public class TurnStackController : MonoBehaviour {
         for (int i = turnList.Count - 1; i >= newIndex; i--) 
         {
             Turn turn = turnList[i];
-            if (IsPlayerTurn(turn))
+            if (turn.IsPlayerTurn())
             {
                 continue;
             }
@@ -106,7 +106,7 @@ public class TurnStackController : MonoBehaviour {
         for (int i = newIndex - 1; i >= 0; i--)
         {
             Turn turn = turnList[i];
-            if (IsPlayerTurn(turn))
+            if (turn.IsPlayerTurn())
             {
                 continue;
             }
@@ -142,15 +142,7 @@ public class TurnStackController : MonoBehaviour {
 
     public bool IsPlayerTurnComplete()
     {
-        return TurnStack.Any(IsACompletePlayerTurn);
+        return TurnStack.Any(turn => turn.IsCompletePlayerTurn());
     }
-
-    public static Func<Turn, bool> IsPlayerTurn = (Turn turn) => turn.Entity.ID == Constants.PLAYER_ID;
-    public static Func<Turn, bool> IsACompletePlayerTurn = (Turn turn) => 
-        turn.Entity.ID == Constants.PLAYER_ID && 
-        turn.moves.Count > 0 && 
-        turn.action != null && 
-        turn.action.card != null;
-    Predicate<Turn> IsPlayerActionPredicate = new Predicate<Turn>(IsACompletePlayerTurn);
 
 }

@@ -121,7 +121,7 @@ public class GameStateHelperFunctions {
         EntityData copiedEntity =
             entity == currentGameState.player ?
             copiedGameState.player :
-            copiedGameState.enemies.First(enemy => enemy == entity);
+            copiedGameState.enemies.Find(enemy => enemy.ID == entity.ID && enemy.Position == entity.Position);
         Vector2Int lastPosition = copiedEntity.Position;
 
         Turn entityTurn = copiedGameState.turnStack.First(t => t.Entity == copiedEntity);
@@ -131,7 +131,7 @@ public class GameStateHelperFunctions {
         // Fast-forward to entity's turn.
         while (nextTurn != entityTurn)
         {
-            ProcessTurn(nextTurn, copiedGameState);
+            ProcessAsMuchOfTurnAsPossible(nextTurn, copiedGameState);
             // If entity gets bumped around at all, add their new positions to the list.
             if (copiedEntity.Position != lastPosition)
             {
@@ -151,6 +151,23 @@ public class GameStateHelperFunctions {
         }
 
         return results;
+    }
+
+    static void ProcessAsMuchOfTurnAsPossible(Turn turn, GameState state)
+    {
+        if (turn.IsComplete())
+        {
+            ProcessTurn(turn, state);
+        }
+        else if (turn.ContainsMoves())
+        {
+            ProcessMoves(turn.moves, turn.Entity, state);
+
+        }
+        else if (turn.ContainsAction())
+        {
+            ProcessAction(turn.action, state);
+        }
     }
 
     public static bool IsTileValid(Vector2Int position)

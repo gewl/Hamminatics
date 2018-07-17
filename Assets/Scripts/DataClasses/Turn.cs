@@ -61,4 +61,28 @@ public class Turn {
         return !a.Equals(b);
     }
 
+    public bool ContainsMoves()
+    {
+        return moves.Count > 0;
+    }
+
+    public bool ContainsAction()
+    {
+        return action != null && action.card != null;
+    }
+
+    public bool IsPlayerTurn()
+    {
+        return Entity.ID == Constants.PLAYER_ID;
+    }
+
+    public bool IsComplete()
+    {
+        return ContainsAction() && ContainsMoves();
+    }
+
+    public bool IsCompletePlayerTurn()
+    {
+        return IsPlayerTurn() && IsComplete();
+    }
 }
