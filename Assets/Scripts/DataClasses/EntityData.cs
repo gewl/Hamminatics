@@ -10,25 +10,14 @@ public class EntityData : ScriptableObject {
     [HideInInspector]
     public Vector2Int Position;
 
-    public MovementCardData MovementCard;
+    public MovementCardData movementCard;
     public AttackCardData attackCard;
 
     public override int GetHashCode()
     {
         int result = 37;
 
-        result *= 397;
-        if (ID != null)
-        {
-            result += ID.GetHashCode();
-        }
-
-        result *= 397;
-        if (Position != null)
-        {
-            result += Position.GetHashCode();
-        }
-
+        result = result * 23 + ID.GetHashCode();
         return result;
     }
 
@@ -42,5 +31,21 @@ public class EntityData : ScriptableObject {
         EntityData entity = (EntityData)other;
 
         return entity.GetHashCode() == GetHashCode();
+    }
+
+    public EntityData Copy()
+    {
+        EntityData copy = ScriptableObject.CreateInstance(typeof(EntityData)) as EntityData;
+
+        copy.ID = ID;
+        copy.Health = Health;
+        copy.EntitySprite = EntitySprite;
+        copy.Speed = Speed;
+        copy.IdentifyingColor = IdentifyingColor;
+        copy.Position = Position;
+        copy.movementCard = movementCard;
+        copy.attackCard = attackCard;
+
+        return copy;
     }
 }

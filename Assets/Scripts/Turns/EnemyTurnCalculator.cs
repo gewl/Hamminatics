@@ -35,7 +35,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
             Vector2Int enemyPosition = enemy.Position;
             Tile enemyTile = BoardHelperFunctions.GetTileAtPosition(enemyPosition);
 
-            MovementCardData enemyMovementCard = enemy.MovementCard;
+            MovementCardData enemyMovementCard = enemy.movementCard;
             int enemyMoveRange = enemyMovementCard.Range;
 
             AttackCardData enemyAttackCard = enemy.attackCard;

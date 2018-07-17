@@ -11,6 +11,8 @@ public class GameState {
     public List<CompletedMove> movesCompletedLastRound;
     public List<CompletedAction> actionsCompletedLastRound;
 
+    public Dictionary<EntityData, List<PathStep>> entityPathsMap;
+
     public GameState(EntityData _player, List<EntityData> _enemies)
     {
         player = _player;
@@ -19,6 +21,9 @@ public class GameState {
         turnStack = new Stack<Turn>();
         movesCompletedLastRound = new List<CompletedMove>();
         actionsCompletedLastRound = new List<CompletedAction>();
+
+        entityPathsMap = new Dictionary<EntityData, List<PathStep>>();
+        this.GetAllEntities().ForEach(e => entityPathsMap[e] = new List<PathStep>());
     }
 
     public GameState(EntityData _player, List<EntityData> _enemies, Stack<Turn> _turns)
@@ -29,6 +34,9 @@ public class GameState {
 
         movesCompletedLastRound = new List<CompletedMove>();
         actionsCompletedLastRound = new List<CompletedAction>();
+
+        entityPathsMap = new Dictionary<EntityData, List<PathStep>>();
+        this.GetAllEntities().ForEach(e => entityPathsMap[e] = new List<PathStep>());
     }
 
     public void UpdateTurnStack(Stack<Turn> newTurnStack)

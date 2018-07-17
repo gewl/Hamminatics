@@ -17,5 +17,5 @@ MonoBehaviour:
   Speed: 2
   IdentifyingColor: {r: 0.9862069, g: 1, b: 0, a: 1}
   Position: {x: 0, y: 0}
-  MovementCard: {fileID: 11400000, guid: 7eb599ec2e87a724f909c00b1e5184ea, type: 2}
+  movementCard: {fileID: 11400000, guid: 7eb599ec2e87a724f909c00b1e5184ea, type: 2}
   attackCard: {fileID: 11400000, guid: e1df8ea6f83e9f44daf04f84e149c83f, type: 2}

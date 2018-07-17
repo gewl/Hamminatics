@@ -4122,7 +4122,7 @@ GameObject:
   - component: {fileID: 929109534}
   - component: {fileID: 929109535}
   m_Layer: 5
-  m_Name: ActionImageLayer
+  m_Name: DrawnTurnLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -142,20 +142,33 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public void DrawBoard_Standard(GameState currentGameState, GameState projectedGameState, bool isResolvingTurn)
+    public void DrawBoard_Standard(GameState currentGameState, bool isResolvingTurn)
     {
         ClearBoard();
 
-        // Draw future player position.
-        DrawSpriteAtPosition(projectedGameState.player.EntitySprite, projectedGameState.player.Position, translucent);
+        // Draw current player at position.
+        DrawSpriteAtPosition(currentGameState.player.EntitySprite, currentGameState.player.Position, opaque);
 
-        // Draw future enemy positions.
-        for (int i = 0; i < projectedGameState.enemies.Count; i++)
+        // Draw current enemies at positions.
+        for (int i = 0; i < currentGameState.enemies.Count; i++)
         {
-            EntityData entity = projectedGameState.enemies[i];
+            EntityData entity = currentGameState.enemies[i];
             if (entity != null)
             {
-                DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent);
+                DrawSpriteAtPosition(entity.EntitySprite, entity.Position, opaque);
+            }
+        }
+    }
+
+    public void DrawBoard_Standard(GameState currentGameState, Dictionary<EntityData, List<PathStep>> paths, bool isResolvingTurn)
+    {
+        ClearBoard();
+
+        if (paths != null)
+        {
+            foreach (EntityData entity in paths.Keys)
+            {
+                paths[entity].ForEach(step => DrawSpriteAtPosition(entity.EntitySprite, step.position, translucent));
             }
         }
 
@@ -172,37 +185,37 @@ public class BoardController : MonoBehaviour {
             }
         }
 
-        // Draw cells to be attacked in next round.
-        foreach (CompletedAction completedAction in projectedGameState.actionsCompletedLastRound)
-        {
-            HighlightDamageCell(completedAction.TargetTile.Position);
-        }
+        //// Draw cells to be attacked in next round.
+        //foreach (CompletedAction completedAction in projectedGameState.actionsCompletedLastRound)
+        //{
+        //    HighlightDamageCell(completedAction.TargetTile.Position);
+        //}
     }
 
     void DrawBoard_SelectedEntity(EntityData selectedEntity, GameState currentGameState, GameState projectedGameState)
     {
-        ClearBoard();
+        //ClearBoard();
 
-        // Draw all current non-selected entities translucent.
-        if (currentGameState.player != selectedEntity)
-        {
-            DrawSpriteAtPosition(currentGameState.player.EntitySprite, currentGameState.player.Position, translucent);
-        }
+        //// Draw all current non-selected entities translucent.
+        //if (currentGameState.player != selectedEntity)
+        //{
+        //    DrawSpriteAtPosition(currentGameState.player.EntitySprite, currentGameState.player.Position, translucent);
+        //}
 
-        for (int i = 0; i < currentGameState.enemies.Count; i++)
-        {
-            EntityData entity = currentGameState.enemies[i];
-            if (entity != null && entity != selectedEntity)
-            {
-                DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent);
-            }
-        }
+        //for (int i = 0; i < currentGameState.enemies.Count; i++)
+        //{
+        //    EntityData entity = currentGameState.enemies[i];
+        //    if (entity != null && entity != selectedEntity)
+        //    {
+        //        DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent);
+        //    }
+        //}
 
-        currentGameState
-            .GetAllEntityPaths()[selectedEntity]
-            .ForEach(pathStep => DrawSpriteAtPosition(selectedEntity.EntitySprite, pathStep.position, translucent));
+        //currentGameState
+        //    .GetAllEntityPaths()[selectedEntity]
+        //    .ForEach(pathStep => DrawSpriteAtPosition(selectedEntity.EntitySprite, pathStep.position, translucent));
 
-        DrawSpriteAtPosition(selectedEntity.EntitySprite, selectedEntity.Position, opaque);
+        //DrawSpriteAtPosition(selectedEntity.EntitySprite, selectedEntity.Position, opaque);
     }
 
     void DrawSpriteAtPosition(Sprite sprite, Vector2Int position, Color color)

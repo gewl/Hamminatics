@@ -4,6 +4,18 @@ using UnityEngine;
 using System.Linq;
 
 public static class GameStateHelperFunctions {
+    public static Vector2Int GetProjectedPlayerPosition(this GameState state)
+    {
+        List<PathStep> playerPath = state.entityPathsMap[state.player];
+
+        if (playerPath.Count == 0)
+        {
+            return state.player.Position;
+        }
+       
+        return state.entityPathsMap[state.player].Last().position;
+    }
+
     public static Direction GetDirectionFromEntity(EntityData entity, Vector2Int targetPosition)
     {
         Vector2Int entityPosition = entity.Position;
@@ -98,21 +110,6 @@ public static class GameStateHelperFunctions {
         return state.IsTileOccupied(updatedPosition.x, updatedPosition.y);
     }
 
-    public static GameState CalculateFollowingGameState(GameState currentState)
-    {
-        GameState projectedState = currentState.DeepCopy();
-        projectedState.actionsCompletedLastRound.Clear();
-
-        while (projectedState.turnStack.Count > 0)
-        {
-            Turn nextTurn = projectedState.turnStack.Pop();
-
-            ProcessTurn(nextTurn, projectedState);
-        }
-
-        return projectedState;
-    }
-
     public static List<EntityData> GetAllEntities(this GameState state)
     {
         return state.enemies.Append(state.player).ToList();
@@ -125,13 +122,14 @@ public static class GameStateHelperFunctions {
 
         copiedState.GetAllEntities().ForEach(e => entityPathsMap.Add(e, new List<PathStep>()));
 
-        foreach (Turn turn in copiedState.turnStack)
+        while (copiedState.turnStack.Count > 0)
         {
+            Turn turn = copiedState.turnStack.Pop();
             EntityData thisEntity = turn.Entity;
             if (turn.ContainsMoves())
             {
                 List<PathStep> thisPath = turn.GetPathFromTurn(copiedState);
-                entityPathsMap[thisEntity].Concat(thisPath);
+                entityPathsMap[thisEntity].AddRange(thisPath);
 
                 // If this path terminated with bumping an entity,
                 // add a "bumpedBy" pathstep to the impacted entity's path.
@@ -145,6 +143,7 @@ public static class GameStateHelperFunctions {
 
                     entityPathsMap[bumpedEntity].Add(bumpedStep);
                 }
+
             }
 
             if (turn.ContainsAction())
@@ -495,13 +494,13 @@ public static class GameStateHelperFunctions {
 
     public static GameState DeepCopy(this GameState originalState)
     {
-        EntityData playerCopy = ScriptableObject.Instantiate(originalState.player);
+        EntityData playerCopy = originalState.player.Copy();
 
         List<EntityData> enemyCopies = new List<EntityData>();
 
         for (int i = 0; i < originalState.enemies.Count; i++)
         {
-            EntityData enemyCopy = ScriptableObject.Instantiate(originalState.enemies[i]);
+            EntityData enemyCopy = originalState.enemies[i].Copy();
             enemyCopies.Add(enemyCopy);
         }
 
@@ -518,7 +517,7 @@ public static class GameStateHelperFunctions {
             }
             else
             {
-                int originalTurnSubjectIndex = originalState.enemies.FindIndex(enemy => enemy == turnSubject);
+                int originalTurnSubjectIndex = originalState.enemies.FindIndex(enemy => enemy.ID == turnSubject.ID);
                 newTurn.UpdateEntity(enemyCopies[originalTurnSubjectIndex]);
             }
 

@@ -80,7 +80,6 @@ public class GameStateManager : MonoBehaviour {
 
     bool isResolvingTurn = false;
     public bool IsResolvingTurn { get { return isResolvingTurn; } }
-    public Vector2Int ProjectedPlayerPosition { get { return ProjectedGameState.player.Position; } }
 
     private void Awake()
     {
@@ -122,7 +121,7 @@ public class GameStateManager : MonoBehaviour {
 
         // Movement availability is always 'from' player's current position.
         // Other actions are 'from' player's projected position.
-        Vector2Int playerOrigin = card.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
+        Vector2Int playerOrigin = card.Category == CardCategory.Movement ? Player.Position : CurrentGameState.GetProjectedPlayerPosition();
 
         BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
     }
@@ -147,10 +146,9 @@ public class GameStateManager : MonoBehaviour {
     {
         if (!isResolvingTurn)
         {
-            ProjectedGameState = GameStateHelperFunctions.CalculateFollowingGameState(currentGameState);
-            turnDrawer.DrawEntireRound(ProjectedGameState.movesCompletedLastRound, ProjectedGameState.actionsCompletedLastRound);
+            currentGameState.entityPathsMap = currentGameState.GetAllEntityPaths();
         }
-        boardController.DrawBoard_Standard(currentGameState, ProjectedGameState, isResolvingTurn);
+        boardController.DrawBoard_Standard(currentGameState, currentGameState.entityPathsMap, isResolvingTurn);
         potentialCardTargets.Clear();
     }
 
@@ -163,7 +161,7 @@ public class GameStateManager : MonoBehaviour {
         if (potentialCardTargets.Contains(tileClickedPosition))
         {
             CardData selectedCard = equippedCardsManager.GetSelectedCard();
-            Vector2Int playerOrigin = selectedCard.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
+            Vector2Int playerOrigin = selectedCard.Category == CardCategory.Movement ? Player.Position : CurrentGameState.GetProjectedPlayerPosition();
             turnStackController.AddToPlayerTurn(selectedCard, Player, playerOrigin, tileClickedPosition);
             equippedCardsManager.ClearSelectedCard();
             GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
