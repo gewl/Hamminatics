@@ -1,20 +1,120 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class PathStep {
+public class Path {
 
-    public EntityData pathingEntity;
-    public Vector2Int position;
-    public EntityData bumpedEntity;
-    public EntityData bumpedBy;
-    
-    public PathStep(EntityData _pathingEntity, Vector2Int _position, EntityData _bumpedEntity = null)
+    PathStep head;
+
+    public Path(EntityData entity, Vector2Int initialPosition)
     {
-        pathingEntity = _pathingEntity;
-        position = _position;
-        bumpedBy = null;
-        bumpedEntity = _bumpedEntity;
+        head = new PathStep(entity, initialPosition);
+    }
+
+    public Path()
+    {
+        head = null;
+    }
+
+    public bool IsEmpty()
+    {
+        return head == null || head.nextStep == null;
+    }
+
+    public void AddStep(PathStep step)
+    {
+        if (head == null)
+        {
+            head = step;
+            return;
+        }
+
+        PathStep checkNode = head;
+
+        while (checkNode.nextStep != null)
+        {
+            checkNode = checkNode.nextStep;
+        }
+
+        step.lastPosition = checkNode.newPosition;
+        checkNode.nextStep = step;
+    }
+
+    public void AddPath(Path path)
+    {
+        AddStep(path.head);
+    }
+
+    public PathStep Peek()
+    {
+        return head;
+    }
+    
+    public PathStep PeekLast()
+    {
+        PathStep checkNode = head;
+
+        while (checkNode.nextStep != null)
+        {
+            checkNode = checkNode.nextStep;
+        }
+
+        return checkNode;
+    }
+
+    public PathStep GetNext()
+    {
+        PathStep nextNode = head;
+        if (nextNode == null)
+        {
+            return null;
+        }
+        head = head.nextStep;
+        return nextNode;
+    }
+
+    public void LogPath()
+    {
+        PathStep iterNode = head;
+
+        while (iterNode != null)
+        {
+            Debug.Log(iterNode.newPosition);
+            iterNode = iterNode.nextStep;
+        }
+    }
+
+    public void LogPathLength()
+    {
+        int result = 0;
+        PathStep iterNode = head;
+        if (head == null)
+        {
+            Debug.Log("Path has no length.");
+        }
+
+        while (iterNode != null)
+        {
+            result++;
+            iterNode = iterNode.nextStep;
+        }
+        Debug.Log(head.pathingEntity.ID + ": " + result);
+    }
+
+
+    public List<Vector2Int> GetAllPositions()
+    {
+        List<Vector2Int> positions = new List<Vector2Int>();
+
+        PathStep checkNode = head;
+
+        while (checkNode != null)
+        {
+            positions.Add(checkNode.newPosition);
+            checkNode = checkNode.nextStep;
+        }
+
+        return positions; 
     }
 }

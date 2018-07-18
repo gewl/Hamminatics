@@ -18,7 +18,7 @@ public class ImageManager : SerializedMonoBehaviour {
     Dictionary<CardCategory, Dictionary<Direction, Sprite>> abilityImages;
 
     [SerializeField]
-    Dictionary<PathDirection, Sprite> pathSprites;
+    Dictionary<PathType, Sprite> pathSprites;
 
     static ImageManager instance;
 
@@ -36,34 +36,10 @@ public class ImageManager : SerializedMonoBehaviour {
         return abilityPointer;
     }
 
-    public static GameObject GetPathImage(Sprite pathSprite, Direction entranceDirection)
+    public static GameObject GetPathImage(Sprite pathSprite)
     {
         GameObject pathImage = GameObject.Instantiate(instance.pathImagePrefab);
-        RectTransform pathRect = pathImage.GetComponent<RectTransform>();
-
         pathImage.GetComponent<Image>().sprite = pathSprite;
-
-        float imageRotation = 0f;
-
-        switch (entranceDirection)
-        {
-            case Direction.Up:
-                break;
-            case Direction.Right:
-                imageRotation = -90f;
-                break;
-            case Direction.Down:
-                imageRotation = 180f;
-                break;
-            case Direction.Left:
-                imageRotation = 90f;
-                break;
-            default:
-                break;
-        }
-
-
-        pathRect.rotation = Quaternion.Euler(new Vector3(0f, 0f, imageRotation));
 
         return pathImage;
     }
@@ -83,7 +59,7 @@ public class ImageManager : SerializedMonoBehaviour {
         return instance.abilityImages[CardCategory.Movement][direction];
     }
 
-    public static Sprite GetPathSprite(PathDirection path)
+    public static Sprite GetPathSprite(PathType path)
     {
         return instance.pathSprites[path];
     }

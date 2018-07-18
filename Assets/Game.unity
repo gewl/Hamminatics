@@ -1303,8 +1303,14 @@ MonoBehaviour:
         mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[CardCategory,
-        Assembly-CSharp]], mscorlib
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[CardCategory, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1323,8 +1329,14 @@ MonoBehaviour:
         UnityEngine.CoreModule]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 3|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[Direction,
-        Assembly-CSharp]], mscorlib
+      Data: 3|System.Collections.Generic.EnumEqualityComparer`1[[Direction, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1399,12 +1411,8 @@ MonoBehaviour:
       Data: 4|System.Collections.Generic.Dictionary`2[[Direction, Assembly-CSharp],[UnityEngine.Sprite,
         UnityEngine.CoreModule]], mscorlib
     - Name: comparer
-      Entry: 7
-      Data: 5|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[Direction,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
+      Entry: 9
+      Data: 3
     - Name: 
       Entry: 12
       Data: 4
@@ -1473,12 +1481,18 @@ MonoBehaviour:
       Data: 
     - Name: pathSprites
       Entry: 7
-      Data: 6|System.Collections.Generic.Dictionary`2[[PathDirection, Assembly-CSharp],[UnityEngine.Sprite,
+      Data: 5|System.Collections.Generic.Dictionary`2[[PathType, Assembly-CSharp],[UnityEngine.Sprite,
         UnityEngine.CoreModule]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 7|System.Collections.Generic.EqualityComparer`1+DefaultComparer[[PathDirection,
-        Assembly-CSharp]], mscorlib
+      Data: 6|System.Collections.Generic.EnumEqualityComparer`1[[PathType, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
     - Name: 
       Entry: 8
       Data: 

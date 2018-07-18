@@ -8,14 +8,14 @@ using static Helpers.Operators;
 public static class GameStateHelperFunctions {
     public static Vector2Int GetProjectedPlayerPosition(this GameState state)
     {
-        List<PathStep> playerPath = state.entityPathsMap[state.player];
+        Path playerPath = state.entityPathsMap[state.player];
 
-        if (playerPath.Count == 0)
+        if (playerPath.IsEmpty())
         {
             return state.player.Position;
         }
        
-        return state.entityPathsMap[state.player].Last().position;
+        return state.entityPathsMap[state.player].PeekLast().newPosition;
     }
 
     public static Direction GetDirectionFromEntity(EntityData entity, Vector2Int targetPosition)
@@ -91,12 +91,12 @@ public static class GameStateHelperFunctions {
         return state.enemies.Append(state.player).ToList();
     }
 
-    public static Dictionary<EntityData, List<PathStep>> GenerateAllEntityPaths(this GameState state)
+    public static Dictionary<EntityData, Path> GenerateAllEntityPaths(this GameState state)
     {
         GameState copiedState = state.DeepCopy();
-        Dictionary<EntityData, List<PathStep>> entityPathsMap = new Dictionary<EntityData, List<PathStep>>();
+        Dictionary<EntityData, Path> entityPathsMap = new Dictionary<EntityData, Path>();
 
-        copiedState.GetAllEntities().ForEach(e => entityPathsMap.Add(e, new List<PathStep>()));
+        copiedState.GetAllEntities().ForEach(e => entityPathsMap.Add(e, new Path()));
 
         while (copiedState.turnStack.Count > 0)
         {
@@ -104,20 +104,20 @@ public static class GameStateHelperFunctions {
             EntityData thisEntity = turn.Entity;
             if (turn.ContainsMoves())
             {
-                List<PathStep> thisPath = turn.GetPathFromTurn(copiedState);
-                entityPathsMap[thisEntity].AddRange(thisPath);
+                Path thisPath = turn.GetPathFromTurn(copiedState);
+                entityPathsMap[thisEntity].AddPath(thisPath);
 
                 // If this path terminated with bumping an entity,
                 // add a "bumpedBy" pathstep to the impacted entity's path.
-                if (thisPath.Last().bumpedEntity != null)
+                if (thisPath.PeekLast().bumpedEntity != null)
                 {
-                    EntityData bumpedEntity = thisPath.Last().bumpedEntity;
+                    EntityData bumpedEntity = thisPath.PeekLast().bumpedEntity;
                     PathStep bumpedStep = new PathStep(bumpedEntity, bumpedEntity.Position)
                     {
                         bumpedBy = thisEntity
                     };
 
-                    entityPathsMap[bumpedEntity].Add(bumpedStep);
+                    entityPathsMap[bumpedEntity].AddStep(bumpedStep);
                 }
             }
 
@@ -148,21 +148,21 @@ public static class GameStateHelperFunctions {
         }
     }
 
-    static List<PathStep> GetPathFromTurn(this Turn turn, GameState state)
+    static Path GetPathFromTurn(this Turn turn, GameState state)
     {
-        List<PathStep> pathSteps = new List<PathStep>();
+        Path path = new Path();
         List<Direction> turnMoves = turn.moves;
 
         EntityData entity = turn.Entity;
 
         if (turn.moves.Count == 0)
         {
-            return pathSteps;
+            return path;
 
         }
 
         // Path start.
-        pathSteps.Add(new PathStep(entity, entity.Position));
+        path.AddStep(new PathStep(entity, entity.Position));
 
         // Add path steps until they end or a bump occurs.
         for (int i = 0; i < turnMoves.Count; i++)
@@ -171,16 +171,19 @@ public static class GameStateHelperFunctions {
 
             PathStep thisStep = GetPathStepFromMove(entity, move, state);
 
-            pathSteps.Add(thisStep);
-
-            if (thisStep != null && thisStep.bumpedEntity != null)
+            if (thisStep != null)
             {
-                break;
+                path.AddStep(thisStep);
+                if (thisStep.bumpedEntity != null)
+                {
+                    break;
+                }
             }
+
         }
 
         // Prune null results (e.g. from trying to move into wall).
-        return pathSteps.Where(step => step != null).ToList();
+        return path;
     }
 
     static PathStep GetPathStepFromMove(EntityData entity, Direction direction, GameState state)

@@ -37,7 +37,7 @@ public enum AbilityDirection
     AllDirections
 }
 
-public enum PathDirection
+public enum PathType
 {
     Straight,
     RightTurn,

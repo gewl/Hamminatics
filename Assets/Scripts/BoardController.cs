@@ -15,7 +15,6 @@ public class BoardController : MonoBehaviour {
     Image[,] boardCellImages;
     Image[,] cellContentImages;
 
-    ImageManager spriteManager;
     Canvas canvas;
 
     Color invisible;
@@ -34,7 +33,6 @@ public class BoardController : MonoBehaviour {
     {
         canvas = GetComponentInParent<Canvas>();
         gameStateManager = GetComponentInParent<GameStateManager>();
-        spriteManager = GetComponentInParent<ImageManager>();
 
         InitializeBoard();
         gameStateManager.InitializeGameState(currentBoard);

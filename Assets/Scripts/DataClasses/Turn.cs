@@ -68,7 +68,7 @@ public class Turn {
 
     public bool ContainsAction()
     {
-        return action != null && action.card != null;
+        return action.card != null;
     }
 
     public bool IsPlayerTurn()

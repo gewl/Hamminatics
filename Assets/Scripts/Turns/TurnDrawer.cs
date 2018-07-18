@@ -28,128 +28,181 @@ public class TurnDrawer : MonoBehaviour {
             .ForEach(entity => DrawEntityPath(entity, state.entityPathsMap[entity]));
     }
 
-    void DrawEntityPath(EntityData entity, List<PathStep> path)
+    void DrawEntityPath(EntityData entity, Path path)
     {
-        if (path.Count == 0)
+        if (path.IsEmpty())
         {
             return;
         }
 
-        PathStep firstMove = path.First(p => p.bumpedBy == null);
-        PathStep lastMove = path.Last(p => p.bumpedBy == null);
-
-        Vector2Int entityLastPosition = entity.Position;
-        List<PathStep>.Enumerator pathEnumerator = path.GetEnumerator();
-        pathEnumerator.MoveNext();
+        PathStep currentStep = path.GetNext();
 
         // Iterate through 'bumped' steps until it:
         // A: Hits the end of the path (indicating that there are no moves, the entirety of the path is bumps), or,
         // B: Hits the first 'move' step.
-        while (pathEnumerator.Current != null && pathEnumerator.Current != firstMove)
+        while (currentStep != null && currentStep.bumpedBy != null)
         {
-            PathStep step = pathEnumerator.Current;
-            GenerateNewBumpImage(step.position, entityLastPosition);
-
-            entityLastPosition = step.position;
-            pathEnumerator.MoveNext();
+            GenerateNewBumpImage(currentStep);
+            currentStep = path.GetNext();
         }
 
-        if (pathEnumerator.Current == null)
+        if (currentStep == null)
         {
+            Debug.Log("returning in first current step check");
             return;
         }
 
-        while (pathEnumerator.Current != null && pathEnumerator.Current.bumpedBy == null)
+        while (currentStep != null && currentStep.bumpedBy == null)
         {
-            PathStep step = pathEnumerator.Current;
+            Sprite pathSprite = GeneratePathSprite(currentStep);
 
-            if (step.position == entityLastPosition)
-            {
-                pathEnumerator.MoveNext();
-                continue;
-            }
-
-            GenerateNewPathStepImage(step,
-                GetPathSpriteFromCoordinates(step, step.position, entityLastPosition),
-                BoardHelperFunctions.GetDirectionFromPosition(entityLastPosition, step.position),
+            GenerateNewPathStepImage(currentStep,
+                pathSprite,
                 entity.IdentifyingColor);
 
-            if (entity.ID == Constants.PLAYER_ID)
-            {
-                Debug.Log("Moved " + BoardHelperFunctions.GetDirectionFromPosition(entityLastPosition, step.position));
-                Debug.Log("Player moved to: " + step.position + " from " + entityLastPosition);
-            }
-            entityLastPosition = step.position;
-
-            pathEnumerator.MoveNext();
+            currentStep = path.GetNext();
         }
 
-        if (pathEnumerator.Current == null)
+        if (currentStep == null)
         {
             return;
         }
 
-        while (pathEnumerator.Current != null)
+        while (currentStep != null && currentStep.bumpedBy != null)
         {
-            PathStep step = pathEnumerator.Current;
-            GenerateNewBumpImage(step.position, entityLastPosition);
+            GenerateNewBumpImage(currentStep);
+            currentStep = path.GetNext();
+        }
 
-            entityLastPosition = step.position;
-            pathEnumerator.MoveNext();
+        if (currentStep == null)
+        {
+            return;
         }
     }
 
-    void GenerateNewBumpImage(Vector2Int newPosition, Vector2Int bumpedFromPosition)
+    void GenerateNewBumpImage(PathStep step)
     {
-        GameObject instantiatedBumpImage = ImageManager.GetPathImage(
-            ImageManager.GetPathSprite(PathDirection.Bumped),
-            BoardHelperFunctions.GetDirectionFromPosition(newPosition, bumpedFromPosition)
-            );
+        GameObject instantiatedBumpImage = ImageManager.GetPathImage(ImageManager.GetPathSprite(PathType.Bumped));
         instantiatedBumpImage.transform.SetParent(transform);
-        instantiatedBumpImage.transform.position = boardController.GetCellPosition(newPosition);
+        instantiatedBumpImage.transform.position = boardController.GetCellPosition(step.newPosition);
+        instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
+        instantiatedBumpImage.GetComponent<Image>().color = step.pathingEntity.IdentifyingColor;
     }
 
-    void GenerateNewPathStepImage(PathStep step, Sprite stepSprite, Direction entranceDirection, Color color)
+    void GenerateNewPathStepImage(PathStep step, Sprite stepSprite, Color color)
     {
-        GameObject instantiatedPathImage = ImageManager.GetPathImage(stepSprite, entranceDirection);
+        GameObject instantiatedPathImage = ImageManager.GetPathImage(stepSprite);
         instantiatedPathImage.transform.SetParent(transform);
-        instantiatedPathImage.transform.position = boardController.GetCellPosition(step.position);
+        instantiatedPathImage.transform.position = boardController.GetCellPosition(step.newPosition);
+        instantiatedPathImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
+        instantiatedPathImage.GetComponent<Image>().color = step.pathingEntity.IdentifyingColor;
+    }
+
+    float GetImageRotation(PathStep step)
+    {
+        float result = 0f;
+
+        Direction directionOfEntrance = default(Direction);
+
+        if (step.IsFirstStep())
+        {
+            directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(step.GetNextPosition(), step.newPosition);
+        }
+        else
+        {
+            directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(step.newPosition, step.lastPosition);
+        }
+
+        switch (directionOfEntrance)
+        {
+            case Direction.Up:
+                break;
+            case Direction.Right:
+                result = -90f;
+                break;
+            case Direction.Down:
+                result = 180f;
+                break;
+            case Direction.Left:
+                result = 90f;
+                break;
+            default:
+                break;
+        }
+
+        return result;
+    }
+
+    Sprite GeneratePathSprite(PathStep step)
+    {
+        if (step.IsFirstStep())
+        {
+            return ImageManager.GetPathSprite(PathType.Beginning);
+        }
+        else if (step.IsLastStep())
+        {
+            return ImageManager.GetPathSprite(PathType.Terminating);
+        }
+        else
+        {
+            Sprite resultSprite = ImageManager.GetPathSprite(PathType.Straight);
+
+            if (BoardHelperFunctions.AreTwoPositionsLinear(step.lastPosition, step.GetNextPosition()))
+            {
+                return resultSprite;
+            }
+            Vector2Int localVectorToLastPosition = step.lastPosition - step.newPosition;
+            Vector2Int localVectorToNextPosition = step.GetNextPosition() - step.newPosition;
+
+            float angleBetween = Vector2.SignedAngle(localVectorToLastPosition, localVectorToNextPosition);
+
+            if (angleBetween - 90f == 0f)
+            {
+                resultSprite = ImageManager.GetPathSprite(PathType.LeftTurn);
+            }
+            else if (angleBetween + 90f == 0f)
+            {
+                resultSprite = ImageManager.GetPathSprite(PathType.RightTurn);
+            }
+
+            return resultSprite;
+        }
     }
 
     Sprite GetPathSpriteFromCoordinates(PathStep step, Vector2Int nextPosition, Vector2Int lastPosition)
     {
-        PathDirection pathDirection = PathDirection.Bumped;
+        PathType pathDirection = PathType.Bumped;
         Vector2Int defaultVector = new Vector2Int(-1, -1);
         if (step.bumpedBy != null)
         {
-            pathDirection = PathDirection.Bumped;
+            pathDirection = PathType.Bumped;
         }
         else if (nextPosition == defaultVector)
         {
-            pathDirection = PathDirection.Terminating;
+            pathDirection = PathType.Terminating;
         }
         else if (lastPosition == defaultVector)
         {
-            pathDirection = PathDirection.Beginning;
+            pathDirection = PathType.Beginning;
         }
         else
         {
-            Vector2Int localVectorToLastPosition = lastPosition - step.position;
-            Vector2Int localVectorToNextPosition = nextPosition - step.position;
+            Vector2Int localVectorToLastPosition = lastPosition - step.newPosition;
+            Vector2Int localVectorToNextPosition = nextPosition - step.newPosition;
 
             float angleBetween = Vector2.SignedAngle(localVectorToLastPosition, localVectorToNextPosition);
 
             if (Mathf.Abs(angleBetween) == 180)
             {
-                pathDirection = PathDirection.Straight;
+                pathDirection = PathType.Straight;
             }
             else if (angleBetween - 90f == 0f)
             {
-                pathDirection = PathDirection.LeftTurn;
+                pathDirection = PathType.LeftTurn;
             }
             else if (angleBetween + 90f == 0f)
             {
-                pathDirection = PathDirection.RightTurn;
+                pathDirection = PathType.RightTurn;
             }
         }
 
