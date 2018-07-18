@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;   
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using static Helpers.Predicates;
 
 public static class GameStateHelperFunctions {
     public static Vector2Int GetProjectedPlayerPosition(this GameState state)
@@ -117,12 +119,12 @@ public static class GameStateHelperFunctions {
 
                     entityPathsMap[bumpedEntity].Add(bumpedStep);
                 }
-
             }
 
             if (turn.ContainsAction())
             {
                 ProcessAction(turn.action, copiedState);
+
             }
         }
 
@@ -156,6 +158,7 @@ public static class GameStateHelperFunctions {
         if (turn.moves.Count == 0)
         {
             return pathSteps;
+
         }
 
         // Path start.
@@ -165,7 +168,6 @@ public static class GameStateHelperFunctions {
         for (int i = 0; i < turnMoves.Count; i++)
         {
             Direction move = turnMoves[i];
-            Vector2Int currentPosition = entity.Position;
 
             PathStep thisStep = GetPathStepFromMove(entity, move, state);
 
@@ -183,7 +185,7 @@ public static class GameStateHelperFunctions {
 
     static PathStep GetPathStepFromMove(EntityData entity, Direction direction, GameState state)
     {
-        Tile currentTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
+        Tile currentTile = BoardController.CurrentBoard.GetTileAtPosition(entity.Position);
         EntityData bumpedEntity = null;
 
         if (!currentTile.ConnectsToNeighbor(direction))
@@ -257,6 +259,7 @@ public static class GameStateHelperFunctions {
     //        results.Add(copiedEntity.Position);
     //    }
 
+
     //    return results;
     //}
 
@@ -264,6 +267,7 @@ public static class GameStateHelperFunctions {
     //{
     //    if (turn.IsComplete())
     //    {
+
     //        ProcessTurn(turn, state);
     //    }
     //    else if (turn.ContainsMoves())
@@ -307,14 +311,18 @@ public static class GameStateHelperFunctions {
     // Used for extrapolating next turn.
     public static void ProcessMoves(List<Direction> moves, EntityData entity, GameState state)
     {
-        Tile originTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
+        Tile originTile = BoardController
+            .CurrentBoard
+            .GetTileAtPosition(entity.Position);
         for (int i = 0; i < moves.Count; i++)
         {
             Direction nextMove = moves[i];
             TryToMoveEntityInDirection(entity, nextMove, state);
         }
 
-        Tile destinationTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
+        Tile destinationTile = BoardController
+            .CurrentBoard
+            .GetTileAtPosition(entity.Position);
 
         CompletedMove completedMove = new CompletedMove(moves, entity, originTile, destinationTile);
         state.movesCompletedLastRound.Add(completedMove);
@@ -322,7 +330,9 @@ public static class GameStateHelperFunctions {
 
     static void TryToMoveEntityInDirection(EntityData entity, Direction direction, GameState state)
     {
-        Tile currentTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
+        Tile currentTile = BoardController
+            .CurrentBoard
+            .GetTileAtPosition(entity.Position);
 
         if (!currentTile.ConnectsToNeighbor(direction))
         { 
@@ -385,7 +395,17 @@ public static class GameStateHelperFunctions {
 
             Vector2Int projectedBumpPosition = GetTilePosition(projectedPosition, direction, 1);
 
-            bool canBump = BoardHelperFunctions.GetTileAtPosition(projectedPosition).HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition) && !gameState.IsTileOccupied(projectedBumpPosition);
+            bool canBump = BoardController
+                .CurrentBoard
+                .GetTileAtPosition(projectedPosition)
+                .CheckThat(Operators.And(
+                    (Tile t) => t.HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition),
+                    (Tile t) => !t
+                    .GetNeighborWhere(neighb => neighb.Position == projectedBumpPosition)
+                    .IsTileOccupied(gameState)
+                    ));
+                //.HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition) && 
+                //!gameState.IsTileOccupied(projectedBumpPosition);
 
             if (canBump)
             {
@@ -404,7 +424,8 @@ public static class GameStateHelperFunctions {
 
     static void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance, GameState gameState)
     {
-        Tile originTile = BoardHelperFunctions.GetTileAtPosition(entity.Position);
+        Tile originTile = BoardController.CurrentBoard
+            .GetTileAtPosition(entity.Position);
         Tile targetTile = FindFirstOccupiedTileInDirection(originTile, direction, distance, gameState);
 
         CompletedAction completedAction = new CompletedAction(originTile, targetTile, direction, card.Category);

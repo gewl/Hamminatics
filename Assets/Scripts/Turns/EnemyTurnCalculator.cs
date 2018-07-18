@@ -28,12 +28,12 @@ public class EnemyTurnCalculator : MonoBehaviour {
         projectedEnemyMovementTiles.Clear();
         projectedEnemyAttackTiles.Clear();
 
-        currentlyOccupiedTiles = enemies.Select(enemy => BoardHelperFunctions.GetTileAtPosition(enemy.Position)).ToList<Tile>();
+        currentlyOccupiedTiles = enemies.Select(enemy => BoardController.CurrentBoard.GetTileAtPosition(enemy.Position)).ToList<Tile>();
 
         foreach (EntityData enemy in enemies)
         {
             Vector2Int enemyPosition = enemy.Position;
-            Tile enemyTile = BoardHelperFunctions.GetTileAtPosition(enemyPosition);
+            Tile enemyTile = BoardController.CurrentBoard.GetTileAtPosition(enemyPosition);
 
             MovementCardData enemyMovementCard = enemy.movementCard;
             int enemyMoveRange = enemyMovementCard.Range;
@@ -54,7 +54,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
             // IF enemy is projected to move into player's tile:
             // THEN attack as if enemy is NOT moving (to account for projected player displacement)
             // ELSE attack from projected movement tile
-            Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardHelperFunctions.GetTileAtPosition(enemyPosition) : targetMovementTile;
+            Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardController.CurrentBoard.GetTileAtPosition(enemyPosition) : targetMovementTile;
 
             List<Tile> potentialAttackTargetTiles = BoardHelperFunctions.GetPotentialLinearTargets(projectedMovementTile.Position, enemyAttackRange);
             List<Tile> sortedPotentialAttackTargets = SortTilesByAttackEligibility(potentialAttackTargetTiles);

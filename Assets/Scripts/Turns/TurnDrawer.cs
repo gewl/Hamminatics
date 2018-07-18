@@ -35,22 +35,33 @@ public class TurnDrawer : MonoBehaviour {
             return;
         }
 
-        for (int i = 0; i < path.Count; i++)
+        PathStep firstMove = path.First(p => p.bumpedBy == null);
+        PathStep lastMove = path.Last(p => p.bumpedBy == null);
+
+        Vector2Int entityLastPosition = entity.Position;
+        List<PathStep>.Enumerator pathEnumerator = path.GetEnumerator();
+
+        while (pathEnumerator.MoveNext() && pathEnumerator.Current != firstMove)
         {
-            PathStep step = path[i];
-
-            Vector2Int nextPosition = i == path.Count - 1 ? new Vector2Int(-1, -1) : path[i + 1].position;
-            Vector2Int lastPosition = i == 0 ? new Vector2Int(-1, -1) : path[i - 1].position;
-
-            Direction entranceDirection = i == 0 ?
-                BoardHelperFunctions.GetDirectionFromPosition(nextPosition, step.position) :
-                BoardHelperFunctions.GetDirectionFromPosition(step.position, lastPosition);
-
-            GenerateNewPathStepImage(step, 
-                GetPathSpriteFromCoordinates(step, nextPosition, lastPosition), 
-                entranceDirection,
-                entity.IdentifyingColor);
+            
         }
+
+        //for (int i = 0; i < path.Count; i++)
+        //{
+        //    PathStep step = path[i];
+
+        //    Vector2Int nextPosition = i == path.Count - 1 ? new Vector2Int(-1, -1) : path[i + 1].position;
+        //    Vector2Int lastPosition = i == 0 ? new Vector2Int(-1, -1) : path[i - 1].position;
+
+        //    Direction entranceDirection = i == 0 ?
+        //        BoardHelperFunctions.GetDirectionFromPosition(nextPosition, step.position) :
+        //        BoardHelperFunctions.GetDirectionFromPosition(step.position, lastPosition);
+
+        //    GenerateNewPathStepImage(step, 
+        //        GetPathSpriteFromCoordinates(step, nextPosition, lastPosition), 
+        //        entranceDirection,
+        //        entity.IdentifyingColor);
+        //}
     }
 
     void GenerateNewPathStepImage(PathStep step, Sprite stepSprite, Direction entranceDirection, Color color)

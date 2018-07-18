@@ -70,15 +70,15 @@ public class TurnStackController : MonoBehaviour {
 
     void UpdatePlayerTurn_Movement(Vector2Int originPosition, Vector2Int targetPosition)
     {
-        List<Direction> pathToPosition = BoardHelperFunctions.FindPathBetweenTiles(BoardHelperFunctions.GetTileAtPosition(originPosition), BoardHelperFunctions.GetTileAtPosition(targetPosition));
+        List<Direction> pathToPosition = BoardHelperFunctions.FindPathBetweenTiles(BoardController.CurrentBoard.GetTileAtPosition(originPosition), BoardController.CurrentBoard.GetTileAtPosition(targetPosition));
 
         GetPlayerTurn().moves = pathToPosition;
     }
 
     void UpdatePlayerTurn_Action(CardData card, EntityData player, Vector2Int originPosition, Vector2Int targetPosition)
     {
-        Tile playerTile = BoardHelperFunctions.GetTileAtPosition(originPosition);
-        Tile targetTile = BoardHelperFunctions.GetTileAtPosition(targetPosition);
+        Tile playerTile = BoardController.CurrentBoard.GetTileAtPosition(originPosition);
+        Tile targetTile = BoardController.CurrentBoard.GetTileAtPosition(targetPosition);
         GetPlayerTurn().action = new Action(card, player, BoardHelperFunctions.GetDirectionBetweenTiles(playerTile, targetTile), BoardHelperFunctions.GetLinearDistanceBetweenTiles(playerTile, targetTile));
     }
 

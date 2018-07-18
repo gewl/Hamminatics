@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BoardHelperFunctions : MonoBehaviour {
+public static class BoardHelperFunctions {
 
     #region Exposed methods for data retrieval
-    static public Tile GetTileAtPosition(Vector2Int position)
+    static public Tile GetTileAtPosition(this GameBoard board, Vector2Int position)
     {
-        return BoardController.CurrentBoard.Tiles[position.x, position.y];
+        return board.Tiles[position.x, position.y];
     }
 
     public static Direction GetDirectionFromPosition(Vector2Int startingPosition, Vector2Int targetPosition)
@@ -39,7 +39,7 @@ public class BoardHelperFunctions : MonoBehaviour {
 
     static public List<Tile> GetPotentialLinearTargets(Vector2Int startingPosition, int range)
     {
-        Tile startingTile = GetTileAtPosition(startingPosition);
+        Tile startingTile = BoardController.CurrentBoard.GetTileAtPosition(startingPosition);
 
         return GetPotentialLinearTargets(startingTile, range);
     }
@@ -67,7 +67,7 @@ public class BoardHelperFunctions : MonoBehaviour {
 
     static public List<Tile> GetPotentialBranchingTargets(Vector2Int position, int range)
     {
-        return GetPotentialBranchingTargets(GetTileAtPosition(position), range);
+        return GetPotentialBranchingTargets(BoardController.CurrentBoard.GetTileAtPosition(position), range);
     }
 
     // For branching/multidirectional searching.
@@ -283,7 +283,6 @@ public class BoardHelperFunctions : MonoBehaviour {
 
         return path;
     }
-
 
     #endregion
 }

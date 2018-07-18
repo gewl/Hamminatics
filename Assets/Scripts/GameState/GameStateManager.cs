@@ -207,7 +207,7 @@ public class GameStateManager : MonoBehaviour {
 
             GameStateDelegates.OnResolvingTurn(nextTurn);
 
-            Tile entityInitialTile = BoardHelperFunctions.GetTileAtPosition(nextTurn.Entity.Position);
+            Tile entityInitialTile = BoardController.CurrentBoard.GetTileAtPosition(nextTurn.Entity.Position);
 
             for (int i = 0; i < nextTurn.moves.Count; i++)
             {
@@ -225,7 +225,7 @@ public class GameStateManager : MonoBehaviour {
                 yield return new WaitForSeconds(0.5f);
             }
 
-            Tile entityResultingTile = BoardHelperFunctions.GetTileAtPosition(nextTurn.Entity.Position);
+            Tile entityResultingTile = BoardController.CurrentBoard.GetTileAtPosition(nextTurn.Entity.Position);
             CompletedMove completedMove = new CompletedMove(nextTurn.moves, nextTurn.Entity, entityInitialTile, entityResultingTile);
 
             CurrentGameState.movesCompletedLastRound.Add(completedMove);
