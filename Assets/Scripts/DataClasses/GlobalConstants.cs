@@ -40,8 +40,8 @@ public enum AbilityDirection
 public enum PathDirection
 {
     Straight,
-    Left,
-    Right,
+    RightTurn,
+    LeftTurn,
     Terminating,
     Beginning,
     Bumped

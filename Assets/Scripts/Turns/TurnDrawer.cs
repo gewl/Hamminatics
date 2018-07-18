@@ -42,9 +42,13 @@ public class TurnDrawer : MonoBehaviour {
             Vector2Int nextPosition = i == path.Count - 1 ? new Vector2Int(-1, -1) : path[i + 1].position;
             Vector2Int lastPosition = i == 0 ? new Vector2Int(-1, -1) : path[i - 1].position;
 
+            Direction entranceDirection = i == 0 ?
+                BoardHelperFunctions.GetDirectionFromPosition(nextPosition, step.position) :
+                BoardHelperFunctions.GetDirectionFromPosition(step.position, lastPosition);
+
             GenerateNewPathStepImage(step, 
                 GetPathSpriteFromCoordinates(step, nextPosition, lastPosition), 
-                BoardHelperFunctions.GetDirectionFromPosition(step.position, lastPosition),
+                entranceDirection,
                 entity.IdentifyingColor);
         }
     }
@@ -54,7 +58,11 @@ public class TurnDrawer : MonoBehaviour {
         GameObject instantiatedPathImage = ImageManager.GetPathImage(stepSprite, entranceDirection);
         instantiatedPathImage.transform.SetParent(transform);
         instantiatedPathImage.transform.position = boardController.GetCellPosition(step.position);
-        instantiatedPathImage.GetComponent<Image>().color = color;
+
+        if (step.bumpedBy == null)
+        {
+            instantiatedPathImage.GetComponent<Image>().color = color;
+        }
     }
 
     Sprite GetPathSpriteFromCoordinates(PathStep step, Vector2Int nextPosition, Vector2Int lastPosition)
@@ -84,13 +92,13 @@ public class TurnDrawer : MonoBehaviour {
             {
                 pathDirection = PathDirection.Straight;
             }
-            else if (angleBetween - 90f <= 0.5f)
+            else if (angleBetween - 90f == 0f)
             {
-                pathDirection = PathDirection.Left;
+                pathDirection = PathDirection.LeftTurn;
             }
-            else if (angleBetween + 90f <= 0.5f)
+            else if (angleBetween + 90f == 0f)
             {
-                pathDirection = PathDirection.Right;
+                pathDirection = PathDirection.RightTurn;
             }
         }
 

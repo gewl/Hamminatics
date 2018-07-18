@@ -171,7 +171,7 @@ public static class GameStateHelperFunctions {
 
             pathSteps.Add(thisStep);
 
-            if (thisStep.bumpedEntity != null)
+            if (thisStep != null && thisStep.bumpedEntity != null)
             {
                 break;
             }

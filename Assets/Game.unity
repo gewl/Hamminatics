@@ -1285,10 +1285,10 @@ MonoBehaviour:
     - {fileID: 21300000, guid: ad4bf67ed6a6e0842ad546422c882f41, type: 3}
     - {fileID: 21300000, guid: 68f90e57f41fa5a47895ae35b6124aa4, type: 3}
     - {fileID: 21300000, guid: c34f19fe6fd99734890e667579e5b405, type: 3}
+    - {fileID: 21300000, guid: 431031389fe0f4745b58b2204dc974be, type: 3}
     - {fileID: 21300000, guid: 344c11c77bbc3044d9a94dfb5dee4af5, type: 3}
     - {fileID: 21300000, guid: 0cca52634d71471438e8c996b01216ad, type: 3}
     - {fileID: 21300000, guid: 6d2ebd7817f8ccf46ad57aa57ec72040, type: 3}
-    - {fileID: 21300000, guid: 431031389fe0f4745b58b2204dc974be, type: 3}
     - {fileID: 21300000, guid: 676cb45a61391a34eab28ee97ff119b8, type: 3}
     - {fileID: 21300000, guid: 37643e993bf12554b945e2175930820c, type: 3}
     SerializedBytesString: 
@@ -1490,7 +1490,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: 
       Entry: 10
       Data: 8
@@ -1502,7 +1502,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 3
-      Data: 1
+      Data: 0
     - Name: 
       Entry: 10
       Data: 9
@@ -1526,7 +1526,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 3
-      Data: 3
+      Data: 1
     - Name: 
       Entry: 10
       Data: 11
@@ -1564,6 +1564,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
   emptyActionSprite: {fileID: 21300000, guid: 1a75093240ca2de46bcd8d2ccb56bec9, type: 3}
+  pathImagePrefab: {fileID: 1272388111021372, guid: c94b3207495d8414d8bf99ba27dcfff2,
+    type: 2}
   abilityPointerPrefab: {fileID: 1913382652620346, guid: 846bbc2c4028bec488a19f7e5c9c5985,
     type: 2}
 --- !u!114 &323374607
