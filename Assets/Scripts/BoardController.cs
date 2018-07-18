@@ -158,35 +158,9 @@ public class BoardController : MonoBehaviour {
                 DrawSpriteAtPosition(entity.EntitySprite, entity.Position, opaque);
             }
         }
-    }
 
-    public void DrawBoard_Standard(GameState currentGameState, Dictionary<EntityData, List<PathStep>> paths, bool isResolvingTurn)
-    {
-        ClearBoard();
-
-        if (paths != null)
-        {
-            foreach (EntityData entity in paths.Keys)
-            {
-                paths[entity].ForEach(step => DrawSpriteAtPosition(entity.EntitySprite, step.position, translucent));
-            }
-        }
-
-        // Draw current player at position.
-        DrawSpriteAtPosition(currentGameState.player.EntitySprite, currentGameState.player.Position, opaque);
-
-        // Draw current enemies at positions.
-        for (int i = 0; i < currentGameState.enemies.Count; i++)
-        {
-            EntityData entity = currentGameState.enemies[i];
-            if (entity != null)
-            {
-                DrawSpriteAtPosition(entity.EntitySprite, entity.Position, opaque);
-            }
-        }
-
-        //// Draw cells to be attacked in next round.
-        //foreach (CompletedAction completedAction in projectedGameState.actionsCompletedLastRound)
+        // Draw cells to be attacked in next round.
+        //foreach (CompletedAction completedAction in currentGameState.actionsCompletedLastRound)
         //{
         //    HighlightDamageCell(completedAction.TargetTile.Position);
         //}

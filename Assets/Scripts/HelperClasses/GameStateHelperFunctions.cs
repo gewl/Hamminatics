@@ -19,33 +19,7 @@ public static class GameStateHelperFunctions {
     public static Direction GetDirectionFromEntity(EntityData entity, Vector2Int targetPosition)
     {
         Vector2Int entityPosition = entity.Position;
-        return GetDirectionFromPosition(entityPosition, targetPosition);
-    }
-
-    public static Direction GetDirectionFromPosition(Vector2Int startingPosition, Vector2Int targetPosition)
-    {
-        if (targetPosition.x > startingPosition.x && targetPosition.y == startingPosition.y)
-        {
-            return Direction.Right;
-        }
-        else if (targetPosition.x < startingPosition.x && targetPosition.y == startingPosition.y)
-        {
-            return Direction.Left;
-        }
-        else if (targetPosition.x == startingPosition.x && targetPosition.y > startingPosition.y)
-        {
-            return Direction.Down;
-        }
-        else if (targetPosition.x == startingPosition.x && targetPosition.y < startingPosition.y)
-        {
-            return Direction.Up;
-        }
-        else
-        {
-            Debug.LogError("Cell was not a cardinal direction from entity.");
-            return Direction.Right;
-        }
-
+        return BoardHelperFunctions.GetDirectionFromPosition(entityPosition, targetPosition);
     }
 
     public static EntityData GetTileOccupant(this GameState state, Vector2Int position)
@@ -115,7 +89,7 @@ public static class GameStateHelperFunctions {
         return state.enemies.Append(state.player).ToList();
     }
 
-    public static Dictionary<EntityData, List<PathStep>> GetAllEntityPaths(this GameState state)
+    public static Dictionary<EntityData, List<PathStep>> GenerateAllEntityPaths(this GameState state)
     {
         GameState copiedState = state.DeepCopy();
         Dictionary<EntityData, List<PathStep>> entityPathsMap = new Dictionary<EntityData, List<PathStep>>();

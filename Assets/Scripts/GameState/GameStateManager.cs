@@ -146,9 +146,10 @@ public class GameStateManager : MonoBehaviour {
     {
         if (!isResolvingTurn)
         {
-            currentGameState.entityPathsMap = currentGameState.GetAllEntityPaths();
+            currentGameState.entityPathsMap = currentGameState.GenerateAllEntityPaths();
+            turnDrawer.DrawAllPaths(currentGameState);
         }
-        boardController.DrawBoard_Standard(currentGameState, currentGameState.entityPathsMap, isResolvingTurn);
+        boardController.DrawBoard_Standard(currentGameState, isResolvingTurn);
         potentialCardTargets.Clear();
     }
 

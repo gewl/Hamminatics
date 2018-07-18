@@ -12,6 +12,31 @@ public class BoardHelperFunctions : MonoBehaviour {
         return BoardController.CurrentBoard.Tiles[position.x, position.y];
     }
 
+    public static Direction GetDirectionFromPosition(Vector2Int startingPosition, Vector2Int targetPosition)
+    {
+        if (targetPosition.x > startingPosition.x && targetPosition.y == startingPosition.y)
+        {
+            return Direction.Right;
+        }
+        else if (targetPosition.x < startingPosition.x && targetPosition.y == startingPosition.y)
+        {
+            return Direction.Left;
+        }
+        else if (targetPosition.x == startingPosition.x && targetPosition.y > startingPosition.y)
+        {
+            return Direction.Down;
+        }
+        else if (targetPosition.x == startingPosition.x && targetPosition.y < startingPosition.y)
+        {
+            return Direction.Up;
+        }
+        else
+        {
+            Debug.LogError("Cell was not a cardinal direction from entity.");
+            return Direction.Right;
+        }
+    }
+
     static public List<Tile> GetPotentialLinearTargets(Vector2Int startingPosition, int range)
     {
         Tile startingTile = GetTileAtPosition(startingPosition);
