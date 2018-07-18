@@ -84,6 +84,8 @@ public class GameStateManager : MonoBehaviour {
     private void Awake()
     {
         potentialCardTargets = new List<Vector2Int>();
+        // This has to be delayed so layout group can space accordingly.
+        Invoke("SetBoardUp", 0.1f);
     }
 
     public void InitializeGameState(GameBoard board)
@@ -91,8 +93,6 @@ public class GameStateManager : MonoBehaviour {
         CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance.Position, board.BoardWidth);
         GameStateDelegates.OnCurrentGameStateChange += ResetBoard;
         GameStateDelegates.ReturnToDefaultBoard += ResetBoard;
-        // This has to be delayed so layout group can space accordingly.
-        Invoke("SetBoardUp", 0.1f);
     }
 
     private void OnEnable()

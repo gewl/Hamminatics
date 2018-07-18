@@ -40,28 +40,73 @@ public class TurnDrawer : MonoBehaviour {
 
         Vector2Int entityLastPosition = entity.Position;
         List<PathStep>.Enumerator pathEnumerator = path.GetEnumerator();
+        pathEnumerator.MoveNext();
 
-        while (pathEnumerator.MoveNext() && pathEnumerator.Current != firstMove)
+        // Iterate through 'bumped' steps until it:
+        // A: Hits the end of the path (indicating that there are no moves, the entirety of the path is bumps), or,
+        // B: Hits the first 'move' step.
+        while (pathEnumerator.Current != null && pathEnumerator.Current != firstMove)
         {
-            
+            PathStep step = pathEnumerator.Current;
+            GenerateNewBumpImage(step.position, entityLastPosition);
+
+            entityLastPosition = step.position;
+            pathEnumerator.MoveNext();
         }
 
-        //for (int i = 0; i < path.Count; i++)
-        //{
-        //    PathStep step = path[i];
+        if (pathEnumerator.Current == null)
+        {
+            return;
+        }
 
-        //    Vector2Int nextPosition = i == path.Count - 1 ? new Vector2Int(-1, -1) : path[i + 1].position;
-        //    Vector2Int lastPosition = i == 0 ? new Vector2Int(-1, -1) : path[i - 1].position;
+        while (pathEnumerator.Current != null && pathEnumerator.Current.bumpedBy == null)
+        {
+            PathStep step = pathEnumerator.Current;
 
-        //    Direction entranceDirection = i == 0 ?
-        //        BoardHelperFunctions.GetDirectionFromPosition(nextPosition, step.position) :
-        //        BoardHelperFunctions.GetDirectionFromPosition(step.position, lastPosition);
+            if (step.position == entityLastPosition)
+            {
+                pathEnumerator.MoveNext();
+                continue;
+            }
 
-        //    GenerateNewPathStepImage(step, 
-        //        GetPathSpriteFromCoordinates(step, nextPosition, lastPosition), 
-        //        entranceDirection,
-        //        entity.IdentifyingColor);
-        //}
+            GenerateNewPathStepImage(step,
+                GetPathSpriteFromCoordinates(step, step.position, entityLastPosition),
+                BoardHelperFunctions.GetDirectionFromPosition(entityLastPosition, step.position),
+                entity.IdentifyingColor);
+
+            if (entity.ID == Constants.PLAYER_ID)
+            {
+                Debug.Log("Moved " + BoardHelperFunctions.GetDirectionFromPosition(entityLastPosition, step.position));
+                Debug.Log("Player moved to: " + step.position + " from " + entityLastPosition);
+            }
+            entityLastPosition = step.position;
+
+            pathEnumerator.MoveNext();
+        }
+
+        if (pathEnumerator.Current == null)
+        {
+            return;
+        }
+
+        while (pathEnumerator.Current != null)
+        {
+            PathStep step = pathEnumerator.Current;
+            GenerateNewBumpImage(step.position, entityLastPosition);
+
+            entityLastPosition = step.position;
+            pathEnumerator.MoveNext();
+        }
+    }
+
+    void GenerateNewBumpImage(Vector2Int newPosition, Vector2Int bumpedFromPosition)
+    {
+        GameObject instantiatedBumpImage = ImageManager.GetPathImage(
+            ImageManager.GetPathSprite(PathDirection.Bumped),
+            BoardHelperFunctions.GetDirectionFromPosition(newPosition, bumpedFromPosition)
+            );
+        instantiatedBumpImage.transform.SetParent(transform);
+        instantiatedBumpImage.transform.position = boardController.GetCellPosition(newPosition);
     }
 
     void GenerateNewPathStepImage(PathStep step, Sprite stepSprite, Direction entranceDirection, Color color)
@@ -69,11 +114,6 @@ public class TurnDrawer : MonoBehaviour {
         GameObject instantiatedPathImage = ImageManager.GetPathImage(stepSprite, entranceDirection);
         instantiatedPathImage.transform.SetParent(transform);
         instantiatedPathImage.transform.position = boardController.GetCellPosition(step.position);
-
-        if (step.bumpedBy == null)
-        {
-            instantiatedPathImage.GetComponent<Image>().color = color;
-        }
     }
 
     Sprite GetPathSpriteFromCoordinates(PathStep step, Vector2Int nextPosition, Vector2Int lastPosition)

@@ -21,7 +21,7 @@ public class Tile
             for (int i = 0; i < 4; i++)
             {
                 Direction direction = (Direction)i;
-                if (ConnectsToNeighbor(direction))
+                if (this.ConnectsToNeighbor(direction))
                 {
                     idString += "1";
                 }
@@ -61,7 +61,6 @@ public class Tile
     {
         return neighbors.Count;
     }
-
 
     public override int GetHashCode()
     {

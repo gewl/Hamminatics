@@ -16,13 +16,13 @@ public static class TileExtensions {
         switch (direction)
         {
             case Direction.Up:
-                return tile.GetNeighborWhere(t => tile.Position.y == t.Position.y - 1);
+                return tile.GetNeighborWhere(t => t.Position.y == tile.Position.y - 1);
             case Direction.Right:
-                return tile.GetNeighborWhere(t => tile.Position.x == t.Position.x + 1);
+                return tile.GetNeighborWhere(t => t.Position.x == tile.Position.x + 1);
             case Direction.Down:
-                return tile.GetNeighborWhere(t => tile.Position.y == t.Position.y + 1);
+                return tile.GetNeighborWhere(t => t.Position.y == tile.Position.y + 1);
             case Direction.Left:
-                return tile.GetNeighborWhere(t => tile.Position.x == t.Position.x - 1);
+                return tile.GetNeighborWhere(t => t.Position.x == tile.Position.x - 1);
             default:
                 return null;
         }

@@ -62,6 +62,7 @@ public class ImageManager : SerializedMonoBehaviour {
                 break;
         }
 
+
         pathRect.rotation = Quaternion.Euler(new Vector3(0f, 0f, imageRotation));
 
         return pathImage;
