@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using static Helpers.Predicates;
+using static Helpers.Operators;
 
 public static class GameStateHelperFunctions {
     public static Vector2Int GetProjectedPlayerPosition(this GameState state)
@@ -395,17 +395,15 @@ public static class GameStateHelperFunctions {
 
             Vector2Int projectedBumpPosition = GetTilePosition(projectedPosition, direction, 1);
 
+            Predicate<Tile> IsAtProjectedBumpPosition = (Tile t) => t.Position == projectedBumpPosition;
+
             bool canBump = BoardController
                 .CurrentBoard
                 .GetTileAtPosition(projectedPosition)
-                .CheckThat(Operators.And(
-                    (Tile t) => t.HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition),
-                    (Tile t) => !t
-                    .GetNeighborWhere(neighb => neighb.Position == projectedBumpPosition)
-                    .IsTileOccupied(gameState)
+                .CheckThat(And(
+                    (Tile t) => t.HasNeighborWhere(IsAtProjectedBumpPosition),
+                    (Tile t) => t.GetNeighborWhere(IsAtProjectedBumpPosition).IsUnoccupied(gameState)
                     ));
-                //.HasNeighborWhere(neighb => neighb.Position == projectedBumpPosition) && 
-                //!gameState.IsTileOccupied(projectedBumpPosition);
 
             if (canBump)
             {

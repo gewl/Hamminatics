@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿namespace Helpers {
 
-namespace Helpers
-{
-    public static class Predicates  {
+    public static class TilePredicates  {
+
 
     }
+
 }

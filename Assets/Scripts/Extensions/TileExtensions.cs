@@ -35,7 +35,7 @@ public static class TileExtensions {
 
     public static bool CheckThatNeighbor(this Tile tile, Vector2Int position, Predicate<Tile> predicate)
     {
-        return tile.Neighbors.Contains()
+        return tile.HasNeighborWhere(t => t.Position == position) && predicate(tile.GetNeighborWhere(t => t.Position == position));
     }
 
     public static Tile GetRandomNeighbor(this Tile tile, bool checkForWallEligibility = false)
@@ -112,9 +112,14 @@ public static class TileExtensions {
         return tile.IsConnectedToTile(testPosition);
     }
 
-    public static bool IsTileOccupied(this Tile tile, GameState state)
+    public static bool IsOccupied(this Tile tile, GameState state)
     {
         return state.IsTileOccupied(tile);
+    }
+
+    public static bool IsUnoccupied(this Tile tile, GameState state)
+    {
+        return !state.IsTileOccupied(tile);
     }
 
     public static bool CheckThat(this Tile tile, Predicate<Tile> predicate)
