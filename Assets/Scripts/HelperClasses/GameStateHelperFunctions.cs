@@ -97,7 +97,7 @@ public static class GameStateHelperFunctions {
         GameState copiedState = state.DeepCopy();
         Dictionary<EntityData, Path> entityPathsMap = new Dictionary<EntityData, Path>();
 
-        copiedState.GetAllEntities().ForEach(e => entityPathsMap.Add(e, new Path()));
+        //copiedState.GetAllEntities().ForEach(e => entityPathsMap.(e, new Path(e, e.Position)));
 
         while (copiedState.turnStack.Count > 0)
         {
@@ -106,21 +106,17 @@ public static class GameStateHelperFunctions {
             if (turn.ContainsMoves())
             {
                 Path thisPath = turn.GetPathFromTurn(copiedState);
-                entityPathsMap[thisEntity].AddPath(thisPath);
+                entityPathsMap.Add(thisEntity, thisPath);
 
                 // If this path terminated with bumping an entity,
                 // add a "bumpedBy" pathstep to the impacted entity's path.
-                if (thisPath.PeekLast().bumpedEntity != null)
+                if (thisPath.PeekLast() != null && thisPath.PeekLast().bumpedEntity != null)
                 {
                     EntityData bumpedEntity = thisPath.PeekLast().bumpedEntity.Copy();
+
                     // Copies current state of entity so bump calculations can work off of
                     // entity's position, health, etc., at time of bump
-                    PathStep bumpedStep = new PathStep(bumpedEntity, bumpedEntity.Position)
-                    {
-                        bumpedBy = thisEntity.Copy()
-                    };
-
-                    entityPathsMap[bumpedEntity].AddStep(bumpedStep);
+                    entityPathsMap[bumpedEntity].AddStep(bumpedEntity, bumpedEntity.Position, null, thisEntity);
                 }
             }
 
@@ -153,7 +149,7 @@ public static class GameStateHelperFunctions {
 
     static Path GetPathFromTurn(this Turn turn, GameState state)
     {
-        Path path = new Path();
+        Path path = new Path(turn.Entity, turn.Entity.Position);
         List<Direction> turnMoves = turn.moves;
 
         EntityData entity = turn.Entity;
@@ -165,38 +161,34 @@ public static class GameStateHelperFunctions {
         }
 
         // Path start.
-        path.AddStep(new PathStep(entity, entity.Position));
+        //path.AddStep(new PathStep(entity, entity.Position));
 
         // Add path steps until they end or a bump occurs.
         for (int i = 0; i < turnMoves.Count; i++)
         {
             Direction move = turnMoves[i];
 
-            PathStep thisStep = GetPathStepFromMove(entity, move, state);
+            AddToPathFromMove(ref path, entity, move, state);
 
-            if (thisStep != null)
+            if (path.PeekLast() != null && path.PeekLast().bumpedEntity != null)
             {
-                path.AddStep(thisStep);
-                if (thisStep.bumpedEntity != null)
-                {
-                    break;
-                }
+                Debug.Log("breaking because bump detected");
+                break;
             }
 
         }
-
-        // Prune null results (e.g. from trying to move into wall).
         return path;
     }
 
-    static PathStep GetPathStepFromMove(EntityData entity, Direction direction, GameState state)
+    static void AddToPathFromMove(ref Path path, EntityData entity, Direction direction, GameState state)
     {
         Tile currentTile = BoardController.CurrentBoard.GetTileAtPosition(entity.Position);
+        Vector2Int startingPosition = entity.Position;
         EntityData bumpedEntity = null;
 
         if (!currentTile.ConnectsToNeighbor(direction))
         {
-            return null;
+            return;
         }
 
         Tile nextTile = currentTile.GetDirectionalNeighbor(direction);
@@ -225,7 +217,7 @@ public static class GameStateHelperFunctions {
             entity.Position = nextTile.Position;
         }
 
-        return new PathStep(entity, entity.Position, bumpedEntity);
+        path.AddStep(entity, entity.Position, bumpedEntity);
     }
 
     //public static List<Vector2Int> GetAllPositionsThroughWhichEntityWillMove(EntityData entity, GameState currentGameState)

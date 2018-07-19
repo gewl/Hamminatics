@@ -7,14 +7,10 @@ public class Path {
 
     PathStep head;
 
-    public Path(EntityData entity, Vector2Int initialPosition)
+    private Path() { }
+    public Path(EntityData entity, Vector2Int startingPosition)
     {
-        head = new PathStep(entity, initialPosition);
-    }
-
-    public Path()
-    {
-        head = null;
+        head = new PathStep(entity, startingPosition, null);
     }
 
     #region basics
@@ -28,23 +24,30 @@ public class Path {
         return head == null || head.nextStep == null;
     }
 
-    public void AddStep(PathStep step)
+    public void AddStep(EntityData entity, Vector2Int newPosition, EntityData bumpedEntity = null, EntityData bumpedBy = null)
     {
-        if (head == null)
-        {
-            head = step;
-            return;
-        }
-
         PathStep checkNode = PeekLast();
 
-        step.lastPosition = checkNode.newPosition;
-        checkNode.nextStep = step;
+        PathStep newStep = new PathStep(entity, newPosition, checkNode, bumpedEntity, bumpedBy);
+
+        if (checkNode != null)
+        {
+            checkNode.nextStep = newStep;
+        }
+        else
+        {
+            head = newStep;
+        }
+        LogPathLength();
     }
 
     public void AddPath(Path path)
     {
-        AddStep(path.head);
+        if (path.head == null)
+        {
+            return;
+        }
+        AddStep(path.head.pathingEntity, path.head.newPosition, path.head.bumpedEntity, path.head.bumpedBy);
     }
 
     public PathStep Peek()
@@ -56,7 +59,7 @@ public class Path {
     {
         PathStep checkNode = head;
 
-        while (checkNode.nextStep != null)
+        while (checkNode != null && checkNode.nextStep != null)
         {
             checkNode = checkNode.nextStep;
         }
@@ -73,6 +76,11 @@ public class Path {
         }
         head = head.nextStep;
         return nextNode;
+    }
+
+    public bool IsFirstStep(PathStep step)
+    {
+        return step == head;
     }
     #endregion
 
@@ -91,19 +99,18 @@ public class Path {
     public void LogPathLength()
     {
         int result = 0;
-        PathStep iterNode = head;
         if (head == null)
         {
             Debug.Log("Path has no length.");
             return;
         }
 
-        while (iterNode != null)
+        PathEnumerator iterNode = GetEnumerator();
+        while (iterNode.Current != null)
         {
             result++;
-            iterNode = iterNode.nextStep;
+            iterNode.MoveNext();
         }
-        Debug.Log(head.pathingEntity.ID + ": " + result);
     }
     #endregion
 

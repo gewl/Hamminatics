@@ -25,6 +25,8 @@ public class TurnDrawer : MonoBehaviour {
 
         state
             .GetAllEntities()
+            .Where(e => state.entityPathsMap.ContainsKey(e))
+            .ToList()
             .ForEach(entity => DrawEntityPath(entity, state.entityPathsMap[entity]));
     }
 
@@ -88,7 +90,7 @@ public class TurnDrawer : MonoBehaviour {
     // Generates blast image & arrow pointing into cell that bumped entity was bumped into, if relevant.
     void GenerateBumpedImages(PathStep step)
     {
-        if (step.lastPosition == step.newPosition)
+        if (!step.IsFirstStep() && step.GetLastPosition() == step.newPosition)
         {
             Direction bumpedFrom = BoardHelperFunctions.GetDirectionFromPosition(step.newPosition, step.bumpedBy.Position);
             GenerateFailedBumpedImages(step, bumpedFrom);
@@ -107,7 +109,7 @@ public class TurnDrawer : MonoBehaviour {
 
         Vector2Int lastPosition = step.IsFirstStep() ?
             step.bumpedBy.Position :
-            step.lastPosition;
+            step.GetLastPosition();
         instantiatedBumpImage.transform.position = boardController.GetCellPosition(lastPosition);
         instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
 
@@ -126,7 +128,7 @@ public class TurnDrawer : MonoBehaviour {
         GameObject instantiatedBumpImage = ImageManager.GetPathImage(ImageManager.GetPathSprite(PathType.Bumped));
         instantiatedBumpImage.transform.SetParent(transform);
 
-        instantiatedBumpImage.transform.position = boardController.GetCellEdgePosition(step.lastPosition, bumpedFrom);
+        instantiatedBumpImage.transform.position = boardController.GetCellEdgePosition(step.GetLastPosition(), bumpedFrom);
         instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
     }
 
@@ -143,7 +145,7 @@ public class TurnDrawer : MonoBehaviour {
     {
         float result = 0f;
 
-        if (step.newPosition == step.lastPosition)
+        if (step.newPosition == step.GetLastPosition())
         {
             return result;
         }
@@ -163,7 +165,7 @@ public class TurnDrawer : MonoBehaviour {
         }
         else
         {
-            directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(step.newPosition, step.lastPosition);
+            directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(step.newPosition, step.GetLastPosition());
         }
 
         switch (directionOfEntrance)
@@ -204,16 +206,17 @@ public class TurnDrawer : MonoBehaviour {
             Vector2Int nextPosition = step.IsLastStepBeforeFailedBump() ?
                 step.nextStep.bumpedEntity.Position :
                 step.GetNextPosition();
+
             Sprite resultSprite = ImageManager.GetPathSprite(PathType.Straight);
 
-            if (BoardHelperFunctions.AreTwoPositionsLinear(step.lastPosition, nextPosition))
+            if (BoardHelperFunctions.AreTwoPositionsLinear(step.GetLastPosition(), nextPosition))
             {
                 return step.IsLastStepBeforeFailedBump() ? 
                     ImageManager.GetPathSprite(PathType.FailedBumpStraight) :
                     resultSprite;
             }
 
-            Vector2Int localVectorToLastPosition = step.lastPosition - step.newPosition;
+            Vector2Int localVectorToLastPosition = step.GetLastPosition() - step.newPosition;
             Vector2Int localVectorToNextPosition = nextPosition - step.newPosition;
 
             float angleBetween = Vector2.SignedAngle(localVectorToLastPosition, localVectorToNextPosition);

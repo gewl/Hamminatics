@@ -7,29 +7,29 @@ public class PathStep {
 
     public EntityData pathingEntity;
     public Vector2Int newPosition;
-    public Vector2Int lastPosition;
     public EntityData bumpedEntity;
     public EntityData bumpedBy;
 
+    PathStep lastStep;
     public PathStep nextStep;
     
-    public PathStep(EntityData _pathingEntity, Vector2Int _newPosition, EntityData _bumpedEntity = null)
+    public PathStep(EntityData _pathingEntity, Vector2Int _newPosition, PathStep _lastStep, EntityData _bumpedEntity = null, EntityData _bumpedBy = null)
     {
         pathingEntity = _pathingEntity;
         newPosition = _newPosition;
-        bumpedBy = null;
+        bumpedBy = _bumpedBy;
         bumpedEntity = _bumpedEntity;
-        lastPosition = new Vector2Int(-1, -1);
+        lastStep = _lastStep;
     }
 
     public bool IsFirstStep()
     {
-        return lastPosition == new Vector2Int(-1, -1);
+        return lastStep == null;
     }
 
     public bool IsFailedBump()
     {
-        return bumpedEntity != null && newPosition == lastPosition;
+        return bumpedEntity != null && newPosition == lastStep.newPosition;
     }
 
     public bool IsLastStep()
@@ -52,5 +52,16 @@ public class PathStep {
         }
 
         return nextStep.newPosition;
+    }
+
+    public Vector2Int GetLastPosition()
+    {
+        if (lastStep == null)
+        {
+            Debug.LogError("Trying to get last position from first step in path");
+            return new Vector2Int(-1, -1);
+        }
+
+        return lastStep.newPosition;
     }
 }

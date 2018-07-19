@@ -23,7 +23,7 @@ public class GameState {
         actionsCompletedLastRound = new List<CompletedAction>();
 
         entityPathsMap = new Dictionary<EntityData, Path>();
-        this.GetAllEntities().ForEach(e => entityPathsMap[e] = new Path(e, e.Position));
+        //this.GetAllEntities().ForEach(e => entityPathsMap[e] = new Path());
     }
 
     public GameState(EntityData _player, List<EntityData> _enemies, Stack<Turn> _turns)
@@ -36,7 +36,7 @@ public class GameState {
         actionsCompletedLastRound = new List<CompletedAction>();
 
         entityPathsMap = new Dictionary<EntityData, Path>();
-        this.GetAllEntities().ForEach(e => entityPathsMap[e] = new Path(e, e.Position));
+        //this.GetAllEntities().ForEach(e => entityPathsMap[e] = new Path());
     }
 
     public void UpdateTurnStack(Stack<Turn> newTurnStack)
