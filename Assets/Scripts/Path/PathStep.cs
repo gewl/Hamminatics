@@ -29,7 +29,7 @@ public class PathStep {
 
     public bool IsLastStep()
     {
-        return nextStep == null;
+        return nextStep == null || (bumpedBy == null && nextStep.bumpedBy != null);
     }
 
     public Vector2Int GetNextPosition()

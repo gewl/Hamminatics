@@ -12,6 +12,7 @@ public static class GameStateHelperFunctions {
 
         if (playerPath.IsEmpty())
         {
+            playerPath.LogPathLength();
             return state.player.Position;
         }
        

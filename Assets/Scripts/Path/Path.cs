@@ -17,6 +17,11 @@ public class Path {
         head = null;
     }
 
+    public PathEnumerator GetEnumerator()
+    {
+        return new PathEnumerator(this);
+    }
+
     public bool IsEmpty()
     {
         return head == null || head.nextStep == null;
@@ -30,12 +35,7 @@ public class Path {
             return;
         }
 
-        PathStep checkNode = head;
-
-        while (checkNode.nextStep != null)
-        {
-            checkNode = checkNode.nextStep;
-        }
+        PathStep checkNode = PeekLast();
 
         step.lastPosition = checkNode.newPosition;
         checkNode.nextStep = step;
@@ -92,6 +92,7 @@ public class Path {
         if (head == null)
         {
             Debug.Log("Path has no length.");
+            return;
         }
 
         while (iterNode != null)

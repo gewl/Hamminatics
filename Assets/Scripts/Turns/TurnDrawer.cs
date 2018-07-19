@@ -35,46 +35,46 @@ public class TurnDrawer : MonoBehaviour {
             return;
         }
 
-        PathStep currentStep = path.GetNext();
+        PathEnumerator pathEnumerator = path.GetEnumerator();
 
         // Iterate through 'bumped' steps until it:
         // A: Hits the end of the path (indicating that there are no moves, the entirety of the path is bumps), or,
         // B: Hits the first 'move' step.
-        while (currentStep != null && currentStep.bumpedBy != null)
+        while (pathEnumerator.Current != null && pathEnumerator.Current.bumpedBy != null)
         {
-            GenerateNewBumpImage(currentStep);
-            currentStep = path.GetNext();
+            GenerateNewBumpImage(pathEnumerator.Current);
+            pathEnumerator.MoveNext();
         }
 
-        if (currentStep == null)
+        if (pathEnumerator.Current == null)
         {
             Debug.Log("returning in first current step check");
             return;
         }
 
-        while (currentStep != null && currentStep.bumpedBy == null)
+        while (pathEnumerator.Current != null && pathEnumerator.Current.bumpedBy == null)
         {
-            Sprite pathSprite = GeneratePathSprite(currentStep);
+            Sprite pathSprite = GeneratePathSprite(pathEnumerator.Current);
 
-            GenerateNewPathStepImage(currentStep,
+            GenerateNewPathStepImage(pathEnumerator.Current,
                 pathSprite,
                 entity.IdentifyingColor);
 
-            currentStep = path.GetNext();
+            pathEnumerator.MoveNext();
         }
 
-        if (currentStep == null)
+        if (pathEnumerator.Current == null)
         {
             return;
         }
 
-        while (currentStep != null && currentStep.bumpedBy != null)
+        while (pathEnumerator.Current != null && pathEnumerator.Current.bumpedBy != null)
         {
-            GenerateNewBumpImage(currentStep);
-            currentStep = path.GetNext();
+            GenerateNewBumpImage(pathEnumerator.Current);
+            pathEnumerator.MoveNext();
         }
 
-        if (currentStep == null)
+        if (pathEnumerator.Current == null)
         {
             return;
         }
