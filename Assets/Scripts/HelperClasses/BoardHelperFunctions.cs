@@ -32,7 +32,7 @@ public static class BoardHelperFunctions {
         }
         else
         {
-            Debug.LogError("Cell was not a cardinal direction from entity.");
+            Debug.LogError("Positions " + startingPosition + " and " + targetPosition + " are not linear.");
             return Direction.Right;
         }
     }

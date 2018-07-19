@@ -102,21 +102,20 @@ public class TurnDrawer : MonoBehaviour {
     // Image for bump that successfully moved bumper and bumpee.
     void GenerateSuccessfulBumpedImages(PathStep step)
     {
-        // "Bump" image.
         GameObject instantiatedBumpImage = ImageManager.GetPathImage(ImageManager.GetPathSprite(PathType.Bumped));
         instantiatedBumpImage.transform.SetParent(transform);
-        if (step.lastPosition == new Vector2Int(-1, -1))
-        {
-            Debug.Log(step.pathingEntity.ID);
-        }
-        instantiatedBumpImage.transform.position = boardController.GetCellPosition(step.lastPosition);
+
+        Vector2Int lastPosition = step.IsFirstStep() ?
+            step.bumpedBy.Position :
+            step.lastPosition;
+        instantiatedBumpImage.transform.position = boardController.GetCellPosition(lastPosition);
         instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
 
         // Fake path-step image showing bump direction.
         Sprite arrowSprite = ImageManager.GetPathSprite(PathType.Beginning);
         GameObject instantiatedPathImage = ImageManager.GetPathImage(arrowSprite);
         instantiatedPathImage.transform.SetParent(transform);
-        instantiatedPathImage.transform.position = boardController.GetCellPosition(step.lastPosition);
+        instantiatedPathImage.transform.position = boardController.GetCellPosition(lastPosition);
         instantiatedPathImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
         instantiatedPathImage.GetComponent<Image>().color = step.pathingEntity.IdentifyingColor;
     }

@@ -112,7 +112,7 @@ public static class GameStateHelperFunctions {
                 // add a "bumpedBy" pathstep to the impacted entity's path.
                 if (thisPath.PeekLast().bumpedEntity != null)
                 {
-                    EntityData bumpedEntity = thisPath.PeekLast().bumpedEntity;
+                    EntityData bumpedEntity = thisPath.PeekLast().bumpedEntity.Copy();
                     // Copies current state of entity so bump calculations can work off of
                     // entity's position, health, etc., at time of bump
                     PathStep bumpedStep = new PathStep(bumpedEntity, bumpedEntity.Position)
