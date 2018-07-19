@@ -89,7 +89,7 @@ public static class GameStateHelperFunctions {
 
     public static List<EntityData> GetAllEntities(this GameState state)
     {
-        return state.enemies.Append(state.player).ToList();
+        return state.turnStack.Select(t => t.Entity).ToList();
     }
 
     public static Dictionary<EntityData, Path> GenerateAllEntityPaths(this GameState state)
@@ -113,9 +113,11 @@ public static class GameStateHelperFunctions {
                 if (thisPath.PeekLast().bumpedEntity != null)
                 {
                     EntityData bumpedEntity = thisPath.PeekLast().bumpedEntity;
+                    // Copies current state of entity so bump calculations can work off of
+                    // entity's position, health, etc., at time of bump
                     PathStep bumpedStep = new PathStep(bumpedEntity, bumpedEntity.Position)
                     {
-                        bumpedBy = thisEntity
+                        bumpedBy = thisEntity.Copy()
                     };
 
                     entityPathsMap[bumpedEntity].AddStep(bumpedStep);

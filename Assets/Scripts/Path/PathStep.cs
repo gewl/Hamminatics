@@ -32,6 +32,13 @@ public class PathStep {
         return nextStep == null || (bumpedBy == null && nextStep.bumpedBy != null);
     }
 
+    public bool IsLastStepBeforeFailedBump()
+    {
+        return nextStep != null &&
+            nextStep.bumpedEntity != null &&
+            nextStep.newPosition == nextStep.lastPosition;
+    }
+
     public Vector2Int GetNextPosition()
     {
         if (nextStep == null)

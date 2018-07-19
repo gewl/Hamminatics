@@ -17,6 +17,7 @@ public class Path {
         head = null;
     }
 
+    #region basics
     public PathEnumerator GetEnumerator()
     {
         return new PathEnumerator(this);
@@ -73,7 +74,9 @@ public class Path {
         head = head.nextStep;
         return nextNode;
     }
+    #endregion
 
+    #region debugging
     public void LogPath()
     {
         PathStep iterNode = head;
@@ -102,8 +105,9 @@ public class Path {
         }
         Debug.Log(head.pathingEntity.ID + ": " + result);
     }
+    #endregion
 
-
+    #region querying
     public List<Vector2Int> GetAllPositions()
     {
         List<Vector2Int> positions = new List<Vector2Int>();
@@ -118,4 +122,18 @@ public class Path {
 
         return positions; 
     }
+
+    public PathStep GetStepWhere(Predicate<PathStep> predicate)
+    {
+        PathStep currentNode = head;
+
+        while (currentNode != null && !predicate(currentNode))
+        {
+            currentNode = currentNode.nextStep;
+        }
+
+        return currentNode;
+    }
+
+    #endregion
 }

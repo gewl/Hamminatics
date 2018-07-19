@@ -44,7 +44,10 @@ public enum PathType
     LeftTurn,
     Terminating,
     Beginning,
-    Bumped
+    Bumped,
+    FailedBumpStraight,
+    FailedBumpRight,
+    FailedBumpLeft
 }
 
 public struct Constants
