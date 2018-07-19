@@ -73,6 +73,10 @@ public class TurnDrawer : MonoBehaviour {
     // Generates arrow pointing into cell where bump occurred.
     void GenerateBumpImages(PathStep step)
     {
+        if (step.IsFailedBump())
+        {
+            return;
+        }
         Sprite arrowSprite = ImageManager.GetPathSprite(PathType.Terminating);
         GameObject instantiatedPathImage = ImageManager.GetPathImage(arrowSprite);
         instantiatedPathImage.transform.SetParent(transform);
@@ -185,6 +189,9 @@ public class TurnDrawer : MonoBehaviour {
 
     Sprite GeneratePathSprite(PathStep step)
     {
+        // "Next position" refers to:
+        // 1. IF last path step before failed bump, the position of the bumpee.
+        // 2. ELSE the next position that the pathing entity will move into.
         if (step.IsFirstStep())
         {
             return ImageManager.GetPathSprite(PathType.Beginning);
@@ -195,17 +202,17 @@ public class TurnDrawer : MonoBehaviour {
         }
         else
         {
+            Vector2Int nextPosition = step.IsLastStepBeforeFailedBump() ?
+                step.nextStep.bumpedEntity.Position :
+                step.GetNextPosition();
             Sprite resultSprite = ImageManager.GetPathSprite(PathType.Straight);
 
-            if (BoardHelperFunctions.AreTwoPositionsLinear(step.lastPosition, step.GetNextPosition()))
+            if (BoardHelperFunctions.AreTwoPositionsLinear(step.lastPosition, nextPosition))
             {
                 return step.IsLastStepBeforeFailedBump() ? 
                     ImageManager.GetPathSprite(PathType.FailedBumpStraight) :
                     resultSprite;
             }
-            Vector2Int nextPosition = step.IsLastStepBeforeFailedBump() ?
-                step.nextStep.bumpedEntity.Position :
-                step.GetNextPosition();
 
             Vector2Int localVectorToLastPosition = step.lastPosition - step.newPosition;
             Vector2Int localVectorToNextPosition = nextPosition - step.newPosition;
