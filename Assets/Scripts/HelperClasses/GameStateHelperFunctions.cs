@@ -157,7 +157,6 @@ public static class GameStateHelperFunctions {
         if (turn.moves.Count == 0)
         {
             return path;
-
         }
 
         // Add path steps until they end or a bump occurs.

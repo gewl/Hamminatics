@@ -200,42 +200,72 @@ public class GameStateManager : MonoBehaviour {
         isResolvingTurn = true;
         CurrentGameState.actionsCompletedLastRound.Clear();
         CurrentGameState.movesCompletedLastRound.Clear();
+
         while (!turnStackController.IsTurnStackEmpty)
         {
-            turnDrawer.Clear();
             Turn nextTurn = turnStackController.GetNextTurn();
-
+            EntityData entity = nextTurn.Entity; 
             GameStateDelegates.OnResolvingTurn(nextTurn);
 
-            Tile entityInitialTile = BoardController.CurrentBoard.GetTileAtPosition(nextTurn.Entity.Position);
+            PathEnumerator pathEnumerator = CurrentGameState.entityPathsMap[entity].GetEnumerator();
 
-            for (int i = 0; i < nextTurn.moves.Count; i++)
+            while (pathEnumerator.Current != null)
             {
-                GameStateHelperFunctions.ProcessMove(nextTurn.moves[i], nextTurn.Entity, CurrentGameState);
-                GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
+                entity.Position = pathEnumerator.Current.newPosition;
 
-                if (i < nextTurn.moves.Count - 1)
+                if (pathEnumerator.Current.bumpedBy != null || pathEnumerator.Current.bumpedEntity != null)
                 {
-                    turnDrawer.DrawSingleMove(nextTurn.Entity.Position, nextTurn.moves[i+1]);
+                    entity.Health--;
                 }
-                else
-                {
-                    turnDrawer.Clear();
-                }
+
+                GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
+                pathEnumerator.MoveNext();
                 yield return new WaitForSeconds(0.5f);
             }
 
-            Tile entityResultingTile = BoardController.CurrentBoard.GetTileAtPosition(nextTurn.Entity.Position);
-            CompletedMove completedMove = new CompletedMove(nextTurn.moves, nextTurn.Entity, entityInitialTile, entityResultingTile);
-
-            CurrentGameState.movesCompletedLastRound.Add(completedMove);
-
             turnDrawer.DrawSingleAction(nextTurn.action);
             GameStateHelperFunctions.ProcessAction(nextTurn.action, CurrentGameState);
-
             GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
+
             yield return new WaitForSeconds(0.5f);
         }
+
+        //while (!turnStackController.IsTurnStackEmpty)
+        //{
+        //    turnDrawer.Clear();
+        //    Turn nextTurn = turnStackController.GetNextTurn();
+
+        //    GameStateDelegates.OnResolvingTurn(nextTurn);
+
+        //    Tile entityInitialTile = BoardController.CurrentBoard.GetTileAtPosition(nextTurn.Entity.Position);
+
+        //    for (int i = 0; i < nextTurn.moves.Count; i++)
+        //    {
+        //        GameStateHelperFunctions.ProcessMove(nextTurn.moves[i], nextTurn.Entity, CurrentGameState);
+        //        GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
+
+        //        if (i < nextTurn.moves.Count - 1)
+        //        {
+        //            turnDrawer.DrawSingleMove(nextTurn.Entity.Position, nextTurn.moves[i+1]);
+        //        }
+        //        else
+        //        {
+        //            turnDrawer.Clear();
+        //        }
+        //        yield return new WaitForSeconds(0.5f);
+        //    }
+
+        //    Tile entityResultingTile = BoardController.CurrentBoard.GetTileAtPosition(nextTurn.Entity.Position);
+        //    CompletedMove completedMove = new CompletedMove(nextTurn.moves, nextTurn.Entity, entityInitialTile, entityResultingTile);
+
+        //    CurrentGameState.movesCompletedLastRound.Add(completedMove);
+
+        //    turnDrawer.DrawSingleAction(nextTurn.action);
+        //    GameStateHelperFunctions.ProcessAction(nextTurn.action, CurrentGameState);
+
+        //    GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
+        //    yield return new WaitForSeconds(0.5f);
+        //}
 
         GenerateNextTurnStack(CurrentGameState);
 
