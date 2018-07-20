@@ -7,11 +7,7 @@ public class GameState {
     public List<EntityData> enemies;
 
     public Stack<Turn> turnStack;
-
-    public List<CompletedMove> movesCompletedLastRound;
-    public List<CompletedAction> actionsCompletedLastRound;
-
-    public Dictionary<EntityData, Path> entityPathsMap;
+    public GameState lastGamestate;
 
     public GameState(EntityData _player, List<EntityData> _enemies)
     {
@@ -19,10 +15,6 @@ public class GameState {
         enemies = _enemies;
 
         turnStack = new Stack<Turn>();
-        movesCompletedLastRound = new List<CompletedMove>();
-        actionsCompletedLastRound = new List<CompletedAction>();
-
-        entityPathsMap = new Dictionary<EntityData, Path>();
     }
 
     public GameState(EntityData _player, List<EntityData> _enemies, Stack<Turn> _turns)
@@ -30,11 +22,6 @@ public class GameState {
         player = _player;
         enemies = _enemies;
         turnStack = _turns;
-
-        movesCompletedLastRound = new List<CompletedMove>();
-        actionsCompletedLastRound = new List<CompletedAction>();
-
-        entityPathsMap = new Dictionary<EntityData, Path>();
     }
 
     public void UpdateTurnStack(Stack<Turn> newTurnStack)

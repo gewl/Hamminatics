@@ -19,15 +19,35 @@ public class TurnDrawer : MonoBehaviour {
         }
     }
 
-    public void DrawAllPaths(GameState state)
+    public void DrawUpcomingStates(List<ProjectedGameState> upcomingStates)
     {
-        Clear();
+        for (int i = 0; i < upcomingStates.Count; i++)
+        {
+            ProjectedGameState projectedState = upcomingStates[i];
+            EntityData activeEntity = projectedState.activeEntity;
 
-        state
-            .GetAllEntities()
-            .Where(e => state.entityPathsMap.ContainsKey(e))
-            .ToList()
-            .ForEach(entity => DrawEntityPath(entity, state.entityPathsMap[entity]));
+            bool activeEntityMovedLastTurn = i > 0 && 
+                upcomingStates[i - 1].activeEntity.Equals(activeEntity);
+            bool activeEntityMovesNextTurn = i < upcomingStates.Count - 1 && 
+                upcomingStates[i + 1].activeEntity.Equals(activeEntity);
+
+            // Is middle of movement.
+            if (activeEntityMovedLastTurn && activeEntityMovesNextTurn)
+            {
+
+            }
+            // Is end of movement.
+            else if (!activeEntityMovesNextTurn && activeEntityMovedLastTurn)
+            {
+
+            }
+            // Is beginning or entirety of movement.
+            else
+            {
+
+            }
+        }
+        upcomingStates.ForEach(state => boardController.DEBUG_DrawUpcomingEntitySprite(state.activeEntity));
     }
 
     void DrawEntityPath(EntityData entity, Path path)

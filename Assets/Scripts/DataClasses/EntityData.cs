@@ -30,7 +30,7 @@ public class EntityData : ScriptableObject {
 
         EntityData entity = (EntityData)other;
 
-        return entity.GetHashCode() == GetHashCode();
+        return entity.GetHashCode() == GetHashCode() && entity.Position == Position;
     }
 
     public EntityData Copy()

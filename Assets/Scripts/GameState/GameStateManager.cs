@@ -72,11 +72,19 @@ public class GameStateManager : MonoBehaviour {
     }
 
     public GameState CurrentGameState { get; private set; }
-    public GameState ProjectedGameState { get; private set; }
+    public GameState ProjectedGameState { get { return upcomingGamestates.Last().gameState; } }
     public EntityData Player { get { return CurrentGameState.player; } }
 
     List<Vector2Int> potentialCardTargets;
     EntityData selectedEntity;
+    List<ProjectedGameState> upcomingGamestates;
+    public Vector2Int ProjectedPlayerPosition
+    {
+        get
+        {
+            return ProjectedGameState.player.Position;
+        }
+    }
 
     bool isResolvingTurn = false;
     public bool IsResolvingTurn { get { return isResolvingTurn; } }
@@ -86,6 +94,8 @@ public class GameStateManager : MonoBehaviour {
         potentialCardTargets = new List<Vector2Int>();
         // This has to be delayed so layout group can space accordingly.
         Invoke("SetBoardUp", 0.1f);
+
+        upcomingGamestates = new List<ProjectedGameState>();
     }
 
     public void InitializeGameState(GameBoard board)
@@ -97,14 +107,14 @@ public class GameStateManager : MonoBehaviour {
 
     private void OnEnable()
     {
-        turnStackController.OnTurnStackUpdate += ResetBoard; 
+        turnStackController.OnTurnStackUpdate += RecalculateUpcomingStates;
     }
 
     private void OnDisable()
     {
         GameStateDelegates.ReturnToDefaultBoard -= ResetBoard;
         GameStateDelegates.OnCurrentGameStateChange -= ResetBoard;
-        turnStackController.OnTurnStackUpdate -= ResetBoard; 
+        turnStackController.OnTurnStackUpdate -= RecalculateUpcomingStates;
     }
 
     void SetBoardUp()
@@ -121,7 +131,7 @@ public class GameStateManager : MonoBehaviour {
 
         // Movement availability is always 'from' player's current position.
         // Other actions are 'from' player's projected position.
-        Vector2Int playerOrigin = card.Category == CardCategory.Movement ? Player.Position : CurrentGameState.GetProjectedPlayerPosition();
+        Vector2Int playerOrigin = card.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
 
         BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
     }
@@ -142,13 +152,17 @@ public class GameStateManager : MonoBehaviour {
         ResetBoard(CurrentGameState);
     }
 
-    void ResetBoard(GameState currentGameState)
+    void RecalculateUpcomingStates(List<Turn> turns)
     {
         if (!isResolvingTurn)
         {
-            currentGameState.entityPathsMap = currentGameState.GenerateAllEntityPaths();
-            turnDrawer.DrawAllPaths(currentGameState);
+            upcomingGamestates = UpcomingStateCalculator.CalculateUpcomingStates(CurrentGameState);
+            turnDrawer.DrawUpcomingStates(upcomingGamestates);
         }
+    }
+
+    void ResetBoard(GameState currentGameState)
+    {
         boardController.DrawBoard_Standard(currentGameState, isResolvingTurn);
         potentialCardTargets.Clear();
     }
@@ -162,7 +176,7 @@ public class GameStateManager : MonoBehaviour {
         if (potentialCardTargets.Contains(tileClickedPosition))
         {
             CardData selectedCard = equippedCardsManager.GetSelectedCard();
-            Vector2Int playerOrigin = selectedCard.Category == CardCategory.Movement ? Player.Position : CurrentGameState.GetProjectedPlayerPosition();
+            Vector2Int playerOrigin = selectedCard.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
             turnStackController.AddToPlayerTurn(selectedCard, Player, playerOrigin, tileClickedPosition);
             equippedCardsManager.ClearSelectedCard();
             GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
@@ -198,95 +212,17 @@ public class GameStateManager : MonoBehaviour {
     IEnumerator ProcessCurrentRoundActions()
     {
         isResolvingTurn = true;
-        CurrentGameState.actionsCompletedLastRound.Clear();
-        CurrentGameState.movesCompletedLastRound.Clear();
 
-        while (!turnStackController.IsTurnStackEmpty)
+        for (int i = 0; i < upcomingGamestates.Count; i++)
         {
-            Turn nextTurn = turnStackController.GetNextTurn();
-            EntityData entity = nextTurn.Entity; 
-            GameStateDelegates.OnResolvingTurn(nextTurn);
+            GameState nextGameState = upcomingGamestates[i].gameState;
 
-            PathEnumerator pathEnumerator = CurrentGameState.entityPathsMap[entity].GetEnumerator();
-
-            while (pathEnumerator.Current != null)
-            {
-                PathStep currentStep = pathEnumerator.Current;
-                // If next step is a 'bumped by' step, don't increment that during this entity's turn resolution.
-                if (currentStep.bumpedByStep != null)
-                {
-                    pathEnumerator.MoveNext();
-                    continue;
-                }
-
-                entity.Position = currentStep.newPosition;
-
-                // If next step is a 'bumped someone else step, get their matching step, update their position,
-                // and remove health from each.
-                if (currentStep.bumpedEntity != null)
-                {
-                    EntityData bumpedEntity = CurrentGameState.GetAllEntities().First(e => e == currentStep.bumpedEntity);
-
-                    PathStep bumpedEntityStep = CurrentGameState
-                        .entityPathsMap[bumpedEntity]
-                        .GetStepWhere(s => s.bumpedByStep == currentStep);
-
-                    bumpedEntity.Position = bumpedEntityStep.newPosition;
-
-                    bumpedEntity.Health--;
-                    entity.Health--;
-                }
-
-                GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
-                pathEnumerator.MoveNext();
-                yield return new WaitForSeconds(0.5f);
-            }
-
-            turnDrawer.DrawSingleAction(nextTurn.action);
-            GameStateHelperFunctions.ProcessAction(nextTurn.action, CurrentGameState);
+            CurrentGameState = nextGameState;
+           
             GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
 
             yield return new WaitForSeconds(0.5f);
         }
-
-        //while (!turnStackController.IsTurnStackEmpty)
-        //{
-        //    turnDrawer.Clear();
-        //    Turn nextTurn = turnStackController.GetNextTurn();
-
-        //    GameStateDelegates.OnResolvingTurn(nextTurn);
-
-        //    Tile entityInitialTile = BoardController.CurrentBoard.GetTileAtPosition(nextTurn.Entity.Position);
-
-        //    for (int i = 0; i < nextTurn.moves.Count; i++)
-        //    {
-        //        GameStateHelperFunctions.ProcessMove(nextTurn.moves[i], nextTurn.Entity, CurrentGameState);
-        //        GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
-
-        //        if (i < nextTurn.moves.Count - 1)
-        //        {
-        //            turnDrawer.DrawSingleMove(nextTurn.Entity.Position, nextTurn.moves[i+1]);
-        //        }
-        //        else
-        //        {
-        //            turnDrawer.Clear();
-        //        }
-        //        yield return new WaitForSeconds(0.5f);
-        //    }
-
-        //    Tile entityResultingTile = BoardController.CurrentBoard.GetTileAtPosition(nextTurn.Entity.Position);
-        //    CompletedMove completedMove = new CompletedMove(nextTurn.moves, nextTurn.Entity, entityInitialTile, entityResultingTile);
-
-        //    CurrentGameState.movesCompletedLastRound.Add(completedMove);
-
-        //    turnDrawer.DrawSingleAction(nextTurn.action);
-        //    GameStateHelperFunctions.ProcessAction(nextTurn.action, CurrentGameState);
-
-        //    GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
-        //    yield return new WaitForSeconds(0.5f);
-        //}
-
-        GenerateNextTurnStack(CurrentGameState);
 
         if (GameStateDelegates.OnRoundEnded != null)
         {
@@ -299,11 +235,14 @@ public class GameStateManager : MonoBehaviour {
         {
             GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
         }
+
+        upcomingGamestates.Clear();
     }
 
     void GenerateNextTurnStack(GameState gameState)
     {
         enemyTurnCalculator.CalculateAndQueueEnemyTurns(CurrentGameState);
         turnStackController.AddEmptyPlayerTurn();
+        turnStackController.OnTurnStackUpdate(new List<Turn>(turnStackController.TurnStack));
     }
 }

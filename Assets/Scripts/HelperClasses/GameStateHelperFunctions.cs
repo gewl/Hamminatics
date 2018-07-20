@@ -6,19 +6,6 @@ using System.Linq;
 using static Helpers.Operators;
 
 public static class GameStateHelperFunctions {
-    public static Vector2Int GetProjectedPlayerPosition(this GameState state)
-    {
-        Path playerPath = state.entityPathsMap[state.player];
-
-        if (playerPath.IsEmpty())
-        {
-            playerPath.LogPathLength();
-            return state.player.Position;
-        }
-       
-        return state.entityPathsMap[state.player].PeekLast().newPosition;
-    }
-
     public static Direction GetDirectionFromEntity(EntityData entity, Vector2Int targetPosition)
     {
         Vector2Int entityPosition = entity.Position;
@@ -89,64 +76,64 @@ public static class GameStateHelperFunctions {
 
     public static List<EntityData> GetAllEntities(this GameState state)
     {
-        return state.turnStack.Select(t => t.Entity).ToList();
+        return state.enemies.Append(state.player).ToList();
     }
 
-    public static Dictionary<EntityData, Path> GenerateAllEntityPaths(this GameState state)
-    {
-        GameState copiedState = state.DeepCopy();
-        Dictionary<EntityData, Path> entityPathsMap = new Dictionary<EntityData, Path>();
+    //public static Dictionary<EntityData, Path> GenerateAllEntityPaths(this GameState state)
+    //{
+    //    GameState copiedState = state.DeepCopy();
+    //    Dictionary<EntityData, Path> entityPathsMap = new Dictionary<EntityData, Path>();
 
-        copiedState.GetAllEntities().ForEach(e => entityPathsMap.Add(e, new Path()));
+    //    copiedState.GetAllEntities().ForEach(e => entityPathsMap.Add(e, new Path()));
 
-        while (copiedState.turnStack.Count > 0)
-        {
-            Turn turn = copiedState.turnStack.Pop();
-            EntityData thisEntity = turn.Entity;
-            if (turn.ContainsMoves())
-            {
-                Path thisPath = turn.GetPathFromTurn(copiedState);
-                entityPathsMap[thisEntity].AddPath(thisPath);
+    //    while (copiedState.turnStack.Count > 0)
+    //    {
+    //        Turn turn = copiedState.turnStack.Pop();
+    //        EntityData thisEntity = turn.Entity;
+    //        if (turn.ContainsMoves())
+    //        {
+    //            Path thisPath = turn.GetPathFromTurn(copiedState);
+    //            entityPathsMap[thisEntity].AddPath(thisPath);
 
-                // If this path terminated with bumping an entity,
-                // add a "bumpedBy" pathstep to the impacted entity's path.
-                if (thisPath.PeekLast() != null && thisPath.PeekLast().bumpedEntity != null)
-                {
-                    PathStep bumpStep = thisPath.PeekLast();
-                    EntityData bumpedEntity = bumpStep.bumpedEntity;
+    //            // If this path terminated with bumping an entity,
+    //            // add a "bumpedBy" pathstep to the impacted entity's path.
+    //            if (thisPath.PeekLast() != null && thisPath.PeekLast().bumpedEntity != null)
+    //            {
+    //                PathStep bumpStep = thisPath.PeekLast();
+    //                EntityData bumpedEntity = bumpStep.bumpedEntity;
 
-                    // Copies current state of entity so bump calculations can work off of
-                    // entity's position, health, etc., at time of bump
-                    entityPathsMap[bumpedEntity].AddStep(bumpedEntity, bumpedEntity.Position, null, bumpStep);
-                }
-            }
+    //                // Copies current state of entity so bump calculations can work off of
+    //                // entity's position, health, etc., at time of bump
+    //                entityPathsMap[bumpedEntity].AddStep(bumpedEntity, bumpedEntity.Position, null, bumpStep);
+    //            }
+    //        }
 
-            if (turn.ContainsAction())
-            {
-                ProcessAction(turn.action, copiedState);
+    //        if (turn.ContainsAction())
+    //        {
+    //            ProcessAction(turn.action, copiedState);
 
-            }
-        }
+    //        }
+    //    }
 
-        return entityPathsMap;
-    }
+    //    return entityPathsMap;
+    //}
 
-    static void ProcessAsMuchOfTurnAsPossible(this GameState state, Turn turn)
-    {
-        if (turn.IsComplete())
-        {
-            ProcessTurn(turn, state);
-        }
-        else if (turn.ContainsMoves())
-        {
-            ProcessMoves(turn.moves, turn.Entity, state);
+    //static void ProcessAsMuchOfTurnAsPossible(this GameState state, Turn turn)
+    //{
+    //    if (turn.IsComplete())
+    //    {
+    //        ProcessTurn(turn, state);
+    //    }
+    //    else if (turn.ContainsMoves())
+    //    {
+    //        ProcessMoves(turn.moves, turn.Entity, state);
 
-        }
-        else if (turn.ContainsAction())
-        {
-            ProcessAction(turn.action, state);
-        }
-    }
+    //    }
+    //    else if (turn.ContainsAction())
+    //    {
+    //        ProcessAction(turn.action, state);
+    //    }
+    //}
 
     static Path GetPathFromTurn(this Turn turn, GameState state)
     {
@@ -285,43 +272,43 @@ public static class GameStateHelperFunctions {
     // following gamestates regardless of whether the player has chosen their turn yet.
     // If there's ever an empty turn for any other reason, this is going to be a problem—
     // but there *should* (lol) never be an empty turn for any other reason.
-    public static void ProcessTurn(Turn turn, GameState state)
-    {
-        if (turn.moves.Count > 0)
-        {
-            ProcessMoves(turn.moves, turn.Entity, state);
-        }
-        if (turn.action != null && turn.action.card != null)
-        {
-            ProcessAction(turn.action, state);
-        }
-    }
+    //public static void ProcessTurn(Turn turn, GameState state)
+    //{
+    //    if (turn.moves.Count > 0)
+    //    {
+    //        ProcessMoves(turn.moves, turn.Entity, state);
+    //    }
+    //    if (turn.action != null && turn.action.card != null)
+    //    {
+    //        ProcessAction(turn.action, state);
+    //    }
+    //}
 
     // Used for incremental updating during actual-turn resolution.
-    public static void ProcessMove(Direction move, EntityData entity, GameState state)
-    {
-        TryToMoveEntityInDirection(entity, move, state);
-    }
+    //public static void ProcessMove(Direction move, EntityData entity, GameState state)
+    //{
+    //    TryToMoveEntityInDirection(entity, move, state);
+    //}
 
-    // Used for extrapolating next turn.
-    public static void ProcessMoves(List<Direction> moves, EntityData entity, GameState state)
-    {
-        Tile originTile = BoardController
-            .CurrentBoard
-            .GetTileAtPosition(entity.Position);
-        for (int i = 0; i < moves.Count; i++)
-        {
-            Direction nextMove = moves[i];
-            TryToMoveEntityInDirection(entity, nextMove, state);
-        }
+    //// Used for extrapolating next turn.
+    //public static void ProcessMoves(List<Direction> moves, EntityData entity, GameState state)
+    //{
+    //    Tile originTile = BoardController
+    //        .CurrentBoard
+    //        .GetTileAtPosition(entity.Position);
+    //    for (int i = 0; i < moves.Count; i++)
+    //    {
+    //        Direction nextMove = moves[i];
+    //        TryToMoveEntityInDirection(entity, nextMove, state);
+    //    }
 
-        Tile destinationTile = BoardController
-            .CurrentBoard
-            .GetTileAtPosition(entity.Position);
+    //    Tile destinationTile = BoardController
+    //        .CurrentBoard
+    //        .GetTileAtPosition(entity.Position);
 
-        CompletedMove completedMove = new CompletedMove(moves, entity, originTile, destinationTile);
-        state.movesCompletedLastRound.Add(completedMove);
-    }
+    //    CompletedMove completedMove = new CompletedMove(moves, entity, originTile, destinationTile);
+    //    state.movesCompletedLastRound.Add(completedMove);
+    //}
 
     static void TryToMoveEntityInDirection(EntityData entity, Direction direction, GameState state)
     {
@@ -360,20 +347,20 @@ public static class GameStateHelperFunctions {
         }
     }
 
-    public static void ProcessAction(Action action, GameState state)
-    {
-        switch (action.card.Category)
-        {
-            case CardCategory.Movement:
-                HandleMovementAction(action.entity, action.direction, action.distance, state);
-                break;
-            case CardCategory.Attack:
-                HandleAttackAction(action.entity, action.card as AttackCardData, action.direction, action.distance, state);
-                break;
-            default:
-                break;
-        }
-    }
+    //public static void ProcessAction(Action action, GameState state)
+    //{
+    //    switch (action.card.Category)
+    //    {
+    //        case CardCategory.Movement:
+    //            HandleMovementAction(action.entity, action.direction, action.distance, state);
+    //            break;
+    //        case CardCategory.Attack:
+    //            HandleAttackAction(action.entity, action.card as AttackCardData, action.direction, action.distance, state);
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //}
 
     static void HandleMovementAction(EntityData entity, Direction direction, int distance, GameState gameState)
     {
@@ -415,26 +402,26 @@ public static class GameStateHelperFunctions {
         }
     }
 
-    static void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance, GameState gameState)
-    {
-        Tile originTile = BoardController.CurrentBoard
-            .GetTileAtPosition(entity.Position);
-        Tile targetTile = FindFirstOccupiedTileInDirection(originTile, direction, distance, gameState);
+    //static void HandleAttackAction(EntityData entity, AttackCardData card, Direction direction, int distance, GameState gameState)
+    //{
+    //    Tile originTile = BoardController.CurrentBoard
+    //        .GetTileAtPosition(entity.Position);
+    //    Tile targetTile = FindFirstOccupiedTileInDirection(originTile, direction, distance, gameState);
 
-        CompletedAction completedAction = new CompletedAction(originTile, targetTile, direction, card.Category);
-        gameState.actionsCompletedLastRound.Add(completedAction);
+    //    CompletedAction completedAction = new CompletedAction(originTile, targetTile, direction, card.Category);
+    //    gameState.actionsCompletedLastRound.Add(completedAction);
 
-        if (!gameState.IsTileOccupied(targetTile))
-        {
-            return;
-        }
+    //    if (!gameState.IsTileOccupied(targetTile))
+    //    {
+    //        return;
+    //    }
 
-        EntityData targetEntity = gameState.GetTileOccupant(targetTile);
+    //    EntityData targetEntity = gameState.GetTileOccupant(targetTile);
 
-        targetEntity.Health -= card.Damage;
-    }
+    //    targetEntity.Health -= card.Damage;
+    //}
 
-    static Tile FindFirstOccupiedTileInDirection(Tile originTile, Direction direction, int distance, GameState state)
+    public static Tile FindFirstOccupiedTileInDirection(this GameState state, Tile originTile, Direction direction, int distance)
     {
         Tile currentTargetTile = originTile;
         Tile testTargetTile = originTile.GetDirectionalNeighbor(direction);

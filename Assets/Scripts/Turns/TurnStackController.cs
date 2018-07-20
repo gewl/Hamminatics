@@ -34,7 +34,7 @@ public class TurnStackController : MonoBehaviour {
     {
         TurnStack.Push(newTurn);
         endRoundButton.interactable = IsPlayerTurnComplete();
-        OnTurnStackUpdate(new List<Turn>(TurnStack));
+        //OnTurnStackUpdate(new List<Turn>(TurnStack));
     }
 
     public void AddEmptyPlayerTurn()
@@ -45,7 +45,7 @@ public class TurnStackController : MonoBehaviour {
 
     Turn GetPlayerTurn()
     {
-        return TurnStack.First(t => t.Entity == gameStateManager.Player);
+        return TurnStack.First(t => t.Entity.ID == gameStateManager.Player.ID);
     }
 
     Turn GetEntityTurn(EntityData entity)

@@ -190,6 +190,12 @@ public class BoardController : MonoBehaviour {
         //DrawSpriteAtPosition(selectedEntity.EntitySprite, selectedEntity.Position, opaque);
     }
 
+    public void DEBUG_DrawUpcomingEntitySprite(EntityData entity)
+    {
+        Debug.Log("drawing entity sprite at position:" + entity.Position);
+        DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent);
+    }
+
     void DrawSpriteAtPosition(Sprite sprite, Vector2Int position, Color color)
     {
         Image positionCellImage = cellContentImages[position.x, position.y];
