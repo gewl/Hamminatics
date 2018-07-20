@@ -145,7 +145,7 @@ public class TurnDrawer : MonoBehaviour {
     {
         float result = 0f;
 
-        if (step.newPosition == step.GetLastPosition())
+        if (!step.IsFirstStep() && step.newPosition == step.GetLastPosition())
         {
             return result;
         }
@@ -158,7 +158,7 @@ public class TurnDrawer : MonoBehaviour {
             {
                 directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(step.nextStep.bumpedEntity.Position, step.newPosition);
             }
-            else
+            else if (!step.IsLastStep())
             {
                 directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(step.GetNextPosition(), step.newPosition);
             }

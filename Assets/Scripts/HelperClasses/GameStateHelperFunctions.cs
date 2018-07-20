@@ -97,7 +97,7 @@ public static class GameStateHelperFunctions {
         GameState copiedState = state.DeepCopy();
         Dictionary<EntityData, Path> entityPathsMap = new Dictionary<EntityData, Path>();
 
-        //copiedState.GetAllEntities().ForEach(e => entityPathsMap.(e, new Path(e, e.Position)));
+        copiedState.GetAllEntities().ForEach(e => entityPathsMap.Add(e, new Path()));
 
         while (copiedState.turnStack.Count > 0)
         {
@@ -106,7 +106,7 @@ public static class GameStateHelperFunctions {
             if (turn.ContainsMoves())
             {
                 Path thisPath = turn.GetPathFromTurn(copiedState);
-                entityPathsMap.Add(thisEntity, thisPath);
+                entityPathsMap[thisEntity].AddPath(thisPath);
 
                 // If this path terminated with bumping an entity,
                 // add a "bumpedBy" pathstep to the impacted entity's path.
@@ -160,9 +160,6 @@ public static class GameStateHelperFunctions {
 
         }
 
-        // Path start.
-        //path.AddStep(new PathStep(entity, entity.Position));
-
         // Add path steps until they end or a bump occurs.
         for (int i = 0; i < turnMoves.Count; i++)
         {
@@ -172,7 +169,7 @@ public static class GameStateHelperFunctions {
 
             if (path.PeekLast() != null && path.PeekLast().bumpedEntity != null)
             {
-                Debug.Log("breaking because bump detected");
+                Debug.Log("bumped, breaking");
                 break;
             }
 

@@ -7,7 +7,11 @@ public class Path {
 
     PathStep head;
 
-    private Path() { }
+    public Path()
+    {
+        head = null;
+    }
+
     public Path(EntityData entity, Vector2Int startingPosition)
     {
         head = new PathStep(entity, startingPosition, null);
@@ -27,27 +31,36 @@ public class Path {
     public void AddStep(EntityData entity, Vector2Int newPosition, EntityData bumpedEntity = null, EntityData bumpedBy = null)
     {
         PathStep checkNode = PeekLast();
-
         PathStep newStep = new PathStep(entity, newPosition, checkNode, bumpedEntity, bumpedBy);
-
-        if (checkNode != null)
-        {
-            checkNode.nextStep = newStep;
-        }
-        else
+        if (head == null)
         {
             head = newStep;
+            return;
         }
-        LogPathLength();
+
+        checkNode.nextStep = newStep;
+    }
+
+    void AddStep(PathStep step)
+    {
+        PathStep checkNode = PeekLast();
+        if (head == null)
+        {
+            head = step;
+            return;
+        }
+
+        checkNode.nextStep = step;
     }
 
     public void AddPath(Path path)
     {
         if (path.head == null)
         {
+            Debug.Log("adding null path");
             return;
         }
-        AddStep(path.head.pathingEntity, path.head.newPosition, path.head.bumpedEntity, path.head.bumpedBy);
+        AddStep(path.head);
     }
 
     public PathStep Peek()
@@ -85,6 +98,19 @@ public class Path {
     #endregion
 
     #region debugging
+    public int GetPathLength()
+    {
+        int result = 0;
+
+        PathEnumerator iterNode = GetEnumerator();
+        while (iterNode.Current != null)
+        {
+            result++;
+            iterNode.MoveNext();
+        }
+        return result;
+    }
+
     public void LogPath()
     {
         PathStep iterNode = head;
@@ -111,6 +137,7 @@ public class Path {
             result++;
             iterNode.MoveNext();
         }
+        Debug.Log(head.pathingEntity.ID + ": " + result);
     }
     #endregion
 
