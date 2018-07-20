@@ -8,16 +8,16 @@ public class PathStep {
     public EntityData pathingEntity;
     public Vector2Int newPosition;
     public EntityData bumpedEntity;
-    public EntityData bumpedBy;
+    public PathStep bumpedByStep;
 
     PathStep lastStep;
     public PathStep nextStep;
     
-    public PathStep(EntityData _pathingEntity, Vector2Int _newPosition, PathStep _lastStep, EntityData _bumpedEntity = null, EntityData _bumpedBy = null)
+    public PathStep(EntityData _pathingEntity, Vector2Int _newPosition, PathStep _lastStep, EntityData _bumpedEntity = null, PathStep _bumpedBy = null)
     {
         pathingEntity = _pathingEntity;
         newPosition = _newPosition;
-        bumpedBy = _bumpedBy;
+        bumpedByStep = _bumpedBy;
         bumpedEntity = _bumpedEntity;
         lastStep = _lastStep;
     }
@@ -34,7 +34,7 @@ public class PathStep {
 
     public bool IsLastStep()
     {
-        return nextStep == null || (bumpedBy == null && nextStep.bumpedBy != null);
+        return nextStep == null || (bumpedByStep == null && nextStep.bumpedByStep != null);
     }
 
     public bool IsLastStepBeforeFailedBump()

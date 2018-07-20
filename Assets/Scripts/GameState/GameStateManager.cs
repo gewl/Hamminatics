@@ -211,10 +211,29 @@ public class GameStateManager : MonoBehaviour {
 
             while (pathEnumerator.Current != null)
             {
-                entity.Position = pathEnumerator.Current.newPosition;
-
-                if (pathEnumerator.Current.bumpedBy != null || pathEnumerator.Current.bumpedEntity != null)
+                PathStep currentStep = pathEnumerator.Current;
+                // If next step is a 'bumped by' step, don't increment that during this entity's turn resolution.
+                if (currentStep.bumpedByStep != null)
                 {
+                    pathEnumerator.MoveNext();
+                    continue;
+                }
+
+                entity.Position = currentStep.newPosition;
+
+                // If next step is a 'bumped someone else step, get their matching step, update their position,
+                // and remove health from each.
+                if (currentStep.bumpedEntity != null)
+                {
+                    EntityData bumpedEntity = CurrentGameState.GetAllEntities().First(e => e == currentStep.bumpedEntity);
+
+                    PathStep bumpedEntityStep = CurrentGameState
+                        .entityPathsMap[bumpedEntity]
+                        .GetStepWhere(s => s.bumpedByStep == currentStep);
+
+                    bumpedEntity.Position = bumpedEntityStep.newPosition;
+
+                    bumpedEntity.Health--;
                     entity.Health--;
                 }
 

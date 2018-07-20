@@ -92,7 +92,7 @@ public class TurnDrawer : MonoBehaviour {
     {
         if (!step.IsFirstStep() && step.GetLastPosition() == step.newPosition)
         {
-            Direction bumpedFrom = BoardHelperFunctions.GetDirectionFromPosition(step.newPosition, step.bumpedBy.Position);
+            Direction bumpedFrom = BoardHelperFunctions.GetDirectionFromPosition(step.newPosition, step.bumpedByStep.pathingEntity.Position);
             GenerateFailedBumpedImages(step, bumpedFrom);
         }
         else
@@ -108,7 +108,7 @@ public class TurnDrawer : MonoBehaviour {
         instantiatedBumpImage.transform.SetParent(transform);
 
         Vector2Int lastPosition = step.IsFirstStep() ?
-            step.bumpedBy.Position :
+            step.bumpedByStep.newPosition :
             step.GetLastPosition();
         instantiatedBumpImage.transform.position = boardController.GetCellPosition(lastPosition);
         instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
@@ -242,7 +242,7 @@ public class TurnDrawer : MonoBehaviour {
     {
         PathType pathDirection = PathType.Bumped;
         Vector2Int defaultVector = new Vector2Int(-1, -1);
-        if (step.bumpedBy != null)
+        if (step.bumpedByStep != null)
         {
             pathDirection = PathType.Bumped;
         }

@@ -28,7 +28,7 @@ public class Path {
         return head == null || head.nextStep == null;
     }
 
-    public void AddStep(EntityData entity, Vector2Int newPosition, EntityData bumpedEntity = null, EntityData bumpedBy = null)
+    public void AddStep(EntityData entity, Vector2Int newPosition, EntityData bumpedEntity = null, PathStep bumpedBy = null)
     {
         PathStep checkNode = PeekLast();
         PathStep newStep = new PathStep(entity, newPosition, checkNode, bumpedEntity, bumpedBy);

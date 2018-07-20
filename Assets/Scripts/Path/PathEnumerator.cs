@@ -20,7 +20,7 @@ public class PathEnumerator {
 
     public bool IsBumpedStep()
     {
-        return currentNode != null && Current.bumpedBy != null;
+        return currentNode != null && Current.bumpedByStep != null;
     }
 
     public bool IsBumpStep()
@@ -30,6 +30,6 @@ public class PathEnumerator {
 
     public bool IsNormalPathingStep()
     {
-        return currentNode != null && currentNode.bumpedBy == null && currentNode.bumpedEntity == null;
+        return currentNode != null && currentNode.bumpedByStep == null && currentNode.bumpedEntity == null;
     }
 }
