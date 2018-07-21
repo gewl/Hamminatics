@@ -23,6 +23,10 @@ public static class UpcomingStateCalculator
                 projectedGameStates.Add(updatedState);
 
                 mostRecentState = updatedState.gameState;
+                if (updatedState.bump != null)
+                {
+                    break;
+                }
             }
 
             if (turn.action.card != null)

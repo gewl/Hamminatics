@@ -28,43 +28,74 @@ public class TurnDrawer : MonoBehaviour {
             ProjectedGameState projectedState = upcomingStates[i];
             EntityData activeEntity = projectedState.activeEntity;
 
-            bool isEntitysFirstMove = lastActiveEntity == null || 
-                activeEntity.ID != lastActiveEntity.ID;
+            ProjectedGameState nextState = i == upcomingStates.Count - 1 ?
+                null :
+                upcomingStates[i + 1];
 
-            bool isEntitysLastMove = projectedState.cardType == CardCategory.Movement &&
-                (i == upcomingStates.Count - 1 ||
-                upcomingStates[i + 1].cardType != CardCategory.Movement ||
-                upcomingStates[i + 1].activeEntity.ID != activeEntity.ID);
-
-            Vector2Int positionLastState = projectedState
-                .gameState
-                .lastGamestate
-                .GetEntityWhere(e => e.ID == activeEntity.ID)
-                .Position;
-            Vector2Int positionThisState = activeEntity.Position;
-
-            if (isEntitysFirstMove)
+            if (projectedState.cardType == CardCategory.Movement)
             {
-                DrawPath_Beginning(activeEntity, positionLastState, positionThisState);
-            }
-
-            if (isEntitysLastMove)
-            {
-                DrawPath_Ending(activeEntity, positionLastState, positionThisState);
-            }
-
-            if (projectedState.cardType == CardCategory.Movement && 
-                !isEntitysLastMove)
-            {
-                Vector2Int positionNextState = upcomingStates[i + 1]
+                bool isEntitysFirstMove = lastActiveEntity == null || 
+                    activeEntity.ID != lastActiveEntity.ID;
+                Vector2Int positionLastState = projectedState
                     .gameState
+                    .lastGamestate
                     .GetEntityWhere(e => e.ID == activeEntity.ID)
                     .Position;
+                Vector2Int positionThisState = activeEntity.Position;
 
-                DrawPath_Between(activeEntity, positionLastState, positionThisState, positionNextState);
+                bool isFailedBump = projectedState.bump != null &&
+                    positionLastState == positionThisState;
+                if (isEntitysFirstMove && !isFailedBump)
+                {
+                    DrawPath_Beginning(activeEntity, positionLastState, positionThisState);
+                }
+
+                if (projectedState.bump == null)
+                {
+                    DrawPath(activeEntity, lastActiveEntity, projectedState, nextState);
+                }
+                else
+                {
+                    DrawBump(activeEntity, lastActiveEntity, projectedState, nextState);
+                }
             }
 
             lastActiveEntity = activeEntity;
+        }
+    }
+
+    void DrawPath(EntityData activeEntity, EntityData lastActiveEntity, ProjectedGameState projectedState, ProjectedGameState nextState)
+    {
+        bool isEntitysLastMove = projectedState.cardType == CardCategory.Movement &&
+            (nextState == null ||
+            nextState.cardType != CardCategory.Movement ||
+            nextState.activeEntity.ID != activeEntity.ID);
+
+        Vector2Int positionLastState = projectedState
+            .gameState
+            .lastGamestate
+            .GetEntityWhere(e => e.ID == activeEntity.ID)
+            .Position;
+        Vector2Int positionThisState = activeEntity.Position;
+
+        if (isEntitysLastMove)
+        {
+            DrawPath_Ending(activeEntity, positionLastState, positionThisState);
+            return;
+        }
+
+        bool isNextMoveFailedBump = nextState.bump != null &&
+            nextState.activeEntity.Position == activeEntity.Position;
+        if (projectedState.cardType == CardCategory.Movement && 
+            !isEntitysLastMove &&
+            !isNextMoveFailedBump)
+        {
+            Vector2Int positionNextState = nextState
+                .gameState
+                .GetEntityWhere(e => e.ID == activeEntity.ID)
+                .Position;
+
+            DrawPath_Between(activeEntity, positionLastState, positionThisState, positionNextState);
         }
     }
 
@@ -113,7 +144,6 @@ public class TurnDrawer : MonoBehaviour {
         }
     }
 
-
     void DrawPath_Ending(EntityData entity, Vector2Int positionLastState, Vector2Int positionThisState)
     {
         if (positionThisState == positionLastState)
@@ -136,6 +166,105 @@ public class TurnDrawer : MonoBehaviour {
 
         instantiatedPathImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(directionOfEntrance)));
         instantiatedPathImage.GetComponent<Image>().color = color;
+    }
+
+    void DrawBump(EntityData activeEntity, EntityData lastActiveEntity, ProjectedGameState projectedState, ProjectedGameState nextState)
+    {
+        bool isEntitysFirstMove = activeEntity != lastActiveEntity;
+        Bump bump = projectedState.bump;
+        Vector2Int positionThisState = activeEntity.Position;
+        Vector2Int positionLastState = projectedState
+            .gameState
+            .lastGamestate
+            .GetEntityWhere(e => e.ID == activeEntity.ID)
+            .Position;
+
+        bool bumpSucceeds = activeEntity.Position != positionLastState;
+
+        if (bumpSucceeds)
+        {
+            DrawPath_Ending(activeEntity, positionLastState, positionThisState);
+            DrawSuccessfulBumpEffect(positionThisState, BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionLastState));
+
+            DrawPath_Beginning(bump.bumpedEntity, positionThisState, bump.bumpedEntity.Position);
+        }
+        else if (isEntitysFirstMove)
+        {
+            Vector2Int bumpedEntityPosition = bump.bumpedEntity.Position;
+            Sprite pathSprite = ImageManager.GetPathSprite(PathType.Beginning);
+            Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(bumpedEntityPosition, positionThisState);
+            GenerateAndPositionPathImage(positionThisState, directionOfEntrance, pathSprite, activeEntity.IdentifyingColor);
+
+            DrawFailedBumpEffect(positionThisState,
+                BoardHelperFunctions.GetDirectionFromPosition(positionThisState, bumpedEntityPosition));
+        }
+        else
+        {
+            Vector2Int positionTwoStatesAgo = projectedState
+                .gameState
+                .lastGamestate
+                .lastGamestate
+                .GetEntityWhere(e => e.ID == activeEntity.ID)
+                .Position;
+            PathType pathType = GetFailedBumpPathType(positionTwoStatesAgo, positionThisState, bump.bumpedEntity.Position);
+            Sprite pathSprite = ImageManager.GetPathSprite(pathType);
+            Vector2Int bumpedEntityPosition = bump.bumpedEntity.Position;
+            Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(bumpedEntityPosition, positionThisState);
+
+            GenerateAndPositionPathImage(positionThisState, directionOfEntrance, pathSprite, activeEntity.IdentifyingColor);
+            DrawFailedBumpEffect(positionThisState,
+                BoardHelperFunctions.GetDirectionFromPosition(positionThisState, bumpedEntityPosition));
+        }
+    }
+
+    //void DrawPath_FailedBumpBeginning(EntityData entity, EntityData bumpedEntity)
+    //{
+    //    Sprite pathSprite = ImageManager.GetPathSprite(PathType.Beginning);
+    //    Direction fakeDirectionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(bumpedEntity.Position, entity.Position);
+
+    //    GenerateAndPositionPathImage(bumpedEntity.Position, fakeDirectionOfEntrance, pathSprite, entity.IdentifyingColor);
+    //}
+
+    void DrawSuccessfulBumpEffect(Vector2Int position, Direction entranceDirectionOfBumper)
+    {
+        Sprite bumpEffectSprite = ImageManager.GetPathSprite(PathType.Bumped);
+        GameObject instantiatedBumpImage = ImageManager.GetPathImage(bumpEffectSprite);
+        instantiatedBumpImage.transform.SetParent(transform);
+        instantiatedBumpImage.transform.position = boardController.GetCellPosition(position);
+        float imageRotation = GetImageRotation(entranceDirectionOfBumper);
+        instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, imageRotation));
+    }
+
+    void DrawFailedBumpEffect(Vector2Int position, Direction entranceDirectionOfBumper)
+    {
+        Sprite bumpEffectSprite = ImageManager.GetPathSprite(PathType.Bumped);
+        GameObject instantiatedBumpImage = ImageManager.GetPathImage(bumpEffectSprite);
+        instantiatedBumpImage.transform.SetParent(transform);
+        instantiatedBumpImage.transform.position = boardController.GetCellEdgePosition(position, entranceDirectionOfBumper);
+        float imageRotation = GetImageRotation(entranceDirectionOfBumper);
+        instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, imageRotation));
+    }
+
+    PathType GetFailedBumpPathType(Vector2Int positionTwoStatesAgo, Vector2Int positionThisState, Vector2Int bumpeePosition)
+    {
+        if (BoardHelperFunctions.AreTwoPositionsLinear(positionTwoStatesAgo, bumpeePosition))
+        {
+            return PathType.FailedBumpStraight;
+        }
+
+        Vector2Int localVectorToLastPosition = positionTwoStatesAgo - positionThisState;
+        Vector2Int localVectorToNextPosition = bumpeePosition - positionThisState;
+
+        float angleBetween = Vector2.SignedAngle(localVectorToLastPosition, localVectorToNextPosition);
+
+        if (angleBetween - 90f == 0f)
+        {
+            return PathType.FailedBumpLeft;
+        }
+        else
+        {
+            return PathType.FailedBumpRight;
+        }
     }
 
     // Generates arrow pointing into cell where bump occurred.

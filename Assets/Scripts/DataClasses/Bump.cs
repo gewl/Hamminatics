@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Bump {
 
-    EntityData bumpingEntity;
-    EntityData bumpedEntity;
+    public EntityData bumpingEntity;
+    public EntityData bumpedEntity;
 
     private Bump() { }
 
