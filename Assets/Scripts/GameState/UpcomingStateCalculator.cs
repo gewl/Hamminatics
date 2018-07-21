@@ -53,7 +53,7 @@ public static class UpcomingStateCalculator
         // If entity can't move that direction, return state as-is.
         if (!currentEntityTile.ConnectsToNeighbor(move))
         {
-            return new ProjectedGameState(entityCopy, newState);
+            return new ProjectedGameState(entityCopy, newState, CardCategory.Movement);
         }
 
         Tile nextTile = currentEntityTile.GetDirectionalNeighbor(move);
@@ -62,7 +62,7 @@ public static class UpcomingStateCalculator
         if (!newState.IsTileOccupied(nextTile))
         {
             entityCopy.Position = nextTile.Position;
-            return new ProjectedGameState(entityCopy, newState);
+            return new ProjectedGameState(entityCopy, newState, CardCategory.Movement);
         }
 
         EntityData tileOccupant = newState.GetTileOccupant(nextTile.Position);
@@ -82,7 +82,7 @@ public static class UpcomingStateCalculator
 
         Bump bump = new Bump(entityCopy, tileOccupant);
 
-        return new ProjectedGameState(entityCopy, newState, bump);
+        return new ProjectedGameState(entityCopy, newState, CardCategory.Movement, bump);
     }
 
     static ProjectedGameState GetNextGameStateFromAction(GameState lastState, EntityData entity, Action action)
@@ -118,13 +118,13 @@ public static class UpcomingStateCalculator
 
         if (!newState.IsTileOccupied(targetTile))
         {
-            return new ProjectedGameState(entity, newState);
+            return new ProjectedGameState(entity, newState, CardCategory.Attack);
         }
 
         EntityData targetEntity = newState.GetTileOccupant(targetTile);
 
         targetEntity.Health -= card.Damage;
 
-        return new ProjectedGameState(entity, newState);
+        return new ProjectedGameState(entity, newState, CardCategory.Attack);
     }
 }
