@@ -111,7 +111,6 @@ public class TurnDrawer : MonoBehaviour {
     {
         if (positionThisState == positionLastState)
         {
-            Debug.Log("DrawPath_Beginning: Position last state same as position this state.");
             return;
         }
 
@@ -156,7 +155,6 @@ public class TurnDrawer : MonoBehaviour {
     {
         if (positionThisState == positionLastState)
         {
-            Debug.Log("DrawPath_Ending: Position last state same as position this state.");
             return;
         }
 
@@ -178,7 +176,7 @@ public class TurnDrawer : MonoBehaviour {
 
     void DrawBump(EntityData activeEntity, EntityData lastActiveEntity, ProjectedGameState projectedState, ProjectedGameState nextState)
     {
-        bool isEntitysFirstMove = activeEntity != lastActiveEntity;
+        bool isEntitysFirstMove = lastActiveEntity == null || activeEntity.ID != lastActiveEntity.ID;
         Bump bump = projectedState.bump;
         Vector2Int positionThisState = activeEntity.Position;
         Vector2Int positionLastState = projectedState
@@ -217,21 +215,13 @@ public class TurnDrawer : MonoBehaviour {
             PathType pathType = GetFailedBumpPathType(positionTwoStatesAgo, positionThisState, bump.bumpedEntity.Position);
             Sprite pathSprite = ImageManager.GetPathSprite(pathType);
             Vector2Int bumpedEntityPosition = bump.bumpedEntity.Position;
-            Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(bumpedEntityPosition, positionThisState);
+            Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionTwoStatesAgo);
 
             GenerateAndPositionPathImage(positionThisState, directionOfEntrance, pathSprite, activeEntity.IdentifyingColor);
             DrawFailedBumpEffect(positionThisState,
                 BoardHelperFunctions.GetDirectionFromPosition(positionThisState, bumpedEntityPosition));
         }
     }
-
-    //void DrawPath_FailedBumpBeginning(EntityData entity, EntityData bumpedEntity)
-    //{
-    //    Sprite pathSprite = ImageManager.GetPathSprite(PathType.Beginning);
-    //    Direction fakeDirectionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(bumpedEntity.Position, entity.Position);
-
-    //    GenerateAndPositionPathImage(bumpedEntity.Position, fakeDirectionOfEntrance, pathSprite, entity.IdentifyingColor);
-    //}
 
     void DrawSuccessfulBumpEffect(Vector2Int position, Direction entranceDirectionOfBumper)
     {
@@ -275,73 +265,6 @@ public class TurnDrawer : MonoBehaviour {
         }
     }
 
-    // Generates arrow pointing into cell where bump occurred.
-    //void GenerateBumpImages(PathStep step) {
-    //    if (step.IsFailedBump())
-    //    {
-    //        return;
-    //    }
-    //    Sprite arrowSprite = ImageManager.GetPathSprite(PathType.Terminating);
-    //    GameObject instantiatedPathImage = ImageManager.GetPathImage(arrowSprite);
-    //    instantiatedPathImage.transform.SetParent(transform);
-    //    instantiatedPathImage.transform.position = boardController.GetCellPosition(step.newPosition);
-    //    instantiatedPathImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
-    //    instantiatedPathImage.GetComponent<Image>().color = step.pathingEntity.IdentifyingColor;
-    //}
-
-    //// Generates blast image & arrow pointing into cell that bumped entity was bumped into, if relevant.
-    //void GenerateBumpedImages(PathStep step)
-    //{
-    //    if (!step.IsFirstStep() && step.GetLastPosition() == step.newPosition)
-    //    {
-    //        Direction bumpedFrom = BoardHelperFunctions.GetDirectionFromPosition(step.newPosition, step.bumpedByStep.pathingEntity.Position);
-    //        GenerateFailedBumpedImages(step, bumpedFrom);
-    //    }
-    //    else
-    //    {
-    //        GenerateSuccessfulBumpedImages(step);
-    //    }
-    //}
-
-    //// Image for bump that successfully moved bumper and bumpee.
-    //void GenerateSuccessfulBumpedImages(PathStep step)
-    //{
-    //    GameObject instantiatedBumpImage = ImageManager.GetPathImage(ImageManager.GetPathSprite(PathType.Bumped));
-    //    instantiatedBumpImage.transform.SetParent(transform);
-
-    //    Vector2Int lastPosition = step.IsFirstStep() ?
-    //        step.bumpedByStep.newPosition :
-    //        step.GetLastPosition();
-    //    instantiatedBumpImage.transform.position = boardController.GetCellPosition(lastPosition);
-    //    instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
-
-    //    // Fake path-step image showing bump direction.
-    //    Sprite arrowSprite = ImageManager.GetPathSprite(PathType.Beginning);
-    //    GameObject instantiatedPathImage = ImageManager.GetPathImage(arrowSprite);
-    //    instantiatedPathImage.transform.SetParent(transform);
-    //    instantiatedPathImage.transform.position = boardController.GetCellPosition(lastPosition);
-    //    instantiatedPathImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
-    //    instantiatedPathImage.GetComponent<Image>().color = step.pathingEntity.IdentifyingColor;
-    //}
-
-    //// Image for bump that failed to move bumper and bumpee.
-    //void GenerateFailedBumpedImages(PathStep step, Direction bumpedFrom)
-    //{
-    //    GameObject instantiatedBumpImage = ImageManager.GetPathImage(ImageManager.GetPathSprite(PathType.Bumped));
-    //    instantiatedBumpImage.transform.SetParent(transform);
-
-    //    instantiatedBumpImage.transform.position = boardController.GetCellEdgePosition(step.GetLastPosition(), bumpedFrom);
-    //    instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
-    //}
-
-    //void GenerateNewPathStepImage(PathStep step, Sprite stepSprite, Color color)
-    //{
-    //    GameObject instantiatedPathImage = ImageManager.GetPathImage(stepSprite);
-    //    instantiatedPathImage.transform.SetParent(transform);
-    //    instantiatedPathImage.transform.position = boardController.GetCellPosition(step.newPosition);
-    //    instantiatedPathImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(step)));
-    //    instantiatedPathImage.GetComponent<Image>().color = step.pathingEntity.IdentifyingColor;
-    //}
 
     float GetImageRotation(Direction directionOfEntrance)
     {
