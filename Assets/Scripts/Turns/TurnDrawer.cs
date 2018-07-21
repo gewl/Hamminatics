@@ -34,14 +34,22 @@ public class TurnDrawer : MonoBehaviour {
 
             if (projectedState.cardType == CardCategory.Movement)
             {
-                bool isEntitysFirstMove = lastActiveEntity == null || 
-                    activeEntity.ID != lastActiveEntity.ID;
+                Vector2Int positionThisState = activeEntity.Position;
                 Vector2Int positionLastState = projectedState
                     .gameState
                     .lastGamestate
                     .GetEntityWhere(e => e.ID == activeEntity.ID)
                     .Position;
-                Vector2Int positionThisState = activeEntity.Position;
+                EntityData activeEntityTwoStatesAgo = projectedState
+                    .gameState
+                    .lastGamestate
+                    .lastGamestate
+                    .GetEntityWhere(e => e.ID == activeEntity.ID);
+
+                bool isEntitysFirstMove = lastActiveEntity == null ||
+                    activeEntity.ID != lastActiveEntity.ID ||
+                    (activeEntity.ID == activeEntityTwoStatesAgo.ID &&
+                    activeEntity.Position == activeEntityTwoStatesAgo.Position);
 
                 bool isFailedBump = projectedState.bump != null &&
                     positionLastState == positionThisState;
