@@ -79,6 +79,11 @@ public static class GameStateHelperFunctions {
         return state.enemies.Append(state.player).ToList();
     }
 
+    public static EntityData GetEntityWhere(this GameState state, Predicate<EntityData> predicate)
+    {
+        return state.GetAllEntities().Find(e => predicate(e));
+    }
+
     //public static Dictionary<EntityData, Path> GenerateAllEntityPaths(this GameState state)
     //{
     //    GameState copiedState = state.DeepCopy();
