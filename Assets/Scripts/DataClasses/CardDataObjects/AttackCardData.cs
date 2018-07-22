@@ -7,4 +7,5 @@ public class AttackCardData : CardData
 {
     public override CardCategory Category { get { return CardCategory.Attack; } }
     public int Damage = 1;
+    public Sprite PointerSprite;
 }

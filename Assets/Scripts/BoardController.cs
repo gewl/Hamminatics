@@ -15,8 +15,6 @@ public class BoardController : MonoBehaviour {
     Image[,] boardCellImages;
     Image[,] cellContentImages;
 
-    Canvas canvas;
-
     Color invisible;
     Color translucent;
     Color opaque;
@@ -31,7 +29,6 @@ public class BoardController : MonoBehaviour {
     #region Lifecycle
     private void Awake()
     {
-        canvas = GetComponentInParent<Canvas>();
         gameStateManager = GetComponentInParent<GameStateManager>();
 
         InitializeBoard();

@@ -31,11 +31,12 @@ public class TurnDrawer : MonoBehaviour {
                 null :
                 upcomingStates[i + 1];
 
-            if (projectedState.cardType == CardCategory.Movement)
+            CardCategory actionCardCategory = projectedState.action.card.Category;
+            if (actionCardCategory == CardCategory.Movement)
             {
                 DrawMoveState(projectedState, nextState, lastActiveEntity);
             }
-            else if (projectedState.cardType == CardCategory.Attack)
+            else if (actionCardCategory == CardCategory.Attack)
             {
                 DrawAttackState(projectedState);
             }
@@ -85,9 +86,9 @@ public class TurnDrawer : MonoBehaviour {
 
     void DrawPath(EntityData activeEntity, EntityData lastActiveEntity, ProjectedGameState projectedState, ProjectedGameState nextState)
     {
-        bool isEntitysLastMove = projectedState.cardType == CardCategory.Movement &&
+        bool isEntitysLastMove = projectedState.action.card.Category == CardCategory.Movement &&
             (nextState == null ||
-            nextState.cardType != CardCategory.Movement ||
+            nextState.action.card.Category != CardCategory.Movement ||
             nextState.activeEntity.ID != activeEntity.ID);
 
         Vector2Int positionLastState = projectedState
@@ -105,7 +106,7 @@ public class TurnDrawer : MonoBehaviour {
 
         bool isNextMoveFailedBump = nextState.bump != null &&
             nextState.activeEntity.Position == activeEntity.Position;
-        if (projectedState.cardType == CardCategory.Movement && 
+        if (projectedState.action.card.Category == CardCategory.Movement && 
             !isEntitysLastMove &&
             !isNextMoveFailedBump)
         {
@@ -276,6 +277,34 @@ public class TurnDrawer : MonoBehaviour {
         }
     }
 
+    #endregion
+
+    #region Attack drawing
+
+    void DrawAttackState(ProjectedGameState projectedState)
+    {
+        Sprite tileTargetedSprite = ImageManager.GetTileTargetedSprite();
+        for (int i = 0; i < projectedState.attackedPositions.Count; i++)
+        {
+            Vector2Int attackedPosition = projectedState.attackedPositions[i];
+            GameObject instantiatedTargetImage = ImageManager.GetOverlayImage(tileTargetedSprite);
+            instantiatedTargetImage.transform.SetParent(transform);
+            instantiatedTargetImage.transform.position = boardController.GetCellPosition(attackedPosition);
+
+            instantiatedTargetImage.GetComponent<Image>().color = Color.red;
+
+            AttackCardData cardData = projectedState.action.card as AttackCardData;
+            Sprite pointerSprite = cardData.PointerSprite;
+
+            float rotation = GetImageRotation(projectedState.action.direction);
+            GameObject abilityPointer = ImageManager.GetAbilityPointer(pointerSprite, rotation);
+            abilityPointer.transform.SetParent(transform);
+            abilityPointer.transform.position = boardController.GetCellEdgePosition(projectedState.activeEntity.Position, projectedState.action.direction);
+        }
+    }
+
+    #endregion
+
     float GetImageRotation(Direction directionOfEntrance)
     {
         float result = 0f;
@@ -299,23 +328,4 @@ public class TurnDrawer : MonoBehaviour {
 
         return result;
     }
-    #endregion
-
-    #region Attack drawing
-
-    void DrawAttackState(ProjectedGameState projectedState)
-    {
-        Sprite tileTargetedSprite = ImageManager.GetTileTargetedSprite();
-        for (int i = 0; i < projectedState.attackedPositions.Count; i++)
-        {
-            Vector2Int attackedPosition = projectedState.attackedPositions[i];
-            GameObject instantiatedTargetImage = ImageManager.GetOverlayImage(tileTargetedSprite);
-            instantiatedTargetImage.transform.SetParent(transform);
-            instantiatedTargetImage.transform.position = boardController.GetCellPosition(attackedPosition);
-
-            instantiatedTargetImage.GetComponent<Image>().color = Color.red;
-        }
-    }
-
-    #endregion
 }

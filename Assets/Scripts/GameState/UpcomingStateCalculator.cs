@@ -5,12 +5,15 @@ using UnityEngine;
 
 public static class UpcomingStateCalculator
 {
+    static CardData GenericMovementCard { get { return DataManager.GetGenericMovementCard(); } }
+
     public static List<ProjectedGameState> CalculateUpcomingStates(GameState currentState)
     {
         List<ProjectedGameState> projectedGameStates = new List<ProjectedGameState>();
 
         GameState mostRecentState = currentState.DeepCopy();
         mostRecentState.lastGamestate = currentState;
+
         while (mostRecentState.turnStack.Count > 0)
         {
             Turn turn = mostRecentState.turnStack.Pop();
@@ -54,10 +57,12 @@ public static class UpcomingStateCalculator
         EntityData entityCopy = newState.GetAllEntities().Find(e => entity.ID == e.ID);
         Tile currentEntityTile = BoardController.CurrentBoard.GetTileAtPosition(entityCopy.Position);
 
+        Action stateAction = new Action(GenericMovementCard, entity, move, 1);
+
         // If entity can't move that direction, return state as-is.
         if (!currentEntityTile.ConnectsToNeighbor(move))
         {
-            return new ProjectedGameState(entityCopy, newState, CardCategory.Movement);
+            return new ProjectedGameState(entityCopy, newState, stateAction);
         }
 
         Tile nextTile = currentEntityTile.GetDirectionalNeighbor(move);
@@ -66,7 +71,7 @@ public static class UpcomingStateCalculator
         if (!newState.IsTileOccupied(nextTile))
         {
             entityCopy.Position = nextTile.Position;
-            return new ProjectedGameState(entityCopy, newState, CardCategory.Movement);
+            return new ProjectedGameState(entityCopy, newState, stateAction);
         }
 
         EntityData tileOccupant = newState.GetTileOccupant(nextTile.Position);
@@ -86,7 +91,7 @@ public static class UpcomingStateCalculator
 
         Bump bump = new Bump(entityCopy, tileOccupant);
 
-        return new ProjectedGameState(entityCopy, newState, CardCategory.Movement, bump);
+        return new ProjectedGameState(entityCopy, newState, stateAction, bump);
     }
 
     static ProjectedGameState GetNextGameStateFromAction(GameState lastState, EntityData entity, Action action)
@@ -102,25 +107,23 @@ public static class UpcomingStateCalculator
             case CardCategory.Movement:
                 return GetNextGameStateFromMove(newState, entityCopy, action.direction);
             case CardCategory.Attack:
-                return GetNextStateFromAction_Attack(newState, 
-                    entityCopy, 
-                    action.card as AttackCardData, 
-                    action.direction, 
-                    action.distance);
+                return GetNextStateFromAction_Attack(newState,
+                    entityCopy,
+                    action);
             default:
                 return GetNextGameStateFromMove(newState, entityCopy, action.direction);
         }
     }
 
-    static ProjectedGameState GetNextStateFromAction_Attack(GameState newState, EntityData entity, AttackCardData card, Direction direction, int distance)
+    static ProjectedGameState GetNextStateFromAction_Attack(GameState newState, EntityData entity, Action action)
     {
         GameBoard testBoard = BoardController.CurrentBoard;
+        AttackCardData card = action.card as AttackCardData;
 
-        Tile originTile = BoardController.CurrentBoard.GetTileAtPosition(new Vector2Int(0, 0));
         Tile attackOriginTile = BoardController.CurrentBoard.GetTileAtPosition(entity.Position);
-        Tile targetTile = newState.FindFirstOccupiedTileInDirection(attackOriginTile, direction, distance);
+        Tile targetTile = newState.FindFirstOccupiedTileInDirection(attackOriginTile, action.direction, action.distance);
 
-        ProjectedGameState newProjectedState = new ProjectedGameState(entity, newState, CardCategory.Attack);
+        ProjectedGameState newProjectedState = new ProjectedGameState(entity, newState, action);
 
         newProjectedState.AddAttackedPosition(targetTile.Position);
         if (!newState.IsTileOccupied(targetTile))

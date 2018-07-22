@@ -8,6 +8,21 @@ public class DataManager : MonoBehaviour {
     const string CARD_DIR = "Data/Cards/";
     const string TILE_DIR = "Sprites/Tiles/";
 
+    const string GEN_MOVEMENT_CARD_LOC = "Data/Cards/InternalUse/_GenericMove";
+    static CardData _genericMovementCard;
+    static CardData GenericMovementCard
+    {
+        get
+        {
+            if (_genericMovementCard == null)
+            {
+                _genericMovementCard = Resources.Load<CardData>(GEN_MOVEMENT_CARD_LOC);
+            }
+
+            return _genericMovementCard;
+        }
+    }
+
     static Dictionary<string, EntityData> cachedEntityData;
     static Dictionary<string, CardData> cachedCardData;
     static Dictionary<string, Sprite> cachedTileSprites;
@@ -31,6 +46,11 @@ public class DataManager : MonoBehaviour {
             cachedEntityData[entityName] = loadedEntityData;
             return Instantiate(loadedEntityData);
         }
+    }
+
+    public static CardData GetGenericMovementCard()
+    {
+        return GenericMovementCard;
     }
 
     public static CardData GetCardData(string cardName)

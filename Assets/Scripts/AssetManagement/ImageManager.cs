@@ -35,11 +35,12 @@ public class ImageManager : SerializedMonoBehaviour {
         return instance.tileTargetedSprite;
     }
 
-    public static GameObject GetAbilityPointer(CardCategory cardCategory, Direction direction)
+    public static GameObject GetAbilityPointer(Sprite cardSprite, float rotation)
     {
         GameObject abilityPointer = GameObject.Instantiate(instance.abilityPointerPrefab);
 
-        abilityPointer.GetComponent<Image>().sprite = GetActionSprite(cardCategory, direction);
+        abilityPointer.GetComponent<Image>().sprite = cardSprite;
+        abilityPointer.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, rotation));
 
         return abilityPointer;
     }
