@@ -9,6 +9,9 @@ public class ImageManager : SerializedMonoBehaviour {
     Sprite emptyActionSprite;
 
     [SerializeField]
+    Sprite tileTargetedSprite;
+
+    [SerializeField]
     GameObject pathImagePrefab;
 
     [SerializeField]
@@ -27,6 +30,11 @@ public class ImageManager : SerializedMonoBehaviour {
         instance = this;
     }
 
+    public static Sprite GetTileTargetedSprite()
+    {
+        return instance.tileTargetedSprite;
+    }
+
     public static GameObject GetAbilityPointer(CardCategory cardCategory, Direction direction)
     {
         GameObject abilityPointer = GameObject.Instantiate(instance.abilityPointerPrefab);
@@ -36,12 +44,12 @@ public class ImageManager : SerializedMonoBehaviour {
         return abilityPointer;
     }
 
-    public static GameObject GetPathImage(Sprite pathSprite)
+    public static GameObject GetOverlayImage(Sprite overlaySprite)
     {
-        GameObject pathImage = GameObject.Instantiate(instance.pathImagePrefab);
-        pathImage.GetComponent<Image>().sprite = pathSprite;
+        GameObject overlayImage = GameObject.Instantiate(instance.pathImagePrefab);
+        overlayImage.GetComponent<Image>().sprite = overlaySprite;
 
-        return pathImage;
+        return overlayImage;
     }
 
     public static Sprite GetEmptyActionSprite()

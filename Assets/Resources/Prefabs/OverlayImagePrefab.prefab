@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 222606935515993498}
   - component: {fileID: 114063637861570074}
   m_Layer: 5
-  m_Name: PathImagePrefab
+  m_Name: OverlayImagePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -26,7 +26,6 @@ public class TurnDrawer : MonoBehaviour {
         for (int i = 0; i < upcomingStates.Count; i++)
         {
             ProjectedGameState projectedState = upcomingStates[i];
-            EntityData activeEntity = projectedState.activeEntity;
 
             ProjectedGameState nextState = i == upcomingStates.Count - 1 ?
                 null :
@@ -34,41 +33,53 @@ public class TurnDrawer : MonoBehaviour {
 
             if (projectedState.cardType == CardCategory.Movement)
             {
-                Vector2Int positionThisState = activeEntity.Position;
-                Vector2Int positionLastState = projectedState
-                    .gameState
-                    .lastGamestate
-                    .GetEntityWhere(e => e.ID == activeEntity.ID)
-                    .Position;
-                EntityData activeEntityTwoStatesAgo = projectedState
-                    .gameState
-                    .lastGamestate
-                    .lastGamestate
-                    .GetEntityWhere(e => e.ID == activeEntity.ID);
-
-                bool isEntitysFirstMove = lastActiveEntity == null ||
-                    activeEntity.ID != lastActiveEntity.ID ||
-                    (activeEntity.ID == activeEntityTwoStatesAgo.ID &&
-                    activeEntity.Position == activeEntityTwoStatesAgo.Position);
-
-                bool isFailedBump = projectedState.bump != null &&
-                    positionLastState == positionThisState;
-                if (isEntitysFirstMove && !isFailedBump)
-                {
-                    DrawPath_Beginning(activeEntity, positionLastState, positionThisState);
-                }
-
-                if (projectedState.bump == null)
-                {
-                    DrawPath(activeEntity, lastActiveEntity, projectedState, nextState);
-                }
-                else
-                {
-                    DrawBump(activeEntity, lastActiveEntity, projectedState, nextState);
-                }
+                DrawMoveState(projectedState, nextState, lastActiveEntity);
+            }
+            else if (projectedState.cardType == CardCategory.Attack)
+            {
+                DrawAttackState(projectedState);
             }
 
-            lastActiveEntity = activeEntity;
+            lastActiveEntity = projectedState.activeEntity;
+        }
+    }
+
+    #region Movement drawing
+    void DrawMoveState(ProjectedGameState projectedState, ProjectedGameState nextState, EntityData lastActiveEntity)
+    {
+        EntityData activeEntity = projectedState.activeEntity;
+        Vector2Int positionThisState = activeEntity.Position;
+        Vector2Int positionLastState = projectedState
+            .gameState
+            .lastGamestate
+            .GetEntityWhere(e => e.ID == activeEntity.ID)
+            .Position;
+        EntityData activeEntityTwoStatesAgo = projectedState
+            .gameState
+            .lastGamestate
+            .lastGamestate
+            .GetEntityWhere(e => e.ID == activeEntity.ID);
+
+        bool isEntitysFirstMove = lastActiveEntity == null ||
+            activeEntity.ID != lastActiveEntity.ID ||
+            (activeEntity.ID == activeEntityTwoStatesAgo.ID &&
+            activeEntity.Position == activeEntityTwoStatesAgo.Position);
+
+        bool isFailedBump = projectedState.bump != null &&
+            positionLastState == positionThisState;
+
+        if (isEntitysFirstMove && !isFailedBump)
+        {
+            DrawPath_Beginning(activeEntity, positionLastState, positionThisState);
+        }
+
+        if (projectedState.bump == null)
+        {
+            DrawPath(activeEntity, lastActiveEntity, projectedState, nextState);
+        }
+        else
+        {
+            DrawBump(activeEntity, lastActiveEntity, projectedState, nextState);
         }
     }
 
@@ -166,7 +177,7 @@ public class TurnDrawer : MonoBehaviour {
 
     void GenerateAndPositionPathImage(Vector2Int position, Direction directionOfEntrance, Sprite pathSprite, Color color)
     {
-        GameObject instantiatedPathImage = ImageManager.GetPathImage(pathSprite);
+        GameObject instantiatedPathImage = ImageManager.GetOverlayImage(pathSprite);
         instantiatedPathImage.transform.SetParent(transform);
         instantiatedPathImage.transform.position = boardController.GetCellPosition(position);
 
@@ -226,7 +237,7 @@ public class TurnDrawer : MonoBehaviour {
     void DrawSuccessfulBumpEffect(Vector2Int position, Direction entranceDirectionOfBumper)
     {
         Sprite bumpEffectSprite = ImageManager.GetPathSprite(PathType.Bumped);
-        GameObject instantiatedBumpImage = ImageManager.GetPathImage(bumpEffectSprite);
+        GameObject instantiatedBumpImage = ImageManager.GetOverlayImage(bumpEffectSprite);
         instantiatedBumpImage.transform.SetParent(transform);
         instantiatedBumpImage.transform.position = boardController.GetCellPosition(position);
         float imageRotation = GetImageRotation(entranceDirectionOfBumper);
@@ -236,7 +247,7 @@ public class TurnDrawer : MonoBehaviour {
     void DrawFailedBumpEffect(Vector2Int position, Direction entranceDirectionOfBumper)
     {
         Sprite bumpEffectSprite = ImageManager.GetPathSprite(PathType.Bumped);
-        GameObject instantiatedBumpImage = ImageManager.GetPathImage(bumpEffectSprite);
+        GameObject instantiatedBumpImage = ImageManager.GetOverlayImage(bumpEffectSprite);
         instantiatedBumpImage.transform.SetParent(transform);
         instantiatedBumpImage.transform.position = boardController.GetCellEdgePosition(position, entranceDirectionOfBumper);
         float imageRotation = GetImageRotation(entranceDirectionOfBumper);
@@ -265,7 +276,6 @@ public class TurnDrawer : MonoBehaviour {
         }
     }
 
-
     float GetImageRotation(Direction directionOfEntrance)
     {
         float result = 0f;
@@ -289,130 +299,23 @@ public class TurnDrawer : MonoBehaviour {
 
         return result;
     }
+    #endregion
 
-    Sprite GeneratePathSprite(PathStep step)
+    #region Attack drawing
+
+    void DrawAttackState(ProjectedGameState projectedState)
     {
-        // "Next position" refers to:
-        // 1. IF last path step before failed bump, the position of the bumpee.
-        // 2. ELSE the next position that the pathing entity will move into.
-        if (step.IsFirstStep())
+        Sprite tileTargetedSprite = ImageManager.GetTileTargetedSprite();
+        for (int i = 0; i < projectedState.attackedPositions.Count; i++)
         {
-            return ImageManager.GetPathSprite(PathType.Beginning);
-        }
-        else if (step.IsLastStep())
-        {
-            return ImageManager.GetPathSprite(PathType.Terminating);
-        }
-        else
-        {
-            Vector2Int nextPosition = step.IsLastStepBeforeFailedBump() ?
-                step.nextStep.bumpedEntity.Position :
-                step.GetNextPosition();
+            Vector2Int attackedPosition = projectedState.attackedPositions[i];
+            GameObject instantiatedTargetImage = ImageManager.GetOverlayImage(tileTargetedSprite);
+            instantiatedTargetImage.transform.SetParent(transform);
+            instantiatedTargetImage.transform.position = boardController.GetCellPosition(attackedPosition);
 
-            Sprite resultSprite = ImageManager.GetPathSprite(PathType.Straight);
-
-            if (BoardHelperFunctions.AreTwoPositionsLinear(step.GetLastPosition(), nextPosition))
-            {
-                return step.IsLastStepBeforeFailedBump() ? 
-                    ImageManager.GetPathSprite(PathType.FailedBumpStraight) :
-                    resultSprite;
-            }
-
-            Vector2Int localVectorToLastPosition = step.GetLastPosition() - step.newPosition;
-            Vector2Int localVectorToNextPosition = nextPosition - step.newPosition;
-
-            float angleBetween = Vector2.SignedAngle(localVectorToLastPosition, localVectorToNextPosition);
-
-            if (angleBetween - 90f == 0f)
-            {
-                resultSprite = step.IsLastStepBeforeFailedBump() ?
-                    ImageManager.GetPathSprite(PathType.FailedBumpLeft) :
-                    ImageManager.GetPathSprite(PathType.LeftTurn);
-            }
-            else if (angleBetween + 90f == 0f)
-            {
-                resultSprite = step.IsLastStepBeforeFailedBump() ?
-                    ImageManager.GetPathSprite(PathType.FailedBumpRight) :
-                    ImageManager.GetPathSprite(PathType.RightTurn);
-            }
-
-            return resultSprite;
+            instantiatedTargetImage.GetComponent<Image>().color = Color.red;
         }
     }
 
-    Sprite GetPathSpriteFromCoordinates(PathStep step, Vector2Int nextPosition, Vector2Int lastPosition)
-    {
-        PathType pathDirection = PathType.Bumped;
-        Vector2Int defaultVector = new Vector2Int(-1, -1);
-        if (step.bumpedByStep != null)
-        {
-            pathDirection = PathType.Bumped;
-        }
-        else if (nextPosition == defaultVector)
-        {
-            pathDirection = PathType.Terminating;
-        }
-        else if (lastPosition == defaultVector)
-        {
-            pathDirection = PathType.Beginning;
-        }
-        else
-        {
-            Vector2Int localVectorToLastPosition = lastPosition - step.newPosition;
-            Vector2Int localVectorToNextPosition = nextPosition - step.newPosition;
-
-            float angleBetween = Vector2.SignedAngle(localVectorToLastPosition, localVectorToNextPosition);
-
-            if (Mathf.Abs(angleBetween) == 180)
-            {
-                pathDirection = PathType.Straight;
-            }
-            else if (angleBetween - 90f == 0f)
-            {
-                pathDirection = PathType.LeftTurn;
-            }
-            else if (angleBetween + 90f == 0f)
-            {
-                pathDirection = PathType.RightTurn;
-            }
-        }
-
-        return ImageManager.GetPathSprite(pathDirection);
-    }
-
-    public void DrawSingleMove(Vector2Int position, Direction direction, bool shouldClearFirst = true)
-    {
-        if (shouldClearFirst)
-        {
-            Clear();
-        }
-
-        GenerateNewMoveImage(position, direction);
-    }
-
-    public void DrawSingleAction(Action action)
-    {
-        Clear();
-
-        GenerateNewActionImage(action.card.Category, action.entity.Position, action.direction);
-    }
-
-    void GenerateNewMoveImage(Vector2Int position, Direction direction)
-    {
-        GameObject instantiatedActionImage = ImageManager.GetAbilityPointer(CardCategory.Movement, direction);
-
-        instantiatedActionImage.transform.SetParent(transform);
-        Vector2 cellEdgePosition = boardController.GetCellEdgePosition(position, direction);
-        instantiatedActionImage.transform.position = cellEdgePosition;
-    }
-
-    void GenerateNewActionImage(CardCategory category, Vector2Int position, Direction direction)
-    {
-        GameObject instantiatedActionImage = ImageManager.GetAbilityPointer(category, direction);
-
-        instantiatedActionImage.transform.SetParent(transform);
-        Vector2 cellEdgePosition = boardController.GetCellEdgePosition(position, direction);
-        instantiatedActionImage.transform.position = cellEdgePosition;
-    }
-
+    #endregion
 }

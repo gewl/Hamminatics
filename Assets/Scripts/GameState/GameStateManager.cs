@@ -224,17 +224,11 @@ public class GameStateManager : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
         }
 
-        if (GameStateDelegates.OnRoundEnded != null)
-        {
-            GameStateDelegates.OnRoundEnded(CurrentGameState);
-        }
+        GameStateDelegates.OnRoundEnded?.Invoke(CurrentGameState);
 
         isResolvingTurn = false;
 
-        if (GameStateDelegates.OnCurrentGameStateChange != null)
-        {
-            GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
-        }
+        GameStateDelegates.OnCurrentGameStateChange?.Invoke(CurrentGameState);
 
         upcomingGamestates.Clear();
     }

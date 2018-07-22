@@ -120,15 +120,18 @@ public static class UpcomingStateCalculator
         Tile attackOriginTile = BoardController.CurrentBoard.GetTileAtPosition(entity.Position);
         Tile targetTile = newState.FindFirstOccupiedTileInDirection(attackOriginTile, direction, distance);
 
+        ProjectedGameState newProjectedState = new ProjectedGameState(entity, newState, CardCategory.Attack);
+
+        newProjectedState.AddAttackedPosition(targetTile.Position);
         if (!newState.IsTileOccupied(targetTile))
         {
-            return new ProjectedGameState(entity, newState, CardCategory.Attack);
+            return newProjectedState;
         }
 
         EntityData targetEntity = newState.GetTileOccupant(targetTile);
 
         targetEntity.Health -= card.Damage;
 
-        return new ProjectedGameState(entity, newState, CardCategory.Attack);
+        return newProjectedState;
     }
 }
