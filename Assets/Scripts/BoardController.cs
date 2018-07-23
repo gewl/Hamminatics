@@ -153,15 +153,9 @@ public class BoardController : MonoBehaviour {
                 DrawSpriteAtPosition(entity.EntitySprite, entity.Position, opaque);
             }
         }
-
-        // Draw cells to be attacked in next round.
-        //foreach (CompletedAction completedAction in currentGameState.actionsCompletedLastRound)
-        //{
-        //    HighlightDamageCell(completedAction.TargetTile.Position);
-        //}
     }
 
-    void DrawBoard_SelectedEntity(EntityData selectedEntity, GameState currentGameState, GameState projectedGameState)
+    void DrawBoard_SelectedEntity(EntityData selectedEntity, GameState currentGameState, List<ProjectedGameState> upcomingStates)
     {
         //ClearBoard();
 
@@ -193,7 +187,7 @@ public class BoardController : MonoBehaviour {
         DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent);
     }
 
-    void DrawSpriteAtPosition(Sprite sprite, Vector2Int position, Color color)
+    public void DrawSpriteAtPosition(Sprite sprite, Vector2Int position, Color color)
     {
         Image positionCellImage = cellContentImages[position.x, position.y];
         positionCellImage.sprite = sprite;

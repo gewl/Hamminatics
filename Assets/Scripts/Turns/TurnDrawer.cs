@@ -11,6 +11,9 @@ public class TurnDrawer : MonoBehaviour {
     [SerializeField]
     BoardController boardController;
 
+    bool drawingSelectedEntity = true;
+    float deselectedEntityActionOpacity = 0.4f;
+
     private void OnEnable()
     {
         GameStateDelegates.ReturnToDefaultBoard += DrawUpcomingStates;
@@ -34,6 +37,7 @@ public class TurnDrawer : MonoBehaviour {
     public void DrawUpcomingStates(List<ProjectedGameState> upcomingStates)
     {
         Clear();
+        drawingSelectedEntity = true;
         EntityData lastActiveEntity = null;
         for (int i = 0; i < upcomingStates.Count; i++)
         {
@@ -43,23 +47,71 @@ public class TurnDrawer : MonoBehaviour {
                 null :
                 upcomingStates[i + 1];
 
-            CardCategory actionCardCategory = projectedState.action.card.Category;
-            if (actionCardCategory == CardCategory.Movement)
-            {
-                DrawMoveState(projectedState, nextState, lastActiveEntity);
-            }
-            else if (actionCardCategory == CardCategory.Attack)
-            {
-                DrawAttackState(projectedState);
-            }
+            DrawState(projectedState, nextState, lastActiveEntity);
 
             lastActiveEntity = projectedState.activeEntity;
         }
     }
 
-    void HighlightSelectedEntityStates(EntityData entity, GameState currentGameState, List<ProjectedGameState> upcomingStates)
+    void HighlightSelectedEntityStates(EntityData selectedEntity, GameState currentGameState, List<ProjectedGameState> upcomingStates)
     {
         Clear();
+        EntityData lastActiveEntity = null;
+        for (int i = 0; i < upcomingStates.Count; i++)
+        {
+            ProjectedGameState projectedState = upcomingStates[i];
+            Vector2Int selectedEntityPositionThisState = projectedState
+                .gameState
+                .GetEntityWhere(e => e == selectedEntity)
+                .Position;
+
+            bool isSelectedEntityState = projectedState.activeEntity == selectedEntity;
+            bool isSelectedEntityBumped = projectedState.bump != null && projectedState.bump.bumpedEntity == selectedEntity;
+            bool isSelectedEntityAttacked = projectedState.attackedPositions.Contains(selectedEntityPositionThisState);
+
+            ProjectedGameState nextState = i == upcomingStates.Count - 1 ?
+                null :
+                upcomingStates[i + 1];
+
+            if (isSelectedEntityState || isSelectedEntityBumped || isSelectedEntityAttacked)
+            {
+                drawingSelectedEntity = true;
+
+                // Draw entity under attack targeting reticule if
+                // (A) selected entity is hit OR
+                // (B) selected entity is attacking & hits someone.
+
+                Color translucent = new Color(1f, 1f, 1f, deselectedEntityActionOpacity);
+
+                projectedState
+                    .attackedPositions
+                    .Select(pos => projectedState
+                        .gameState
+                        .GetTileOccupant(pos))
+                    .Where(target => target != null && isSelectedEntityState || target == selectedEntity)
+                    .ToList()
+                    .ForEach(entity => boardController.DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent));
+            }
+            else
+            {
+                drawingSelectedEntity = false;
+            }
+            DrawState(projectedState, nextState, lastActiveEntity);
+            lastActiveEntity = projectedState.activeEntity;
+        }
+    }
+
+    void DrawState(ProjectedGameState projectedState, ProjectedGameState nextState, EntityData lastActiveEntity)
+    {
+        CardCategory actionCardCategory = projectedState.action.card.Category;
+        if (actionCardCategory == CardCategory.Movement)
+        {
+            DrawMoveState(projectedState, nextState, lastActiveEntity);
+        }
+        else if (actionCardCategory == CardCategory.Attack)
+        {
+            DrawAttackState(projectedState);
+        }
     }
 
     #region Movement drawing
@@ -146,7 +198,7 @@ public class TurnDrawer : MonoBehaviour {
         Sprite pathSprite = ImageManager.GetPathSprite(PathType.Beginning);
         Direction fakeDirectionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionLastState);
 
-        GenerateAndPositionPathImage(positionLastState, fakeDirectionOfEntrance, pathSprite, entity.IdentifyingColor);
+        GenerateAndPositionCellImage(positionLastState, GetImageRotation(fakeDirectionOfEntrance), pathSprite, entity.IdentifyingColor);
     }
 
     void DrawPath_Between(EntityData entity, Vector2Int positionLastState, Vector2Int positionThisState, Vector2Int positionNextState)
@@ -155,7 +207,7 @@ public class TurnDrawer : MonoBehaviour {
         Sprite pathSprite = ImageManager.GetPathSprite(pathType);
         Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionLastState);
 
-        GenerateAndPositionPathImage(positionThisState, directionOfEntrance, pathSprite, entity.IdentifyingColor);
+        GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, entity.IdentifyingColor);
     }
 
     PathType GetPathType(Vector2Int positionLastState, Vector2Int positionThisState, Vector2Int positionNextState)
@@ -190,17 +242,7 @@ public class TurnDrawer : MonoBehaviour {
         Sprite pathSprite = ImageManager.GetPathSprite(PathType.Terminating);
         Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionLastState);
 
-        GenerateAndPositionPathImage(positionThisState, directionOfEntrance, pathSprite, entity.IdentifyingColor);
-    }
-
-    void GenerateAndPositionPathImage(Vector2Int position, Direction directionOfEntrance, Sprite pathSprite, Color color)
-    {
-        GameObject instantiatedPathImage = ImageManager.GetOverlayImage(pathSprite);
-        instantiatedPathImage.transform.SetParent(transform);
-        instantiatedPathImage.transform.position = boardController.GetCellPosition(position);
-
-        instantiatedPathImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, GetImageRotation(directionOfEntrance)));
-        instantiatedPathImage.GetComponent<Image>().color = color;
+        GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, entity.IdentifyingColor);
     }
 
     void DrawBump(EntityData activeEntity, EntityData lastActiveEntity, ProjectedGameState projectedState, ProjectedGameState nextState)
@@ -228,7 +270,7 @@ public class TurnDrawer : MonoBehaviour {
             Vector2Int bumpedEntityPosition = bump.bumpedEntity.Position;
             Sprite pathSprite = ImageManager.GetPathSprite(PathType.Beginning);
             Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(bumpedEntityPosition, positionThisState);
-            GenerateAndPositionPathImage(positionThisState, directionOfEntrance, pathSprite, activeEntity.IdentifyingColor);
+            GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, activeEntity.IdentifyingColor);
 
             DrawFailedBumpEffect(positionThisState,
                 BoardHelperFunctions.GetDirectionFromPosition(positionThisState, bumpedEntityPosition));
@@ -246,7 +288,7 @@ public class TurnDrawer : MonoBehaviour {
             Vector2Int bumpedEntityPosition = bump.bumpedEntity.Position;
             Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionTwoStatesAgo);
 
-            GenerateAndPositionPathImage(positionThisState, directionOfEntrance, pathSprite, activeEntity.IdentifyingColor);
+            GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, activeEntity.IdentifyingColor);
             DrawFailedBumpEffect(positionThisState,
                 BoardHelperFunctions.GetDirectionFromPosition(positionThisState, bumpedEntityPosition));
         }
@@ -255,21 +297,13 @@ public class TurnDrawer : MonoBehaviour {
     void DrawSuccessfulBumpEffect(Vector2Int position, Direction entranceDirectionOfBumper)
     {
         Sprite bumpEffectSprite = ImageManager.GetPathSprite(PathType.Bumped);
-        GameObject instantiatedBumpImage = ImageManager.GetOverlayImage(bumpEffectSprite);
-        instantiatedBumpImage.transform.SetParent(transform);
-        instantiatedBumpImage.transform.position = boardController.GetCellPosition(position);
-        float imageRotation = GetImageRotation(entranceDirectionOfBumper);
-        instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, imageRotation));
+        GenerateAndPositionCellImage(position, GetImageRotation(entranceDirectionOfBumper), bumpEffectSprite, Color.white);
     }
 
     void DrawFailedBumpEffect(Vector2Int position, Direction entranceDirectionOfBumper)
     {
         Sprite bumpEffectSprite = ImageManager.GetPathSprite(PathType.Bumped);
-        GameObject instantiatedBumpImage = ImageManager.GetOverlayImage(bumpEffectSprite);
-        instantiatedBumpImage.transform.SetParent(transform);
-        instantiatedBumpImage.transform.position = boardController.GetCellEdgePosition(position, entranceDirectionOfBumper);
-        float imageRotation = GetImageRotation(entranceDirectionOfBumper);
-        instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, imageRotation));
+        GenerateAndPositionCellEdgeImage(position, entranceDirectionOfBumper, bumpEffectSprite, Color.white);
     }
 
     PathType GetFailedBumpPathType(Vector2Int positionTwoStatesAgo, Vector2Int positionThisState, Vector2Int bumpeePosition)
@@ -303,20 +337,24 @@ public class TurnDrawer : MonoBehaviour {
         Sprite tileTargetedSprite = ImageManager.GetTileTargetedSprite();
         for (int i = 0; i < projectedState.attackedPositions.Count; i++)
         {
+            EntityData activeEntity = projectedState.activeEntity;
             Vector2Int attackedPosition = projectedState.attackedPositions[i];
-            GameObject instantiatedTargetImage = ImageManager.GetOverlayImage(tileTargetedSprite);
-            instantiatedTargetImage.transform.SetParent(transform);
-            instantiatedTargetImage.transform.position = boardController.GetCellPosition(attackedPosition);
-
-            instantiatedTargetImage.GetComponent<Image>().color = Color.red;
+            GenerateAndPositionCellImage(attackedPosition, 0f, tileTargetedSprite, activeEntity.IdentifyingColor);
 
             AttackCardData cardData = projectedState.action.card as AttackCardData;
             Sprite pointerSprite = cardData.PointerSprite;
 
             float rotation = GetImageRotation(projectedState.action.direction);
             GameObject abilityPointer = ImageManager.GetAbilityPointer(pointerSprite, rotation);
+
             abilityPointer.transform.SetParent(transform);
-            abilityPointer.transform.position = GetPointerImagePosition(projectedState.activeEntity.Position, projectedState.action.direction);
+            abilityPointer.transform.position = GetPointerImagePosition(activeEntity.Position, projectedState.action.direction);
+            if (!drawingSelectedEntity)
+            {
+                Color pointerColor = Color.white;
+                pointerColor.a = deselectedEntityActionOpacity;
+                abilityPointer.GetComponent<Image>().color = pointerColor;
+            }
         }
     }
 
@@ -374,4 +412,36 @@ public class TurnDrawer : MonoBehaviour {
     }
 
     #endregion
+
+    void GenerateAndPositionCellImage(Vector2Int position, float rotation, Sprite pathSprite, Color color)
+    {
+        GameObject instantiatedPathImage = ImageManager.GetOverlayImage(pathSprite);
+        instantiatedPathImage.transform.SetParent(transform);
+        instantiatedPathImage.transform.position = boardController.GetCellPosition(position);
+
+        instantiatedPathImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, rotation));
+
+        if (!drawingSelectedEntity)
+        {
+            color = new Color(color.r, color.g, color.b, deselectedEntityActionOpacity);
+        }
+
+        instantiatedPathImage.GetComponent<Image>().color = color;
+    }
+
+    void GenerateAndPositionCellEdgeImage(Vector2Int position, Direction direction, Sprite pathSprite, Color color)
+    {
+        GameObject instantiatedBumpImage = ImageManager.GetOverlayImage(pathSprite);
+        instantiatedBumpImage.transform.SetParent(transform);
+        instantiatedBumpImage.transform.position = boardController.GetCellEdgePosition(position, direction);
+        float imageRotation = GetImageRotation(direction);
+        instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, imageRotation));
+
+        if (!drawingSelectedEntity)
+        {
+            color = new Color(color.r, color.g, color.b, deselectedEntityActionOpacity);
+        }
+
+        instantiatedBumpImage.GetComponent<Image>().color = color;
+    }
 }

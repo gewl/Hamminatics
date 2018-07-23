@@ -30,7 +30,7 @@ public class EntityData : ScriptableObject {
 
         EntityData entity = (EntityData)other;
 
-        return entity.GetHashCode() == GetHashCode() && entity.Position == Position;
+        return entity.ID == ID;
     }
 
     public EntityData Copy()
@@ -47,5 +47,19 @@ public class EntityData : ScriptableObject {
         copy.attackCard = attackCard;
 
         return copy;
+    }
+
+    public static bool operator ==(EntityData entity1, EntityData entity2)
+    {
+        if (ReferenceEquals(entity1, null))
+        {
+             return ReferenceEquals(entity2, null);
+        }        
+        return entity1.Equals(entity2);
+    }
+
+    public static bool operator !=(EntityData entity1, EntityData entity2)
+    {
+        return !(entity1 == entity2);
     }
 }
