@@ -142,7 +142,7 @@ public class GameStateManager : MonoBehaviour {
         potentialCardTargets.Add(position);
     }
 
-    public void ResetBoard(List<Turn> turnList)
+    public void ResetBoard(List<ProjectedGameState> upcomingStates)
     {
         ResetBoard(CurrentGameState);
     }
@@ -195,13 +195,13 @@ public class GameStateManager : MonoBehaviour {
     void SelectEntity(EntityData entity)
     {
         selectedEntity = entity;
-        GameStateDelegates.OnEntitySelected(entity, CurrentGameState, ProjectedGameState);
+        GameStateDelegates.OnEntitySelected(entity, CurrentGameState, upcomingGamestates);
     }
 
     void DeselectEntity()
     {
         selectedEntity = null;
-        GameStateDelegates.ReturnToDefaultBoard();
+        GameStateDelegates.ReturnToDefaultBoard(upcomingGamestates);
     }
 
     public void EndRound()

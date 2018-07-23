@@ -256,6 +256,12 @@ public class BoardController : MonoBehaviour {
         }
     }
 
+    public float GetTileWidth()
+    {
+        RectTransform cellRectTransform = boardCells[0,0].GetComponent<RectTransform>();
+        return cellRectTransform.rect.width;
+    }
+
     #region DEBUG ONLY
     public static void TurnTileColor(Tile tile, Color color)
     {

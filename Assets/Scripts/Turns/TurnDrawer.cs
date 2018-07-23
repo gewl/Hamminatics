@@ -11,6 +11,18 @@ public class TurnDrawer : MonoBehaviour {
     [SerializeField]
     BoardController boardController;
 
+    private void OnEnable()
+    {
+        GameStateDelegates.ReturnToDefaultBoard += DrawUpcomingStates;
+        GameStateDelegates.OnEntitySelected += HighlightSelectedEntityStates;
+    }
+
+    private void OnDisable()
+    {
+        GameStateDelegates.ReturnToDefaultBoard -= DrawUpcomingStates;
+        GameStateDelegates.OnEntitySelected -= HighlightSelectedEntityStates;
+    }
+
     public void Clear()
     {
         foreach (Transform child in transform)
@@ -43,6 +55,11 @@ public class TurnDrawer : MonoBehaviour {
 
             lastActiveEntity = projectedState.activeEntity;
         }
+    }
+
+    void HighlightSelectedEntityStates(EntityData entity, GameState currentGameState, List<ProjectedGameState> upcomingStates)
+    {
+        Clear();
     }
 
     #region Movement drawing
@@ -299,12 +316,13 @@ public class TurnDrawer : MonoBehaviour {
             float rotation = GetImageRotation(projectedState.action.direction);
             GameObject abilityPointer = ImageManager.GetAbilityPointer(pointerSprite, rotation);
             abilityPointer.transform.SetParent(transform);
-            abilityPointer.transform.position = boardController.GetCellEdgePosition(projectedState.activeEntity.Position, projectedState.action.direction);
+            abilityPointer.transform.position = GetPointerImagePosition(projectedState.activeEntity.Position, projectedState.action.direction);
         }
     }
 
     #endregion
 
+    #region Image helper funcs
     float GetImageRotation(Direction directionOfEntrance)
     {
         float result = 0f;
@@ -328,4 +346,32 @@ public class TurnDrawer : MonoBehaviour {
 
         return result;
     }
+
+    Vector3 GetPointerImagePosition(Vector2Int tilePosition, Direction pointingDirection)
+    {
+        Vector3 cellEdgePosition = boardController.GetCellEdgePosition(tilePosition, pointingDirection);
+        float pointerBumpAmount = boardController.GetTileWidth() / 3f;
+
+        switch (pointingDirection)
+        {
+            case Direction.Up:
+                cellEdgePosition.x += pointerBumpAmount;
+                break;
+            case Direction.Right:
+                cellEdgePosition.y -= pointerBumpAmount;
+                break;
+            case Direction.Down:
+                cellEdgePosition.x -= pointerBumpAmount;
+                break;
+            case Direction.Left:
+                cellEdgePosition.y += pointerBumpAmount;
+                break;
+            default:
+                break;
+        }
+
+        return cellEdgePosition;
+    }
+
+    #endregion
 }
