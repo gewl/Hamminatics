@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Data/Entity")]
+[CreateAssetMenu(menuName = "Entity")]
 public class EntityData : ScriptableObject {
     public string ID;
     public int Health = 1;
@@ -9,6 +9,8 @@ public class EntityData : ScriptableObject {
     public Color IdentifyingColor;
     [HideInInspector]
     public Vector2Int Position;
+
+    public ItemData dropItem;
 
     public MovementCardData movementCard;
     public AttackCardData attackCard;

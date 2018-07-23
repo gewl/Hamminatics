@@ -6,6 +6,45 @@ using System.Linq;
 using static Helpers.Operators;
 
 public static class GameStateHelperFunctions {
+    #region tile info
+    public static bool IsTileValid(Vector2Int position)
+    {
+        return position.x >= 0 && position.x < BoardController.BoardWidth && position.y >= 0 && position.y < BoardController.BoardWidth;
+    }
+
+    public static Vector2Int GetTilePosition(Vector2Int origin, Direction direction, int distance)
+    {
+        Vector2Int updatedPosition = origin;
+
+        switch (direction)
+        {
+            case Direction.Up:
+                updatedPosition.y -= distance;
+                break;
+            case Direction.Down:
+                updatedPosition.y += distance;
+                break;
+            case Direction.Left:
+                updatedPosition.x -= distance;
+                break;
+            case Direction.Right:
+                updatedPosition.x += distance;
+                break;
+            default:
+                break;
+        }
+
+        return updatedPosition;
+    }
+
+    #endregion
+
+    #region entity info/manip
+    public static EntityData GetTileOccupant(this GameState state, Tile tile)
+    {
+        return state.GetTileOccupant(tile.Position);
+    }
+
     public static Direction GetDirectionFromEntity(EntityData entity, Vector2Int targetPosition)
     {
         Vector2Int entityPosition = entity.Position;
@@ -20,11 +59,6 @@ public static class GameStateHelperFunctions {
         }
 
         return state.enemies.Find(enemy => enemy.Position == position);
-    }
-
-    public static EntityData GetTileOccupant(this GameState state, Tile tile)
-    {
-        return state.GetTileOccupant(tile.Position);
     }
 
     public static int GetTileDistanceFromPlayer(Vector2Int cellPosition, GameState state)
@@ -84,9 +118,25 @@ public static class GameStateHelperFunctions {
         return state.GetAllEntities().Find(e => predicate(e));
     }
 
-    public static bool IsTileValid(Vector2Int position)
+    public static Tile FindFirstOccupiedTileInDirection(this GameState state, Tile originTile, Direction direction, int distance)
     {
-        return position.x >= 0 && position.x < BoardController.BoardWidth && position.y >= 0 && position.y < BoardController.BoardWidth;
+        Tile currentTargetTile = originTile;
+        Tile testTargetTile = originTile.GetDirectionalNeighbor(direction);
+
+        while (distance > 0 && testTargetTile != null)
+        {
+            currentTargetTile = testTargetTile;
+            testTargetTile = currentTargetTile.GetDirectionalNeighbor(direction);
+
+            if (state.IsTileOccupied(currentTargetTile)) 
+            {
+                break;
+            }
+
+            distance--;
+        }
+
+        return currentTargetTile;
     }
 
     static void TryToMoveEntityInDirection(EntityData entity, Direction direction, GameState state)
@@ -125,104 +175,27 @@ public static class GameStateHelperFunctions {
             entity.Position = nextTile.Position;
         }
     }
+    #endregion
 
-    static void HandleMovementAction(EntityData entity, Direction direction, int distance, GameState gameState)
+    #region item info/manip
+    public static bool DoesPositionContainItem(this GameState state, Vector2Int position)
     {
-        Vector2Int projectedPosition = GetTilePosition(entity.Position, direction, distance);
-
-        if (!IsTileValid(projectedPosition))
-        {
-            return;
-        }
-
-        if (gameState.IsTileOccupied(projectedPosition))
-        {
-            EntityData tileOccupant = gameState.GetTileOccupant(projectedPosition);
-
-            Vector2Int projectedBumpPosition = GetTilePosition(projectedPosition, direction, 1);
-
-            Predicate<Tile> IsAtProjectedBumpPosition = (Tile t) => t.Position == projectedBumpPosition;
-
-            bool canBump = BoardController
-                .CurrentBoard
-                .GetTileAtPosition(projectedPosition)
-                .CheckThat(And(
-                    (Tile t) => t.HasNeighborWhere(IsAtProjectedBumpPosition),
-                    (Tile t) => t.GetNeighborWhere(IsAtProjectedBumpPosition).IsUnoccupied(gameState)
-                    ));
-
-            if (canBump)
-            {
-                tileOccupant.Position = projectedBumpPosition;
-                entity.Position = projectedPosition;
-            }
-
-            tileOccupant.Health -= 1;
-            entity.Health -= 1;
-        }
-        else
-        {
-            entity.Position = projectedPosition;
-        }
+        return state.items.Any(item => item.Position == position);
     }
 
-    public static Tile FindFirstOccupiedTileInDirection(this GameState state, Tile originTile, Direction direction, int distance)
+    public static ItemData GetItemInPosition(this GameState state, Vector2Int position)
     {
-        Tile currentTargetTile = originTile;
-        Tile testTargetTile = originTile.GetDirectionalNeighbor(direction);
-
-        while (distance > 0 && testTargetTile != null)
-        {
-            currentTargetTile = testTargetTile;
-            testTargetTile = currentTargetTile.GetDirectionalNeighbor(direction);
-
-            if (state.IsTileOccupied(currentTargetTile)) 
-            {
-                break;
-            }
-
-            distance--;
-        }
-
-        return currentTargetTile;
+        return state.items.First(item => item.Position == position);
     }
-
-    public static Vector2Int GetTilePosition(Vector2Int origin, Direction direction, int distance)
-    {
-        Vector2Int updatedPosition = origin;
-
-        switch (direction)
-        {
-            case Direction.Up:
-                updatedPosition.y -= distance;
-                break;
-            case Direction.Down:
-                updatedPosition.y += distance;
-                break;
-            case Direction.Left:
-                updatedPosition.x -= distance;
-                break;
-            case Direction.Right:
-                updatedPosition.x += distance;
-                break;
-            default:
-                break;
-        }
-
-        return updatedPosition;
-    }
+    #endregion
 
     public static GameState DeepCopy(this GameState originalState)
     {
         EntityData playerCopy = originalState.player.Copy();
 
-        List<EntityData> enemyCopies = new List<EntityData>();
+        List<EntityData> enemyCopies = originalState.enemies.Select(entity => entity.Copy()).ToList();
 
-        for (int i = 0; i < originalState.enemies.Count; i++)
-        {
-            EntityData enemyCopy = originalState.enemies[i].Copy();
-            enemyCopies.Add(enemyCopy);
-        }
+        List<ItemData> itemCopies = originalState.items.Select(item => item.Copy()).ToList();
 
         List<Turn> newTurnList = new List<Turn>();
 

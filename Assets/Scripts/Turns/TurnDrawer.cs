@@ -17,12 +17,14 @@ public class TurnDrawer : MonoBehaviour {
     private void OnEnable()
     {
         GameStateDelegates.ReturnToDefaultBoard += DrawUpcomingStates;
+        GameStateDelegates.OnCurrentGameStateChange += DrawUpcomingStates;
         GameStateDelegates.OnEntitySelected += HighlightSelectedEntityStates;
     }
 
     private void OnDisable()
     {
         GameStateDelegates.ReturnToDefaultBoard -= DrawUpcomingStates;
+        GameStateDelegates.OnCurrentGameStateChange -= DrawUpcomingStates;
         GameStateDelegates.OnEntitySelected -= HighlightSelectedEntityStates;
     }
 
@@ -34,7 +36,7 @@ public class TurnDrawer : MonoBehaviour {
         }
     }
 
-    public void DrawUpcomingStates(List<ProjectedGameState> upcomingStates)
+    public void DrawUpcomingStates(GameState currentState, List<ProjectedGameState> upcomingStates)
     {
         Clear();
         drawingSelectedEntity = true;
@@ -77,20 +79,19 @@ public class TurnDrawer : MonoBehaviour {
             {
                 drawingSelectedEntity = true;
 
+                Color translucent = new Color(1f, 1f, 1f, deselectedEntityActionOpacity);
+
                 // Draw entity under attack targeting reticule if
                 // (A) selected entity is hit OR
                 // (B) selected entity is attacking & hits someone.
-
-                Color translucent = new Color(1f, 1f, 1f, deselectedEntityActionOpacity);
-
                 projectedState
                     .attackedPositions
-                    .Select(pos => projectedState
+                    .Select(position => projectedState
                         .gameState
-                        .GetTileOccupant(pos))
-                    .Where(target => target != null && isSelectedEntityState || target == selectedEntity)
+                        .GetTileOccupant(position))
+                    .Where(attackTarget => attackTarget != null && isSelectedEntityState || attackTarget == selectedEntity)
                     .ToList()
-                    .ForEach(entity => boardController.DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent));
+                    .ForEach(entity => boardController.DrawEntityAtPosition(entity, translucent));
             }
             else
             {

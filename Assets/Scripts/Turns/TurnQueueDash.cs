@@ -72,7 +72,7 @@ public class TurnQueueDash : MonoBehaviour {
         turnOutlines[turnIndex].effectColor = Color.yellow;
     }
 
-    void OnDeselectEntity(List<ProjectedGameState> upcomingStates)
+    void OnDeselectEntity(GameState currentState, List<ProjectedGameState> upcomingStates)
     {
         ResetTurnOutlines();
     }

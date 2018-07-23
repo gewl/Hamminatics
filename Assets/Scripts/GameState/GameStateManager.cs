@@ -72,17 +72,17 @@ public class GameStateManager : MonoBehaviour {
     }
 
     public GameState CurrentGameState { get; private set; }
-    public GameState ProjectedGameState { get { return upcomingGamestates.Last().gameState; } }
+    public GameState ProjectedGameState { get { return upcomingGameStates.Last().gameState; } }
     public EntityData Player { get { return CurrentGameState.player; } }
 
     List<Vector2Int> potentialCardTargets;
     EntityData selectedEntity;
-    List<ProjectedGameState> upcomingGamestates;
+    List<ProjectedGameState> upcomingGameStates;
     public Vector2Int ProjectedPlayerPosition
     {
         get
         {
-            return upcomingGamestates.Last(s => s.activeEntity.ID == Player.ID).activeEntity.Position;
+            return upcomingGameStates.Last(s => s.activeEntity.ID == Player.ID).activeEntity.Position;
         }
     }
 
@@ -95,7 +95,7 @@ public class GameStateManager : MonoBehaviour {
         // This has to be delayed so layout group can space accordingly.
         Invoke("SetBoardUp", 0.1f);
 
-        upcomingGamestates = new List<ProjectedGameState>();
+        upcomingGameStates = new List<ProjectedGameState>();
     }
 
     public void InitializeGameState(GameBoard board)
@@ -120,12 +120,12 @@ public class GameStateManager : MonoBehaviour {
     void SetBoardUp()
     {
         GenerateNextTurnStack(CurrentGameState);
-        GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
+        GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
     }
 
     public void HighlightPotentialCardTargets(CardData card)
     {
-        ResetBoard(CurrentGameState);
+        ResetBoard(CurrentGameState, upcomingGameStates);
 
         int cardRange = card.Range;
 
@@ -144,26 +144,26 @@ public class GameStateManager : MonoBehaviour {
 
     public void ResetBoard(List<ProjectedGameState> upcomingStates)
     {
-        ResetBoard(CurrentGameState);
+        ResetBoard(CurrentGameState, upcomingGameStates);
     }
 
     public void ResetBoard()
     {
-        ResetBoard(CurrentGameState);
+        ResetBoard(CurrentGameState, upcomingGameStates);
     }
 
     void RecalculateUpcomingStates(List<Turn> turns)
     {
         if (!isResolvingTurn)
         {
-            upcomingGamestates = UpcomingStateCalculator.CalculateUpcomingStates(CurrentGameState);
-            turnDrawer.DrawUpcomingStates(upcomingGamestates);
+            upcomingGameStates = UpcomingStateCalculator.CalculateUpcomingStates(CurrentGameState);
+            turnDrawer.DrawUpcomingStates(CurrentGameState, upcomingGameStates);
         }
     }
 
-    void ResetBoard(GameState currentGameState)
+    void ResetBoard(GameState currentGameState, List<ProjectedGameState> upcomingStates)
     {
-        boardController.DrawBoard_Standard(currentGameState, isResolvingTurn);
+        boardController.DrawBoard(currentGameState, isResolvingTurn);
         potentialCardTargets.Clear();
     }
 
@@ -179,7 +179,7 @@ public class GameStateManager : MonoBehaviour {
             Vector2Int playerOrigin = selectedCard.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
             turnStackController.AddToPlayerTurn(selectedCard, Player, playerOrigin, tileClickedPosition);
             equippedCardsManager.ClearSelectedCard();
-            GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
+            GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
         }
         else if (selectedEntity != null)
         {
@@ -195,13 +195,13 @@ public class GameStateManager : MonoBehaviour {
     void SelectEntity(EntityData entity)
     {
         selectedEntity = entity;
-        GameStateDelegates.OnEntitySelected(entity, CurrentGameState, upcomingGamestates);
+        GameStateDelegates.OnEntitySelected(entity, CurrentGameState, upcomingGameStates);
     }
 
     void DeselectEntity()
     {
         selectedEntity = null;
-        GameStateDelegates.ReturnToDefaultBoard(upcomingGamestates);
+        GameStateDelegates.ReturnToDefaultBoard(CurrentGameState, upcomingGameStates);
     }
 
     public void EndRound()
@@ -213,13 +213,16 @@ public class GameStateManager : MonoBehaviour {
     {
         isResolvingTurn = true;
 
-        for (int i = 0; i < upcomingGamestates.Count; i++)
+        Queue<ProjectedGameState> upcomingStateQueue = new Queue<ProjectedGameState>(upcomingGameStates);
+
+        while (upcomingStateQueue.Count > 0)
         {
-            GameState nextGameState = upcomingGamestates[i].gameState;
+            GameState nextGameState = upcomingStateQueue.Dequeue().gameState;
 
             CurrentGameState = nextGameState;
-           
-            GameStateDelegates.OnCurrentGameStateChange(CurrentGameState);
+
+            upcomingGameStates = new List<ProjectedGameState>(upcomingStateQueue);
+            GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
 
             yield return new WaitForSeconds(0.5f);
         }
@@ -228,9 +231,10 @@ public class GameStateManager : MonoBehaviour {
 
         isResolvingTurn = false;
 
-        GameStateDelegates.OnCurrentGameStateChange?.Invoke(CurrentGameState);
+        GameStateDelegates.OnCurrentGameStateChange?.Invoke(CurrentGameState, upcomingGameStates);
 
-        upcomingGamestates.Clear();
+        upcomingGameStates.Clear();
+        GenerateNextTurnStack(CurrentGameState);
     }
 
     void GenerateNextTurnStack(GameState gameState)

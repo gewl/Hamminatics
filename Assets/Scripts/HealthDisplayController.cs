@@ -27,7 +27,7 @@ public class HealthDisplayController : MonoBehaviour {
         GameStateDelegates.OnCurrentGameStateChange -= OnGameStateChange;
     }
 
-    void OnGameStateChange(GameState updatedGameState)
+    void OnGameStateChange(GameState updatedGameState, List<ProjectedGameState> upcomingStates)
     {
         int currentPlayerHealth = updatedGameState.player.Health;
 

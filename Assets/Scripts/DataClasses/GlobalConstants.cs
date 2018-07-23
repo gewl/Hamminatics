@@ -1,10 +1,4 @@
-﻿public enum CellContents {
-    None,
-    Player,
-    Enemy
-}
-
-public enum CardCategory
+﻿public enum CardCategory
 {
     Movement,
     Attack
@@ -48,6 +42,18 @@ public enum PathType
     FailedBumpStraight,
     FailedBumpRight,
     FailedBumpLeft
+}
+
+public enum ItemCategory
+{
+    Treasure,
+    Trap
+}
+
+public enum ItemCollectionType
+{
+    OnStep,
+    OnFinishMove
 }
 
 public struct Constants

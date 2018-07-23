@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
+[ExecuteInEditMode]
 public class BoardController : MonoBehaviour {
     GameStateManager gameStateManager;
     static BoardController instance;
@@ -13,7 +14,8 @@ public class BoardController : MonoBehaviour {
     public static int BoardWidth { get { return boardWidth; } }
     Transform[,] boardCells;
     Image[,] boardCellImages;
-    Image[,] cellContentImages;
+    Image[,] tileOccupantImages;
+    Image[,] tileItemImages;
 
     Color invisible;
     Color translucent;
@@ -58,7 +60,8 @@ public class BoardController : MonoBehaviour {
     {
         boardCells = new Transform[boardWidth, boardWidth];
         boardCellImages = new Image[boardWidth, boardWidth];
-        cellContentImages = new Image[boardWidth, boardWidth];
+        tileOccupantImages = new Image[boardWidth, boardWidth];
+        tileItemImages = new Image[boardWidth, boardWidth];
 
         int childCount = transform.childCount;
 
@@ -71,9 +74,12 @@ public class BoardController : MonoBehaviour {
 
             boardCellImages[xCounter, yCounter] = cell.GetComponent<Image>();
 
-            Image cellContents = cell.GetChild(0).GetComponent<Image>();
-            cellContentImages[xCounter, yCounter] = cellContents;
-            cellContents.GetComponent<Button>().onClick.AddListener(GenerateCellClickListener(xCounter, yCounter));
+            Image tileOccupant = cell.GetChild(0).GetComponent<Image>();
+            tileOccupantImages[xCounter, yCounter] = tileOccupant;
+            tileOccupant.GetComponent<Button>().onClick.AddListener(GenerateCellClickListener(xCounter, yCounter));
+
+            Image tileItem = cell.GetChild(1).GetComponent<Image>();
+            tileItemImages[xCounter, yCounter] = tileItem;
 
             xCounter++;
 
@@ -130,19 +136,19 @@ public class BoardController : MonoBehaviour {
         {
             for (int xCounter = 0; xCounter < boardWidth; xCounter++)
             {
-                Image contentsImage = cellContentImages[xCounter, yCounter];
+                Image contentsImage = tileOccupantImages[xCounter, yCounter];
                 contentsImage.sprite = null;
                 contentsImage.color = invisible;
             }
         }
     }
 
-    public void DrawBoard_Standard(GameState currentGameState, bool isResolvingTurn)
+    public void DrawBoard(GameState currentGameState, bool isResolvingTurn)
     {
         ClearBoard();
 
         // Draw current player at position.
-        DrawSpriteAtPosition(currentGameState.player.EntitySprite, currentGameState.player.Position, opaque);
+        DrawEntityAtPosition(currentGameState.player, opaque);
 
         // Draw current enemies at positions.
         for (int i = 0; i < currentGameState.enemies.Count; i++)
@@ -150,58 +156,50 @@ public class BoardController : MonoBehaviour {
             EntityData entity = currentGameState.enemies[i];
             if (entity != null)
             {
-                DrawSpriteAtPosition(entity.EntitySprite, entity.Position, opaque);
+                DrawEntityAtPosition(entity, opaque);
             }
         }
-    }
 
-    void DrawBoard_SelectedEntity(EntityData selectedEntity, GameState currentGameState, List<ProjectedGameState> upcomingStates)
-    {
-        //ClearBoard();
-
-        //// Draw all current non-selected entities translucent.
-        //if (currentGameState.player != selectedEntity)
-        //{
-        //    DrawSpriteAtPosition(currentGameState.player.EntitySprite, currentGameState.player.Position, translucent);
-        //}
-
-        //for (int i = 0; i < currentGameState.enemies.Count; i++)
-        //{
-        //    EntityData entity = currentGameState.enemies[i];
-        //    if (entity != null && entity != selectedEntity)
-        //    {
-        //        DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent);
-        //    }
-        //}
-
-        //currentGameState
-        //    .GetAllEntityPaths()[selectedEntity]
-        //    .ForEach(pathStep => DrawSpriteAtPosition(selectedEntity.EntitySprite, pathStep.position, translucent));
-
-        //DrawSpriteAtPosition(selectedEntity.EntitySprite, selectedEntity.Position, opaque);
+        for (int i = 0; i < currentGameState.items.Count; i++)
+        {
+            ItemData item = currentGameState.items[i];
+            if (item != null)
+            {
+                DrawItemAtPosition(item, opaque);
+            }
+        }
     }
 
     public void DEBUG_DrawUpcomingEntitySprite(EntityData entity)
     {
         Debug.Log("drawing entity sprite at position:" + entity.Position);
-        DrawSpriteAtPosition(entity.EntitySprite, entity.Position, translucent);
+        DrawEntityAtPosition(entity, translucent);
     }
 
-    public void DrawSpriteAtPosition(Sprite sprite, Vector2Int position, Color color)
+    public void DrawEntityAtPosition(EntityData entity, Color color)
     {
-        Image positionCellImage = cellContentImages[position.x, position.y];
-        positionCellImage.sprite = sprite;
-        positionCellImage.color = color;
+        Vector2Int entityPosition = entity.Position;
+        Image entityImage = tileOccupantImages[entityPosition.x, entityPosition.y];
+        entityImage.sprite = entity.EntitySprite;
+        entityImage.color = color;
+    }
+
+    public void DrawItemAtPosition(ItemData item, Color color)
+    {
+        Vector2Int itemPosition = item.Position;
+        Image itemImage = tileItemImages[itemPosition.x, itemPosition.y];
+        itemImage.sprite = item.sprite;
+        itemImage.color = color;
     }
 
     public void HighlightSelectedCell(Vector2Int position)
     {
-        cellContentImages[position.x, position.y].color = new Color(1f, 1f, 0f);
+        tileOccupantImages[position.x, position.y].color = new Color(1f, 1f, 0f);
     }
 
     public void HighlightDamageCell(Vector2Int position)
     {
-        Image cellImage = cellContentImages[position.x, position.y];
+        Image cellImage = tileOccupantImages[position.x, position.y];
         // If cell is already opaque (because e.g. it contains an entity), it remains opaque.
         float damageCellAlpha = Mathf.Max(cellImage.color.a, 0.5f);
         cellImage.color = new Color(.8f, 0f, 0f, damageCellAlpha);

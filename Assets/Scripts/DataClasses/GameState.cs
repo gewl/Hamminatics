@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameState {
     public EntityData player;
     public List<EntityData> enemies;
+    public List<ItemData> items;
 
     public Stack<Turn> turnStack;
     public GameState lastGamestate;
@@ -13,6 +14,16 @@ public class GameState {
     {
         player = _player;
         enemies = _enemies;
+
+        items = new List<ItemData>();
+        turnStack = new Stack<Turn>();
+    }
+
+    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items)
+    {
+        player = _player;
+        enemies = _enemies;
+        items = _items;
 
         turnStack = new Stack<Turn>();
     }
