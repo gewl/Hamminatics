@@ -118,6 +118,11 @@ public static class GameStateHelperFunctions {
         return state.GetAllEntities().Find(e => predicate(e));
     }
 
+    public static bool HasEntityWhere(this GameState state, Predicate<EntityData> predicate)
+    {
+        return state.GetAllEntities().Any(e => predicate(e));
+    }
+
     public static Tile FindFirstOccupiedTileInDirection(this GameState state, Tile originTile, Direction direction, int distance)
     {
         Tile currentTargetTile = originTile;
@@ -162,6 +167,7 @@ public static class GameStateHelperFunctions {
                 }
                 TreasureData treasure = item as TreasureData;
                 state.inventory.gold += treasure.Value;
+                state.items.Remove(item);
                 break;
             case ItemCategory.Trap:
                 break;
@@ -173,6 +179,22 @@ public static class GameStateHelperFunctions {
     }
 
     public static void CollectFinishMoveItems(this GameState state)
+    {
+        List<EntityData> allEntities = state.GetAllEntities();
+        for (int i = 0; i < allEntities.Count; i++)
+        {
+            EntityData entity = allEntities[i];
+
+            ItemData itemAtEntityPosition = state.GetItemInPosition(entity.Position);
+
+            if (itemAtEntityPosition == null)
+            {
+                continue;
+            }
+
+            state.CollectItem(itemAtEntityPosition, entity);
+        }
+    }
     #endregion
 
     public static GameState DeepCopy(this GameState originalState)
@@ -196,7 +218,10 @@ public static class GameStateHelperFunctions {
             else
             {
                 int originalTurnSubjectIndex = originalState.enemies.FindIndex(enemy => enemy.ID == turnSubject.ID);
-                newTurn.UpdateEntity(enemyCopies[originalTurnSubjectIndex]);
+                if (originalTurnSubjectIndex > -1)
+                {
+                    newTurn.UpdateEntity(enemyCopies[originalTurnSubjectIndex]);
+                }
             }
 
             newTurnList.Add(newTurn);

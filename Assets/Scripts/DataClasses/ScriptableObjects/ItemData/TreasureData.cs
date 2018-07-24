@@ -11,9 +11,13 @@ public class TreasureData : ItemData {
 
     public override ItemData Copy()
     {
-        TreasureData copy = base.Copy() as TreasureData;
+        TreasureData copy = ScriptableObject.CreateInstance(typeof(TreasureData)) as TreasureData;
 
         copy.Value = Value;
+        copy.sprite = sprite;
+        copy.ID = ID;
+        copy.Duration = Duration;
+        copy.Position = Position;
 
         return copy;
     }

@@ -11,16 +11,5 @@ public abstract class ItemData : ScriptableObject {
     [HideInInspector]
     public Vector2Int Position;
 
-    public virtual ItemData Copy()
-    {
-        ItemData copy = ScriptableObject.CreateInstance(typeof(ItemData)) as ItemData;
-
-        copy.ID = ID;
-        copy.Duration = Duration;
-        copy.sprite = sprite;
-        copy.Position = Position;
-
-        return copy;
-
-    }
+    public abstract ItemData Copy();
 }

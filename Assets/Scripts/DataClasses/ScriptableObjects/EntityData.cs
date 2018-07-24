@@ -57,6 +57,7 @@ public class EntityData : ScriptableObject {
         copy._position = Position;
         copy.movementCard = movementCard;
         copy.attackCard = attackCard;
+        copy.dropItem = dropItem;
 
         return copy;
     }

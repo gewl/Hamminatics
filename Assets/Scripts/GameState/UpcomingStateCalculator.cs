@@ -23,6 +23,13 @@ public static class UpcomingStateCalculator
 
             foreach (Direction move in turn.moves)
             {
+                bool entityIsAliveToMove = mostRecentState.HasEntityWhere(e => e == entity);
+
+                if (!entityIsAliveToMove)
+                {
+                    break;
+                }
+
                 ProjectedGameState updatedState = GetNextGameStateFromMove(mostRecentState, entity, move);
                 entity = updatedState.activeEntity;
 
@@ -36,7 +43,17 @@ public static class UpcomingStateCalculator
                 }
             }
 
-            projectedGameStates.Last().gameState.CollectFinishMoveItems();
+            if (projectedGameStates.Count > 0)
+            {
+                projectedGameStates.Last().gameState.CollectFinishMoveItems();
+            }
+
+            bool entityIsStillAlive = mostRecentState.HasEntityWhere(e => e == entity);
+
+            if (!entityIsStillAlive)
+            {
+                break;
+            }
 
             if (turn.action.card != null)
             {

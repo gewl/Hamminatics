@@ -156,11 +156,14 @@ public class TurnDrawer : MonoBehaviour {
 
     void DrawPath(EntityData activeEntity, EntityData lastActiveEntity, ProjectedGameState projectedState, ProjectedGameState nextState)
     {
+        bool isEntityAliveNextState = nextState == null || nextState
+            .gameState
+            .HasEntityWhere(e => e == activeEntity);
         bool isEntitysLastMove = projectedState.action.card.Category == CardCategory.Movement &&
             (nextState == null ||
             nextState.action.card.Category != CardCategory.Movement ||
             nextState.activeEntity.ID != activeEntity.ID);
-
+            
         Vector2Int positionLastState = projectedState
             .gameState
             .lastGamestate
@@ -178,11 +181,12 @@ public class TurnDrawer : MonoBehaviour {
             nextState.activeEntity.Position == activeEntity.Position;
         if (projectedState.action.card.Category == CardCategory.Movement && 
             !isEntitysLastMove &&
-            !isNextMoveFailedBump)
+            !isNextMoveFailedBump && 
+            isEntityAliveNextState)
         {
             Vector2Int positionNextState = nextState
                 .gameState
-                .GetEntityWhere(e => e.ID == activeEntity.ID)
+                .GetEntityWhere(e => e == activeEntity)
                 .Position;
 
             DrawPath_Between(activeEntity, positionLastState, positionThisState, positionNextState);

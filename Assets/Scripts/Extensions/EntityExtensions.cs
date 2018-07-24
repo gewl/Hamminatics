@@ -13,12 +13,13 @@ public static class EntityExtensions {
         {
             gameState.enemies.RemoveAll(e => e == entity);
 
-            ItemData itemToSpawn = entity.dropItem;
+            TreasureData itemToSpawn = entity.dropItem as TreasureData;
             Vector2Int positionToSpawn = entity.Position;
 
             if (itemToSpawn != null && !gameState.DoesPositionContainItem(positionToSpawn))
             {
-                ItemData itemInstance = Object.Instantiate(itemToSpawn);
+                TreasureData itemInstance = Object.Instantiate(itemToSpawn);
+                itemInstance.Position = positionToSpawn;
                 gameState.items.Add(itemInstance);
             }
         }
