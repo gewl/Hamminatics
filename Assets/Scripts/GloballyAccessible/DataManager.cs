@@ -23,6 +23,9 @@ public class DataManager : MonoBehaviour {
         }
     }
 
+    const string BASIC_ATTACK_ID = "Attack";
+    const string BASIC_MOVE_ID = "Move";
+
     static Dictionary<string, EntityData> cachedEntityData;
     static Dictionary<string, CardData> cachedCardData;
     static Dictionary<string, Sprite> cachedTileSprites;
@@ -65,6 +68,17 @@ public class DataManager : MonoBehaviour {
             cachedCardData[cardName] = loadedCardData;
             return Instantiate(loadedCardData);
         }
+    }
+
+    public static CardData[] GetBasicCards()
+    {
+        return new CardData[4]
+        {
+            GetCardData(BASIC_MOVE_ID),
+            GetCardData(BASIC_ATTACK_ID),
+            null,
+            null
+        };
     }
 
     public static Sprite GetTileSprite(string ID)

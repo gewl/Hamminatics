@@ -33,9 +33,6 @@ public class BoardController : MonoBehaviour {
     {
         gameStateManager = GetComponentInParent<GameStateManager>();
 
-        InitializeBoard();
-        gameStateManager.InitializeGameState(currentBoard);
-
         invisible = new Color(1f, 1f, 1f, 0f);
         translucent = new Color(1f, 1f, 1f, 0.5f);
         opaque = new Color(1f, 1f, 1f, 1f);
@@ -56,7 +53,7 @@ public class BoardController : MonoBehaviour {
     }
     #endregion
 
-    void InitializeBoard()
+    public GameBoard InitializeBoard()
     {
         boardCells = new Transform[boardWidth, boardWidth];
         boardCellImages = new Image[boardWidth, boardWidth];
@@ -104,6 +101,8 @@ public class BoardController : MonoBehaviour {
                 }
             }
         }
+
+        return currentBoard;
     }
 
     void RecalculateTileDistances(GameState updatedGameState)

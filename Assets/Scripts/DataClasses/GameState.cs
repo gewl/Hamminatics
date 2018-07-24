@@ -18,9 +18,10 @@ public class GameState {
 
         items = new List<ItemData>();
         turnStack = new Stack<Turn>();
+        inventory = new Inventory();
     }
 
-    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items)
+    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Inventory inventory)
     {
         player = _player;
         enemies = _enemies;
@@ -29,7 +30,7 @@ public class GameState {
         turnStack = new Stack<Turn>();
     }
 
-    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Stack<Turn> _turns)
+    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Stack<Turn> _turns, Inventory inventory)
     {
         player = _player;
         enemies = _enemies;

@@ -121,6 +121,7 @@ public class GameStateManager : MonoBehaviour {
 
     void SetBoardUp()
     {
+        InitializeGameState(boardController.InitializeBoard());
         GenerateNextTurnStack(CurrentGameState);
         GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
     }

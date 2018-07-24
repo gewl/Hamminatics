@@ -5,20 +5,20 @@ using UnityEngine.UI;
 using Sirenix.OdinInspector;
 
 public class EquippedCardsManager : SerializedMonoBehaviour {
+    [SerializeField]
     GameStateManager gameStateManager;
 
-    int maximumEquippedCards = 4;
-    int selectedCardSlot = -1;
-
-    [SerializeField]
     CardData[] equippedCards;
+
+    int maximumEquippedCards;
+    int selectedCardSlot = -1;
 
     GameObject[] cardDisplays;
     Text[] cardTitles;
 
     private void Awake()
     {
-        gameStateManager = GetComponentInParent<GameStateManager>();
+        maximumEquippedCards = Constants.MAX_EQUIPPED_CARDS;
 
         cardDisplays = new GameObject[maximumEquippedCards];
         cardTitles = new Text[maximumEquippedCards];
@@ -28,8 +28,16 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
             cardDisplays[i] = transform.GetChild(i).gameObject;
             cardTitles[i] = cardDisplays[i].GetComponentInChildren<Text>();
         }
+    }
 
-        UpdateCardDisplays();
+    private void OnEnable()
+    {
+        GameStateDelegates.OnCurrentGameStateChange += UpdateEquippedCards;
+    }
+
+    private void OnDisable()
+    {
+        GameStateDelegates.OnCurrentGameStateChange -= UpdateEquippedCards;
     }
 
     public void ClearSelectedCard()
@@ -43,11 +51,19 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
         return equippedCards[selectedCardSlot];
     }
 
-    void UpdateCardDisplays()
+    void UpdateEquippedCards(GameState currentState, List<ProjectedGameState> upcomingStates)
     {
+        equippedCards = currentState.inventory.equippedCards;
+
+        UpdateCardDisplays(equippedCards);
+    }
+
+    void UpdateCardDisplays(CardData[] equippedCards)
+    {
+        Debug.Log(equippedCards[0].ID);
         for (int i = 0; i < maximumEquippedCards; i++)
         {
-            if (equippedCards[i] == null)
+            if (equippedCards == null)
             {
                 cardTitles[i].text = "";
                 cardDisplays[i].GetComponent<Button>().interactable = false;

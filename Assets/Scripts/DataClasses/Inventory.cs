@@ -4,6 +4,23 @@ using UnityEngine;
 
 public class Inventory {
 
-    public int gold = 0;
-    public List<CardData> equippedCards;
+    public int gold;
+    public CardData[] equippedCards;
+
+    public Inventory()
+    {
+        gold = 0;
+        equippedCards = DataManager.GetBasicCards();
+    }
+
+    public Inventory(int _gold, CardData[] _equippedCards)
+    {
+        gold = _gold;
+        equippedCards = _equippedCards;
+    }
+
+    public Inventory Copy()
+    {
+        return new Inventory(gold, equippedCards);
+    }
 }

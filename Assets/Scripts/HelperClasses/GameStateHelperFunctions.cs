@@ -154,10 +154,11 @@ public static class GameStateHelperFunctions {
 
     public static GameState DeepCopy(this GameState originalState)
     {
-        EntityData playerCopy = originalState.player.Copy();
+        EntityData playerCopy = originalStte.player.Copy();
 
         List<EntityData> enemyCopies = originalState.enemies.Select(entity => entity.Copy()).ToList();
         List<ItemData> itemCopies = originalState.items.Select(item => item.Copy()).ToList();
+        Inventory inventoryCopy = originalState.inventory.Copy();
 
         List<Turn> newTurnList = new List<Turn>();
         foreach (Turn turn in originalState.turnStack)
@@ -184,6 +185,6 @@ public static class GameStateHelperFunctions {
             newTurnStack.Push(newTurnList[i]);
         }
 
-        return new GameState(playerCopy, enemyCopies, itemCopies, newTurnStack);
+        return new GameState(playerCopy, enemyCopies, itemCopies, newTurnStack, inventoryCopy);
     }
 }
