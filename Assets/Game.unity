@@ -170,7 +170,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cefb68d8e49123940b824dde644e0cfc, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -277,7 +277,7 @@ GameObject:
   - component: {fileID: 21412948}
   - component: {fileID: 21412947}
   m_Layer: 5
-  m_Name: Contents (19)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -649,7 +649,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cefb68d8e49123940b824dde644e0cfc, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -878,7 +878,7 @@ GameObject:
   - component: {fileID: 147606117}
   - component: {fileID: 147606116}
   m_Layer: 5
-  m_Name: Contents (12)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -946,7 +946,7 @@ GameObject:
   - component: {fileID: 187466652}
   - component: {fileID: 187466651}
   m_Layer: 5
-  m_Name: Contents (17)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1015,7 +1015,7 @@ GameObject:
   - component: {fileID: 226760137}
   - component: {fileID: 226760139}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1136,7 +1136,7 @@ GameObject:
   - component: {fileID: 294786848}
   - component: {fileID: 294786850}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1257,7 +1257,7 @@ GameObject:
   - component: {fileID: 318576590}
   - component: {fileID: 318576592}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1910,7 +1910,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 230}
+  m_SizeDelta: {x: 100, y: 150}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &341573499
 MonoBehaviour:
@@ -2008,7 +2008,7 @@ GameObject:
   - component: {fileID: 355435211}
   - component: {fileID: 355435210}
   m_Layer: 5
-  m_Name: Contents (15)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2076,7 +2076,7 @@ GameObject:
   - component: {fileID: 359122017}
   - component: {fileID: 359122016}
   m_Layer: 5
-  m_Name: Contents (18)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2190,7 +2190,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1c5f35f77b3d02d498467ff450d44e4d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2304,7 +2304,7 @@ GameObject:
   - component: {fileID: 404066351}
   - component: {fileID: 404066353}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2425,7 +2425,7 @@ GameObject:
   - component: {fileID: 409455735}
   - component: {fileID: 409455737}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2698,7 +2698,7 @@ GameObject:
   - component: {fileID: 431303173}
   - component: {fileID: 431303172}
   m_Layer: 5
-  m_Name: Contents (23)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2767,7 +2767,7 @@ GameObject:
   - component: {fileID: 448608600}
   - component: {fileID: 448608602}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2888,7 +2888,7 @@ GameObject:
   - component: {fileID: 455911934}
   - component: {fileID: 455911936}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3008,7 +3008,7 @@ GameObject:
   - component: {fileID: 458873562}
   - component: {fileID: 458873561}
   m_Layer: 5
-  m_Name: Contents (7)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3077,7 +3077,7 @@ GameObject:
   - component: {fileID: 462732044}
   - component: {fileID: 462732046}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3198,7 +3198,7 @@ GameObject:
   - component: {fileID: 485673178}
   - component: {fileID: 485673180}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3364,7 +3364,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2e2861fec2386ff4e8bbd3c56e56468e, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -3403,7 +3403,7 @@ GameObject:
   - component: {fileID: 522876362}
   - component: {fileID: 522876361}
   m_Layer: 5
-  m_Name: Contents (25)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3471,7 +3471,7 @@ GameObject:
   - component: {fileID: 532840057}
   - component: {fileID: 532840056}
   m_Layer: 5
-  m_Name: Contents (8)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3573,7 +3573,7 @@ GameObject:
   - component: {fileID: 566171293}
   - component: {fileID: 566171292}
   m_Layer: 5
-  m_Name: Contents (16)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3642,7 +3642,7 @@ GameObject:
   - component: {fileID: 578845865}
   - component: {fileID: 578845867}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3808,7 +3808,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1c5f35f77b3d02d498467ff450d44e4d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -3847,7 +3847,7 @@ GameObject:
   - component: {fileID: 654112167}
   - component: {fileID: 654112166}
   m_Layer: 5
-  m_Name: Contents (5)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3915,7 +3915,7 @@ GameObject:
   - component: {fileID: 672581758}
   - component: {fileID: 672581757}
   m_Layer: 5
-  m_Name: Contents (21)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3984,7 +3984,7 @@ GameObject:
   - component: {fileID: 673259364}
   - component: {fileID: 673259366}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4346,7 +4346,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6ad46b686ff4fa543b1cf85e0deae5e5, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -4386,7 +4386,7 @@ GameObject:
   - component: {fileID: 696163616}
   - component: {fileID: 696163618}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4506,7 +4506,7 @@ GameObject:
   - component: {fileID: 708910790}
   - component: {fileID: 708910789}
   m_Layer: 5
-  m_Name: Contents (4)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4727,7 +4727,7 @@ GameObject:
   - component: {fileID: 823358798}
   - component: {fileID: 823358797}
   m_Layer: 5
-  m_Name: Contents (20)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4943,7 +4943,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6117ed9e9788e2645b25df9fd2cbf99a, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -5102,7 +5102,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a0c4ccdc70c61f4881fcbb75c402686, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -5141,7 +5141,7 @@ GameObject:
   - component: {fileID: 872547594}
   - component: {fileID: 872547593}
   m_Layer: 5
-  m_Name: Contents (1)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5351,7 +5351,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c88bb8de47f690e40b4f02d7e4be0ae0, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -5441,7 +5441,7 @@ GameObject:
   - component: {fileID: 958688824}
   - component: {fileID: 958688826}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5607,7 +5607,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cefb68d8e49123940b824dde644e0cfc, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -5715,7 +5715,7 @@ GameObject:
   - component: {fileID: 988318588}
   - component: {fileID: 988318590}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5836,7 +5836,7 @@ GameObject:
   - component: {fileID: 1027000427}
   - component: {fileID: 1027000429}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6025,7 +6025,7 @@ GameObject:
   - component: {fileID: 1033059824}
   - component: {fileID: 1033059826}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6145,7 +6145,7 @@ GameObject:
   - component: {fileID: 1044508938}
   - component: {fileID: 1044508937}
   m_Layer: 5
-  m_Name: Contents (14)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6432,7 +6432,7 @@ GameObject:
   - component: {fileID: 1070374226}
   - component: {fileID: 1070374228}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6598,7 +6598,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2e2861fec2386ff4e8bbd3c56e56468e, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -6638,7 +6638,7 @@ GameObject:
   - component: {fileID: 1097495591}
   - component: {fileID: 1097495593}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6852,7 +6852,7 @@ GameObject:
   - component: {fileID: 1192229750}
   - component: {fileID: 1192229752}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7684,7 +7684,7 @@ GameObject:
   - component: {fileID: 1348779151}
   - component: {fileID: 1348779150}
   m_Layer: 5
-  m_Name: Contents (10)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7752,7 +7752,7 @@ GameObject:
   - component: {fileID: 1360956704}
   - component: {fileID: 1360956703}
   m_Layer: 5
-  m_Name: Contents (13)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7934,7 +7934,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a0c4ccdc70c61f4881fcbb75c402686, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -8205,7 +8205,7 @@ GameObject:
   - component: {fileID: 1493089353}
   - component: {fileID: 1493089355}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8371,7 +8371,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 256ba2e7e4c29fa4e8b1db8e8429c382, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -8411,7 +8411,7 @@ GameObject:
   - component: {fileID: 1537598651}
   - component: {fileID: 1537598653}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8577,7 +8577,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c88bb8de47f690e40b4f02d7e4be0ae0, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -8616,7 +8616,7 @@ GameObject:
   - component: {fileID: 1563985033}
   - component: {fileID: 1563985032}
   m_Layer: 5
-  m_Name: Contents (24)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8684,7 +8684,7 @@ GameObject:
   - component: {fileID: 1637654644}
   - component: {fileID: 1637654643}
   m_Layer: 5
-  m_Name: Contents (11)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8883,7 +8883,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6117ed9e9788e2645b25df9fd2cbf99a, type: 3}
   m_Type: 1
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -8922,7 +8922,7 @@ GameObject:
   - component: {fileID: 1692278125}
   - component: {fileID: 1692278124}
   m_Layer: 5
-  m_Name: Contents (22)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9036,7 +9036,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c88bb8de47f690e40b4f02d7e4be0ae0, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -9076,7 +9076,7 @@ GameObject:
   - component: {fileID: 1711842907}
   - component: {fileID: 1711842909}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9197,7 +9197,7 @@ GameObject:
   - component: {fileID: 1717070608}
   - component: {fileID: 1717070610}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9454,7 +9454,7 @@ GameObject:
   - component: {fileID: 1738762070}
   - component: {fileID: 1738762072}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10074,7 +10074,7 @@ GameObject:
   - component: {fileID: 1827503076}
   - component: {fileID: 1827503078}
   m_Layer: 5
-  m_Name: Contents
+  m_Name: TileOccupant
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10240,7 +10240,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d7f7b7bf6352f9642a481e8b065d9111, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -10279,7 +10279,7 @@ GameObject:
   - component: {fileID: 1848415727}
   - component: {fileID: 1848415726}
   m_Layer: 5
-  m_Name: Contents (6)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10454,7 +10454,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cefb68d8e49123940b824dde644e0cfc, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -10539,7 +10539,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6117ed9e9788e2645b25df9fd2cbf99a, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -10624,7 +10624,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c88bb8de47f690e40b4f02d7e4be0ae0, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -10663,7 +10663,7 @@ GameObject:
   - component: {fileID: 1964150743}
   - component: {fileID: 1964150742}
   m_Layer: 5
-  m_Name: Contents (2)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10699,14 +10699,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: f7d5eb75cc0dadc44a083625e41f3c5f, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -10799,7 +10799,7 @@ GameObject:
   - component: {fileID: 1974973947}
   - component: {fileID: 1974973946}
   m_Layer: 5
-  m_Name: Contents (9)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10979,10 +10979,10 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
+  m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 150, y: 110}
+  m_CellSize: {x: 150, y: 70}
   m_Spacing: {x: 10, y: 10}
   m_Constraint: 1
   m_ConstraintCount: 2
@@ -11310,7 +11310,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2063671478}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dec0245d954a8d4da26bec9a22194ee, type: 3}
   m_Name: 
@@ -11433,7 +11433,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1c5f35f77b3d02d498467ff450d44e4d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -11685,7 +11685,7 @@ GameObject:
   - component: {fileID: 2140927553}
   - component: {fileID: 2140927552}
   m_Layer: 5
-  m_Name: Contents (3)
+  m_Name: TileItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

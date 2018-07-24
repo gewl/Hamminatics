@@ -89,6 +89,7 @@ public class GameStateManager : MonoBehaviour {
     bool isResolvingTurn = false;
     public bool IsResolvingTurn { get { return isResolvingTurn; } }
 
+    #region lifecycle
     private void Awake()
     {
         potentialCardTargets = new List<Vector2Int>();
@@ -97,14 +98,6 @@ public class GameStateManager : MonoBehaviour {
 
         upcomingGameStates = new List<ProjectedGameState>();
     }
-
-    public void InitializeGameState(GameBoard board)
-    {
-        CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance.Position, board.BoardWidth);
-        GameStateDelegates.OnCurrentGameStateChange += ResetBoard;
-        GameStateDelegates.ReturnToDefaultBoard += ResetBoard;
-    }
-
     private void OnEnable()
     {
         turnStackController.OnTurnStackUpdate += RecalculateUpcomingStates;
@@ -116,30 +109,20 @@ public class GameStateManager : MonoBehaviour {
         GameStateDelegates.OnCurrentGameStateChange -= ResetBoard;
         turnStackController.OnTurnStackUpdate -= RecalculateUpcomingStates;
     }
+    #endregion
+
+    #region initialization/reset
+    public void InitializeGameState(GameBoard board)
+    {
+        CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance.Position, board.BoardWidth);
+        GameStateDelegates.OnCurrentGameStateChange += ResetBoard;
+        GameStateDelegates.ReturnToDefaultBoard += ResetBoard;
+    }
 
     void SetBoardUp()
     {
         GenerateNextTurnStack(CurrentGameState);
         GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
-    }
-
-    public void HighlightPotentialCardTargets(CardData card)
-    {
-        ResetBoard(CurrentGameState, upcomingGameStates);
-
-        int cardRange = card.Range;
-
-        // Movement availability is always 'from' player's current position.
-        // Other actions are 'from' player's projected position.
-        Vector2Int playerOrigin = card.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
-
-        BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
-    }
-
-    void HighlightCell(Vector2Int position)
-    {
-        boardController.HighlightSelectedCell(position);
-        potentialCardTargets.Add(position);
     }
 
     public void ResetBoard(List<ProjectedGameState> upcomingStates)
@@ -165,6 +148,27 @@ public class GameStateManager : MonoBehaviour {
     {
         boardController.DrawBoard(currentGameState, isResolvingTurn);
         potentialCardTargets.Clear();
+    }
+    #endregion
+
+    #region player interaction handling
+    public void HighlightPotentialCardTargets(CardData card)
+    {
+        ResetBoard(CurrentGameState, upcomingGameStates);
+
+        int cardRange = card.Range;
+
+        // Movement availability is always 'from' player's current position.
+        // Other actions are 'from' player's projected position.
+        Vector2Int playerOrigin = card.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
+
+        BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
+    }
+
+    void HighlightCell(Vector2Int position)
+    {
+        boardController.HighlightSelectedCell(position);
+        potentialCardTargets.Add(position);
     }
 
     public void RegisterCellClick(Vector2Int tileClickedPosition)
@@ -208,7 +212,9 @@ public class GameStateManager : MonoBehaviour {
     {
         StartCoroutine(ProcessCurrentRoundActions());
     }
+    #endregion
 
+    #region turn transitioning
     IEnumerator ProcessCurrentRoundActions()
     {
         isResolvingTurn = true;
@@ -243,4 +249,6 @@ public class GameStateManager : MonoBehaviour {
         turnStackController.AddEmptyPlayerTurn();
         turnStackController.OnTurnStackUpdate(new List<Turn>(turnStackController.TurnStack));
     }
+    #endregion
+
 }

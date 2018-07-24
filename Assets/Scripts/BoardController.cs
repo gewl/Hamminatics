@@ -46,13 +46,13 @@ public class BoardController : MonoBehaviour {
     private void OnEnable()
     {
         GameStateDelegates.OnRoundEnded += RecalculateTileDistances;   
-        GameStateDelegates.OnEntitySelected += DrawBoard_SelectedEntity;   
+        //GameStateDelegates.OnEntitySelected += DrawBoard_SelectedEntity;   
     }
 
     private void OnDisable()
     {
         GameStateDelegates.OnRoundEnded -= RecalculateTileDistances;   
-        GameStateDelegates.OnEntitySelected -= DrawBoard_SelectedEntity;   
+        //GameStateDelegates.OnEntitySelected -= DrawBoard_SelectedEntity;   
     }
     #endregion
 
@@ -136,9 +136,13 @@ public class BoardController : MonoBehaviour {
         {
             for (int xCounter = 0; xCounter < boardWidth; xCounter++)
             {
-                Image contentsImage = tileOccupantImages[xCounter, yCounter];
-                contentsImage.sprite = null;
-                contentsImage.color = invisible;
+                Image occupantImage = tileOccupantImages[xCounter, yCounter];
+                occupantImage.sprite = null;
+                occupantImage.color = invisible;
+
+                Image itemImage = tileItemImages[xCounter, yCounter];
+                itemImage.sprite = null;
+                itemImage.color = invisible;
             }
         }
     }
@@ -259,6 +263,5 @@ public class BoardController : MonoBehaviour {
     {
         instance.boardCellImages[tile.Position.x, tile.Position.y].color = color;
     }
-
     #endregion
 }

@@ -86,8 +86,8 @@ public static class UpcomingStateCalculator
             entityCopy.Position = nextTile.Position;
         }
 
-        tileOccupant.Health--;
-        entityCopy.Health--;
+        tileOccupant.DealDamage(1, newState);
+        entityCopy.DealDamage(1, newState);
 
         Bump bump = new Bump(entityCopy, tileOccupant);
 
@@ -133,8 +133,13 @@ public static class UpcomingStateCalculator
 
         EntityData targetEntity = newState.GetTileOccupant(targetTile);
 
-        targetEntity.Health -= card.Damage;
+        targetEntity.DealDamage(card.Damage, newState);
 
         return newProjectedState;
+    }
+
+    static Turn GetPlayersLastMoveAction(EntityData player, Stack<Turn> turns)
+    {
+        return turns.Last(turn => turn.Entity == player && turn.action.card.Category == CardCategory.Movement);
     }
 }

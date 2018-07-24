@@ -138,43 +138,6 @@ public static class GameStateHelperFunctions {
 
         return currentTargetTile;
     }
-
-    static void TryToMoveEntityInDirection(EntityData entity, Direction direction, GameState state)
-    {
-        Tile currentTile = BoardController
-            .CurrentBoard
-            .GetTileAtPosition(entity.Position);
-
-        if (!currentTile.ConnectsToNeighbor(direction))
-        { 
-            return;
-        }
-
-        Tile nextTile = currentTile.GetDirectionalNeighbor(direction);
-
-        if (state.IsTileOccupied(nextTile))
-        {
-            EntityData tileOccupant = state.GetTileOccupant(nextTile.Position);
-
-            Tile projectedBumpTile = nextTile.GetDirectionalNeighbor(direction);
-
-            bool canBump = projectedBumpTile != null && !state.IsTileOccupied(projectedBumpTile);
-
-            if (canBump)
-            {
-                Vector2Int projectedBumpPosition = projectedBumpTile.Position;
-                tileOccupant.Position = projectedBumpPosition;
-                entity.Position = nextTile.Position;
-            }
-
-            tileOccupant.Health -= 1;
-            entity.Health -= 1;
-        }
-        else
-        {
-            entity.Position = nextTile.Position;
-        }
-    }
     #endregion
 
     #region item info/manip
@@ -194,11 +157,9 @@ public static class GameStateHelperFunctions {
         EntityData playerCopy = originalState.player.Copy();
 
         List<EntityData> enemyCopies = originalState.enemies.Select(entity => entity.Copy()).ToList();
-
         List<ItemData> itemCopies = originalState.items.Select(item => item.Copy()).ToList();
 
         List<Turn> newTurnList = new List<Turn>();
-
         foreach (Turn turn in originalState.turnStack)
         {
             Turn newTurn = new Turn(turn.Entity, turn.moves.GetRange(0, turn.moves.Count), turn.action);
@@ -216,7 +177,6 @@ public static class GameStateHelperFunctions {
 
             newTurnList.Add(newTurn);
         }
-
         Stack<Turn> newTurnStack = new Stack<Turn>();
 
         for (int i = newTurnList.Count - 1; i >= 0; i--)
@@ -224,6 +184,6 @@ public static class GameStateHelperFunctions {
             newTurnStack.Push(newTurnList[i]);
         }
 
-        return new GameState(playerCopy, enemyCopies, newTurnStack);
+        return new GameState(playerCopy, enemyCopies, itemCopies, newTurnStack);
     }
 }

@@ -3,7 +3,11 @@
 [CreateAssetMenu(menuName = "Entity")]
 public class EntityData : ScriptableObject {
     public string ID;
-    public int Health = 1;
+
+    [SerializeField]
+    protected int _health = 1;
+    public int Health { get { return _health; } }
+
     public Sprite EntitySprite;
     public int Speed = 1;
     public Color IdentifyingColor;
@@ -14,6 +18,11 @@ public class EntityData : ScriptableObject {
 
     public MovementCardData movementCard;
     public AttackCardData attackCard;
+
+    public void SetHealth(int newHealth)
+    {
+        _health = newHealth;
+    }
 
     public override int GetHashCode()
     {
@@ -40,7 +49,7 @@ public class EntityData : ScriptableObject {
         EntityData copy = ScriptableObject.CreateInstance(typeof(EntityData)) as EntityData;
 
         copy.ID = ID;
-        copy.Health = Health;
+        copy._health = Health;
         copy.EntitySprite = EntitySprite;
         copy.Speed = Speed;
         copy.IdentifyingColor = IdentifyingColor;
