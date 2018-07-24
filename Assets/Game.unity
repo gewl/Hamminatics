@@ -5315,6 +5315,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionStackController: {fileID: 323374608}
   boardController: {fileID: 2063671481}
+  durationClockPrefab: {fileID: 1545939839052936, guid: d68f2bc5e10ed1f478d055b9c947acc3,
+    type: 2}
 --- !u!1 &933691185
 GameObject:
   m_ObjectHideFlags: 0

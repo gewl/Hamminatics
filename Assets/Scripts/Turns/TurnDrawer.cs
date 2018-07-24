@@ -11,6 +11,9 @@ public class TurnDrawer : MonoBehaviour {
     [SerializeField]
     BoardController boardController;
 
+    [SerializeField]
+    GameObject durationClockPrefab;
+
     bool drawingSelectedEntity = true;
     float deselectedEntityActionOpacity = 0.4f;
 
@@ -53,6 +56,8 @@ public class TurnDrawer : MonoBehaviour {
 
             lastActiveEntity = projectedState.activeEntity;
         }
+
+        DrawItemDurations(currentState.items);
     }
 
     void HighlightSelectedEntityStates(EntityData selectedEntity, GameState currentGameState, List<ProjectedGameState> upcomingStates)
@@ -100,6 +105,8 @@ public class TurnDrawer : MonoBehaviour {
             DrawState(projectedState, nextState, lastActiveEntity);
             lastActiveEntity = projectedState.activeEntity;
         }
+
+        DrawItemDurations(currentGameState.items);
     }
 
     void DrawState(ProjectedGameState projectedState, ProjectedGameState nextState, EntityData lastActiveEntity)
@@ -112,6 +119,23 @@ public class TurnDrawer : MonoBehaviour {
         else if (actionCardCategory == CardCategory.Attack)
         {
             DrawAttackState(projectedState);
+        }
+    }
+
+    void DrawItemDurations(List<ItemData> items)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            ItemData item = items[i];
+
+            Vector2Int itemPosition = item.Position;
+
+            Vector2 cellCornerPosition = boardController.GetCellCornerPosition(itemPosition, Direction.Up, Direction.Right);
+            GameObject durationClock = Instantiate(durationClockPrefab);
+            durationClock.GetComponentInChildren<Text>().text = item.Duration.ToString();
+
+            durationClock.transform.parent = transform;
+            durationClock.transform.position = cellCornerPosition;
         }
     }
 

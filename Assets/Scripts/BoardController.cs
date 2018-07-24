@@ -251,6 +251,39 @@ public class BoardController : MonoBehaviour {
         }
     }
 
+    public Vector2 GetCellCornerPosition(Vector2Int cellPosition, Direction verticalDirection, Direction horizontalDirection)
+    {
+        if (verticalDirection == Direction.Right ||
+            verticalDirection == Direction.Left ||
+            horizontalDirection == Direction.Up ||
+            horizontalDirection == Direction.Down)
+        {
+            Debug.LogError("Bad directional input for cell corner position retrieval.");
+            return Vector2.zero;
+        }
+
+        RectTransform cellRectTransform = boardCells[cellPosition.x, cellPosition.y].GetComponent<RectTransform>();
+        Vector3[] worldCorners = new Vector3[4];
+        cellRectTransform.GetWorldCorners(worldCorners);
+
+        if (verticalDirection == Direction.Down && horizontalDirection == Direction.Left)
+        {
+            return worldCorners[0];
+        }
+        else if (verticalDirection == Direction.Up && horizontalDirection == Direction.Left)
+        {
+            return worldCorners[1];
+        }
+        else if (verticalDirection == Direction.Up && horizontalDirection == Direction.Right)
+        {
+            return worldCorners[2];
+        }
+        else
+        {
+            return worldCorners[3];
+        }
+    }
+
     public float GetTileWidth()
     {
         RectTransform cellRectTransform = boardCells[0,0].GetComponent<RectTransform>();

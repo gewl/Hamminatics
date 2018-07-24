@@ -234,6 +234,8 @@ public class GameStateManager : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
         }
 
+        CurrentGameState.items = UpdateItemDurations(CurrentGameState);
+
         GameStateDelegates.OnRoundEnded?.Invoke(CurrentGameState);
 
         isResolvingTurn = false;
@@ -249,6 +251,15 @@ public class GameStateManager : MonoBehaviour {
         enemyTurnCalculator.CalculateAndQueueEnemyTurns(CurrentGameState);
         turnStackController.AddEmptyPlayerTurn();
         turnStackController.OnTurnStackUpdate(new List<Turn>(turnStackController.TurnStack));
+    }
+
+    List<ItemData> UpdateItemDurations(GameState currentGameState)
+    {
+        List<ItemData> items = currentGameState.items;
+
+        items.ForEach(i => i.Duration--);
+
+        return items.Where(i => i.Duration > 0).ToList();
     }
     #endregion
 

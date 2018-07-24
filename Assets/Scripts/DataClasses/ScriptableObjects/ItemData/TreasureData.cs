@@ -21,5 +21,4 @@ public class TreasureData : ItemData {
 
         return copy;
     }
-
 }
