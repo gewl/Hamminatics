@@ -148,13 +148,36 @@ public static class GameStateHelperFunctions {
 
     public static ItemData GetItemInPosition(this GameState state, Vector2Int position)
     {
-        return state.items.First(item => item.Position == position);
+        return state.items.FirstOrDefault(item => item.Position == position);
     }
+
+    public static GameState CollectItem(this GameState state, ItemData item, EntityData collector)
+    {
+        switch (item.Category)
+        {
+            case ItemCategory.Treasure:
+                if (collector != state.player)
+                {
+                    break;
+                }
+                TreasureData treasure = item as TreasureData;
+                state.inventory.gold += treasure.Value;
+                break;
+            case ItemCategory.Trap:
+                break;
+            default:
+                break;
+        }
+
+        return state;
+    }
+
+    public static void CollectFinishMoveItems(this GameState state)
     #endregion
 
     public static GameState DeepCopy(this GameState originalState)
     {
-        EntityData playerCopy = originalStte.player.Copy();
+        EntityData playerCopy = originalState.player.Copy();
 
         List<EntityData> enemyCopies = originalState.enemies.Select(entity => entity.Copy()).ToList();
         List<ItemData> itemCopies = originalState.items.Select(item => item.Copy()).ToList();

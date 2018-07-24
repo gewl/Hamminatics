@@ -60,10 +60,9 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
 
     void UpdateCardDisplays(CardData[] equippedCards)
     {
-        Debug.Log(equippedCards[0].ID);
         for (int i = 0; i < maximumEquippedCards; i++)
         {
-            if (equippedCards == null)
+            if (equippedCards[i] == null)
             {
                 cardTitles[i].text = "";
                 cardDisplays[i].GetComponent<Button>().interactable = false;

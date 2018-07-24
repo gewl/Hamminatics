@@ -21,21 +21,23 @@ public class GameState {
         inventory = new Inventory();
     }
 
-    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Inventory inventory)
+    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Inventory _inventory)
     {
         player = _player;
         enemies = _enemies;
         items = _items;
+        inventory = _inventory;
 
         turnStack = new Stack<Turn>();
     }
 
-    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Stack<Turn> _turns, Inventory inventory)
+    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Stack<Turn> _turns, Inventory _inventory)
     {
         player = _player;
         enemies = _enemies;
         turnStack = _turns;
         items = _items;
+        inventory = _inventory;
     }
 
     public void UpdateTurnStack(Stack<Turn> newTurnStack)

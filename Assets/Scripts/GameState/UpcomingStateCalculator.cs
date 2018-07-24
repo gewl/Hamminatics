@@ -14,6 +14,8 @@ public static class UpcomingStateCalculator
         GameState mostRecentState = currentState.DeepCopy();
         mostRecentState.lastGamestate = currentState;
 
+        Vector2Int lastPlayerPosition = currentState.player.Position;
+
         while (mostRecentState.turnStack.Count > 0)
         {
             Turn turn = mostRecentState.turnStack.Pop();
@@ -23,14 +25,18 @@ public static class UpcomingStateCalculator
             {
                 ProjectedGameState updatedState = GetNextGameStateFromMove(mostRecentState, entity, move);
                 entity = updatedState.activeEntity;
+
                 projectedGameStates.Add(updatedState);
 
                 mostRecentState = updatedState.gameState;
+
                 if (updatedState.bump != null)
                 {
                     break;
                 }
             }
+
+            projectedGameStates.Last().gameState.CollectFinishMoveItems();
 
             if (turn.action.card != null)
             {
@@ -42,14 +48,10 @@ public static class UpcomingStateCalculator
             }
         }
 
-        for (int i = 0; i < projectedGameStates.Count; i++)
-        {
-            ProjectedGameState projectedState = projectedGameStates[i];
-        }
-
         return projectedGameStates;
     }
 
+    #region state generation
     static ProjectedGameState GetNextGameStateFromMove(GameState lastState, EntityData entity, Direction move)
     {
         GameState newState = lastState.DeepCopy();
@@ -70,7 +72,7 @@ public static class UpcomingStateCalculator
         // If tile is empty, move entity there and return.
         if (!newState.IsTileOccupied(nextTile))
         {
-            entityCopy.Position = nextTile.Position;
+            entityCopy.SetPosition(nextTile.Position, newState);
             return new ProjectedGameState(entityCopy, newState, stateAction);
         }
 
@@ -82,8 +84,8 @@ public static class UpcomingStateCalculator
         if (bumpCanPush)
         {
             Vector2Int projectedBumpPosition = projectedBumpTile.Position;
-            tileOccupant.Position = projectedBumpPosition;
-            entityCopy.Position = nextTile.Position;
+            tileOccupant.SetPosition(projectedBumpPosition, newState);
+            entityCopy.SetPosition(nextTile.Position, newState);
         }
 
         tileOccupant.DealDamage(1, newState);
@@ -137,9 +139,6 @@ public static class UpcomingStateCalculator
 
         return newProjectedState;
     }
+    #endregion
 
-    static Turn GetPlayersLastMoveAction(EntityData player, Stack<Turn> turns)
-    {
-        return turns.Last(turn => turn.Entity == player && turn.action.card.Category == CardCategory.Movement);
-    }
 }

@@ -34,7 +34,6 @@ public class TurnStackController : MonoBehaviour {
     {
         TurnStack.Push(newTurn);
         endRoundButton.interactable = IsPlayerTurnComplete();
-        //OnTurnStackUpdate(new List<Turn>(TurnStack));
     }
 
     public void AddEmptyPlayerTurn()

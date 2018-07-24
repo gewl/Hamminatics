@@ -15,7 +15,6 @@ public class GameStateGenerator {
     public static GameState GenerateNewGameState(Vector2Int entrance, int boardWidth)
     {
         EntityData player = DataManager.GetEntityData(PLAYER_ID);
-        player.Position = entrance;
 
         //EntityData squid = DataManager.GetEntityData(SQUID_ID);
         //EntityData squid2 = DataManager.GetEntityData(SQUID_ID);
@@ -27,16 +26,18 @@ public class GameStateGenerator {
             wasp
         };
 
-        RandomizeEntityStartingCoordinates(enemies, boardWidth, player);
-
+        
         SpeedComparer comparer = new SpeedComparer();
-
         enemies.Sort(comparer);
 
-        return new GameState(player, enemies);
+        GameState generatedState = new GameState(player, enemies);
+        player.SetPosition(entrance, generatedState);
+        generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, boardWidth, player);
+
+        return generatedState;
     }
 
-    static void RandomizeEntityStartingCoordinates(List<EntityData> entities, int boardWidth, EntityData player)
+    static GameState RandomizeEntityStartingCoordinates(GameState state, List<EntityData> entities, int boardWidth, EntityData player)
     {
         for (int i = 0; i < entities.Count; i++)
         {
@@ -47,8 +48,10 @@ public class GameStateGenerator {
                 newPosition = GenerateRandomVector2IntInBounds(boardWidth);
             }
 
-            entities[i].Position = newPosition;
+            entities[i].SetPosition(newPosition, state);
         }
+
+        return state;
     }
 
     static Vector2Int GenerateRandomVector2IntInBounds(int maxValue)

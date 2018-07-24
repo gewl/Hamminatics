@@ -11,8 +11,9 @@ public class EntityData : ScriptableObject {
     public Sprite EntitySprite;
     public int Speed = 1;
     public Color IdentifyingColor;
+    private Vector2Int _position;
     [HideInInspector]
-    public Vector2Int Position;
+    public Vector2Int Position { get { return _position; } }
 
     public ItemData dropItem;
 
@@ -53,11 +54,25 @@ public class EntityData : ScriptableObject {
         copy.EntitySprite = EntitySprite;
         copy.Speed = Speed;
         copy.IdentifyingColor = IdentifyingColor;
-        copy.Position = Position;
+        copy._position = Position;
         copy.movementCard = movementCard;
         copy.attackCard = attackCard;
 
         return copy;
+    }
+
+    public void SetPosition(Vector2Int newPosition, GameState state)
+    {
+        _position = newPosition;
+
+        ItemData itemData = state.GetItemInPosition(newPosition);
+
+        if (itemData == null || itemData.CollectionType != ItemCollectionType.OnStep)
+        {
+            return;
+        }
+
+        state.CollectItem(itemData, this);
     }
 
     public static bool operator ==(EntityData entity1, EntityData entity2)
