@@ -113,7 +113,7 @@ public class TurnStackController : MonoBehaviour {
         }
 
         TurnStack = newTurnStack;
-        energyManager.ProjectedEnergyGain = newIndex - 1;
+        energyManager.UpdateProjectedEnergyGain(newIndex - 1);
         OnTurnStackUpdate(TurnStack.ToList<Turn>());
     }
 

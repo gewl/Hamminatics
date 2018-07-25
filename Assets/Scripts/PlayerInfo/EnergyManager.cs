@@ -9,11 +9,13 @@ public class EnergyManager : MonoBehaviour {
     Sprite emptyEnergyBub;
     [SerializeField]
     Sprite fullEnergyBub;
+    [SerializeField]
+    Sprite translucentEnergyBub;
 
     Image[] energyBubs;
 
     int currentEnergy;
-    public int ProjectedEnergyGain = 0;
+    int projectedEnergyGain = 0;
 
     private void Awake()
     {
@@ -30,20 +32,38 @@ public class EnergyManager : MonoBehaviour {
         GameStateDelegates.OnRoundEnded -= RoundEndHandler;
     }
 
+    public void UpdateProjectedEnergyGain(int energyGain)
+    {
+        projectedEnergyGain = energyGain;
+
+        UpdateEnergyDisplay();
+    }
+
     void RoundEndHandler(GameState updatedGameState)
     {
-        currentEnergy += ProjectedEnergyGain;
+        currentEnergy += projectedEnergyGain;
 
         if (currentEnergy > 5)
         {
             currentEnergy = 5;
         }
 
+        projectedEnergyGain = 0;
+
+        UpdateEnergyDisplay();
+    }
+
+    void UpdateEnergyDisplay()
+    {
         for (int i = 0; i < energyBubs.Length; i++)
         {
             if (i < currentEnergy)
             {
                 energyBubs[i].sprite = fullEnergyBub;
+            }
+            else if (i < currentEnergy + projectedEnergyGain)
+            {
+                energyBubs[i].sprite = translucentEnergyBub;
             }
             else
             {
@@ -51,6 +71,5 @@ public class EnergyManager : MonoBehaviour {
             }
         }
 
-        ProjectedEnergyGain = 0;
     }
 }

@@ -5366,6 +5366,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   emptyHealthBub: {fileID: 21300000, guid: 9a23f6d38f7cfcc419b8b3cce3ba6ffa, type: 3}
   fullHealthBub: {fileID: 21300000, guid: e866aed19b305a544a0dafca6cf006c5, type: 3}
+  translucentHealthBub: {fileID: 21300000, guid: 0a9c626e4540634408ac525c49ef64ac,
+    type: 3}
 --- !u!1 &934704999
 GameObject:
   m_ObjectHideFlags: 0
@@ -5500,7 +5502,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   emptyEnergyBub: {fileID: 21300000, guid: 9a23f6d38f7cfcc419b8b3cce3ba6ffa, type: 3}
   fullEnergyBub: {fileID: 21300000, guid: 0eb03d535b3dfdc46bbcdb4270f82d52, type: 3}
-  ProjectedEnergyGain: 0
+  translucentEnergyBub: {fileID: 21300000, guid: 95a42f1dd218afb4580c3a411a6fdbdd,
+    type: 3}
 --- !u!1 &958688822
 GameObject:
   m_ObjectHideFlags: 0

@@ -134,7 +134,7 @@ public class TurnDrawer : MonoBehaviour {
             GameObject durationClock = Instantiate(durationClockPrefab);
             durationClock.GetComponentInChildren<Text>().text = item.Duration.ToString();
 
-            durationClock.transform.parent = transform;
+            durationClock.GetComponent<RectTransform>().SetParent(transform);
             durationClock.transform.position = cellCornerPosition;
         }
     }
