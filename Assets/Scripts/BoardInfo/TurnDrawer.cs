@@ -128,6 +128,20 @@ public class TurnDrawer : MonoBehaviour {
                     .Where(attackTarget => attackTarget != null && isSelectedEntityState || attackTarget == selectedEntity)
                     .ToList()
                     .ForEach(entity => boardController.DrawEntityAtPosition(entity, translucent));
+
+                // Draw entities killed this turn.
+                projectedState
+                    .gameState
+                    .lastGameState
+                    .GetAllEntities()
+                    .ForEach(e =>
+                    {
+                        if (!projectedState.gameState.HasEntityWhere(entity => e == entity))
+                        {
+                            GenerateAndPositionCellImage(e.Position, 0f, e.EntitySprite, translucent);
+                            GenerateAndPositionCellImage(e.Position, 0f, deadEntitySprite, Color.white);
+                        }
+                    });
             }
             else
             {
