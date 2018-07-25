@@ -78,7 +78,7 @@ public class TurnDrawer : MonoBehaviour {
                 upcomingStates[i + 1];
 
             bool isEntityDeadThisState = !projectedState.gameState.HasEntityWhere(e => e == selectedEntity);
-            bool didEntityDieThisState = projectedState.gameState.lastGameState.HasEntityWhere(e => selectedEntity);
+            bool didEntityDieThisState = projectedState.gameState.lastGameState.HasEntityWhere(e => selectedEntity == e);
 
             if (isEntityDeadThisState)
             {
@@ -98,7 +98,10 @@ public class TurnDrawer : MonoBehaviour {
                         .lastGameState
                         .GetEntityWhere(e => e == selectedEntity)
                         .Position;
-                    GenerateAndPositionCellImage(entityPositionLastState, 0f, selectedEntity.EntitySprite, translucent);
+                    if (!projectedState.gameState.HasEntityWhere(e => e.Position == selectedEntity.Position) && selectedEntity.Position != entityPositionLastState)
+                    {
+                        GenerateAndPositionCellImage(entityPositionLastState, 0f, selectedEntity.EntitySprite, translucent);
+                    }
                     GenerateAndPositionCellImage(entityPositionLastState, 0f, deadEntitySprite, Color.white);
                     continue;
                 }
@@ -136,9 +139,12 @@ public class TurnDrawer : MonoBehaviour {
                     .GetAllEntities()
                     .ForEach(e =>
                     {
-                        if (!projectedState.gameState.HasEntityWhere(entity => e == entity))
+                        if (!projectedState.gameState.HasEntityWhere(projectedEntity => e == projectedEntity))
                         {
-                            GenerateAndPositionCellImage(e.Position, 0f, e.EntitySprite, translucent);
+                            if (!currentGameState.HasEntityWhere(currentEntity => currentEntity.Position == e.Position))
+                            {
+                                GenerateAndPositionCellImage(e.Position, 0f, e.EntitySprite, translucent);
+                            }
                             GenerateAndPositionCellImage(e.Position, 0f, deadEntitySprite, Color.white);
                         }
                     });
