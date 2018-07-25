@@ -17,7 +17,8 @@ public class InfoPanelHandler : MonoBehaviour {
     public void UpdateText(CardData card)
     {
         title.text = card.ID;
-        body.text = card.description;
+        string newBodyText = "Energy cost: " + card.Cost + "\n\n" + card.description;
+        body.text = newBodyText;
     }
 
     public void UpdateText(EntityData entity)

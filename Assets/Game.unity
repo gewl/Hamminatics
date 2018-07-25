@@ -5393,6 +5393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionStackController: {fileID: 323374608}
   boardController: {fileID: 2063671481}
+  deadEntitySprite: {fileID: 21300000, guid: 776e0772be8ae9e4e93245ecb352a062, type: 3}
   durationClockPrefab: {fileID: 1545939839052936, guid: d68f2bc5e10ed1f478d055b9c947acc3,
     type: 2}
   entityHealthDisplayPrefab: {fileID: 1249036348600738, guid: 2b472465446c15a49ab3e074863c59a9,

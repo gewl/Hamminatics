@@ -9,7 +9,7 @@ public class GameState {
     public List<ItemData> items;
 
     public Stack<Turn> turnStack;
-    public GameState lastGamestate;
+    public GameState lastGameState;
 
     public GameState(EntityData _player, List<EntityData> _enemies)
     {

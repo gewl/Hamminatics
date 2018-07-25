@@ -12,7 +12,7 @@ public static class UpcomingStateCalculator
         List<ProjectedGameState> projectedGameStates = new List<ProjectedGameState>();
 
         GameState mostRecentState = currentState.DeepCopy();
-        mostRecentState.lastGamestate = currentState;
+        mostRecentState.lastGameState = currentState;
 
         Vector2Int lastPlayerPosition = currentState.player.Position;
 
@@ -72,7 +72,7 @@ public static class UpcomingStateCalculator
     static ProjectedGameState GetNextGameStateFromMove(GameState lastState, EntityData entity, Direction move)
     {
         GameState newState = lastState.DeepCopy();
-        newState.lastGamestate = lastState;
+        newState.lastGameState = lastState;
         EntityData entityCopy = newState.GetAllEntities().Find(e => entity.ID == e.ID);
         Tile currentEntityTile = BoardController.CurrentBoard.GetTileAtPosition(entityCopy.Position);
 
@@ -116,7 +116,7 @@ public static class UpcomingStateCalculator
     static ProjectedGameState GetNextGameStateFromAction(GameState lastState, EntityData entity, Action action)
     {
         GameState newState = lastState.DeepCopy();
-        newState.lastGamestate = lastState;
+        newState.lastGameState = lastState;
         EntityData entityCopy = newState.GetAllEntities().Find(e => entity.ID == e.ID);
 
         // TODO: This is pretty bare-bones right now because it isn't clear how other card categories will be
