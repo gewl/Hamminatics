@@ -32,11 +32,11 @@ public class HealthDisplayController : MonoBehaviour {
 
     void OnGameStateChange(GameState updatedGameState, List<ProjectedGameState> upcomingStates)
     {
-        int currentPlayerHealth = updatedGameState.player.Health;
+        int currentPlayerHealth = updatedGameState.player.CurrentHealth;
         int projectedHealth = currentPlayerHealth;
         if (upcomingStates.Count > 0)
         {
-            projectedHealth = upcomingStates.Last().gameState.player.Health;
+            projectedHealth = upcomingStates.Last().gameState.player.CurrentHealth;
         }
 
         int lowerValue = Mathf.Min(currentPlayerHealth, projectedHealth);

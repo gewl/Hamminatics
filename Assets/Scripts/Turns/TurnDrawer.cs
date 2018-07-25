@@ -13,6 +13,8 @@ public class TurnDrawer : MonoBehaviour {
 
     [SerializeField]
     GameObject durationClockPrefab;
+    [SerializeField]
+    GameObject entityHealthDisplayPrefab;
 
     bool drawingSelectedEntity = true;
     float deselectedEntityActionOpacity = 0.4f;
@@ -58,6 +60,7 @@ public class TurnDrawer : MonoBehaviour {
         }
 
         DrawItemDurations(currentState.items);
+        DrawEntityHealths(currentState.GetAllEntities());
     }
 
     void HighlightSelectedEntityStates(EntityData selectedEntity, GameState currentGameState, List<ProjectedGameState> upcomingStates)
@@ -131,11 +134,22 @@ public class TurnDrawer : MonoBehaviour {
             Vector2Int itemPosition = item.Position;
 
             Vector2 cellCornerPosition = boardController.GetCellCornerPosition(itemPosition, Direction.Up, Direction.Right);
-            GameObject durationClock = Instantiate(durationClockPrefab);
+            GameObject durationClock = Instantiate(durationClockPrefab, transform);
             durationClock.GetComponentInChildren<Text>().text = item.Duration.ToString();
 
-            durationClock.GetComponent<RectTransform>().SetParent(transform);
             durationClock.transform.position = cellCornerPosition;
+        }
+    }
+
+    void DrawEntityHealths(List<EntityData> entities)
+    {
+        for (int i = 0; i < entities.Count; i++)
+        {
+            EntityData entity = entities[i];
+            GameObject entityHealthDisplay = Instantiate(entityHealthDisplayPrefab, transform);
+            entityHealthDisplay.transform.position = boardController.GetCellPosition(entity.Position);
+
+            entityHealthDisplay.GetComponent<EntityHealthDisplay>().UpdateHealthDisplay(entity.MaxHealth, entity.CurrentHealth);
         }
     }
 

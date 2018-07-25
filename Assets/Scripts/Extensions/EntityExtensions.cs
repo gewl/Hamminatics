@@ -6,10 +6,10 @@ public static class EntityExtensions {
 
     public static void DealDamage(this EntityData entity, int amount, GameState gameState)
     {
-        int newHealth = entity.Health - amount;
+        int newHealth = entity.CurrentHealth - amount;
         entity.SetHealth(newHealth);
 
-        if (entity.Health <= 0)
+        if (entity.CurrentHealth <= 0)
         {
             gameState.enemies.RemoveAll(e => e == entity);
 

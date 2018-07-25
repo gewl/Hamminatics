@@ -5317,6 +5317,8 @@ MonoBehaviour:
   boardController: {fileID: 2063671481}
   durationClockPrefab: {fileID: 1545939839052936, guid: d68f2bc5e10ed1f478d055b9c947acc3,
     type: 2}
+  entityHealthDisplayPrefab: {fileID: 1249036348600738, guid: 2b472465446c15a49ab3e074863c59a9,
+    type: 2}
 --- !u!1 &933691185
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,8 +5,19 @@ public class EntityData : ScriptableObject {
     public string ID;
 
     [SerializeField]
-    protected int _health = 1;
-    public int Health { get { return _health; } }
+    protected int _maxHealth = 1;
+    public int MaxHealth { get { return _maxHealth; } }
+    private int _currentHealth = int.MinValue;
+    public int CurrentHealth {
+        get
+        {
+            if (_currentHealth == int.MinValue)
+            {
+                _currentHealth = _maxHealth;
+            }
+            return _currentHealth;
+        }
+    }
 
     public Sprite EntitySprite;
     public int Speed = 1;
@@ -22,7 +33,7 @@ public class EntityData : ScriptableObject {
 
     public void SetHealth(int newHealth)
     {
-        _health = newHealth;
+        _currentHealth = newHealth;
     }
 
     public override int GetHashCode()
@@ -47,10 +58,11 @@ public class EntityData : ScriptableObject {
 
     public EntityData Copy()
     {
-        EntityData copy = ScriptableObject.CreateInstance(typeof(EntityData)) as EntityData;
+        EntityData copy = ScriptableObject.Instantiate(this) as EntityData;
 
         copy.ID = ID;
-        copy._health = Health;
+        copy._maxHealth = _maxHealth;
+        copy._currentHealth = _currentHealth;
         copy.EntitySprite = EntitySprite;
         copy.Speed = Speed;
         copy.IdentifyingColor = IdentifyingColor;
