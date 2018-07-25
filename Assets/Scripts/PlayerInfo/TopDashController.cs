@@ -11,6 +11,7 @@ public class TopDashController : MonoBehaviour {
     {
         GameStateDelegates.OnCardSelected += DisplayCardInfo;
         GameStateDelegates.OnEntitySelected += DisplayEntityInfo;
+        GameStateDelegates.OnItemSelected += DisplayItemInfo;
         GameStateDelegates.OnCardDeselected += HideInfoPanel;
         GameStateDelegates.ReturnToDefaultBoard += OnReturnToDefaultBoard;
     }
@@ -19,6 +20,7 @@ public class TopDashController : MonoBehaviour {
     {
         GameStateDelegates.OnCardSelected -= DisplayCardInfo;
         GameStateDelegates.OnEntitySelected -= DisplayEntityInfo;
+        GameStateDelegates.OnItemSelected -= DisplayItemInfo;
         GameStateDelegates.OnCardDeselected -= HideInfoPanel;
         GameStateDelegates.ReturnToDefaultBoard -= OnReturnToDefaultBoard;
     }
@@ -33,6 +35,12 @@ public class TopDashController : MonoBehaviour {
     {
         textInfoHandler.gameObject.SetActive(true);
         textInfoHandler.UpdateText(entity);
+    }
+
+    void DisplayItemInfo(ItemData item)
+    {
+        textInfoHandler.gameObject.SetActive(true);
+        textInfoHandler.UpdateText(item);
     }
 
     void HideInfoPanel()

@@ -22,4 +22,7 @@ public static class GameStateDelegates {
 
     public delegate void SpecificEntityDelegate(EntityData entity, GameState currentGameState, List<ProjectedGameState> upcomingGameStates);
     public static SpecificEntityDelegate OnEntitySelected;
+
+    public delegate void SpecificItemDelegate(ItemData item);
+    public static SpecificItemDelegate OnItemSelected;
 }

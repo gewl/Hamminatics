@@ -77,6 +77,7 @@ public class GameStateManager : MonoBehaviour {
 
     List<Vector2Int> potentialCardTargets;
     EntityData selectedEntity;
+    ItemData selectedItem;
     List<ProjectedGameState> upcomingGameStates;
     public Vector2Int ProjectedPlayerPosition
     {
@@ -193,14 +194,19 @@ public class GameStateManager : MonoBehaviour {
             equippedCardsManager.ClearSelectedCard();
             GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
         }
-        else if (selectedEntity != null)
+        else if (selectedEntity != null || selectedItem != null)
         {
-            DeselectEntity();
+            DeselectEverything();
         }
         else if (CurrentGameState.IsTileOccupied(tileClickedPosition))
         {
             EntityData tileOccupant = CurrentGameState.GetTileOccupant(tileClickedPosition);
             SelectEntity(tileOccupant);
+        }
+        else if (CurrentGameState.DoesPositionContainItem(tileClickedPosition))
+        {
+            ItemData tileItem = CurrentGameState.GetItemInPosition(tileClickedPosition);
+            SelectItem(tileItem);
         }
     }
 
@@ -210,9 +216,16 @@ public class GameStateManager : MonoBehaviour {
         GameStateDelegates.OnEntitySelected(entity, CurrentGameState, upcomingGameStates);
     }
 
-    void DeselectEntity()
+    void SelectItem(ItemData item)
+    {
+        selectedItem = item;
+        GameStateDelegates.OnItemSelected(selectedItem);
+    }
+
+    void DeselectEverything()
     {
         selectedEntity = null;
+        selectedItem = null;
         GameStateDelegates.ReturnToDefaultBoard(CurrentGameState, upcomingGameStates);
     }
 
@@ -223,9 +236,11 @@ public class GameStateManager : MonoBehaviour {
     #endregion
 
     #region turn transitioning
+
     IEnumerator ProcessCurrentRoundActions()
     {
         isResolvingTurn = true;
+        DeselectEverything();
 
         Queue<ProjectedGameState> upcomingStateQueue = new Queue<ProjectedGameState>(upcomingGameStates);
 

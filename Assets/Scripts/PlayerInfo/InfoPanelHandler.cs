@@ -25,4 +25,10 @@ public class InfoPanelHandler : MonoBehaviour {
         title.text = entity.ID;
         body.text = entity.description;
     }
+
+    public void UpdateText(ItemData item)
+    {
+        title.text = item.ID;
+        body.text = item.description;
+    }
 }
