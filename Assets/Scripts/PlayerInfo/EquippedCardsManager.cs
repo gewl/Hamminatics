@@ -43,6 +43,7 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
     public void ClearSelectedCard()
     {
         selectedCardSlot = -1;
+        GameStateDelegates.OnCardDeselected();
         gameStateManager.ResetBoard();
     }
 
@@ -79,11 +80,13 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
     {
         if (selectedCardSlot == cardSlot)
         {
+            GameStateDelegates.OnCardDeselected();
             ClearSelectedCard();
         }
         else
         {
             selectedCardSlot = cardSlot;
+            GameStateDelegates.OnCardSelected(equippedCards[cardSlot]);
             ShowAvailableCardPlays(cardSlot);
         }
     }

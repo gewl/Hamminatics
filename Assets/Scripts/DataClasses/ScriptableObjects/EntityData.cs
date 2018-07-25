@@ -3,6 +3,7 @@
 [CreateAssetMenu(menuName = "Entity")]
 public class EntityData : ScriptableObject {
     public string ID;
+    public string description = "Placeholder description.";
 
     [SerializeField]
     protected int _maxHealth = 1;

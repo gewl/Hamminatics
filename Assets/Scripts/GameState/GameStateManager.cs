@@ -82,7 +82,14 @@ public class GameStateManager : MonoBehaviour {
     {
         get
         {
-            return upcomingGameStates.Last(s => s.activeEntity == Player).activeEntity.Position;
+            if (upcomingGameStates.Any(state => state.activeEntity == Player))
+            {
+                return upcomingGameStates.Last(s => s.activeEntity == Player).activeEntity.Position;
+            }
+            else
+            {
+                return CurrentGameState.player.Position;
+            }
         }
     }
 

@@ -109,6 +109,7 @@ public class TurnDrawer : MonoBehaviour {
             lastActiveEntity = projectedState.activeEntity;
         }
 
+        DrawEntityHealth(selectedEntity);
         DrawItemDurations(currentGameState.items);
     }
 
@@ -141,15 +142,20 @@ public class TurnDrawer : MonoBehaviour {
         }
     }
 
+    void DrawEntityHealth(EntityData entity)
+    {
+        GameObject entityHealthDisplay = Instantiate(entityHealthDisplayPrefab, transform);
+        entityHealthDisplay.transform.position = boardController.GetCellPosition(entity.Position);
+
+        entityHealthDisplay.GetComponent<EntityHealthDisplay>().UpdateHealthDisplay(entity.MaxHealth, entity.CurrentHealth);
+    }
+
     void DrawEntityHealths(List<EntityData> entities)
     {
         for (int i = 0; i < entities.Count; i++)
         {
             EntityData entity = entities[i];
-            GameObject entityHealthDisplay = Instantiate(entityHealthDisplayPrefab, transform);
-            entityHealthDisplay.transform.position = boardController.GetCellPosition(entity.Position);
-
-            entityHealthDisplay.GetComponent<EntityHealthDisplay>().UpdateHealthDisplay(entity.MaxHealth, entity.CurrentHealth);
+            DrawEntityHealth(entity);
         }
     }
 
