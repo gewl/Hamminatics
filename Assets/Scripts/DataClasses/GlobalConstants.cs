@@ -1,4 +1,5 @@
-﻿public enum CardCategory
+﻿#region Cards/actions
+public enum CardCategory
 {
     Movement,
     Attack
@@ -11,7 +12,9 @@ public enum AbilityTarget
     Line,
     Anywhere
 }
+#endregion
 
+#region board/paths
 public enum Direction
 {
     Up,
@@ -43,7 +46,9 @@ public enum PathType
     FailedBumpRight,
     FailedBumpLeft
 }
+#endregion
 
+#region Ground items
 public enum ItemCategory
 {
     Treasure,
@@ -54,6 +59,23 @@ public enum ItemCollectionType
 {
     OnStep,
     OnFinishMove
+}
+
+public enum TrapCategory
+{
+    InstantDamage,
+    Warp
+}
+#endregion
+
+public enum ModifierCategory
+{
+    Slow,
+    Speed,
+    Weaken,
+    Strength,
+    DamageOverTime,
+    HealOverTime
 }
 
 public struct Constants

@@ -158,7 +158,7 @@ public static class GameStateHelperFunctions {
 
     public static GameState CollectItem(this GameState state, ItemData item, EntityData collector)
     {
-        switch (item.Category)
+        switch (item.itemCategory)
         {
             case ItemCategory.Treasure:
                 if (collector != state.player)
@@ -166,10 +166,12 @@ public static class GameStateHelperFunctions {
                     break;
                 }
                 TreasureData treasure = item as TreasureData;
-                state.inventory.gold += treasure.Value;
+                state.inventory.gold += treasure.value;
                 state.items.Remove(item);
                 break;
             case ItemCategory.Trap:
+                TrapData trap = item as TrapData;
+                ApplyTrapToEntity(state, trap, collector);
                 break;
             default:
                 break;
@@ -195,6 +197,25 @@ public static class GameStateHelperFunctions {
             state.CollectItem(itemAtEntityPosition, entity);
         }
     }
+
+    static void ApplyTrapToEntity(GameState state, TrapData trap, EntityData entity)
+    {
+        switch (trap.trapCategory)
+        {
+            case TrapCategory.InstantDamage:
+                entity.DealDamage(trap.value, state);
+                break;
+            case TrapCategory.Warp:
+                break;
+            default:
+                break;
+        }
+
+        state.items.Remove(trap);
+
+        // TODO: Add handling for if trap has a modifier (buff/debuff to apply)
+    }
+
     #endregion
 
     public static GameState DeepCopy(this GameState originalState)

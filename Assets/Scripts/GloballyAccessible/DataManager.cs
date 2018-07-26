@@ -6,6 +6,7 @@ public class DataManager : MonoBehaviour {
 
     const string ENTITY_DIR = "Data/Entities/";
     const string CARD_DIR = "Data/Cards/";
+    const string TRAP_DIR = "Data/Items/Traps/";
     const string TILE_DIR = "Sprites/Tiles/";
 
     const string GEN_MOVEMENT_CARD_LOC = "Data/Cards/InternalUse/_GenericMove";
@@ -27,6 +28,7 @@ public class DataManager : MonoBehaviour {
     const string BASIC_MOVE_ID = "Move";
 
     static Dictionary<string, EntityData> cachedEntityData;
+    static Dictionary<string, TrapData> cachedTrapData;
     static Dictionary<string, CardData> cachedCardData;
     static Dictionary<string, Sprite> cachedTileSprites;
 
@@ -35,6 +37,7 @@ public class DataManager : MonoBehaviour {
         cachedEntityData = new Dictionary<string, EntityData>();
         cachedCardData = new Dictionary<string, CardData>();
         cachedTileSprites = new Dictionary<string, Sprite>();
+        cachedTrapData = new Dictionary<string, TrapData>();
     }
 
     public static EntityData GetEntityData(string entityName)
@@ -62,12 +65,22 @@ public class DataManager : MonoBehaviour {
         {
             return cachedCardData[cardName];
         }
-        else
+
+        CardData loadedCardData = Resources.Load<CardData>(CARD_DIR + cardName);
+        cachedCardData[cardName] = loadedCardData;
+        return Instantiate(loadedCardData);
+    }
+
+    public static TrapData GetTrapData(string trapName)
+    {
+        if (cachedTrapData.ContainsKey(trapName))
         {
-            CardData loadedCardData = Resources.Load<CardData>(CARD_DIR + cardName);
-            cachedCardData[cardName] = loadedCardData;
-            return Instantiate(loadedCardData);
+            return cachedTrapData[trapName];
         }
+        
+        TrapData loadedTrapData = Resources.Load<TrapData>(TRAP_DIR + trapName);
+        cachedTrapData[trapName] = loadedTrapData;
+        return Instantiate(loadedTrapData);
     }
 
     public static CardData[] GetBasicCards()

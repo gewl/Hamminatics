@@ -11,12 +11,12 @@ public class GameState {
     public Stack<Turn> turnStack;
     public GameState lastGameState;
 
-    public GameState(EntityData _player, List<EntityData> _enemies)
+    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items)
     {
         player = _player;
         enemies = _enemies;
 
-        items = new List<ItemData>();
+        items = _items;
         turnStack = new Stack<Turn>();
         inventory = new Inventory();
     }

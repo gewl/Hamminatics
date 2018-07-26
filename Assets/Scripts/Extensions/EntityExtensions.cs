@@ -23,7 +23,6 @@ public static class EntityExtensions {
                 gameState.items.Add(itemInstance);
             }
         }
-
     }
 
 }

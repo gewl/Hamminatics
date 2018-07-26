@@ -12,6 +12,8 @@ public class GameStateGenerator {
     const string SQUID_ID = "Squid";
     const string WASP_ID = "Wasp";
 
+    const string SPIKE_TRAP_ID = "SimpleSpikeTrap";
+
     public static GameState GenerateNewGameState(Vector2Int entrance, int boardWidth)
     {
         EntityData player = DataManager.GetEntityData(PLAYER_ID);
@@ -23,16 +25,23 @@ public class GameStateGenerator {
         {
             //squid,
             //squid2,
-            wasp
+            //wasp
         };
 
-        
+        TrapData spikeTrap = DataManager.GetTrapData(SPIKE_TRAP_ID);
+
+        List<ItemData> items = new List<ItemData>()
+        {
+            spikeTrap
+        };
+
         SpeedComparer comparer = new SpeedComparer();
         enemies.Sort(comparer);
 
-        GameState generatedState = new GameState(player, enemies);
+        GameState generatedState = new GameState(player, enemies, items);
         player.SetPosition(entrance, generatedState);
         generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, boardWidth, player);
+        generatedState = RandomizeItemStartingCoordinates(generatedState, items, boardWidth);
 
         return generatedState;
     }
@@ -49,6 +58,24 @@ public class GameStateGenerator {
             }
 
             entities[i].SetPosition(newPosition, state);
+        }
+
+        return state;
+    }
+
+    static GameState RandomizeItemStartingCoordinates(GameState state, List<ItemData> items, int boardWidth)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            ItemData item = items[i];
+
+            Vector2Int newPosition = GenerateRandomVector2IntInBounds(boardWidth);
+            while (state.IsTileOccupied(newPosition) || state.DoesPositionContainItem(newPosition))
+            {
+                newPosition = GenerateRandomVector2IntInBounds(boardWidth);
+            }
+
+            item.Position = newPosition;
         }
 
         return state;
