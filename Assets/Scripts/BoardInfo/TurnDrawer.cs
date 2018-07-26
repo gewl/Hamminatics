@@ -12,6 +12,8 @@ public class TurnDrawer : MonoBehaviour {
     BoardController boardController;
 
     [SerializeField]
+    Sprite attackedTileSprite;
+    [SerializeField]
     Sprite deadEntitySprite;
     [SerializeField]
     GameObject durationClockPrefab;
@@ -20,12 +22,23 @@ public class TurnDrawer : MonoBehaviour {
 
     bool drawingSelectedEntity = true;
     float deselectedEntityActionOpacity = 0.4f;
+    float positionAttackedBlinkTimer = 0.2f;
+
+    Color opaque, translucent, clear;
+
+    private void Awake()
+    {
+        opaque = new Color(1f, 1f, 1f, 1f);
+        translucent = new Color(1f, 1f, 1f, deselectedEntityActionOpacity);
+        clear = new Color(1f, 1f, 1f, 0f);
+    }
 
     private void OnEnable()
     {
         GameStateDelegates.ReturnToDefaultBoard += DrawUpcomingStates;
         GameStateDelegates.OnCurrentGameStateChange += DrawUpcomingStates;
         GameStateDelegates.OnEntitySelected += HighlightSelectedEntityStates;
+        GameStateDelegates.OnPositionAttacked += OnPositionAttacked;
     }
 
     private void OnDisable()
@@ -33,6 +46,7 @@ public class TurnDrawer : MonoBehaviour {
         GameStateDelegates.ReturnToDefaultBoard -= DrawUpcomingStates;
         GameStateDelegates.OnCurrentGameStateChange -= DrawUpcomingStates;
         GameStateDelegates.OnEntitySelected -= HighlightSelectedEntityStates;
+        GameStateDelegates.OnPositionAttacked -= OnPositionAttacked;
     }
 
     public void Clear()
@@ -68,7 +82,6 @@ public class TurnDrawer : MonoBehaviour {
     void HighlightSelectedEntityStates(EntityData selectedEntity, GameState currentGameState, List<ProjectedGameState> upcomingStates)
     {
         Clear();
-        Color translucent = new Color(1f, 1f, 1f, deselectedEntityActionOpacity);
         EntityData lastActiveEntity = null;
         for (int i = 0; i < upcomingStates.Count; i++)
         {
@@ -205,6 +218,48 @@ public class TurnDrawer : MonoBehaviour {
             EntityData entity = entities[i];
             DrawEntityHealth(entity);
         }
+    }
+
+    void OnPositionAttacked(Vector2Int position)
+    {
+        StartCoroutine(BlinkPositionAttackedIndicator(position));
+    }
+
+    IEnumerator BlinkPositionAttackedIndicator(Vector2Int position)
+    {
+        Vector2 canvasPosition = boardController.GetCellPosition(position);
+        GameObject overlayIndicator = ImageManager.GetOverlayImage(attackedTileSprite);
+        overlayIndicator.transform.SetParent(transform);
+        overlayIndicator.transform.position = canvasPosition;
+
+        Image overlayImage = overlayIndicator.GetComponent<Image>();
+        overlayImage.color = clear;
+
+        float blinkInTime = positionAttackedBlinkTimer / 2f;
+        float blinkOutTime = blinkInTime;
+        float timeElapsed = 0f;
+
+        while (timeElapsed < blinkInTime)
+        {
+            float percentageComplete = timeElapsed / blinkInTime;
+            overlayImage.color = Color.Lerp(clear, opaque, percentageComplete);
+            timeElapsed += Time.deltaTime;
+
+            yield return null;
+        }
+
+        timeElapsed = 0.0f;
+
+        while (timeElapsed < blinkOutTime)
+        {
+            float percentageComplete = timeElapsed / blinkInTime;
+            overlayImage.color = Color.Lerp(opaque, clear, percentageComplete);
+            timeElapsed += Time.deltaTime;
+
+            yield return null;
+        }
+
+        Destroy(overlayImage);
     }
 
     #region Movement drawing

@@ -246,12 +246,14 @@ public class GameStateManager : MonoBehaviour {
 
         while (upcomingStateQueue.Count > 0)
         {
-            GameState nextGameState = upcomingStateQueue.Dequeue().gameState;
+            ProjectedGameState dequeuedProjectedState = upcomingStateQueue.Dequeue();
+            GameState nextGameState = dequeuedProjectedState.gameState;
 
             CurrentGameState = nextGameState;
-
             upcomingGameStates = new List<ProjectedGameState>(upcomingStateQueue);
+
             GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
+            dequeuedProjectedState.attackedPositions.ForEach(pos => GameStateDelegates.OnPositionAttacked(pos));
 
             yield return new WaitForSeconds(0.5f);
         }

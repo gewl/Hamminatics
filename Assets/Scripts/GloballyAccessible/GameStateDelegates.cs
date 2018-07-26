@@ -7,6 +7,9 @@ public static class GameStateDelegates {
     public delegate void NoParametersDelegate();
     public static NoParametersDelegate OnCardDeselected;
 
+    public delegate void PositionDelegate(Vector2Int position);
+    public static PositionDelegate OnPositionAttacked;
+
     public delegate void UpcomingStatesChangeDelegate(GameState currentState, List<ProjectedGameState> upcomingStates);
     public static UpcomingStatesChangeDelegate OnCurrentGameStateChange;
     public static UpcomingStatesChangeDelegate ReturnToDefaultBoard;
