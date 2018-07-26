@@ -94,6 +94,9 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
+    [SerializeField]
+    GameObject exitArrow;
+
     bool isResolvingTurn = false;
     public bool IsResolvingTurn { get { return isResolvingTurn; } }
 
@@ -122,7 +125,7 @@ public class GameStateManager : MonoBehaviour {
     #region initialization/reset
     public void InitializeGameState(GameBoard board)
     {
-        CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance.Position, board.BoardWidth);
+        CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance.Position, board.Exit.Position, board.BoardWidth);
         GameStateDelegates.OnCurrentGameStateChange += ResetBoard;
         GameStateDelegates.ReturnToDefaultBoard += ResetBoard;
     }
@@ -131,6 +134,7 @@ public class GameStateManager : MonoBehaviour {
     {
         InitializeGameState(boardController.InitializeBoard());
         GenerateNextTurnStack(CurrentGameState);
+        exitArrow.transform.position = boardController.GetCellPosition(BoardController.CurrentBoard.Exit.Position);
         GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
     }
 
@@ -210,6 +214,11 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
+    public void RegisterExitArrowClick()
+    {
+        Debug.Log("exit arrow clicked");
+    }
+
     void SelectEntity(EntityData entity)
     {
         selectedEntity = entity;
@@ -259,6 +268,7 @@ public class GameStateManager : MonoBehaviour {
         }
 
         CurrentGameState.items = UpdateItemDurations(CurrentGameState);
+        UpdateExitArrowVisibility();
 
         GameStateDelegates.OnRoundEnded?.Invoke(CurrentGameState);
 
@@ -284,6 +294,13 @@ public class GameStateManager : MonoBehaviour {
         items.ForEach(i => i.Duration--);
 
         return items.Where(i => i.Duration > 0).ToList();
+    }
+    
+    void UpdateExitArrowVisibility()
+    {
+        bool playerOnExit = Player.Position == BoardController.CurrentBoard.Exit.Position;
+
+        exitArrow.SetActive(playerOnExit);
     }
     #endregion
 

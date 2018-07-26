@@ -12,8 +12,8 @@ public class BoardController : MonoBehaviour {
 
     static int boardWidth = 5;
     public static int BoardWidth { get { return boardWidth; } }
-    Transform[,] boardCells;
-    Image[,] boardCellImages;
+    Transform[,] boardTiles;
+    Image[,] boardTileImages;
     Image[,] tileOccupantImages;
     Image[,] tileItemImages;
 
@@ -26,7 +26,10 @@ public class BoardController : MonoBehaviour {
 
     public GameBoard currentBoard { get; private set;  }
     public static GameBoard CurrentBoard { get { return instance.currentBoard; } }
-    public bool DebuggingTileDistances = false;
+    public bool debuggingTileDistances = false;
+    public bool debuggingExitPosition = false;
+    [SerializeField]
+    GameObject debugExitTextPrefab;
 
     #region Lifecycle
     private void Awake()
@@ -55,8 +58,8 @@ public class BoardController : MonoBehaviour {
 
     public GameBoard InitializeBoard()
     {
-        boardCells = new Transform[boardWidth, boardWidth];
-        boardCellImages = new Image[boardWidth, boardWidth];
+        boardTiles = new Transform[boardWidth, boardWidth];
+        boardTileImages = new Image[boardWidth, boardWidth];
         tileOccupantImages = new Image[boardWidth, boardWidth];
         tileItemImages = new Image[boardWidth, boardWidth];
 
@@ -67,9 +70,9 @@ public class BoardController : MonoBehaviour {
         for (int i = 0; i < childCount; i++)
         {
             Transform cell = transform.GetChild(i);
-            boardCells[xCounter, yCounter] = cell;
+            boardTiles[xCounter, yCounter] = cell;
 
-            boardCellImages[xCounter, yCounter] = cell.GetComponent<Image>();
+            boardTileImages[xCounter, yCounter] = cell.GetComponent<Image>();
 
             Image tileOccupant = cell.GetChild(0).GetComponent<Image>();
             tileOccupantImages[xCounter, yCounter] = tileOccupant;
@@ -93,13 +96,21 @@ public class BoardController : MonoBehaviour {
         {
             for (int x = 0; x < boardWidth; x++)
             {
-                boardCellImages[x, y].sprite = DataManager.GetTileSprite(currentBoard.Tiles[x, y].ID);
-                if (DebuggingTileDistances)
+                boardTileImages[x, y].sprite = DataManager.GetTileSprite(currentBoard.Tiles[x, y].ID);
+
+                if (debuggingTileDistances)
                 {
-                    GameObject thisText = Instantiate(debugText, boardCells[x, y], false);
+                    GameObject thisText = Instantiate(debugText, boardTiles[x, y], false);
                     thisText.GetComponent<Text>().text = currentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
                 }
             }
+        }
+
+        if (debuggingExitPosition)
+        {
+            GameObject instantiatedExitText = Instantiate(debugExitTextPrefab);
+            instantiatedExitText.transform.SetParent(transform);
+            instantiatedExitText.transform.position = GetCellPosition(CurrentBoard.Exit.Position);
         }
 
         return currentBoard;
@@ -114,13 +125,13 @@ public class BoardController : MonoBehaviour {
         currentBoard.ProcessTileDistancesToPlayer(playerTile);
 
 #if UNITY_EDITOR
-        if (DebuggingTileDistances)
+        if (debuggingTileDistances)
         {
             for (int y = 0; y < boardWidth; y++)
             {
                 for (int x = 0; x < boardWidth; x++)
                 {
-                    Text thisText = boardCellImages[x, y].GetComponentInChildren<Text>();
+                    Text thisText = boardTileImages[x, y].GetComponentInChildren<Text>();
                     thisText.text = currentBoard.Tiles[x, y].DistanceFromPlayer.ToString();
                 }
             }
@@ -222,14 +233,14 @@ public class BoardController : MonoBehaviour {
 
     public Vector2 GetCellPosition(Vector2Int position)
     {
-        RectTransform cellRectTransform = boardCells[position.x, position.y].GetComponent<RectTransform>();
+        RectTransform cellRectTransform = boardTiles[position.x, position.y].GetComponent<RectTransform>();
 
         return cellRectTransform.position;
     }
 
     public Vector2 GetCellEdgePosition(Vector2Int position, Direction edgeDirection)
     {
-        RectTransform cellRectTransform = boardCells[position.x, position.y].GetComponent<RectTransform>();
+        RectTransform cellRectTransform = boardTiles[position.x, position.y].GetComponent<RectTransform>();
         Vector3[] worldCorners = new Vector3[4];
         cellRectTransform.GetWorldCorners(worldCorners);
 
@@ -262,7 +273,7 @@ public class BoardController : MonoBehaviour {
             return Vector2.zero;
         }
 
-        RectTransform cellRectTransform = boardCells[cellPosition.x, cellPosition.y].GetComponent<RectTransform>();
+        RectTransform cellRectTransform = boardTiles[cellPosition.x, cellPosition.y].GetComponent<RectTransform>();
         Vector3[] worldCorners = new Vector3[4];
         cellRectTransform.GetWorldCorners(worldCorners);
 
@@ -286,14 +297,14 @@ public class BoardController : MonoBehaviour {
 
     public float GetTileWidth()
     {
-        RectTransform cellRectTransform = boardCells[0,0].GetComponent<RectTransform>();
+        RectTransform cellRectTransform = boardTiles[0,0].GetComponent<RectTransform>();
         return cellRectTransform.rect.width;
     }
 
     #region DEBUG ONLY
     public static void TurnTileColor(Tile tile, Color color)
     {
-        instance.boardCellImages[tile.Position.x, tile.Position.y].color = color;
+        instance.boardTileImages[tile.Position.x, tile.Position.y].color = color;
     }
     #endregion
 }

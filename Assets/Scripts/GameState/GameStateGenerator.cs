@@ -14,7 +14,7 @@ public class GameStateGenerator {
 
     const string SPIKE_TRAP_ID = "SimpleSpikeTrap";
 
-    public static GameState GenerateNewGameState(Vector2Int entrance, int boardWidth)
+    public static GameState GenerateNewGameState(Vector2Int entrance, Vector2Int exit, int boardWidth)
     {
         EntityData player = DataManager.GetEntityData(PLAYER_ID);
 
@@ -41,7 +41,7 @@ public class GameStateGenerator {
         GameState generatedState = new GameState(player, enemies, items);
         player.SetPosition(entrance, generatedState);
         generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, boardWidth, player);
-        generatedState = RandomizeItemStartingCoordinates(generatedState, items, boardWidth);
+        generatedState = RandomizeItemStartingCoordinates(generatedState, items, exit, boardWidth);
 
         return generatedState;
     }
@@ -63,14 +63,14 @@ public class GameStateGenerator {
         return state;
     }
 
-    static GameState RandomizeItemStartingCoordinates(GameState state, List<ItemData> items, int boardWidth)
+    static GameState RandomizeItemStartingCoordinates(GameState state, List<ItemData> items, Vector2Int exit, int boardWidth)
     {
         for (int i = 0; i < items.Count; i++)
         {
             ItemData item = items[i];
 
             Vector2Int newPosition = GenerateRandomVector2IntInBounds(boardWidth);
-            while (state.IsTileOccupied(newPosition) || state.DoesPositionContainItem(newPosition))
+            while (state.IsTileOccupied(newPosition) || state.DoesPositionContainItem(newPosition) || exit == newPosition)
             {
                 newPosition = GenerateRandomVector2IntInBounds(boardWidth);
             }

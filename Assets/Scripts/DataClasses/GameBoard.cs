@@ -14,6 +14,7 @@ public class GameBoard {
     public Tile[,] Tiles { get; private set; }
 
     public Tile Entrance { get; private set; }
+    public Tile Exit { get; private set; } 
     List<Wall> walls;
 
     public GameBoard()
@@ -53,6 +54,7 @@ public class GameBoard {
         }
 
         Entrance = GenerateEntrance(BoardWidth);
+        Exit = GenerateExit(BoardWidth, Entrance.Position);
 
         GenerateWalls();
 
@@ -140,6 +142,45 @@ public class GameBoard {
         Tile entranceTile = Tiles[position.x, position.y];
 
         return entranceTile;
+    }
+
+    Tile GenerateExit(int boardWidth, Vector2Int entrance)
+    {
+        Vector2Int position = new Vector2Int(-1, -1);
+
+        // Place exit position against wall opposite entrance wall. 
+        if (entrance.x == 0)
+        {
+            position.x = boardWidth - 1;
+        }
+        else if (entrance.x == boardWidth - 1)
+        {
+            position.x = 0;
+        }
+        else if (entrance.y == 0)
+        {
+            position.y = boardWidth - 1;
+        }
+        else if (entrance.y == boardWidth - 1)
+        {
+            position.y = 0;
+        }
+
+        System.Random random = new System.Random();
+        int otherValue = random.Next(1, boardWidth - 2);
+
+        if (position.x == -1)
+        {
+            position.x = otherValue;
+        }
+        else
+        {
+            position.y = otherValue;
+        }
+
+        Tile exitTile = Tiles[position.x, position.y];
+
+        return exitTile;
     }
 
     public void ProcessTileDistancesToPlayer(Tile playerTile, bool initializeTileDistances = true)
