@@ -5,7 +5,8 @@ using UnityEngine;
 public class DataManager : MonoBehaviour {
 
     const string ENTITY_DIR = "Data/Entities/";
-    const string CARD_DIR = "Data/Cards/";
+    const string PLAYER_CARD_DIR = "Data/Cards/PlayerCards/";
+    const string ENEMY_CARD_DIR = "Data/Cards/EnemyCards";
     const string TRAP_DIR = "Data/Items/Traps/";
     const string TILE_DIR = "Sprites/Tiles/";
 
@@ -26,6 +27,7 @@ public class DataManager : MonoBehaviour {
 
     const string BASIC_ATTACK_ID = "Attack";
     const string BASIC_MOVE_ID = "Move";
+    const string FIREBALL_ID = "Fireball";
 
     static Dictionary<string, EntityData> cachedEntityData;
     static Dictionary<string, TrapData> cachedTrapData;
@@ -59,14 +61,26 @@ public class DataManager : MonoBehaviour {
         return GenericMovementCard;
     }
 
-    public static CardData GetCardData(string cardName)
+    public static CardData GetPlayerCardData(string cardName)
     {
         if (cachedEntityData.ContainsKey(cardName))
         {
             return cachedCardData[cardName];
         }
 
-        CardData loadedCardData = Resources.Load<CardData>(CARD_DIR + cardName);
+        CardData loadedCardData = Resources.Load<CardData>(PLAYER_CARD_DIR + cardName);
+        cachedCardData[cardName] = loadedCardData;
+        return Instantiate(loadedCardData);
+    }
+
+    public static CardData GetEnemyCardData(string cardName)
+    {
+        if (cachedEntityData.ContainsKey(cardName))
+        {
+            return cachedCardData[cardName];
+        }
+
+        CardData loadedCardData = Resources.Load<CardData>(ENEMY_CARD_DIR + cardName);
         cachedCardData[cardName] = loadedCardData;
         return Instantiate(loadedCardData);
     }
@@ -87,9 +101,9 @@ public class DataManager : MonoBehaviour {
     {
         return new CardData[4]
         {
-            GetCardData(BASIC_MOVE_ID),
-            GetCardData(BASIC_ATTACK_ID),
-            null,
+            GetPlayerCardData(BASIC_MOVE_ID),
+            GetPlayerCardData(BASIC_ATTACK_ID),
+            GetPlayerCardData(FIREBALL_ID),
             null
         };
     }

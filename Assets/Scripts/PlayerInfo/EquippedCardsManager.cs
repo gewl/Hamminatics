@@ -7,6 +7,8 @@ using Sirenix.OdinInspector;
 public class EquippedCardsManager : SerializedMonoBehaviour {
     [SerializeField]
     GameStateManager gameStateManager;
+    [SerializeField]
+    EnergyManager energyManager;
 
     CardData[] equippedCards;
 
@@ -14,6 +16,7 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
     int selectedCardSlot = -1;
 
     GameObject[] cardDisplays;
+    Button[] cardButtons;
     Text[] cardTitles;
 
     private void Awake()
@@ -21,11 +24,13 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
         maximumEquippedCards = Constants.MAX_EQUIPPED_CARDS;
 
         cardDisplays = new GameObject[maximumEquippedCards];
+        cardButtons = new Button[maximumEquippedCards];
         cardTitles = new Text[maximumEquippedCards];
 
         for (int i = 0; i < maximumEquippedCards; i++)
         {
             cardDisplays[i] = transform.GetChild(i).gameObject;
+            cardButtons[i] = cardDisplays[i].GetComponent<Button>();
             cardTitles[i] = cardDisplays[i].GetComponentInChildren<Text>();
         }
     }
@@ -63,16 +68,16 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
     {
         for (int i = 0; i < maximumEquippedCards; i++)
         {
-            if (equippedCards[i] == null)
+            CardData card = equippedCards[i];
+            if (card == null)
             {
                 cardTitles[i].text = "";
-                cardDisplays[i].GetComponent<Button>().interactable = false;
+                cardButtons[i].interactable = false;
+                continue;
             }
-            else
-            {
-                cardTitles[i].text = equippedCards[i].ID;
-                cardDisplays[i].GetComponent<Button>().interactable = true;
-            }
+
+            cardTitles[i].text = card.ID;
+            cardButtons[i].interactable = energyManager.CurrentEnergy >= card.Cost;
         }
     }
 

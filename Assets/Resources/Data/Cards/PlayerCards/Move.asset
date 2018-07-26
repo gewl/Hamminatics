@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Name: Move
   m_EditorClassIdentifier: 
   ID: Move
+  description: Placeholder description.
   Cost: 0
   Direction: 6
   Range: 3

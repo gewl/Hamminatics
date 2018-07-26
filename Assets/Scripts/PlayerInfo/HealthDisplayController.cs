@@ -11,7 +11,9 @@ public class HealthDisplayController : MonoBehaviour {
     [SerializeField]
     Sprite fullHealthBub;
     [SerializeField]
-    Sprite translucentHealthBub;
+    Sprite projectedHealthGainBub;
+    [SerializeField]
+    Sprite projectedHealthLossBub;
 
     Image[] healthBubs;
 
@@ -39,18 +41,46 @@ public class HealthDisplayController : MonoBehaviour {
             projectedHealth = upcomingStates.Last().gameState.player.CurrentHealth;
         }
 
-        int lowerValue = Mathf.Min(currentPlayerHealth, projectedHealth);
-        int higherValue = Mathf.Max(currentPlayerHealth, projectedHealth);
+        if (projectedHealth > currentPlayerHealth)
+        {
+            DrawHealthDisplayWithGain(currentPlayerHealth, projectedHealth);
+        }
+        else
+        {
+            DrawHealthDisplayWithLoss(currentPlayerHealth, projectedHealth);
+        }
+    }
 
+    void DrawHealthDisplayWithGain(int currentHealth, int projectedHealth)
+    {
         for (int i = 0; i < healthBubs.Length; i++)
         {
-            if (i < lowerValue)
+            if (i < currentHealth)
             {
                 healthBubs[i].sprite = fullHealthBub;
             }
-            else if (i < higherValue)
+            else if (i < projectedHealth)
             {
-                healthBubs[i].sprite = translucentHealthBub;
+                healthBubs[i].sprite = projectedHealthGainBub;
+            }
+            else
+            {
+                healthBubs[i].sprite = emptyHealthBub;
+            }
+        }
+    }
+
+    void DrawHealthDisplayWithLoss(int currentHealth, int projectedHealth)
+    {
+        for (int i = 0; i < healthBubs.Length; i++)
+        {
+            if (i < projectedHealth)
+            {
+                healthBubs[i].sprite = fullHealthBub;
+            }
+            else if (i < currentHealth)
+            {
+                healthBubs[i].sprite = projectedHealthLossBub;
             }
             else
             {

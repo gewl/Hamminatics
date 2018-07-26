@@ -175,7 +175,14 @@ public class GameStateManager : MonoBehaviour {
         // Other actions are 'from' player's projected position.
         Vector2Int playerOrigin = card.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
 
-        BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
+        if (card.Category == CardCategory.Movement)
+        {
+            BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
+        }
+        else
+        {
+            BoardHelperFunctions.GetPotentialLinearTargets(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
+        }
     }
 
     void HighlightCell(Vector2Int position)

@@ -9,11 +9,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5daf06a50df7c364ca33d7628e7a574c, type: 3}
-  m_Name: Attack
+  m_Name: Fireball
   m_EditorClassIdentifier: 
-  ID: Attack
-  Cost: 0
+  ID: Fireball
+  description: Placeholder description.
+  Cost: 1
   Direction: 6
-  Range: 1
-  Damage: 1
-  PointerSprite: {fileID: 21300000, guid: 06bb56dab4b3a2846893847b6014b02a, type: 3}
+  Range: 3
+  Damage: 3
+  PointerSprite: {fileID: 21300000, guid: a41c0778accf9184991441c470c10d09, type: 3}

@@ -25,7 +25,7 @@ public class GameStateGenerator {
         {
             //squid,
             //squid2,
-            //wasp
+            wasp
         };
 
         TrapData spikeTrap = DataManager.GetTrapData(SPIKE_TRAP_ID);

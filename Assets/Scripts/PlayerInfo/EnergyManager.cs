@@ -10,12 +10,15 @@ public class EnergyManager : MonoBehaviour {
     [SerializeField]
     Sprite fullEnergyBub;
     [SerializeField]
-    Sprite translucentEnergyBub;
+    Sprite projectedGainEnergyBub;
+    [SerializeField]
+    Sprite projectedLossEnergyBub;
 
     Image[] energyBubs;
 
-    int currentEnergy;
+    public int CurrentEnergy { get; private set; }
     int projectedEnergyGain = 0;
+    int projectedEnergyLoss = 0;
 
     private void Awake()
     {
@@ -34,42 +37,97 @@ public class EnergyManager : MonoBehaviour {
 
     public void UpdateProjectedEnergyGain(int energyGain)
     {
+        if (energyGain < 0)
+        {
+            energyGain = 0;
+        }
         projectedEnergyGain = energyGain;
 
         UpdateEnergyDisplay();
     }
 
-    void RoundEndHandler(GameState updatedGameState)
+    public void UpdateProjectedEnergyCost(int energyCost)
     {
-        currentEnergy += projectedEnergyGain;
-
-        if (currentEnergy > 5)
+        if (energyCost > CurrentEnergy)
         {
-            currentEnergy = 5;
+            Debug.LogError("Trying to use an ability w/ greater cost than current energy.");
+            return;
         }
 
+        projectedEnergyLoss = energyCost;
+        UpdateEnergyDisplay();
+    }
+
+    void RoundEndHandler(GameState updatedGameState)
+    {
+        CurrentEnergy = CalculateUpdatedEnergy(CurrentEnergy, projectedEnergyGain, projectedEnergyLoss);
+
         projectedEnergyGain = 0;
+        projectedEnergyLoss = 0;
 
         UpdateEnergyDisplay();
     }
 
     void UpdateEnergyDisplay()
     {
+        int projectedEnergyAmount = CalculateUpdatedEnergy(CurrentEnergy, projectedEnergyGain, projectedEnergyLoss);
+
+        if (projectedEnergyAmount > CurrentEnergy)
+        {
+            DrawEnergyDisplayWithGain(CurrentEnergy, projectedEnergyAmount);
+        }
+        else
+        {
+            DrawEnergyDisplayWithLoss(CurrentEnergy, projectedEnergyAmount);
+        }
+    }
+
+    void DrawEnergyDisplayWithGain(int currentEnergy, int projectedEnergy)
+    {
         for (int i = 0; i < energyBubs.Length; i++)
         {
-            if (i < currentEnergy)
+            if (i < CurrentEnergy)
             {
                 energyBubs[i].sprite = fullEnergyBub;
             }
-            else if (i < currentEnergy + projectedEnergyGain)
+            else if (i < projectedEnergy)
             {
-                energyBubs[i].sprite = translucentEnergyBub;
+                energyBubs[i].sprite = projectedGainEnergyBub;
             }
             else
             {
                 energyBubs[i].sprite = emptyEnergyBub;
             }
         }
+    }
 
+    void DrawEnergyDisplayWithLoss(int currentEnergy, int projectedEnergy)
+    {
+        for (int i = 0; i < energyBubs.Length; i++)
+        {
+            if (i < projectedEnergy)
+            {
+                energyBubs[i].sprite = fullEnergyBub;
+            }
+            else if (i < CurrentEnergy)
+            {
+                energyBubs[i].sprite = projectedLossEnergyBub;
+            }
+            else
+            {
+                energyBubs[i].sprite = emptyEnergyBub;
+            }
+        }
+    }
+
+    int CalculateUpdatedEnergy(int currentEnergy, int projectedGain, int projectedLoss)
+    {
+        currentEnergy -= projectedLoss;
+
+        currentEnergy = Mathf.Max(0, currentEnergy);
+        
+        currentEnergy += projectedGain;
+
+        return Mathf.Min(5, currentEnergy);
     }
 }
