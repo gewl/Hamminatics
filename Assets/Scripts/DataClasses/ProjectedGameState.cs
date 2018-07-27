@@ -5,16 +5,16 @@ using UnityEngine;
 public class ProjectedGameState {
 
     public EntityData activeEntity;
-    public GameState gameState;
+    public ScenarioState scenarioState;
     public Action action;
 
     public Bump bump;
     public List<Vector2Int> attackedPositions;
 
-    public ProjectedGameState(EntityData _activeEntity, GameState _gameState, Action _action, Bump _bump = null)
+    public ProjectedGameState(EntityData _activeEntity, ScenarioState _gameState, Action _action, Bump _bump = null)
     {
         activeEntity = _activeEntity;
-        gameState = _gameState;
+        scenarioState = _gameState;
         bump = _bump;
         action = _action;
         attackedPositions = new List<Vector2Int>();

@@ -2,16 +2,16 @@
 using System.Linq;
 using UnityEngine;
 
-public class GameState {
+public class ScenarioState {
     public EntityData player;
     public Inventory inventory;
     public List<EntityData> enemies;
     public List<ItemData> items;
 
     public Stack<Turn> turnStack;
-    public GameState lastGameState;
+    public ScenarioState lastGameState;
 
-    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items)
+    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items)
     {
         player = _player;
         enemies = _enemies;
@@ -21,7 +21,7 @@ public class GameState {
         inventory = new Inventory();
     }
 
-    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Inventory _inventory)
+    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Inventory _inventory)
     {
         player = _player;
         enemies = _enemies;
@@ -31,7 +31,7 @@ public class GameState {
         turnStack = new Stack<Turn>();
     }
 
-    public GameState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Stack<Turn> _turns, Inventory _inventory)
+    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Stack<Turn> _turns, Inventory _inventory)
     {
         player = _player;
         enemies = _enemies;

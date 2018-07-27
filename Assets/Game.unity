@@ -1487,7 +1487,7 @@ GameObject:
   - component: {fileID: 323374609}
   - component: {fileID: 323374606}
   m_Layer: 5
-  m_Name: Game
+  m_Name: ScenarioLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1956,7 +1956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fac2751ec129204e93172a06acc7d8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStateManager: {fileID: 323374607}
+  scenarioStateManager: {fileID: 323374607}
   endRoundButton: {fileID: 341573501}
   energyManager: {fileID: 955059609}
 --- !u!114 &323374609
@@ -11802,7 +11802,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  gameStateManager: {fileID: 323374607}
+  scenarioStateManager: {fileID: 0}
   energyManager: {fileID: 955059609}
 --- !u!1 &2051296338
 GameObject:

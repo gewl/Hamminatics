@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameStateGenerator {
+public class ScenarioStateGenerator {
 
     static System.Random rnd;
     private static readonly object syncLock = new object();
@@ -14,7 +14,7 @@ public class GameStateGenerator {
 
     const string SPIKE_TRAP_ID = "SimpleSpikeTrap";
 
-    public static GameState GenerateNewGameState(Vector2Int entrance, Vector2Int exit, int boardWidth)
+    public static ScenarioState GenerateNewScenarioState(Vector2Int entrance, Vector2Int exit, int boardWidth)
     {
         EntityData player = DataManager.GetEntityData(PLAYER_ID);
 
@@ -38,7 +38,7 @@ public class GameStateGenerator {
         SpeedComparer comparer = new SpeedComparer();
         enemies.Sort(comparer);
 
-        GameState generatedState = new GameState(player, enemies, items);
+        ScenarioState generatedState = new ScenarioState(player, enemies, items);
         player.SetPosition(entrance, generatedState);
         generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, boardWidth, player);
         generatedState = RandomizeItemStartingCoordinates(generatedState, items, exit, boardWidth);
@@ -46,7 +46,7 @@ public class GameStateGenerator {
         return generatedState;
     }
 
-    static GameState RandomizeEntityStartingCoordinates(GameState state, List<EntityData> entities, int boardWidth, EntityData player)
+    static ScenarioState RandomizeEntityStartingCoordinates(ScenarioState state, List<EntityData> entities, int boardWidth, EntityData player)
     {
         for (int i = 0; i < entities.Count; i++)
         {
@@ -63,7 +63,7 @@ public class GameStateGenerator {
         return state;
     }
 
-    static GameState RandomizeItemStartingCoordinates(GameState state, List<ItemData> items, Vector2Int exit, int boardWidth)
+    static ScenarioState RandomizeItemStartingCoordinates(ScenarioState state, List<ItemData> items, Vector2Int exit, int boardWidth)
     {
         for (int i = 0; i < items.Count; i++)
         {

@@ -75,7 +75,7 @@ public class EntityData : ScriptableObject {
         return copy;
     }
 
-    public void SetPosition(Vector2Int newPosition, GameState state)
+    public void SetPosition(Vector2Int newPosition, ScenarioState state)
     {
         _position = newPosition;
 

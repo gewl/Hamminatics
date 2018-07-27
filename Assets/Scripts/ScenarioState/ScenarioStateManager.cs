@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class GameStateManager : MonoBehaviour {
+public class ScenarioStateManager : MonoBehaviour {
 
     TurnStackController _turnStackController;
     TurnStackController turnStackController
@@ -71,25 +71,25 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
-    public GameState CurrentGameState { get; private set; }
-    public GameState ProjectedGameState { get { return upcomingGameStates.Last().gameState; } }
-    public EntityData Player { get { return CurrentGameState.player; } }
+    public ScenarioState CurrentScenarioState { get; private set; }
+    public ScenarioState ProjectedScenarioState { get { return upcomingScenarioStates.Last().scenarioState; } }
+    public EntityData Player { get { return CurrentScenarioState.player; } }
 
     List<Vector2Int> potentialCardTargets;
     EntityData selectedEntity;
     ItemData selectedItem;
-    List<ProjectedGameState> upcomingGameStates;
+    List<ProjectedGameState> upcomingScenarioStates;
     public Vector2Int ProjectedPlayerPosition
     {
         get
         {
-            if (upcomingGameStates.Any(state => state.activeEntity == Player))
+            if (upcomingScenarioStates.Any(state => state.activeEntity == Player))
             {
-                return upcomingGameStates.Last(s => s.activeEntity == Player).activeEntity.Position;
+                return upcomingScenarioStates.Last(s => s.activeEntity == Player).activeEntity.Position;
             }
             else
             {
-                return CurrentGameState.player.Position;
+                return CurrentScenarioState.player.Position;
             }
         }
     }
@@ -107,7 +107,7 @@ public class GameStateManager : MonoBehaviour {
         // This has to be delayed so layout group can space accordingly.
         Invoke("SetBoardUp", 0.1f);
 
-        upcomingGameStates = new List<ProjectedGameState>();
+        upcomingScenarioStates = new List<ProjectedGameState>();
     }
     private void OnEnable()
     {
@@ -116,8 +116,8 @@ public class GameStateManager : MonoBehaviour {
 
     private void OnDisable()
     {
-        GameStateDelegates.ReturnToDefaultBoard -= ResetBoard;
-        GameStateDelegates.OnCurrentGameStateChange -= ResetBoard;
+        ScenarioStateDelegates.ReturnToDefaultBoard -= ResetBoard;
+        ScenarioStateDelegates.OnCurrentScenarioStateChange -= ResetBoard;
         turnStackController.OnTurnStackUpdate -= RecalculateUpcomingStates;
     }
     #endregion
@@ -125,41 +125,65 @@ public class GameStateManager : MonoBehaviour {
     #region initialization/reset
     public void InitializeGameState(GameBoard board)
     {
-        CurrentGameState = GameStateGenerator.GenerateNewGameState(board.Entrance.Position, board.Exit.Position, board.BoardWidth);
-        GameStateDelegates.OnCurrentGameStateChange += ResetBoard;
-        GameStateDelegates.ReturnToDefaultBoard += ResetBoard;
+        CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board.Entrance.Position, board.Exit.Position, board.BoardWidth);
+        ScenarioStateDelegates.OnCurrentScenarioStateChange += ResetBoard;
+        ScenarioStateDelegates.ReturnToDefaultBoard += ResetBoard;
     }
 
     void SetBoardUp()
     {
         InitializeGameState(boardController.InitializeBoard());
-        GenerateNextTurnStack(CurrentGameState);
-        exitArrow.transform.position = boardController.GetCellPosition(BoardController.CurrentBoard.Exit.Position);
-        GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
+        GenerateNextTurnStack(CurrentScenarioState);
+        PlaceExitArrow(exitArrow, boardController.currentBoard.Exit.Position, boardController.currentBoard.BoardWidth);
+        ScenarioStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
+    }
+
+    void PlaceExitArrow(GameObject arrow, Vector2Int exitPosition, int boardWidth)
+    {
+        arrow.transform.position = boardController.GetCellPosition(exitPosition);
+
+        float rotation = 0f;
+        if (exitPosition.x == 0)
+        {
+            rotation = 90f;
+        }
+        else if (exitPosition.x == boardWidth - 1)
+        {
+            rotation = -90f;
+        }
+        else if (exitPosition.y == boardWidth - 1)
+        {
+            rotation = 180f;
+        }
+        else if (exitPosition.y == 0)
+        {
+            rotation = 0f;
+        }
+        arrow.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, rotation));
     }
 
     public void ResetBoard(List<ProjectedGameState> upcomingStates)
     {
-        ResetBoard(CurrentGameState, upcomingGameStates);
+        ResetBoard(CurrentScenarioState, upcomingScenarioStates);
     }
 
     public void ResetBoard()
     {
-        ResetBoard(CurrentGameState, upcomingGameStates);
+        ResetBoard(CurrentScenarioState, upcomingScenarioStates);
     }
 
     void RecalculateUpcomingStates(List<Turn> turns)
     {
         if (!isResolvingTurn)
         {
-            upcomingGameStates = UpcomingStateCalculator.CalculateUpcomingStates(CurrentGameState);
-            turnDrawer.DrawUpcomingStates(CurrentGameState, upcomingGameStates);
+            upcomingScenarioStates = UpcomingStateCalculator.CalculateUpcomingStates(CurrentScenarioState);
+            turnDrawer.DrawUpcomingStates(CurrentScenarioState, upcomingScenarioStates);
         }
     }
 
-    void ResetBoard(GameState currentGameState, List<ProjectedGameState> upcomingStates)
+    void ResetBoard(ScenarioState currentScenarioState, List<ProjectedGameState> upcomingStates)
     {
-        boardController.DrawBoard(currentGameState, isResolvingTurn);
+        boardController.DrawBoard(currentScenarioState, isResolvingTurn);
         potentialCardTargets.Clear();
     }
     #endregion
@@ -167,7 +191,7 @@ public class GameStateManager : MonoBehaviour {
     #region player interaction handling
     public void HighlightPotentialCardTargets(CardData card)
     {
-        ResetBoard(CurrentGameState, upcomingGameStates);
+        ResetBoard(CurrentScenarioState, upcomingScenarioStates);
 
         int cardRange = card.Range;
 
@@ -203,20 +227,20 @@ public class GameStateManager : MonoBehaviour {
             Vector2Int playerOrigin = selectedCard.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
             turnStackController.AddToPlayerTurn(selectedCard, Player, playerOrigin, tileClickedPosition);
             equippedCardsManager.ClearSelectedCard();
-            GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
+            ScenarioStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
         }
         else if (selectedEntity != null || selectedItem != null)
         {
             DeselectEverything();
         }
-        else if (CurrentGameState.IsTileOccupied(tileClickedPosition))
+        else if (CurrentScenarioState.IsTileOccupied(tileClickedPosition))
         {
-            EntityData tileOccupant = CurrentGameState.GetTileOccupant(tileClickedPosition);
+            EntityData tileOccupant = CurrentScenarioState.GetTileOccupant(tileClickedPosition);
             SelectEntity(tileOccupant);
         }
-        else if (CurrentGameState.DoesPositionContainItem(tileClickedPosition))
+        else if (CurrentScenarioState.DoesPositionContainItem(tileClickedPosition))
         {
-            ItemData tileItem = CurrentGameState.GetItemInPosition(tileClickedPosition);
+            ItemData tileItem = CurrentScenarioState.GetItemInPosition(tileClickedPosition);
             SelectItem(tileItem);
         }
     }
@@ -229,20 +253,20 @@ public class GameStateManager : MonoBehaviour {
     void SelectEntity(EntityData entity)
     {
         selectedEntity = entity;
-        GameStateDelegates.OnEntitySelected(entity, CurrentGameState, upcomingGameStates);
+        ScenarioStateDelegates.OnEntitySelected(entity, CurrentScenarioState, upcomingScenarioStates);
     }
 
     void SelectItem(ItemData item)
     {
         selectedItem = item;
-        GameStateDelegates.OnItemSelected(selectedItem);
+        ScenarioStateDelegates.OnItemSelected(selectedItem);
     }
 
     void DeselectEverything()
     {
         selectedEntity = null;
         selectedItem = null;
-        GameStateDelegates.ReturnToDefaultBoard(CurrentGameState, upcomingGameStates);
+        ScenarioStateDelegates.ReturnToDefaultBoard(CurrentScenarioState, upcomingScenarioStates);
     }
 
     public void EndRound()
@@ -258,45 +282,45 @@ public class GameStateManager : MonoBehaviour {
         isResolvingTurn = true;
         DeselectEverything();
 
-        Queue<ProjectedGameState> upcomingStateQueue = new Queue<ProjectedGameState>(upcomingGameStates);
+        Queue<ProjectedGameState> upcomingStateQueue = new Queue<ProjectedGameState>(upcomingScenarioStates);
 
         while (upcomingStateQueue.Count > 0)
         {
             ProjectedGameState dequeuedProjectedState = upcomingStateQueue.Dequeue();
-            GameState nextGameState = dequeuedProjectedState.gameState;
+            ScenarioState nextScenarioState = dequeuedProjectedState.scenarioState;
 
-            CurrentGameState = nextGameState;
-            upcomingGameStates = new List<ProjectedGameState>(upcomingStateQueue);
+            CurrentScenarioState = nextScenarioState;
+            upcomingScenarioStates = new List<ProjectedGameState>(upcomingStateQueue);
 
-            GameStateDelegates.OnCurrentGameStateChange(CurrentGameState, upcomingGameStates);
-            dequeuedProjectedState.attackedPositions.ForEach(pos => GameStateDelegates.OnPositionAttacked(pos));
+            ScenarioStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
+            dequeuedProjectedState.attackedPositions.ForEach(pos => ScenarioStateDelegates.OnPositionAttacked(pos));
 
             yield return new WaitForSeconds(0.5f);
         }
 
-        CurrentGameState.items = UpdateItemDurations(CurrentGameState);
+        CurrentScenarioState.items = UpdateItemDurations(CurrentScenarioState);
         UpdateExitArrowVisibility();
 
-        GameStateDelegates.OnRoundEnded?.Invoke(CurrentGameState);
+        ScenarioStateDelegates.OnRoundEnded?.Invoke(CurrentScenarioState);
 
         isResolvingTurn = false;
 
-        GameStateDelegates.OnCurrentGameStateChange?.Invoke(CurrentGameState, upcomingGameStates);
+        ScenarioStateDelegates.OnCurrentScenarioStateChange?.Invoke(CurrentScenarioState, upcomingScenarioStates);
 
-        upcomingGameStates.Clear();
-        GenerateNextTurnStack(CurrentGameState);
+        upcomingScenarioStates.Clear();
+        GenerateNextTurnStack(CurrentScenarioState);
     }
 
-    void GenerateNextTurnStack(GameState gameState)
+    void GenerateNextTurnStack(ScenarioState gameState)
     {
-        enemyTurnCalculator.CalculateAndQueueEnemyTurns(CurrentGameState);
+        enemyTurnCalculator.CalculateAndQueueEnemyTurns(CurrentScenarioState);
         turnStackController.AddEmptyPlayerTurn();
         turnStackController.OnTurnStackUpdate(new List<Turn>(turnStackController.TurnStack));
     }
 
-    List<ItemData> UpdateItemDurations(GameState currentGameState)
+    List<ItemData> UpdateItemDurations(ScenarioState currentScenarioState)
     {
-        List<ItemData> items = currentGameState.items;
+        List<ItemData> items = currentScenarioState.items;
 
         items.ForEach(i => i.Duration--);
 

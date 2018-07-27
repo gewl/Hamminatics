@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 [ExecuteInEditMode]
 public class BoardController : MonoBehaviour {
-    GameStateManager gameStateManager;
+    ScenarioStateManager gameStateManager;
     static BoardController instance;
 
     static int boardWidth = 5;
@@ -34,7 +34,7 @@ public class BoardController : MonoBehaviour {
     #region Lifecycle
     private void Awake()
     {
-        gameStateManager = GetComponentInParent<GameStateManager>();
+        gameStateManager = GetComponentInParent<ScenarioStateManager>();
 
         invisible = new Color(1f, 1f, 1f, 0f);
         translucent = new Color(1f, 1f, 1f, 0.5f);
@@ -45,13 +45,13 @@ public class BoardController : MonoBehaviour {
 
     private void OnEnable()
     {
-        GameStateDelegates.OnRoundEnded += RecalculateTileDistances;   
+        ScenarioStateDelegates.OnRoundEnded += RecalculateTileDistances;   
         //GameStateDelegates.OnEntitySelected += DrawBoard_SelectedEntity;   
     }
 
     private void OnDisable()
     {
-        GameStateDelegates.OnRoundEnded -= RecalculateTileDistances;   
+        ScenarioStateDelegates.OnRoundEnded -= RecalculateTileDistances;   
         //GameStateDelegates.OnEntitySelected -= DrawBoard_SelectedEntity;   
     }
     #endregion
@@ -116,7 +116,7 @@ public class BoardController : MonoBehaviour {
         return currentBoard;
     }
 
-    void RecalculateTileDistances(GameState updatedGameState)
+    void RecalculateTileDistances(ScenarioState updatedGameState)
     {
         Vector2Int playerPosition = updatedGameState.player.Position;
 
@@ -157,7 +157,7 @@ public class BoardController : MonoBehaviour {
         }
     }
 
-    public void DrawBoard(GameState currentGameState, bool isResolvingTurn)
+    public void DrawBoard(ScenarioState currentGameState, bool isResolvingTurn)
     {
         ClearBoard();
 

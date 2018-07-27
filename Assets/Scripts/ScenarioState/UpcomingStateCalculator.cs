@@ -7,11 +7,11 @@ public static class UpcomingStateCalculator
 {
     static CardData GenericMovementCard { get { return DataManager.GetGenericMovementCard(); } }
 
-    public static List<ProjectedGameState> CalculateUpcomingStates(GameState currentState)
+    public static List<ProjectedGameState> CalculateUpcomingStates(ScenarioState currentState)
     {
         List<ProjectedGameState> projectedGameStates = new List<ProjectedGameState>();
 
-        GameState mostRecentState = currentState.DeepCopy();
+        ScenarioState mostRecentState = currentState.DeepCopy();
         mostRecentState.lastGameState = currentState;
 
         Vector2Int lastPlayerPosition = currentState.player.Position;
@@ -35,7 +35,7 @@ public static class UpcomingStateCalculator
 
                 projectedGameStates.Add(updatedState);
 
-                mostRecentState = updatedState.gameState;
+                mostRecentState = updatedState.scenarioState;
 
                 if (updatedState.bump != null)
                 {
@@ -45,7 +45,7 @@ public static class UpcomingStateCalculator
 
             if (projectedGameStates.Count > 0)
             {
-                projectedGameStates.Last().gameState.CollectFinishMoveItems();
+                projectedGameStates.Last().scenarioState.CollectFinishMoveItems();
             }
 
             bool entityIsStillAlive = mostRecentState.HasEntityWhere(e => e == entity);
@@ -61,7 +61,7 @@ public static class UpcomingStateCalculator
                 entity = updatedState.activeEntity;
                 projectedGameStates.Add(updatedState);
 
-                mostRecentState = updatedState.gameState;
+                mostRecentState = updatedState.scenarioState;
             }
         }
 
@@ -69,9 +69,9 @@ public static class UpcomingStateCalculator
     }
 
     #region state generation
-    static ProjectedGameState GetNextGameStateFromMove(GameState lastState, EntityData entity, Direction move)
+    static ProjectedGameState GetNextGameStateFromMove(ScenarioState lastState, EntityData entity, Direction move)
     {
-        GameState newState = lastState.DeepCopy();
+        ScenarioState newState = lastState.DeepCopy();
         newState.lastGameState = lastState;
         EntityData entityCopy = newState.GetAllEntities().Find(e => entity.ID == e.ID);
         Tile currentEntityTile = BoardController.CurrentBoard.GetTileAtPosition(entityCopy.Position);
@@ -113,9 +113,9 @@ public static class UpcomingStateCalculator
         return new ProjectedGameState(entityCopy, newState, stateAction, bump);
     }
 
-    static ProjectedGameState GetNextGameStateFromAction(GameState lastState, EntityData entity, Action action)
+    static ProjectedGameState GetNextGameStateFromAction(ScenarioState lastState, EntityData entity, Action action)
     {
-        GameState newState = lastState.DeepCopy();
+        ScenarioState newState = lastState.DeepCopy();
         newState.lastGameState = lastState;
         EntityData entityCopy = newState.GetAllEntities().Find(e => entity.ID == e.ID);
 
@@ -134,7 +134,7 @@ public static class UpcomingStateCalculator
         }
     }
 
-    static ProjectedGameState GetNextStateFromAction_Attack(GameState newState, EntityData entity, Action action)
+    static ProjectedGameState GetNextStateFromAction_Attack(ScenarioState newState, EntityData entity, Action action)
     {
         GameBoard testBoard = BoardController.CurrentBoard;
         AttackCardData card = action.card as AttackCardData;

@@ -112,12 +112,12 @@ public static class TileExtensions {
         return tile.IsConnectedToTile(testPosition);
     }
 
-    public static bool IsOccupied(this Tile tile, GameState state)
+    public static bool IsOccupied(this Tile tile, ScenarioState state)
     {
         return state.IsTileOccupied(tile);
     }
 
-    public static bool IsUnoccupied(this Tile tile, GameState state)
+    public static bool IsUnoccupied(this Tile tile, ScenarioState state)
     {
         return !state.IsTileOccupied(tile);
     }

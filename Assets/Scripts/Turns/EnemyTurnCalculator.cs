@@ -22,7 +22,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
 
     // TODO: Very rudimentary AI rn, assumes all enemies rushing at player, need some
     // switch logic for different AI types.
-    public void CalculateAndQueueEnemyTurns(GameState gameState)
+    public void CalculateAndQueueEnemyTurns(ScenarioState gameState)
     {
         List<EntityData> enemies = gameState.enemies;
         projectedEnemyMovementTiles.Clear();

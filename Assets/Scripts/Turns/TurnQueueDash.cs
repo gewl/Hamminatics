@@ -45,20 +45,20 @@ public class TurnQueueDash : MonoBehaviour {
     private void OnEnable()
     {
         turnStack.OnTurnStackUpdate += UpdateTurnQueueDash;
-        GameStateDelegates.OnResolvingTurn += UpdateCurrentlyResolvingTurn;
-        GameStateDelegates.OnEntitySelected += UpdateSelectedEntityTurn;
-        GameStateDelegates.ReturnToDefaultBoard += OnDeselectEntity;
+        ScenarioStateDelegates.OnResolvingTurn += UpdateCurrentlyResolvingTurn;
+        ScenarioStateDelegates.OnEntitySelected += UpdateSelectedEntityTurn;
+        ScenarioStateDelegates.ReturnToDefaultBoard += OnDeselectEntity;
     }
 
     private void OnDisable()
     {
         turnStack.OnTurnStackUpdate -= UpdateTurnQueueDash;
-        GameStateDelegates.OnResolvingTurn -= UpdateCurrentlyResolvingTurn;
-        GameStateDelegates.OnEntitySelected -= UpdateSelectedEntityTurn;
-        GameStateDelegates.ReturnToDefaultBoard -= OnDeselectEntity;
+        ScenarioStateDelegates.OnResolvingTurn -= UpdateCurrentlyResolvingTurn;
+        ScenarioStateDelegates.OnEntitySelected -= UpdateSelectedEntityTurn;
+        ScenarioStateDelegates.ReturnToDefaultBoard -= OnDeselectEntity;
     }
 
-    void UpdateSelectedEntityTurn(EntityData entity, GameState currentGameState, List<ProjectedGameState> upcomingStates)
+    void UpdateSelectedEntityTurn(EntityData entity, ScenarioState currentGameState, List<ProjectedGameState> upcomingStates)
     {
         int turnIndex = currentlyDepictedTurns.FindIndex(t => t.Entity == entity);
         turnOutlines[turnIndex].effectColor = Color.yellow;
@@ -72,7 +72,7 @@ public class TurnQueueDash : MonoBehaviour {
         turnOutlines[turnIndex].effectColor = Color.yellow;
     }
 
-    void OnDeselectEntity(GameState currentState, List<ProjectedGameState> upcomingStates)
+    void OnDeselectEntity(ScenarioState currentState, List<ProjectedGameState> upcomingStates)
     {
         ResetTurnOutlines();
     }

@@ -17,15 +17,15 @@ public class InventoryDisplay : MonoBehaviour {
 
     private void OnEnable()
     {
-        GameStateDelegates.OnCurrentGameStateChange += HandleGameStateChange;
+        ScenarioStateDelegates.OnCurrentScenarioStateChange += HandleGameStateChange;
     }
 
     private void OnDisable()
     {
-        GameStateDelegates.OnCurrentGameStateChange -= HandleGameStateChange;
+        ScenarioStateDelegates.OnCurrentScenarioStateChange -= HandleGameStateChange;
     }
 
-    void HandleGameStateChange(GameState currentGameState, List<ProjectedGameState> upcomingGameStates)
+    void HandleGameStateChange(ScenarioState currentGameState, List<ProjectedGameState> upcomingGameStates)
     {
         goldValueReadout.text = currentGameState.inventory.gold.ToString();
     }

@@ -35,18 +35,18 @@ public class TurnDrawer : MonoBehaviour {
 
     private void OnEnable()
     {
-        GameStateDelegates.ReturnToDefaultBoard += DrawUpcomingStates;
-        GameStateDelegates.OnCurrentGameStateChange += DrawUpcomingStates;
-        GameStateDelegates.OnEntitySelected += HighlightSelectedEntityStates;
-        GameStateDelegates.OnPositionAttacked += OnPositionAttacked;
+        ScenarioStateDelegates.ReturnToDefaultBoard += DrawUpcomingStates;
+        ScenarioStateDelegates.OnCurrentScenarioStateChange += DrawUpcomingStates;
+        ScenarioStateDelegates.OnEntitySelected += HighlightSelectedEntityStates;
+        ScenarioStateDelegates.OnPositionAttacked += OnPositionAttacked;
     }
 
     private void OnDisable()
     {
-        GameStateDelegates.ReturnToDefaultBoard -= DrawUpcomingStates;
-        GameStateDelegates.OnCurrentGameStateChange -= DrawUpcomingStates;
-        GameStateDelegates.OnEntitySelected -= HighlightSelectedEntityStates;
-        GameStateDelegates.OnPositionAttacked -= OnPositionAttacked;
+        ScenarioStateDelegates.ReturnToDefaultBoard -= DrawUpcomingStates;
+        ScenarioStateDelegates.OnCurrentScenarioStateChange -= DrawUpcomingStates;
+        ScenarioStateDelegates.OnEntitySelected -= HighlightSelectedEntityStates;
+        ScenarioStateDelegates.OnPositionAttacked -= OnPositionAttacked;
     }
 
     public void Clear()
@@ -57,7 +57,7 @@ public class TurnDrawer : MonoBehaviour {
         }
     }
 
-    public void DrawUpcomingStates(GameState currentState, List<ProjectedGameState> upcomingStates)
+    public void DrawUpcomingStates(ScenarioState currentState, List<ProjectedGameState> upcomingStates)
     {
         Clear();
         drawingSelectedEntity = true;
@@ -79,7 +79,7 @@ public class TurnDrawer : MonoBehaviour {
         DrawEntityHealths(currentState.GetAllEntities());
     }
 
-    void HighlightSelectedEntityStates(EntityData selectedEntity, GameState currentGameState, List<ProjectedGameState> upcomingStates)
+    void HighlightSelectedEntityStates(EntityData selectedEntity, ScenarioState currentGameState, List<ProjectedGameState> upcomingStates)
     {
         Clear();
         EntityData lastActiveEntity = null;
@@ -90,8 +90,8 @@ public class TurnDrawer : MonoBehaviour {
                 null :
                 upcomingStates[i + 1];
 
-            bool isEntityDeadThisState = !projectedState.gameState.HasEntityWhere(e => e == selectedEntity);
-            bool didEntityDieThisState = projectedState.gameState.lastGameState.HasEntityWhere(e => selectedEntity == e);
+            bool isEntityDeadThisState = !projectedState.scenarioState.HasEntityWhere(e => e == selectedEntity);
+            bool didEntityDieThisState = projectedState.scenarioState.lastGameState.HasEntityWhere(e => selectedEntity == e);
 
             if (isEntityDeadThisState)
             {
@@ -107,11 +107,11 @@ public class TurnDrawer : MonoBehaviour {
                     drawingSelectedEntity = true;
                     DrawState(projectedState, nextState, lastActiveEntity);
                     lastActiveEntity = projectedState.activeEntity;
-                    Vector2Int entityPositionLastState = projectedState.gameState
+                    Vector2Int entityPositionLastState = projectedState.scenarioState
                         .lastGameState
                         .GetEntityWhere(e => e == selectedEntity)
                         .Position;
-                    if (!projectedState.gameState.HasEntityWhere(e => e.Position == selectedEntity.Position) && selectedEntity.Position != entityPositionLastState)
+                    if (!projectedState.scenarioState.HasEntityWhere(e => e.Position == selectedEntity.Position) && selectedEntity.Position != entityPositionLastState)
                     {
                         GenerateAndPositionCellImage(entityPositionLastState, 0f, selectedEntity.EntitySprite, translucent);
                     }
@@ -121,7 +121,7 @@ public class TurnDrawer : MonoBehaviour {
             }
 
             Vector2Int selectedEntityPositionThisState = projectedState
-                .gameState
+                .scenarioState
                 .GetEntityWhere(e => e == selectedEntity)
                 .Position;
 
@@ -139,7 +139,7 @@ public class TurnDrawer : MonoBehaviour {
                 projectedState
                     .attackedPositions
                     .Select(position => projectedState
-                        .gameState
+                        .scenarioState
                         .GetTileOccupant(position))
                     .Where(attackTarget => attackTarget != null && isSelectedEntityState || attackTarget == selectedEntity)
                     .ToList()
@@ -147,12 +147,12 @@ public class TurnDrawer : MonoBehaviour {
 
                 // Draw entities killed this turn.
                 projectedState
-                    .gameState
+                    .scenarioState
                     .lastGameState
                     .GetAllEntities()
                     .ForEach(e =>
                     {
-                        if (!projectedState.gameState.HasEntityWhere(projectedEntity => e == projectedEntity))
+                        if (!projectedState.scenarioState.HasEntityWhere(projectedEntity => e == projectedEntity))
                         {
                             if (!currentGameState.HasEntityWhere(currentEntity => currentEntity.Position == e.Position))
                             {
@@ -268,12 +268,12 @@ public class TurnDrawer : MonoBehaviour {
         EntityData activeEntity = projectedState.activeEntity;
         Vector2Int positionThisState = activeEntity.Position;
         Vector2Int positionLastState = projectedState
-            .gameState
+            .scenarioState
             .lastGameState
             .GetEntityWhere(e => e.ID == activeEntity.ID)
             .Position;
         EntityData activeEntityTwoStatesAgo = projectedState
-            .gameState
+            .scenarioState
             .lastGameState
             .lastGameState
             .GetEntityWhere(e => e.ID == activeEntity.ID);
@@ -304,7 +304,7 @@ public class TurnDrawer : MonoBehaviour {
     void DrawPath(EntityData activeEntity, EntityData lastActiveEntity, ProjectedGameState projectedState, ProjectedGameState nextState)
     {
         bool isEntityAliveNextState = nextState == null || nextState
-            .gameState
+            .scenarioState
             .HasEntityWhere(e => e == activeEntity);
         bool isEntitysLastMove = projectedState.action.card.Category == CardCategory.Movement &&
             (nextState == null ||
@@ -312,7 +312,7 @@ public class TurnDrawer : MonoBehaviour {
             nextState.activeEntity.ID != activeEntity.ID);
             
         Vector2Int positionLastState = projectedState
-            .gameState
+            .scenarioState
             .lastGameState
             .GetEntityWhere(e => e.ID == activeEntity.ID)
             .Position;
@@ -332,7 +332,7 @@ public class TurnDrawer : MonoBehaviour {
             isEntityAliveNextState)
         {
             Vector2Int positionNextState = nextState
-                .gameState
+                .scenarioState
                 .GetEntityWhere(e => e == activeEntity)
                 .Position;
 
@@ -403,7 +403,7 @@ public class TurnDrawer : MonoBehaviour {
         Bump bump = projectedState.bump;
         Vector2Int positionThisState = activeEntity.Position;
         Vector2Int positionLastState = projectedState
-            .gameState
+            .scenarioState
             .lastGameState
             .GetEntityWhere(e => e.ID == activeEntity.ID)
             .Position;
@@ -430,7 +430,7 @@ public class TurnDrawer : MonoBehaviour {
         else
         {
             Vector2Int positionTwoStatesAgo = projectedState
-                .gameState
+                .scenarioState
                 .lastGameState
                 .lastGameState
                 .GetEntityWhere(e => e.ID == activeEntity.ID)

@@ -40,7 +40,7 @@ public static class GameStateHelperFunctions {
     #endregion
 
     #region entity info/manip
-    public static EntityData GetTileOccupant(this GameState state, Tile tile)
+    public static EntityData GetTileOccupant(this ScenarioState state, Tile tile)
     {
         return state.GetTileOccupant(tile.Position);
     }
@@ -51,7 +51,7 @@ public static class GameStateHelperFunctions {
         return BoardHelperFunctions.GetDirectionFromPosition(entityPosition, targetPosition);
     }
 
-    public static EntityData GetTileOccupant(this GameState state, Vector2Int position)
+    public static EntityData GetTileOccupant(this ScenarioState state, Vector2Int position)
     {
         if (state.player.Position == position)
         {
@@ -61,29 +61,29 @@ public static class GameStateHelperFunctions {
         return state.enemies.Find(enemy => enemy.Position == position);
     }
 
-    public static int GetTileDistanceFromPlayer(Vector2Int cellPosition, GameState state)
+    public static int GetTileDistanceFromPlayer(Vector2Int cellPosition, ScenarioState state)
     {
         int xDifference = Mathf.Abs(cellPosition.x - state.player.Position.x);
 
         return xDifference != 0 ? xDifference : Mathf.Abs(cellPosition.y - state.player.Position.y);
     }
 
-    public static bool IsTileOccupied(this GameState state, int x, int y)
+    public static bool IsTileOccupied(this ScenarioState state, int x, int y)
     {
         return state.IsTileOccupied(new Vector2Int(x, y));
     }
 
-    public static bool IsTileOccupied(this GameState state, Tile tile)
+    public static bool IsTileOccupied(this ScenarioState state, Tile tile)
     {
         return state.IsTileOccupied(tile.Position);
     }
 
-    public static bool IsTileOccupied(this GameState state, Vector2Int position)
+    public static bool IsTileOccupied(this ScenarioState state, Vector2Int position)
     {
         return state.player.Position == position || state.enemies.Any<EntityData>(entityData => entityData.Position == position);
     }
 
-    public static bool IsTileOccupied(this GameState state, Vector2Int originPosition, Direction directionFromOrigin, int distanceFromOrigin)
+    public static bool IsTileOccupied(this ScenarioState state, Vector2Int originPosition, Direction directionFromOrigin, int distanceFromOrigin)
     {
         Vector2Int updatedPosition = originPosition;
 
@@ -108,22 +108,22 @@ public static class GameStateHelperFunctions {
         return state.IsTileOccupied(updatedPosition.x, updatedPosition.y);
     }
 
-    public static List<EntityData> GetAllEntities(this GameState state)
+    public static List<EntityData> GetAllEntities(this ScenarioState state)
     {
         return state.enemies.Append(state.player).ToList();
     }
 
-    public static EntityData GetEntityWhere(this GameState state, Predicate<EntityData> predicate)
+    public static EntityData GetEntityWhere(this ScenarioState state, Predicate<EntityData> predicate)
     {
         return state.GetAllEntities().Find(e => predicate(e));
     }
 
-    public static bool HasEntityWhere(this GameState state, Predicate<EntityData> predicate)
+    public static bool HasEntityWhere(this ScenarioState state, Predicate<EntityData> predicate)
     {
         return state.GetAllEntities().Any(e => predicate(e));
     }
 
-    public static Tile FindFirstOccupiedTileInDirection(this GameState state, Tile originTile, Direction direction, int distance)
+    public static Tile FindFirstOccupiedTileInDirection(this ScenarioState state, Tile originTile, Direction direction, int distance)
     {
         Tile currentTargetTile = originTile;
         Tile testTargetTile = originTile.GetDirectionalNeighbor(direction);
@@ -146,17 +146,17 @@ public static class GameStateHelperFunctions {
     #endregion
 
     #region item info/manip
-    public static bool DoesPositionContainItem(this GameState state, Vector2Int position)
+    public static bool DoesPositionContainItem(this ScenarioState state, Vector2Int position)
     {
         return state.items.Any(item => item.Position == position);
     }
 
-    public static ItemData GetItemInPosition(this GameState state, Vector2Int position)
+    public static ItemData GetItemInPosition(this ScenarioState state, Vector2Int position)
     {
         return state.items.FirstOrDefault(item => item.Position == position);
     }
 
-    public static GameState CollectItem(this GameState state, ItemData item, EntityData collector)
+    public static ScenarioState CollectItem(this ScenarioState state, ItemData item, EntityData collector)
     {
         switch (item.itemCategory)
         {
@@ -180,7 +180,7 @@ public static class GameStateHelperFunctions {
         return state;
     }
 
-    public static void CollectFinishMoveItems(this GameState state)
+    public static void CollectFinishMoveItems(this ScenarioState state)
     {
         List<EntityData> allEntities = state.GetAllEntities();
         for (int i = 0; i < allEntities.Count; i++)
@@ -198,7 +198,7 @@ public static class GameStateHelperFunctions {
         }
     }
 
-    static void ApplyTrapToEntity(GameState state, TrapData trap, EntityData entity)
+    static void ApplyTrapToEntity(ScenarioState state, TrapData trap, EntityData entity)
     {
         switch (trap.trapCategory)
         {
@@ -218,7 +218,7 @@ public static class GameStateHelperFunctions {
 
     #endregion
 
-    public static GameState DeepCopy(this GameState originalState)
+    public static ScenarioState DeepCopy(this ScenarioState originalState)
     {
         EntityData playerCopy = originalState.player.Copy();
 
@@ -254,6 +254,6 @@ public static class GameStateHelperFunctions {
             newTurnStack.Push(newTurnList[i]);
         }
 
-        return new GameState(playerCopy, enemyCopies, itemCopies, newTurnStack, inventoryCopy);
+        return new ScenarioState(playerCopy, enemyCopies, itemCopies, newTurnStack, inventoryCopy);
     }
 }

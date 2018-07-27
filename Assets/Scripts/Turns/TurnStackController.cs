@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class TurnStackController : MonoBehaviour {
 
     [SerializeField]
-    GameStateManager gameStateManager;
+    ScenarioStateManager scenarioStateManager;
 
     public delegate void TurnsDelegate(List<Turn> actions);
     public TurnsDelegate OnTurnStackUpdate;
@@ -16,11 +16,11 @@ public class TurnStackController : MonoBehaviour {
     public Stack<Turn> TurnStack {
         get
         {
-            return gameStateManager.CurrentGameState.turnStack; 
+            return scenarioStateManager.CurrentScenarioState.turnStack; 
         }
         set
         {
-            gameStateManager.CurrentGameState.UpdateTurnStack(value);
+            scenarioStateManager.CurrentScenarioState.UpdateTurnStack(value);
         }
     }
     public bool IsTurnStackEmpty { get { return TurnStack.Count == 0; } }
@@ -38,13 +38,13 @@ public class TurnStackController : MonoBehaviour {
 
     public void AddEmptyPlayerTurn()
     {
-        Turn newTurn = new Turn(gameStateManager.Player);
+        Turn newTurn = new Turn(scenarioStateManager.Player);
         AddNewTurn(newTurn);
     }
 
     Turn GetPlayerTurn()
     {
-        return TurnStack.First(t => t.Entity.ID == gameStateManager.Player.ID);
+        return TurnStack.First(t => t.Entity.ID == scenarioStateManager.Player.ID);
     }
 
     Turn GetEntityTurn(EntityData entity)

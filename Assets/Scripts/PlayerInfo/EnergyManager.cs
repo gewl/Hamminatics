@@ -27,12 +27,12 @@ public class EnergyManager : MonoBehaviour {
 
     private void OnEnable()
     {
-        GameStateDelegates.OnRoundEnded += RoundEndHandler;
+        ScenarioStateDelegates.OnRoundEnded += RoundEndHandler;
     }
 
     private void OnDisable()
     {
-        GameStateDelegates.OnRoundEnded -= RoundEndHandler;
+        ScenarioStateDelegates.OnRoundEnded -= RoundEndHandler;
     }
 
     public void UpdateProjectedEnergyGain(int energyGain)
@@ -58,7 +58,7 @@ public class EnergyManager : MonoBehaviour {
         UpdateEnergyDisplay();
     }
 
-    void RoundEndHandler(GameState updatedGameState)
+    void RoundEndHandler(ScenarioState updatedGameState)
     {
         CurrentEnergy = CalculateUpdatedEnergy(CurrentEnergy, projectedEnergyGain, projectedEnergyLoss);
 

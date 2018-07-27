@@ -24,21 +24,21 @@ public class HealthDisplayController : MonoBehaviour {
 
     private void OnEnable()
     {
-        GameStateDelegates.OnCurrentGameStateChange += OnGameStateChange;
+        ScenarioStateDelegates.OnCurrentScenarioStateChange += OnScenarioStateChange;
     }
 
     private void OnDisable()
     {
-        GameStateDelegates.OnCurrentGameStateChange -= OnGameStateChange;
+        ScenarioStateDelegates.OnCurrentScenarioStateChange -= OnScenarioStateChange;
     }
 
-    void OnGameStateChange(GameState updatedGameState, List<ProjectedGameState> upcomingStates)
+    void OnScenarioStateChange(ScenarioState updatedScenarioState, List<ProjectedGameState> upcomingStates)
     {
-        int currentPlayerHealth = updatedGameState.player.CurrentHealth;
+        int currentPlayerHealth = updatedScenarioState.player.CurrentHealth;
         int projectedHealth = currentPlayerHealth;
         if (upcomingStates.Count > 0)
         {
-            projectedHealth = upcomingStates.Last().gameState.player.CurrentHealth;
+            projectedHealth = upcomingStates.Last().scenarioState.player.CurrentHealth;
         }
 
         if (projectedHealth > currentPlayerHealth)

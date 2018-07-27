@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 
 public class EquippedCardsManager : SerializedMonoBehaviour {
     [SerializeField]
-    GameStateManager gameStateManager;
+    ScenarioStateManager scenarioStateManager;
     [SerializeField]
     EnergyManager energyManager;
 
@@ -37,19 +37,19 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
 
     private void OnEnable()
     {
-        GameStateDelegates.OnCurrentGameStateChange += UpdateEquippedCards;
+        ScenarioStateDelegates.OnCurrentScenarioStateChange += UpdateEquippedCards;
     }
 
     private void OnDisable()
     {
-        GameStateDelegates.OnCurrentGameStateChange -= UpdateEquippedCards;
+        ScenarioStateDelegates.OnCurrentScenarioStateChange -= UpdateEquippedCards;
     }
 
     public void ClearSelectedCard()
     {
         selectedCardSlot = -1;
-        GameStateDelegates.OnCardDeselected();
-        gameStateManager.ResetBoard();
+        ScenarioStateDelegates.OnCardDeselected();
+        scenarioStateManager.ResetBoard();
     }
 
     public CardData GetSelectedCard()
@@ -57,7 +57,7 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
         return equippedCards[selectedCardSlot];
     }
 
-    void UpdateEquippedCards(GameState currentState, List<ProjectedGameState> upcomingStates)
+    void UpdateEquippedCards(ScenarioState currentState, List<ProjectedGameState> upcomingStates)
     {
         equippedCards = currentState.inventory.equippedCards;
 
@@ -85,19 +85,19 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
     {
         if (selectedCardSlot == cardSlot)
         {
-            GameStateDelegates.OnCardDeselected();
+            ScenarioStateDelegates.OnCardDeselected();
             ClearSelectedCard();
         }
         else
         {
             selectedCardSlot = cardSlot;
-            GameStateDelegates.OnCardSelected(equippedCards[cardSlot]);
+            ScenarioStateDelegates.OnCardSelected(equippedCards[cardSlot]);
             ShowAvailableCardPlays(cardSlot);
         }
     }
 
     void ShowAvailableCardPlays(int cardSlot)
     {
-        gameStateManager.HighlightPotentialCardTargets(equippedCards[cardSlot]);
+        scenarioStateManager.HighlightPotentialCardTargets(equippedCards[cardSlot]);
     }
 }

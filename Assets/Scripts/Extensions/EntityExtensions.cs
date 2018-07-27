@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class EntityExtensions {
 
-    public static void DealDamage(this EntityData entity, int amount, GameState gameState)
+    public static void DealDamage(this EntityData entity, int amount, ScenarioState gameState)
     {
         int newHealth = entity.CurrentHealth - amount;
         entity.SetHealth(newHealth);
