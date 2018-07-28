@@ -47,6 +47,9 @@ public class MapController : MonoBehaviour {
         float totalYHeightOfNodes = Mathf.Abs(topLayerYCoord - baseLayerYCoord);
         float yGapBetweenLayers = Mathf.Abs(totalYHeightOfNodes / (numberOfLayers - 1));
 
+        // For the time being, just going to stack nodes in layer rightward from leftmost valid point.
+        // TODO: Prettify
+        float firstLayerXPosition = entranceRect.localPosition.x - mapNodeXVariance; 
         for (int i = 1; i < numberOfLayers - 1; i++)
         {
             List<MapNode> layer = map.nodeLayers[i];
