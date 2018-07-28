@@ -7,11 +7,21 @@ public class CampaignStateManager : MonoBehaviour {
 
     public static CampaignState currentCampaign;
 
+    [SerializeField]
+    MapController mapController;
+
     private void Awake()
     {
         EntityData player = DataManager.GetEntityData(PLAYER_ID);
-        int mapLayerCount = 8;
+        int mapLayerCount = 6;
 
         currentCampaign = new CampaignState(new Inventory(), new Map(0, mapLayerCount), player);
+
+        InitializeMap();
+    }
+
+    void InitializeMap()
+    {
+        mapController.DrawMap(currentCampaign.currentMap);
     }
 }

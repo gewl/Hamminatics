@@ -20,6 +20,8 @@ public class Map {
     {
         depth = _depth;
         rand = new Random();
+
+        nodeLayers = GenerateLayers(layerCount);
     }
 
     List<List<MapNode>> GenerateLayers(int numberOfLayers)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CampaignState : MonoBehaviour {
+public class CampaignState {
 
     public Inventory inventory;
     public Map currentMap;
