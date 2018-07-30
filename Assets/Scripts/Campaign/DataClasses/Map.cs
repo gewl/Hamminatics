@@ -12,7 +12,7 @@ public class Map {
     // Node generation values.
     // If randomly generated number (1-100) is less than these values, that node is a Scenario,
     // otherwise it's an Event. "Second" and "third" refers to *on that layer*. First is always Scenario.
-    int secondNodeScenarioChance = 70;
+    int secondNodeScenarioChance = 60;
     int thirdNodeScenarioChance = 40;
 
     private Map() { }
@@ -36,7 +36,7 @@ public class Map {
 
         for (int i = 1; i < numberOfLayers - 1; i++)
         {
-            int numberOfNodesInLayer = rand.Next(1, 4);
+            int numberOfNodesInLayer = rand.Next(2, 4);
             List<MapNode> nodesThisLayer = new List<MapNode>();
 
             for (int j = 0; j < numberOfNodesInLayer; j++)

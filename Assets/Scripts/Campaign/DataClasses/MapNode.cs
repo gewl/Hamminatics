@@ -9,6 +9,8 @@ public class MapNode {
     public HashSet<MapNode> parents;
     public HashSet<MapNode> children;
 
+    MapNodeController nodeController;
+
     private MapNode() { }
 
     public MapNode(MapNodeType _nodeType, int _layer)
@@ -29,5 +31,11 @@ public class MapNode {
     {
         parents.Add(parent);
         parent.children.Add(this);
+    }
+
+    public void AssociateNodeWithController(MapNodeController controller)
+    {
+        nodeController = controller;
+        nodeController.UpdateDepictedNode(this);
     }
 }

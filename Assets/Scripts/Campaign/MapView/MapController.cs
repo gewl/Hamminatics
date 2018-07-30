@@ -23,8 +23,9 @@ public class MapController : MonoBehaviour {
         int numberOfLayers = map.nodeLayers.Count;
         float layerPixelHeight = height / (numberOfLayers - 1);
 
+        MapNode entrance = map.nodeLayers[0][0];
         GameObject entranceNode = Instantiate(mapNodePrefab, transform);
-        entranceNode.GetComponent<MapNodeController>().UpdateDepictedNode(map.nodeLayers[0][0]);
+        entrance.AssociateNodeWithController(entranceNode.GetComponent<MapNodeController>());
         RectTransform entranceRect = entranceNode.GetComponent<RectTransform>();
         Vector2 entrancePositioning = new Vector2(0.5f, 0f);
         entranceRect.anchorMin = entrancePositioning;
@@ -33,8 +34,9 @@ public class MapController : MonoBehaviour {
 
         mapNodeXVariance = (width - (entranceRect.rect.width * 1.5f)) / 2f;
 
+        MapNode exit = map.nodeLayers[numberOfLayers - 1][0];
         GameObject exitNode = Instantiate(mapNodePrefab, transform);
-        exitNode.GetComponent<MapNodeController>().UpdateDepictedNode(map.nodeLayers[map.nodeLayers.Count - 1][0]);
+        exit.AssociateNodeWithController(exitNode.GetComponent<MapNodeController>());
         RectTransform exitRect = exitNode.GetComponent<RectTransform>();
         Vector2 exitPositioning = new Vector2(0.5f, 1);
         exitRect.anchorMin = exitPositioning;
@@ -54,6 +56,15 @@ public class MapController : MonoBehaviour {
         {
             List<MapNode> layer = map.nodeLayers[i];
             int nodesInLayer = layer.Count;
+
+            for (int j = 0; j < nodesInLayer; j++)
+            {
+                MapNode node = layer[j];
+                GameObject drawnNode = Instantiate(mapNodePrefab, transform);
+                node.AssociateNodeWithController(drawnNode.GetComponent<MapNodeController>());
+                RectTransform newNodeRect = drawnNode.GetComponent<RectTransform>();
+                newNodeRect.localPosition = new Vector2(mapNodeXVariance * (j - 1), yGapBetweenLayers * i + baseLayerYCoord);
+            }
         }
     }
 }

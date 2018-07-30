@@ -10,7 +10,7 @@ public class CampaignStateManager : MonoBehaviour {
     [SerializeField]
     MapController mapController;
 
-    private void Awake()
+    private void Start()
     {
         EntityData player = DataManager.GetEntityData(PLAYER_ID);
         int mapLayerCount = 6;
