@@ -7,6 +7,7 @@ public class MapController : MonoBehaviour {
 
     Image mapBackgroundImage;
     float height, width, mapNodeXVariance;
+    float nodeZValue = -200f;
 
     [SerializeField]
     GameObject mapNodePrefab;
@@ -33,6 +34,7 @@ public class MapController : MonoBehaviour {
         entranceRect.anchorMin = entrancePositioning;
         entranceRect.anchorMax = entrancePositioning;
         entranceRect.pivot = entrancePositioning;
+        entranceRect.localPosition = new Vector3(entranceRect.localPosition.x, entranceRect.localPosition.y, nodeZValue);
 
         mapNodeXVariance = (width - (entranceRect.rect.width * 1.5f)) / 2f;
 
@@ -44,6 +46,7 @@ public class MapController : MonoBehaviour {
         exitRect.anchorMin = exitPositioning;
         exitRect.anchorMax = exitPositioning;
         exitRect.pivot = exitPositioning;
+        exitRect.localPosition = new Vector3(exitRect.localPosition.x, exitRect.localPosition.y, nodeZValue);
 
         float halfHeight = entranceRect.GetComponent<Image>().rectTransform.rect.height / 2f;
         float baseLayerYCoord = entranceRect.localPosition.y + halfHeight;
@@ -65,7 +68,7 @@ public class MapController : MonoBehaviour {
                 GameObject drawnNode = Instantiate(mapNodePrefab, transform);
                 node.AssociateNodeWithController(drawnNode.GetComponent<MapNodeController>());
                 RectTransform newNodeRect = drawnNode.GetComponent<RectTransform>();
-                newNodeRect.localPosition = new Vector3(mapNodeXVariance * (j - 1), yGapBetweenLayers * i + baseLayerYCoord, -200f);
+                newNodeRect.localPosition = new Vector3(mapNodeXVariance * (j - 1), yGapBetweenLayers * i + baseLayerYCoord, nodeZValue);
 
                 foreach (MapNode parent in node.parents)
                 {

@@ -41,6 +41,17 @@ public class MapNode {
 
     public Vector2 GetPosition()
     {
-        return nodeController.transform.position;
+        Vector3 position = nodeController.transform.position;
+        switch (nodeType)
+        {
+            case MapNodeType.Start:
+                position.y += 0.5f;
+                return position;
+            case MapNodeType.End:
+                position.y -= 0.5f;
+                return position;
+            default:
+                return position;
+        }
     }
 }
