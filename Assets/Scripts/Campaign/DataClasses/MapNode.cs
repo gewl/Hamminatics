@@ -38,4 +38,9 @@ public class MapNode {
         nodeController = controller;
         nodeController.UpdateDepictedNode(this);
     }
+
+    public Vector2 GetPosition()
+    {
+        return nodeController.transform.position;
+    }
 }

@@ -10,6 +10,8 @@ public class MapController : MonoBehaviour {
 
     [SerializeField]
     GameObject mapNodePrefab;
+    [SerializeField]
+    GameObject mapPathPrefab;
 
     private void Awake()
     {
@@ -63,7 +65,16 @@ public class MapController : MonoBehaviour {
                 GameObject drawnNode = Instantiate(mapNodePrefab, transform);
                 node.AssociateNodeWithController(drawnNode.GetComponent<MapNodeController>());
                 RectTransform newNodeRect = drawnNode.GetComponent<RectTransform>();
-                newNodeRect.localPosition = new Vector2(mapNodeXVariance * (j - 1), yGapBetweenLayers * i + baseLayerYCoord);
+                newNodeRect.localPosition = new Vector3(mapNodeXVariance * (j - 1), yGapBetweenLayers * i + baseLayerYCoord, -200f);
+
+                foreach (MapNode parent in node.parents)
+                {
+                    GameObject pathToNode = Instantiate(mapPathPrefab, transform);
+                    LineRenderer pathRenderer = pathToNode.GetComponent<LineRenderer>();
+                    pathRenderer.SetPosition(0, new Vector3(newNodeRect.position.x, newNodeRect.position.y, 0f));
+                    Vector3 parentPosition = parent.GetPosition();
+                    pathRenderer.SetPosition(1, new Vector3(parentPosition.x, parentPosition.y, 0f));
+                }
             }
         }
     }

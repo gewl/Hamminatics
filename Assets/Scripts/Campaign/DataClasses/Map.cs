@@ -49,13 +49,16 @@ public class Map {
             layers.Add(nodesThisLayer);
         }
 
-        for (int layer = 0; layer < layers.Count - 1; layer++)
+        for (int layer = 0; layer < layers.Count; layer++)
         {
-            List<MapNode> nextLayer = layers[layer + 1];
             List<MapNode> thisLayer = layers[layer];
             thisLayer.ForEach(node =>
             {
-                node.AddChild(nextLayer.GetRandomElement());
+                if (layer < layers.Count - 1)
+                {
+                    List<MapNode> nextLayer = layers[layer + 1];
+                    node.AddChild(nextLayer.GetRandomElement());
+                }
                 if (layer != 0 && node.parents.Count == 0)
                 {
                     List<MapNode> lastLayer = layers[layer - 1];

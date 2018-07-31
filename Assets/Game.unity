@@ -5518,7 +5518,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 1048112246}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 11
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -12210,6 +12210,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapNodePrefab: {fileID: 1700296433886714, guid: 20fd160f84ab4804a8d44815ce912dd0,
+    type: 2}
+  mapPathPrefab: {fileID: 1063040660059192, guid: 70ae65ed39f635d4caa7a1327bab59f1,
     type: 2}
 --- !u!114 &2085722983
 MonoBehaviour:
