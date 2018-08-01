@@ -68,6 +68,8 @@ public class Map {
         }
 
         MapNode endNode = new MapNode(MapNodeType.End, numberOfLayers - 1);
+        List<MapNode> previousLayer = layers[numberOfLayers - 2];
+        previousLayer.ForEach(terminalPathNode => endNode.AddParent(terminalPathNode));
         layers.Add(new List<MapNode>() { endNode });
 
         return layers;

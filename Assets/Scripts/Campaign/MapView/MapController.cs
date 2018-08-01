@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,12 +8,18 @@ public class MapController : MonoBehaviour {
 
     Image mapBackgroundImage;
     float height, width, mapNodeXVariance;
-    float nodeZValue = -200f;
 
     [SerializeField]
     GameObject mapNodePrefab;
     [SerializeField]
     GameObject mapPathPrefab;
+
+    [SerializeField]
+    Color playerNodeColor;
+    [SerializeField]
+    Color potentialDestinationColor;
+    [SerializeField]
+    Color potentialPathColor;
 
     private void Awake()
     {
@@ -31,10 +38,10 @@ public class MapController : MonoBehaviour {
         entrance.AssociateNodeWithController(entranceNode.GetComponent<MapNodeController>());
         RectTransform entranceRect = entranceNode.GetComponent<RectTransform>();
         Vector2 entrancePositioning = new Vector2(0.5f, 0f);
+        float halfHeight = entranceRect.rect.height / 2f;
         entranceRect.anchorMin = entrancePositioning;
         entranceRect.anchorMax = entrancePositioning;
-        entranceRect.pivot = entrancePositioning;
-        entranceRect.localPosition = new Vector3(entranceRect.localPosition.x, entranceRect.localPosition.y, nodeZValue);
+        entranceRect.anchoredPosition = new Vector2(0f, halfHeight);
 
         mapNodeXVariance = (width - (entranceRect.rect.width * 1.5f)) / 2f;
 
@@ -45,10 +52,8 @@ public class MapController : MonoBehaviour {
         Vector2 exitPositioning = new Vector2(0.5f, 1);
         exitRect.anchorMin = exitPositioning;
         exitRect.anchorMax = exitPositioning;
-        exitRect.pivot = exitPositioning;
-        exitRect.localPosition = new Vector3(exitRect.localPosition.x, exitRect.localPosition.y, nodeZValue);
+        exitRect.anchoredPosition = new Vector2(0f, -halfHeight);
 
-        float halfHeight = entranceRect.GetComponent<Image>().rectTransform.rect.height / 2f;
         float baseLayerYCoord = entranceRect.localPosition.y + halfHeight;
         float topLayerYCoord = exitRect.localPosition.y - halfHeight;
         float totalYHeightOfNodes = Mathf.Abs(topLayerYCoord - baseLayerYCoord);
@@ -68,17 +73,47 @@ public class MapController : MonoBehaviour {
                 GameObject drawnNode = Instantiate(mapNodePrefab, transform);
                 node.AssociateNodeWithController(drawnNode.GetComponent<MapNodeController>());
                 RectTransform newNodeRect = drawnNode.GetComponent<RectTransform>();
-                newNodeRect.localPosition = new Vector3(mapNodeXVariance * (j - 1), yGapBetweenLayers * i + baseLayerYCoord, nodeZValue);
+                newNodeRect.localPosition = new Vector2(mapNodeXVariance * (j - 1), yGapBetweenLayers * i + baseLayerYCoord);
 
                 foreach (MapNode parent in node.parents)
                 {
                     GameObject pathToNode = Instantiate(mapPathPrefab, transform);
                     LineRenderer pathRenderer = pathToNode.GetComponent<LineRenderer>();
                     pathRenderer.SetPosition(0, new Vector3(newNodeRect.position.x, newNodeRect.position.y, 0f));
-                    Vector3 parentPosition = parent.GetPosition();
+                    Vector3 parentPosition = parent.NodeController.GetPosition();
                     pathRenderer.SetPosition(1, new Vector3(parentPosition.x, parentPosition.y, 0f));
+
+                    parent.NodeController.AddPath(node, pathRenderer);
                 }
             }
         }
+
+        foreach (MapNode parent in exit.parents)
+        {
+            GameObject pathToNode = Instantiate(mapPathPrefab, transform);
+            LineRenderer pathRenderer = pathToNode.GetComponent<LineRenderer>();
+            Vector2 exitNodePosition = exit.NodeController.GetPosition();
+            pathRenderer.SetPosition(0, new Vector3(exitNodePosition.x, exitNodePosition.y, 0f));
+            Vector3 parentPosition = parent.NodeController.GetPosition();
+            pathRenderer.SetPosition(1, new Vector3(parentPosition.x, parentPosition.y, 0f));
+
+            parent.NodeController.AddPath(exit, pathRenderer);
+        }
+    }
+
+    public void UpdateMapState(Map map)
+    {
+        map.nodeLayers.ForEach(layer => layer.ForEach(node => node.NodeController.DeactivateHighlight()));
+
+        MapNode currentPlayerNode = map.currentPlayerNode;
+        currentPlayerNode.NodeController.UpdateHighlight(playerNodeColor);
+        foreach (MapNode child in currentPlayerNode.children)
+        {
+            child.NodeController.UpdateHighlight(potentialDestinationColor);
+            LineRenderer pathToChild = currentPlayerNode.NodeController.GetPath(child);
+            pathToChild.startColor = potentialPathColor;
+            pathToChild.endColor = potentialPathColor;
+        }
+
     }
 }

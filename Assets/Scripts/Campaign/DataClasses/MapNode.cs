@@ -10,6 +10,7 @@ public class MapNode {
     public HashSet<MapNode> children;
 
     MapNodeController nodeController;
+    public MapNodeController NodeController { get { return nodeController; } }
 
     private MapNode() { }
 
@@ -39,19 +40,4 @@ public class MapNode {
         nodeController.UpdateDepictedNode(this);
     }
 
-    public Vector2 GetPosition()
-    {
-        Vector3 position = nodeController.transform.position;
-        switch (nodeType)
-        {
-            case MapNodeType.Start:
-                position.y += 0.5f;
-                return position;
-            case MapNodeType.End:
-                position.y -= 0.5f;
-                return position;
-            default:
-                return position;
-        }
-    }
 }

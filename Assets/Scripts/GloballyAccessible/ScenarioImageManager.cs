@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 
-public class ImageManager : SerializedMonoBehaviour {
+public class ScenarioImageManager : SerializedMonoBehaviour {
     [SerializeField]
     Sprite emptyActionSprite;
 
@@ -23,7 +23,7 @@ public class ImageManager : SerializedMonoBehaviour {
     [SerializeField]
     Dictionary<PathType, Sprite> pathSprites;
 
-    static ImageManager instance;
+    static ScenarioImageManager instance;
 
     private void Awake()
     {

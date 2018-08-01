@@ -228,7 +228,7 @@ public class TurnDrawer : MonoBehaviour {
     IEnumerator BlinkPositionAttackedIndicator(Vector2Int position)
     {
         Vector2 canvasPosition = boardController.GetCellPosition(position);
-        GameObject overlayIndicator = ImageManager.GetOverlayImage(attackedTileSprite);
+        GameObject overlayIndicator = ScenarioImageManager.GetOverlayImage(attackedTileSprite);
         overlayIndicator.transform.SetParent(transform);
         overlayIndicator.transform.position = canvasPosition;
 
@@ -347,7 +347,7 @@ public class TurnDrawer : MonoBehaviour {
             return;
         }
 
-        Sprite pathSprite = ImageManager.GetPathSprite(PathType.Beginning);
+        Sprite pathSprite = ScenarioImageManager.GetPathSprite(PathType.Beginning);
         Direction fakeDirectionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionLastState);
 
         GenerateAndPositionCellImage(positionLastState, GetImageRotation(fakeDirectionOfEntrance), pathSprite, entity.IdentifyingColor);
@@ -356,7 +356,7 @@ public class TurnDrawer : MonoBehaviour {
     void DrawPath_Between(EntityData entity, Vector2Int positionLastState, Vector2Int positionThisState, Vector2Int positionNextState)
     {
         PathType pathType = GetPathType(positionLastState, positionThisState, positionNextState);
-        Sprite pathSprite = ImageManager.GetPathSprite(pathType);
+        Sprite pathSprite = ScenarioImageManager.GetPathSprite(pathType);
         Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionLastState);
 
         GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, entity.IdentifyingColor);
@@ -391,7 +391,7 @@ public class TurnDrawer : MonoBehaviour {
             return;
         }
 
-        Sprite pathSprite = ImageManager.GetPathSprite(PathType.Terminating);
+        Sprite pathSprite = ScenarioImageManager.GetPathSprite(PathType.Terminating);
         Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionLastState);
 
         GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, entity.IdentifyingColor);
@@ -420,7 +420,7 @@ public class TurnDrawer : MonoBehaviour {
         else if (isEntitysFirstMove)
         {
             Vector2Int bumpedEntityPosition = bump.bumpedEntity.Position;
-            Sprite pathSprite = ImageManager.GetPathSprite(PathType.Beginning);
+            Sprite pathSprite = ScenarioImageManager.GetPathSprite(PathType.Beginning);
             Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(bumpedEntityPosition, positionThisState);
             GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, activeEntity.IdentifyingColor);
 
@@ -436,7 +436,7 @@ public class TurnDrawer : MonoBehaviour {
                 .GetEntityWhere(e => e.ID == activeEntity.ID)
                 .Position;
             PathType pathType = GetFailedBumpPathType(positionTwoStatesAgo, positionThisState, bump.bumpedEntity.Position);
-            Sprite pathSprite = ImageManager.GetPathSprite(pathType);
+            Sprite pathSprite = ScenarioImageManager.GetPathSprite(pathType);
             Vector2Int bumpedEntityPosition = bump.bumpedEntity.Position;
             Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionTwoStatesAgo);
 
@@ -448,13 +448,13 @@ public class TurnDrawer : MonoBehaviour {
 
     void DrawSuccessfulBumpEffect(Vector2Int position, Direction entranceDirectionOfBumper)
     {
-        Sprite bumpEffectSprite = ImageManager.GetPathSprite(PathType.Bumped);
+        Sprite bumpEffectSprite = ScenarioImageManager.GetPathSprite(PathType.Bumped);
         GenerateAndPositionCellImage(position, GetImageRotation(entranceDirectionOfBumper), bumpEffectSprite, Color.white);
     }
 
     void DrawFailedBumpEffect(Vector2Int position, Direction entranceDirectionOfBumper)
     {
-        Sprite bumpEffectSprite = ImageManager.GetPathSprite(PathType.Bumped);
+        Sprite bumpEffectSprite = ScenarioImageManager.GetPathSprite(PathType.Bumped);
         GenerateAndPositionCellEdgeImage(position, entranceDirectionOfBumper, bumpEffectSprite, Color.white);
     }
 
@@ -486,7 +486,7 @@ public class TurnDrawer : MonoBehaviour {
 
     void DrawAttackState(ProjectedGameState projectedState)
     {
-        Sprite tileTargetedSprite = ImageManager.GetTileTargetedSprite();
+        Sprite tileTargetedSprite = ScenarioImageManager.GetTileTargetedSprite();
         for (int i = 0; i < projectedState.attackedPositions.Count; i++)
         {
             EntityData activeEntity = projectedState.activeEntity;
@@ -497,7 +497,7 @@ public class TurnDrawer : MonoBehaviour {
             Sprite pointerSprite = cardData.PointerSprite;
 
             float rotation = GetImageRotation(projectedState.action.direction);
-            GameObject abilityPointer = ImageManager.GetAbilityPointer(pointerSprite, rotation);
+            GameObject abilityPointer = ScenarioImageManager.GetAbilityPointer(pointerSprite, rotation);
 
             abilityPointer.transform.SetParent(transform);
             abilityPointer.transform.position = GetPointerImagePosition(activeEntity.Position, projectedState.action.direction);
@@ -567,7 +567,7 @@ public class TurnDrawer : MonoBehaviour {
 
     void GenerateAndPositionCellImage(Vector2Int position, float rotation, Sprite sprite, Color color)
     {
-        GameObject instantiatedPathImage = ImageManager.GetOverlayImage(sprite);
+        GameObject instantiatedPathImage = ScenarioImageManager.GetOverlayImage(sprite);
         instantiatedPathImage.transform.SetParent(transform);
         instantiatedPathImage.transform.position = boardController.GetCellPosition(position);
 
@@ -583,7 +583,7 @@ public class TurnDrawer : MonoBehaviour {
 
     void GenerateAndPositionCellEdgeImage(Vector2Int position, Direction direction, Sprite pathSprite, Color color)
     {
-        GameObject instantiatedBumpImage = ImageManager.GetOverlayImage(pathSprite);
+        GameObject instantiatedBumpImage = ScenarioImageManager.GetOverlayImage(pathSprite);
         instantiatedBumpImage.transform.SetParent(transform);
         instantiatedBumpImage.transform.position = boardController.GetCellEdgePosition(position, direction);
         float imageRotation = GetImageRotation(direction);

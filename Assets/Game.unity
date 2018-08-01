@@ -5501,7 +5501,7 @@ MonoBehaviour:
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 640, y: 1136}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -6636,7 +6636,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: -1
   far clip plane: 1000
   field of view: 60
   orthographic: 1
@@ -12173,6 +12173,7 @@ GameObject:
   - component: {fileID: 2085722984}
   - component: {fileID: 2085722983}
   - component: {fileID: 2085722982}
+  - component: {fileID: 2085722986}
   m_Layer: 0
   m_Name: CampaignLayer
   m_TagString: Untagged
@@ -12209,10 +12210,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6d98faba73dc944bf98f352cc23565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapNodePrefab: {fileID: 1700296433886714, guid: 20fd160f84ab4804a8d44815ce912dd0,
+  mapNodePrefab: {fileID: 1931605337670604, guid: 20fd160f84ab4804a8d44815ce912dd0,
     type: 2}
   mapPathPrefab: {fileID: 1063040660059192, guid: 70ae65ed39f635d4caa7a1327bab59f1,
     type: 2}
+  playerNodeColor: {r: 0, g: 1, b: 0.21379304, a: 1}
+  potentialDestinationColor: {r: 0.15862082, g: 0, b: 1, a: 1}
+  potentialPathColor: {r: 0, g: 0.6275863, b: 1, a: 1}
 --- !u!114 &2085722983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12225,7 +12229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
-  m_EffectDistance: {x: 4, y: -4}
+  m_EffectDistance: {x: 10, y: -10}
   m_UseGraphicAlpha: 1
 --- !u!114 &2085722984
 MonoBehaviour:
@@ -12238,7 +12242,7 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 5c5a3489b4db04447b412d6548ea99a8, type: 2}
   m_Color: {r: 1, g: 0.95740366, b: 0.7794118, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -12260,6 +12264,117 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2085722980}
+--- !u!114 &2085722986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2085722980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb5e0cc4b3a91134fa0226114ebf38e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 21300000, guid: 577fe40ce26f4b64596d54540a4b97ac, type: 3}
+    - {fileID: 21300000, guid: 22905c1b36003fc41b100d87d8d42216, type: 3}
+    - {fileID: 21300000, guid: 543ecf989ab1387448c9bd45746e272b, type: 3}
+    - {fileID: 21300000, guid: 24219765482148643b0cbd4c017510f4, type: 3}
+    - {fileID: 21300000, guid: 1e3afb5c25b321c4eb1cb3f02ac23a29, type: 3}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: mapNodeImages
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[MapNodeType, Assembly-CSharp],[UnityEngine.Sprite,
+        UnityEngine.CoreModule]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[MapNodeType, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 5
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &2085946288
 GameObject:
   m_ObjectHideFlags: 0
