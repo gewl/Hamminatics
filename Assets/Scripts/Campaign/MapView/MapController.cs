@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class MapController : MonoBehaviour {
 
@@ -13,6 +14,11 @@ public class MapController : MonoBehaviour {
     GameObject mapNodePrefab;
     [SerializeField]
     GameObject mapPathPrefab;
+
+    [SerializeField]
+    MapNodeController entranceNodeController;
+    [SerializeField]
+    MapNodeController exitNodeController;
 
     [SerializeField]
     Color playerNodeColor;
@@ -34,25 +40,15 @@ public class MapController : MonoBehaviour {
         float layerPixelHeight = height / (numberOfLayers - 1);
 
         MapNode entrance = map.nodeLayers[0][0];
-        GameObject entranceNode = Instantiate(mapNodePrefab, transform);
-        entrance.AssociateNodeWithController(entranceNode.GetComponent<MapNodeController>());
-        RectTransform entranceRect = entranceNode.GetComponent<RectTransform>();
-        Vector2 entrancePositioning = new Vector2(0.5f, 0f);
+        entrance.AssociateNodeWithController(entranceNodeController);
+        RectTransform entranceRect = entranceNodeController.GetComponent<RectTransform>();
         float halfHeight = entranceRect.rect.height / 2f;
-        entranceRect.anchorMin = entrancePositioning;
-        entranceRect.anchorMax = entrancePositioning;
-        entranceRect.anchoredPosition = new Vector2(0f, halfHeight);
 
         mapNodeXVariance = (width - (entranceRect.rect.width * 1.5f)) / 2f;
 
         MapNode exit = map.nodeLayers[numberOfLayers - 1][0];
-        GameObject exitNode = Instantiate(mapNodePrefab, transform);
-        exit.AssociateNodeWithController(exitNode.GetComponent<MapNodeController>());
-        RectTransform exitRect = exitNode.GetComponent<RectTransform>();
-        Vector2 exitPositioning = new Vector2(0.5f, 1);
-        exitRect.anchorMin = exitPositioning;
-        exitRect.anchorMax = exitPositioning;
-        exitRect.anchoredPosition = new Vector2(0f, -halfHeight);
+        exit.AssociateNodeWithController(exitNodeController);
+        RectTransform exitRect = exitNodeController.GetComponent<RectTransform>();
 
         float baseLayerYCoord = entranceRect.localPosition.y + halfHeight;
         float topLayerYCoord = exitRect.localPosition.y - halfHeight;
@@ -77,28 +73,27 @@ public class MapController : MonoBehaviour {
 
                 foreach (MapNode parent in node.parents)
                 {
-                    GameObject pathToNode = Instantiate(mapPathPrefab, transform);
-                    LineRenderer pathRenderer = pathToNode.GetComponent<LineRenderer>();
-                    pathRenderer.SetPosition(0, new Vector3(newNodeRect.position.x, newNodeRect.position.y, 0f));
-                    Vector3 parentPosition = parent.NodeController.GetPosition();
-                    pathRenderer.SetPosition(1, new Vector3(parentPosition.x, parentPosition.y, 0f));
-
-                    parent.NodeController.AddPath(node, pathRenderer);
+                    DrawPath(node, parent.NodeController);
                 }
             }
         }
 
         foreach (MapNode parent in exit.parents)
         {
-            GameObject pathToNode = Instantiate(mapPathPrefab, transform);
-            LineRenderer pathRenderer = pathToNode.GetComponent<LineRenderer>();
-            Vector2 exitNodePosition = exit.NodeController.GetPosition();
-            pathRenderer.SetPosition(0, new Vector3(exitNodePosition.x, exitNodePosition.y, 0f));
-            Vector3 parentPosition = parent.NodeController.GetPosition();
-            pathRenderer.SetPosition(1, new Vector3(parentPosition.x, parentPosition.y, 0f));
-
-            parent.NodeController.AddPath(exit, pathRenderer);
+            DrawPath(exit, parent.NodeController);
         }
+    }
+
+    void DrawPath(MapNode targetNode, MapNodeController parentNodeController)
+    {
+        RectTransform nodeRect = targetNode.NodeController.GetComponent<RectTransform>();
+        GameObject pathToNode = Instantiate(mapPathPrefab, transform);
+        LineRenderer pathRenderer = pathToNode.GetComponent<LineRenderer>();
+        pathRenderer.SetPosition(0, new Vector3(nodeRect.position.x, nodeRect.position.y, 0f));
+        Vector3 parentPosition = parentNodeController.GetPosition();
+        pathRenderer.SetPosition(1, new Vector3(parentPosition.x, parentPosition.y, 0f));
+
+        parentNodeController.AddPath(targetNode, pathRenderer);
     }
 
     public void UpdateMapState(Map map)
@@ -116,4 +111,15 @@ public class MapController : MonoBehaviour {
         }
 
     }
+
+    void OnMapNodeClick(MapNode node)
+    {
+        Debug.Log("node clicked: " + node.nodeType);
+    }
+    
+    UnityAction GenerateMapNodeClickListener(MapNode node)
+    {
+        return () => OnMapNodeClick(node);
+    }
+
 }
