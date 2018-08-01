@@ -42,16 +42,18 @@ public class MapController : MonoBehaviour {
         MapNode entrance = map.nodeLayers[0][0];
         entrance.AssociateNodeWithController(entranceNodeController);
         RectTransform entranceRect = entranceNodeController.GetComponent<RectTransform>();
-        float halfHeight = entranceRect.rect.height / 2f;
+        entranceNodeController.GetComponent<Button>().onClick.AddListener(GenerateMapNodeClickListener(entrance));
 
+        float halfHeight = entranceRect.rect.height / 2f;
         mapNodeXVariance = (width - (entranceRect.rect.width * 1.5f)) / 2f;
 
         MapNode exit = map.nodeLayers[numberOfLayers - 1][0];
         exit.AssociateNodeWithController(exitNodeController);
         RectTransform exitRect = exitNodeController.GetComponent<RectTransform>();
+        exitNodeController.GetComponent<Button>().onClick.AddListener(GenerateMapNodeClickListener(exit));
 
-        float baseLayerYCoord = entranceRect.localPosition.y + halfHeight;
-        float topLayerYCoord = exitRect.localPosition.y - halfHeight;
+        float baseLayerYCoord = entranceRect.localPosition.y;
+        float topLayerYCoord = exitRect.localPosition.y;
         float totalYHeightOfNodes = Mathf.Abs(topLayerYCoord - baseLayerYCoord);
         float yGapBetweenLayers = Mathf.Abs(totalYHeightOfNodes / (numberOfLayers - 1));
 
@@ -70,30 +72,33 @@ public class MapController : MonoBehaviour {
                 node.AssociateNodeWithController(drawnNode.GetComponent<MapNodeController>());
                 RectTransform newNodeRect = drawnNode.GetComponent<RectTransform>();
                 newNodeRect.localPosition = new Vector2(mapNodeXVariance * (j - 1), yGapBetweenLayers * i + baseLayerYCoord);
+                drawnNode.GetComponent<Button>().onClick.AddListener(GenerateMapNodeClickListener(node));
 
                 foreach (MapNode parent in node.parents)
                 {
-                    DrawPath(node, parent.NodeController);
+                    DrawPath(node.NodeController, parent.NodeController);
                 }
             }
         }
 
         foreach (MapNode parent in exit.parents)
         {
-            DrawPath(exit, parent.NodeController);
+            DrawPath(exit.NodeController, parent.NodeController);
         }
     }
 
-    void DrawPath(MapNode targetNode, MapNodeController parentNodeController)
+    void DrawPath(MapNodeController targetNodeController, MapNodeController parentNodeController)
     {
-        RectTransform nodeRect = targetNode.NodeController.GetComponent<RectTransform>();
         GameObject pathToNode = Instantiate(mapPathPrefab, transform);
         LineRenderer pathRenderer = pathToNode.GetComponent<LineRenderer>();
-        pathRenderer.SetPosition(0, new Vector3(nodeRect.position.x, nodeRect.position.y, 0f));
-        Vector3 parentPosition = parentNodeController.GetPosition();
-        pathRenderer.SetPosition(1, new Vector3(parentPosition.x, parentPosition.y, 0f));
 
-        parentNodeController.AddPath(targetNode, pathRenderer);
+        Vector3 parentPosition = parentNodeController.GetPosition();
+        pathRenderer.SetPosition(0, new Vector3(parentPosition.x, parentPosition.y, 0f));
+
+        Vector3 nodePosition = targetNodeController.GetPosition();
+        pathRenderer.SetPosition(1, new Vector3(nodePosition.x, nodePosition.y, 0f));
+
+        parentNodeController.AddPath(targetNodeController.depictedNode, pathRenderer);
     }
 
     public void UpdateMapState(Map map)
@@ -115,6 +120,10 @@ public class MapController : MonoBehaviour {
     void OnMapNodeClick(MapNode node)
     {
         Debug.Log("node clicked: " + node.nodeType);
+        Debug.Log(node.NodeController.GetComponent<RectTransform>().rect.center);
+        Debug.Log(node.NodeController.GetComponent<RectTransform>().anchoredPosition);
+        Debug.Log(node.NodeController.GetComponent<RectTransform>().position);
+        Debug.Log(node.NodeController.transform.position);
     }
     
     UnityAction GenerateMapNodeClickListener(MapNode node)

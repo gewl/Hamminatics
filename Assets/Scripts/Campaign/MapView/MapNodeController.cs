@@ -6,16 +6,30 @@ using UnityEngine.UI;
 public class MapNodeController : MonoBehaviour {
     public MapNode depictedNode;
 
-    SpriteRenderer _nodeRenderer;
-    SpriteRenderer NodeRenderer
+    RectTransform _rectTransform;
+    RectTransform NodeRectTransform
     {
         get
         {
-            if (_nodeRenderer == null)
+            if (_rectTransform == null)
             {
-                _nodeRenderer = GetComponent<SpriteRenderer>();
+                _rectTransform = GetComponent<RectTransform>();
             }
-            return _nodeRenderer;
+
+            return _rectTransform;
+        }
+    } 
+
+    Image _nodeImage;
+    Image NodeImage
+    {
+        get
+        {
+            if (_nodeImage == null)
+            {
+                _nodeImage = GetComponent<Image>();
+            }
+            return _nodeImage;
         }
     }
 
@@ -44,8 +58,7 @@ public class MapNodeController : MonoBehaviour {
     #region data manip
     public Vector2 GetPosition()
     {
-        Vector3 position = transform.position;
-        return position;
+        return (Vector2)transform.localPosition + NodeRectTransform.rect.center;
     }
 
     public void AddPath(MapNode child, LineRenderer path)
@@ -64,7 +77,7 @@ public class MapNodeController : MonoBehaviour {
     {
         depictedNode = _depictedNode;
 
-        NodeRenderer.sprite = CampaignImageManager.GetMapNodeImage(depictedNode.nodeType);
+        NodeImage.sprite = CampaignImageManager.GetMapNodeImage(depictedNode.nodeType);
     }
 
     public void DeactivateHighlight()
