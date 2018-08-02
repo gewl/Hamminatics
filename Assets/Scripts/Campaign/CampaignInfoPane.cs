@@ -66,5 +66,7 @@ public class CampaignInfoPane : MonoBehaviour {
     public void MoveToNode()
     {
         campaignManager.UpdatePlayerPosition(selectedMapNode);
+        selectedMapNode = null;
+        DeactivatePane();
     }
 }

@@ -5,6 +5,9 @@ using System.Linq;
 
 public class ScenarioStateManager : MonoBehaviour {
 
+    [SerializeField]
+    GameStateManager gameStateManager;
+    
     TurnStackController _turnStackController;
     TurnStackController turnStackController
     {
@@ -18,32 +21,13 @@ public class ScenarioStateManager : MonoBehaviour {
             return _turnStackController;
         }
     }
-    BoardController _boardController;
-    BoardController boardController
-    {
-        get
-        {
-            if (_boardController == null)
-            {
-                _boardController = GetComponentInChildren<BoardController>();
-            }
+    [SerializeField]
+    BoardController boardController;
+    [SerializeField]
+    EquippedCardsManager equippedCardsManager;
+    [SerializeField]
+    TurnDrawer turnDrawer;
 
-            return _boardController;
-        }
-    }
-    EquippedCardsManager _equippedCardsManager;
-    EquippedCardsManager equippedCardsManager
-    {
-        get
-        {
-            if (_equippedCardsManager == null)
-            {
-                _equippedCardsManager = GetComponentInChildren<EquippedCardsManager>();
-            }
-
-            return _equippedCardsManager;
-        }
-    }
     EnemyTurnCalculator _enemyTurnCalculator;
     EnemyTurnCalculator enemyTurnCalculator
     {
@@ -55,19 +39,6 @@ public class ScenarioStateManager : MonoBehaviour {
             }
 
             return _enemyTurnCalculator;
-        }
-    }
-    TurnDrawer _turnDrawer;
-    TurnDrawer turnDrawer
-    {
-        get
-        {
-            if (_turnDrawer == null)
-            {
-                _turnDrawer = GetComponentInChildren<TurnDrawer>();
-            }
-
-            return _turnDrawer;
         }
     }
 
@@ -248,6 +219,7 @@ public class ScenarioStateManager : MonoBehaviour {
     public void RegisterExitArrowClick()
     {
         Debug.Log("exit arrow clicked");
+        gameStateManager.SwitchToCampaign();
     }
 
     void SelectEntity(EntityData entity)

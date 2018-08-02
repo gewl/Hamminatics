@@ -61,4 +61,10 @@ public class GameStateManager : MonoBehaviour {
         mapController.gameObject.SetActive(false);
         scenarioManager.gameObject.SetActive(true);
     }
+
+    public void SwitchToCampaign()
+    {
+        scenarioManager.gameObject.SetActive(false);
+        mapController.gameObject.SetActive(true);
+    }
 }

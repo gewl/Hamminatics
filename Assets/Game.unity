@@ -2060,6 +2060,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9e36315e02f14646846e034cda60670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameStateManager: {fileID: 915970916}
+  boardController: {fileID: 2063671481}
+  equippedCardsManager: {fileID: 1996713820}
+  turnDrawer: {fileID: 929109535}
   exitArrow: {fileID: 578113121}
 --- !u!114 &323374608
 MonoBehaviour:

@@ -108,8 +108,7 @@ public class BoardController : MonoBehaviour {
 
         if (debuggingExitPosition)
         {
-            GameObject instantiatedExitText = Instantiate(debugExitTextPrefab);
-            instantiatedExitText.transform.SetParent(transform);
+            GameObject instantiatedExitText = Instantiate(debugExitTextPrefab, transform);
             instantiatedExitText.transform.position = GetCellPosition(CurrentBoard.Exit.Position);
         }
 

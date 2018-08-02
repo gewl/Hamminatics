@@ -200,6 +200,8 @@ public static class GameStateHelperFunctions {
 
     static void ApplyTrapToEntity(ScenarioState state, TrapData trap, EntityData entity)
     {
+        state.items.Remove(trap);
+
         switch (trap.trapCategory)
         {
             case TrapCategory.InstantDamage:
@@ -210,8 +212,6 @@ public static class GameStateHelperFunctions {
             default:
                 break;
         }
-
-        state.items.Remove(trap);
 
         // TODO: Add handling for if trap has a modifier (buff/debuff to apply)
     }
