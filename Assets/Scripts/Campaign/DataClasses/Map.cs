@@ -70,6 +70,11 @@ public class Map {
         previousLayer.ForEach(terminalPathNode => endNode.AddParent(terminalPathNode));
         layers.Add(new List<MapNode>() { endNode });
 
+        // Place store randomly in one of two final (non-exit) layers.
+        int layersCount = layers.Count;
+        int shopLayer = rand.Next(layersCount - 3, layersCount - 2);
+        layers[shopLayer].GetRandomElement<MapNode>().nodeType = MapNodeType.Store;
+
         return layers;
     }
 
