@@ -45,13 +45,13 @@ public class BoardController : MonoBehaviour {
 
     private void OnEnable()
     {
-        ScenarioStateDelegates.OnRoundEnded += RecalculateTileDistances;   
+        GameStateDelegates.OnRoundEnded += RecalculateTileDistances;   
         //GameStateDelegates.OnEntitySelected += DrawBoard_SelectedEntity;   
     }
 
     private void OnDisable()
     {
-        ScenarioStateDelegates.OnRoundEnded -= RecalculateTileDistances;   
+        GameStateDelegates.OnRoundEnded -= RecalculateTileDistances;   
         //GameStateDelegates.OnEntitySelected -= DrawBoard_SelectedEntity;   
     }
     #endregion

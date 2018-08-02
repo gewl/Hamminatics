@@ -11,24 +11,14 @@ public class ScenarioState {
     public Stack<Turn> turnStack;
     public ScenarioState lastGameState;
 
-    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items)
+    public ScenarioState(List<EntityData> _enemies, List<ItemData> _items)
     {
-        player = _player;
+        player = GameStateManager.CurrentCampaign.player;
         enemies = _enemies;
 
         items = _items;
         turnStack = new Stack<Turn>();
-        inventory = new Inventory();
-    }
-
-    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Inventory _inventory)
-    {
-        player = _player;
-        enemies = _enemies;
-        items = _items;
-        inventory = _inventory;
-
-        turnStack = new Stack<Turn>();
+        inventory = GameStateManager.CurrentCampaign.inventory.Copy();
     }
 
     public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, Stack<Turn> _turns, Inventory _inventory)

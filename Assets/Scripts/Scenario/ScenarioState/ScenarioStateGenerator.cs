@@ -16,8 +16,6 @@ public class ScenarioStateGenerator {
 
     public static ScenarioState GenerateNewScenarioState(Vector2Int entrance, Vector2Int exit, int boardWidth)
     {
-        EntityData player = DataManager.GetEntityData(PLAYER_ID);
-
         //EntityData squid = DataManager.GetEntityData(SQUID_ID);
         //EntityData squid2 = DataManager.GetEntityData(SQUID_ID);
         EntityData wasp = DataManager.GetEntityData(WASP_ID);
@@ -38,7 +36,8 @@ public class ScenarioStateGenerator {
         SpeedComparer comparer = new SpeedComparer();
         enemies.Sort(comparer);
 
-        ScenarioState generatedState = new ScenarioState(player, enemies, items);
+        ScenarioState generatedState = new ScenarioState(enemies, items);
+        EntityData player = generatedState.player;
         player.SetPosition(entrance, generatedState);
         generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, boardWidth, player);
         generatedState = RandomizeItemStartingCoordinates(generatedState, items, exit, boardWidth);

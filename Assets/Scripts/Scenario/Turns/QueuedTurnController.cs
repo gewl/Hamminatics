@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class QueuedTurnController : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
 
-    RectTransform rect;
+    RectTransform rectTransform;
     Turn depictedTurn;
 
     TurnQueueDash queueDash;
@@ -29,20 +29,20 @@ public class QueuedTurnController : MonoBehaviour, IBeginDragHandler, IDragHandl
         queueDash = GetComponentInParent<TurnQueueDash>();
         cachedSiblingIndex = transform.GetSiblingIndex();
 
-        rect = GetComponent<RectTransform>();
+        rectTransform = GetComponent<RectTransform>();
     }
 
     public void RecalculateBudgedPosition(bool isAlreadyBudged)
     {
         if (isAlreadyBudged)
         {
-            budgedXPosition = transform.position.x;
-            unbudgedXPosition = budgedXPosition + rect.rect.width;
+            budgedXPosition = transform.localPosition.x;
+            unbudgedXPosition = budgedXPosition + rectTransform.rect.width;
         }
         else
         {
-            unbudgedXPosition = transform.position.x;
-            budgedXPosition = unbudgedXPosition - rect.rect.width;
+            unbudgedXPosition = transform.localPosition.x;
+            budgedXPosition = unbudgedXPosition - rectTransform.rect.width;
         }
     }
 
@@ -76,7 +76,8 @@ public class QueuedTurnController : MonoBehaviour, IBeginDragHandler, IDragHandl
         {
             return;
         }
-        transform.position = new Vector2(pointerEventData.position.x, transform.position.y);
+        Vector3 adjustedEventData = queueDash.UnscalePointerData(pointerEventData.position);
+        rectTransform.anchoredPosition = new Vector2(adjustedEventData.x, rectTransform.anchoredPosition.y);
         queueDash.OnQueuedTurnDrag();
     }
 
@@ -128,13 +129,13 @@ public class QueuedTurnController : MonoBehaviour, IBeginDragHandler, IDragHandl
             float percentageComplete = timeElapsed / budgingTime;
 
             float updatedXPosition = Mathf.Lerp(initialX, destinationX, percentageComplete);
-            Vector2 newPosition = new Vector2(updatedXPosition, transform.position.y);
+            Vector2 newPosition = new Vector2(updatedXPosition, transform.localPosition.y);
 
-            transform.position = newPosition;
+            transform.localPosition = newPosition;
 
             yield return null;
         }
 
-        transform.position = new Vector2(destinationX, transform.position.y);
+        transform.localPosition = new Vector2(destinationX, transform.localPosition.y);
     }
 }

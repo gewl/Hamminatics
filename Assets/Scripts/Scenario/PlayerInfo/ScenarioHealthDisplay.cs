@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthDisplayController : MonoBehaviour {
+public class ScenarioHealthDisplay : MonoBehaviour {
 
     [SerializeField]
     Sprite emptyHealthBub;
@@ -24,12 +24,12 @@ public class HealthDisplayController : MonoBehaviour {
 
     private void OnEnable()
     {
-        ScenarioStateDelegates.OnCurrentScenarioStateChange += OnScenarioStateChange;
+        GameStateDelegates.OnCurrentScenarioStateChange += OnScenarioStateChange;
     }
 
     private void OnDisable()
     {
-        ScenarioStateDelegates.OnCurrentScenarioStateChange -= OnScenarioStateChange;
+        GameStateDelegates.OnCurrentScenarioStateChange -= OnScenarioStateChange;
     }
 
     void OnScenarioStateChange(ScenarioState updatedScenarioState, List<ProjectedGameState> upcomingStates)

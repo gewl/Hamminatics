@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class ScenarioStateDelegates {
+public static class GameStateDelegates {
 
     public delegate void NoParametersDelegate();
     public static NoParametersDelegate OnCardDeselected;
@@ -32,7 +32,7 @@ public static class ScenarioStateDelegates {
     #endregion
 
     #region Campaign delegates
-    public delegate void InventoryDelegate(Inventory inventory);
-    public static InventoryDelegate OnInventoryChange;
+    public delegate void CampaignStateDelegate(CampaignState campaignState);
+    public static CampaignStateDelegate OnCampaignStateUpdated;
     #endregion
 }

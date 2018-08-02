@@ -9,6 +9,8 @@ public class TurnQueueDash : MonoBehaviour {
     [SerializeField]
     TurnStackController turnStack;
 
+    CanvasScaler canvasScaler;
+
     List<Turn> currentlyDepictedTurns;
 
     QueuedTurnController[] queuedTurnController;
@@ -25,8 +27,11 @@ public class TurnQueueDash : MonoBehaviour {
 
     Transform draggingTurn;
 
+    #region lifecycle
     private void Awake()
     {
+        canvasScaler = GetComponentInParent<CanvasScaler>();
+
         queuedTurnController = GetComponentsInChildren<QueuedTurnController>();
         turnImages = new Image[queuedTurnController.Length];
         turnOutlines = new Outline[queuedTurnController.Length];
@@ -45,19 +50,21 @@ public class TurnQueueDash : MonoBehaviour {
     private void OnEnable()
     {
         turnStack.OnTurnStackUpdate += UpdateTurnQueueDash;
-        ScenarioStateDelegates.OnResolvingTurn += UpdateCurrentlyResolvingTurn;
-        ScenarioStateDelegates.OnEntitySelected += UpdateSelectedEntityTurn;
-        ScenarioStateDelegates.ReturnToDefaultBoard += OnDeselectEntity;
+        GameStateDelegates.OnResolvingTurn += UpdateCurrentlyResolvingTurn;
+        GameStateDelegates.OnEntitySelected += UpdateSelectedEntityTurn;
+        GameStateDelegates.ReturnToDefaultBoard += OnDeselectEntity;
     }
 
     private void OnDisable()
     {
         turnStack.OnTurnStackUpdate -= UpdateTurnQueueDash;
-        ScenarioStateDelegates.OnResolvingTurn -= UpdateCurrentlyResolvingTurn;
-        ScenarioStateDelegates.OnEntitySelected -= UpdateSelectedEntityTurn;
-        ScenarioStateDelegates.ReturnToDefaultBoard -= OnDeselectEntity;
+        GameStateDelegates.OnResolvingTurn -= UpdateCurrentlyResolvingTurn;
+        GameStateDelegates.OnEntitySelected -= UpdateSelectedEntityTurn;
+        GameStateDelegates.ReturnToDefaultBoard -= OnDeselectEntity;
     }
+    #endregion
 
+    #region handle state changes
     void UpdateSelectedEntityTurn(EntityData entity, ScenarioState currentGameState, List<ProjectedGameState> upcomingStates)
     {
         int turnIndex = currentlyDepictedTurns.FindIndex(t => t.Entity == entity);
@@ -111,6 +118,7 @@ public class TurnQueueDash : MonoBehaviour {
             queuedTurnController[j].gameObject.SetActive(false);
         }
     }
+    #endregion
 
     #region Queued action event handlers
     public void OnQueuedTurnBeginDrag(Transform queuedTurn)
@@ -193,6 +201,21 @@ public class TurnQueueDash : MonoBehaviour {
             turnsAreBudged[i] = false;
             queuedTurnController[i].RecalculateBudgedPosition(false);
         }
+    }
+    #endregion
+
+    #region helper funcs
+    // source: https://forum.unity.com/threads/canvas-scaler-and-moving-2d-items-with-touch.296310/
+    public Vector3 UnscalePointerData(Vector3 pointerPosition)
+    {
+        Vector2 referenceResolution = canvasScaler.referenceResolution;
+        Vector2 currentResolution = new Vector2(Screen.width, Screen.height);
+
+        float widthRatio = currentResolution.x / referenceResolution.x;
+        float heightRatio = currentResolution.y / referenceResolution.y;
+        float ratio = Mathf.Lerp(widthRatio, heightRatio, canvasScaler.matchWidthOrHeight);
+
+        return pointerPosition / ratio;
     }
     #endregion
 }

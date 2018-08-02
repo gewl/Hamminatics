@@ -6,28 +6,28 @@ using UnityEngine.UI;
 public class InventoryDisplay : MonoBehaviour {
 
     [SerializeField]
-    GameObject goldDisplay;
-
     Text goldValueReadout;
-
-    private void Awake()
-    {
-        goldValueReadout = goldDisplay.transform.GetChild(1).GetComponent<Text>();
-    }
 
     private void OnEnable()
     {
-        ScenarioStateDelegates.OnCurrentScenarioStateChange += HandleGameStateChange;
+        GameStateDelegates.OnCurrentScenarioStateChange += HandleScenarioStateChange;
+        GameStateDelegates.OnCampaignStateUpdated += HandleCampaignStateChange;
     }
 
     private void OnDisable()
     {
-        ScenarioStateDelegates.OnCurrentScenarioStateChange -= HandleGameStateChange;
+        GameStateDelegates.OnCurrentScenarioStateChange -= HandleScenarioStateChange;
+        GameStateDelegates.OnCampaignStateUpdated -= HandleCampaignStateChange;
     }
 
-    void HandleGameStateChange(ScenarioState currentGameState, List<ProjectedGameState> upcomingGameStates)
+    void HandleScenarioStateChange(ScenarioState currentGameState, List<ProjectedGameState> upcomingGameStates)
     {
         goldValueReadout.text = currentGameState.inventory.gold.ToString();
+    }
+
+    void HandleCampaignStateChange(CampaignState newCampaignState)
+    {
+        goldValueReadout.text = newCampaignState.inventory.gold.ToString();
     }
 
 }

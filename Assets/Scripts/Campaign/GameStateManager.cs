@@ -18,6 +18,7 @@ public class GameStateManager : MonoBehaviour {
         int mapLayerCount = 6;
 
         CurrentCampaign = new CampaignState(new Inventory(), new Map(0, mapLayerCount), player);
+        GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
 
         InitializeMap();
     }
@@ -62,9 +63,13 @@ public class GameStateManager : MonoBehaviour {
         scenarioManager.gameObject.SetActive(true);
     }
 
-    public void SwitchToCampaign()
+    public void SwitchToCampaign(ScenarioState lastScenarioState)
     {
         scenarioManager.gameObject.SetActive(false);
         mapController.gameObject.SetActive(true);
+
+        CurrentCampaign.player = lastScenarioState.player;
+        CurrentCampaign.inventory = lastScenarioState.inventory;
+        GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
     }
 }

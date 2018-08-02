@@ -9,20 +9,20 @@ public class TopDashController : MonoBehaviour {
 
     private void OnEnable()
     {
-        ScenarioStateDelegates.OnCardSelected += DisplayCardInfo;
-        ScenarioStateDelegates.OnEntitySelected += DisplayEntityInfo;
-        ScenarioStateDelegates.OnItemSelected += DisplayItemInfo;
-        ScenarioStateDelegates.OnCardDeselected += HideInfoPanel;
-        ScenarioStateDelegates.ReturnToDefaultBoard += OnReturnToDefaultBoard;
+        GameStateDelegates.OnCardSelected += DisplayCardInfo;
+        GameStateDelegates.OnEntitySelected += DisplayEntityInfo;
+        GameStateDelegates.OnItemSelected += DisplayItemInfo;
+        GameStateDelegates.OnCardDeselected += HideInfoPanel;
+        GameStateDelegates.ReturnToDefaultBoard += OnReturnToDefaultBoard;
     }
 
     private void OnDisable()
     {
-        ScenarioStateDelegates.OnCardSelected -= DisplayCardInfo;
-        ScenarioStateDelegates.OnEntitySelected -= DisplayEntityInfo;
-        ScenarioStateDelegates.OnItemSelected -= DisplayItemInfo;
-        ScenarioStateDelegates.OnCardDeselected -= HideInfoPanel;
-        ScenarioStateDelegates.ReturnToDefaultBoard -= OnReturnToDefaultBoard;
+        GameStateDelegates.OnCardSelected -= DisplayCardInfo;
+        GameStateDelegates.OnEntitySelected -= DisplayEntityInfo;
+        GameStateDelegates.OnItemSelected -= DisplayItemInfo;
+        GameStateDelegates.OnCardDeselected -= HideInfoPanel;
+        GameStateDelegates.ReturnToDefaultBoard -= OnReturnToDefaultBoard;
     }
 
     void DisplayCardInfo(CardData card)

@@ -27,12 +27,12 @@ public class EnergyManager : MonoBehaviour {
 
     private void OnEnable()
     {
-        ScenarioStateDelegates.OnRoundEnded += RoundEndHandler;
+        GameStateDelegates.OnRoundEnded += RoundEndHandler;
     }
 
     private void OnDisable()
     {
-        ScenarioStateDelegates.OnRoundEnded -= RoundEndHandler;
+        GameStateDelegates.OnRoundEnded -= RoundEndHandler;
     }
 
     public void UpdateProjectedEnergyGain(int energyGain)

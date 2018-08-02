@@ -35,18 +35,18 @@ public class TurnDrawer : MonoBehaviour {
 
     private void OnEnable()
     {
-        ScenarioStateDelegates.ReturnToDefaultBoard += DrawUpcomingStates;
-        ScenarioStateDelegates.OnCurrentScenarioStateChange += DrawUpcomingStates;
-        ScenarioStateDelegates.OnEntitySelected += HighlightSelectedEntityStates;
-        ScenarioStateDelegates.OnPositionAttacked += OnPositionAttacked;
+        GameStateDelegates.ReturnToDefaultBoard += DrawUpcomingStates;
+        GameStateDelegates.OnCurrentScenarioStateChange += DrawUpcomingStates;
+        GameStateDelegates.OnEntitySelected += HighlightSelectedEntityStates;
+        GameStateDelegates.OnPositionAttacked += OnPositionAttacked;
     }
 
     private void OnDisable()
     {
-        ScenarioStateDelegates.ReturnToDefaultBoard -= DrawUpcomingStates;
-        ScenarioStateDelegates.OnCurrentScenarioStateChange -= DrawUpcomingStates;
-        ScenarioStateDelegates.OnEntitySelected -= HighlightSelectedEntityStates;
-        ScenarioStateDelegates.OnPositionAttacked -= OnPositionAttacked;
+        GameStateDelegates.ReturnToDefaultBoard -= DrawUpcomingStates;
+        GameStateDelegates.OnCurrentScenarioStateChange -= DrawUpcomingStates;
+        GameStateDelegates.OnEntitySelected -= HighlightSelectedEntityStates;
+        GameStateDelegates.OnPositionAttacked -= OnPositionAttacked;
     }
 
     public void Clear()

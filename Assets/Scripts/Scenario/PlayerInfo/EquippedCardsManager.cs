@@ -37,18 +37,18 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
 
     private void OnEnable()
     {
-        ScenarioStateDelegates.OnCurrentScenarioStateChange += UpdateEquippedCards;
+        GameStateDelegates.OnCurrentScenarioStateChange += UpdateEquippedCards;
     }
 
     private void OnDisable()
     {
-        ScenarioStateDelegates.OnCurrentScenarioStateChange -= UpdateEquippedCards;
+        GameStateDelegates.OnCurrentScenarioStateChange -= UpdateEquippedCards;
     }
 
     public void ClearSelectedCard()
     {
         selectedCardSlot = -1;
-        ScenarioStateDelegates.OnCardDeselected();
+        GameStateDelegates.OnCardDeselected();
         scenarioStateManager.ResetBoard();
     }
 
@@ -85,13 +85,13 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
     {
         if (selectedCardSlot == cardSlot)
         {
-            ScenarioStateDelegates.OnCardDeselected();
+            GameStateDelegates.OnCardDeselected();
             ClearSelectedCard();
         }
         else
         {
             selectedCardSlot = cardSlot;
-            ScenarioStateDelegates.OnCardSelected(equippedCards[cardSlot]);
+            GameStateDelegates.OnCardSelected(equippedCards[cardSlot]);
             ShowAvailableCardPlays(cardSlot);
         }
     }
