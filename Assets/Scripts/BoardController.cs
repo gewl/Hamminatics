@@ -10,6 +10,7 @@ public class BoardController : MonoBehaviour {
     ScenarioStateManager gameStateManager;
     static BoardController instance;
 
+    bool boardInitialized = false;
     static int boardWidth = 5;
     public static int BoardWidth { get { return boardWidth; } }
     Transform[,] boardTiles;
@@ -30,6 +31,7 @@ public class BoardController : MonoBehaviour {
     public bool debuggingExitPosition = false;
     [SerializeField]
     GameObject debugExitTextPrefab;
+    GameObject instantiatedExitText;
 
     #region Lifecycle
     private void Awake()
@@ -56,7 +58,7 @@ public class BoardController : MonoBehaviour {
     }
     #endregion
 
-    public GameBoard InitializeBoard()
+    void InitializeBoard()
     {
         boardTiles = new Transform[boardWidth, boardWidth];
         boardTileImages = new Image[boardWidth, boardWidth];
@@ -89,7 +91,15 @@ public class BoardController : MonoBehaviour {
                 xCounter = 0;
             }
         }
+        boardInitialized = true;
+    }
 
+    public GameBoard GenerateBoard()
+    {
+        if (!boardInitialized)
+        {
+            InitializeBoard();
+        }
         currentBoard = new GameBoard();
 
         for (int y = 0; y < boardWidth; y++)
@@ -108,7 +118,11 @@ public class BoardController : MonoBehaviour {
 
         if (debuggingExitPosition)
         {
-            GameObject instantiatedExitText = Instantiate(debugExitTextPrefab, transform);
+            if (instantiatedExitText != null)
+            {
+                Destroy(instantiatedExitText);
+            }
+            instantiatedExitText = Instantiate(debugExitTextPrefab, transform);
             instantiatedExitText.transform.position = GetCellPosition(CurrentBoard.Exit.Position);
         }
 

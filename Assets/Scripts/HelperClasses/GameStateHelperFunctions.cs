@@ -151,6 +151,12 @@ public static class GameStateHelperFunctions {
         return state.items.Any(item => item.Position == position);
     }
 
+    public static bool DoesPositionContainItemWhere(this ScenarioState state, Vector2Int position, Predicate<ItemData> predicate)
+    {
+        return state.DoesPositionContainItem(position) &&
+            predicate(state.GetItemInPosition(position));
+    }
+
     public static ItemData GetItemInPosition(this ScenarioState state, Vector2Int position)
     {
         return state.items.FirstOrDefault(item => item.Position == position);

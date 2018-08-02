@@ -72,17 +72,14 @@ public class ScenarioStateManager : MonoBehaviour {
     public bool IsResolvingTurn { get { return isResolvingTurn; } }
 
     #region lifecycle
-    private void Awake()
-    {
-        potentialCardTargets = new List<Vector2Int>();
-        // This has to be delayed so layout group can space accordingly.
-        Invoke("SetBoardUp", 0.1f);
-
-        upcomingScenarioStates = new List<ProjectedGameState>();
-    }
     private void OnEnable()
     {
+        upcomingScenarioStates = new List<ProjectedGameState>();
+        potentialCardTargets = new List<Vector2Int>();
+
         turnStackController.OnTurnStackUpdate += RecalculateUpcomingStates;
+        GameStateDelegates.OnCurrentScenarioStateChange += ResetBoard;
+        GameStateDelegates.ReturnToDefaultBoard += ResetBoard;
     }
 
     private void OnDisable()
@@ -94,16 +91,17 @@ public class ScenarioStateManager : MonoBehaviour {
     #endregion
 
     #region initialization/reset
-    public void InitializeGameState(GameBoard board)
+    public void InitializeScenarioState(GameBoard board)
     {
         CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board.Entrance.Position, board.Exit.Position, board.BoardWidth);
-        GameStateDelegates.OnCurrentScenarioStateChange += ResetBoard;
-        GameStateDelegates.ReturnToDefaultBoard += ResetBoard;
     }
 
-    void SetBoardUp()
+
+    public void GenerateAndDrawScenario(int depth)
     {
-        InitializeGameState(boardController.InitializeBoard());
+        gameObject.SetActive(true);
+        GameBoard board = boardController.GenerateBoard();
+        CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board.Entrance.Position, board.Exit.Position, board.BoardWidth);
         GenerateNextTurnStack(CurrentScenarioState);
         PlaceExitArrow(exitArrow, boardController.currentBoard.Exit.Position, boardController.currentBoard.BoardWidth);
         GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);

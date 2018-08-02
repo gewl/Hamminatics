@@ -284,5 +284,23 @@ public static class BoardHelperFunctions {
         return path;
     }
 
+    static public List<Tile> GetTilesOnPath(Tile startingTile, List<Direction> path)
+    {
+        List<Tile> tilesOnPath = new List<Tile>();
+
+        Tile lastTile = startingTile;
+        for (int i = 0; i < path.Count; i++)
+        {
+            Direction nextStep = path[i];
+            Tile nextTile = lastTile.GetDirectionalNeighbor(nextStep);
+
+            tilesOnPath.Add(nextTile);
+
+            lastTile = nextTile;
+        }
+
+        return tilesOnPath;
+    }
+
     #endregion
 }

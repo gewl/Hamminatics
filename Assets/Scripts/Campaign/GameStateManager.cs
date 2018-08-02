@@ -60,7 +60,7 @@ public class GameStateManager : MonoBehaviour {
     void SwitchToScenario()
     {
         mapController.gameObject.SetActive(false);
-        scenarioManager.gameObject.SetActive(true);
+        scenarioManager.GenerateAndDrawScenario(CurrentCampaign.depth);
     }
 
     public void SwitchToCampaign(ScenarioState lastScenarioState)

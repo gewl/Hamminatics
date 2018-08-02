@@ -8,6 +8,7 @@ public class CampaignState {
     public Map currentMap;
     public EntityData player;
     public MapNode CurrentPlayerNode { get; private set; }
+    public int depth;
 
     public List<MapNode> pastPlayerNodes;
 
@@ -19,6 +20,7 @@ public class CampaignState {
         player = _player;
 
         UpdateMap(_currentMap);
+        depth = 0;
     }
 
     public void UpdatePlayerNode(MapNode newNode)

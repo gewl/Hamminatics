@@ -45,11 +45,26 @@ public class EnemyTurnCalculator : MonoBehaviour {
 
             List<Tile> sortedPotentialMoveTargets = SortTilesByMoveEligibility(enemyTile, potentialMoveTargetTiles, enemyAttackRange);
 
-            Tile targetMovementTile = sortedPotentialMoveTargets[0];
-            projectedEnemyMovementTiles.Add(targetMovementTile);
-
+            int tileIndex = 0;
+            Tile targetMovementTile = sortedPotentialMoveTargets[tileIndex];
             List<Direction> movesToTargetMovementTile = BoardHelperFunctions.FindPathBetweenTiles(enemyTile, targetMovementTile);
+            List<Tile> tilesToTargetMovementTile = BoardHelperFunctions.GetTilesOnPath(enemyTile, movesToTargetMovementTile);
 
+            // Enemies will not move through traps if they have any other moves available.
+            while (tileIndex < sortedPotentialMoveTargets.Count && 
+                tilesToTargetMovementTile.Any(tile => gameState.DoesPositionContainItemWhere(tile.Position, item => item.itemCategory == ItemCategory.Trap)))
+            {
+                targetMovementTile = sortedPotentialMoveTargets[tileIndex];
+                movesToTargetMovementTile = BoardHelperFunctions.FindPathBetweenTiles(enemyTile, targetMovementTile);
+                tilesToTargetMovementTile = BoardHelperFunctions.GetTilesOnPath(enemyTile, movesToTargetMovementTile);
+            }
+
+            if (tileIndex == sortedPotentialMoveTargets.Count)
+            {
+                targetMovementTile = sortedPotentialMoveTargets[0];
+            }
+
+            projectedEnemyMovementTiles.Add(targetMovementTile);
 
             // IF enemy is projected to move into player's tile:
             // THEN attack as if enemy is NOT moving (to account for projected player displacement)
