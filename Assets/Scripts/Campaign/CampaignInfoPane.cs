@@ -8,7 +8,7 @@ public class CampaignInfoPane : MonoBehaviour {
 
     MapNode selectedMapNode;
     [SerializeField]
-    CampaignStateManager campaignManager;
+    GameStateManager campaignManager;
     [SerializeField]
     Text infoTitle;
     [SerializeField]

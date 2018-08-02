@@ -45,9 +45,9 @@ public class ScenarioImageManager : SerializedMonoBehaviour {
         return abilityPointer;
     }
 
-    public static GameObject GetOverlayImage(Sprite overlaySprite)
+    public static GameObject GetOverlayImage(Sprite overlaySprite, Transform parent)
     {
-        GameObject overlayImage = GameObject.Instantiate(instance.pathImagePrefab);
+        GameObject overlayImage = GameObject.Instantiate(instance.pathImagePrefab, parent);
         overlayImage.GetComponent<Image>().sprite = overlaySprite;
 
         return overlayImage;

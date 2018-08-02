@@ -228,8 +228,7 @@ public class TurnDrawer : MonoBehaviour {
     IEnumerator BlinkPositionAttackedIndicator(Vector2Int position)
     {
         Vector2 canvasPosition = boardController.GetCellPosition(position);
-        GameObject overlayIndicator = ScenarioImageManager.GetOverlayImage(attackedTileSprite);
-        overlayIndicator.transform.SetParent(transform);
+        GameObject overlayIndicator = ScenarioImageManager.GetOverlayImage(attackedTileSprite, transform);
         overlayIndicator.transform.position = canvasPosition;
 
         Image overlayImage = overlayIndicator.GetComponent<Image>();
@@ -567,8 +566,7 @@ public class TurnDrawer : MonoBehaviour {
 
     void GenerateAndPositionCellImage(Vector2Int position, float rotation, Sprite sprite, Color color)
     {
-        GameObject instantiatedPathImage = ScenarioImageManager.GetOverlayImage(sprite);
-        instantiatedPathImage.transform.SetParent(transform);
+        GameObject instantiatedPathImage = ScenarioImageManager.GetOverlayImage(sprite, transform);
         instantiatedPathImage.transform.position = boardController.GetCellPosition(position);
 
         instantiatedPathImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, rotation));
@@ -583,8 +581,7 @@ public class TurnDrawer : MonoBehaviour {
 
     void GenerateAndPositionCellEdgeImage(Vector2Int position, Direction direction, Sprite pathSprite, Color color)
     {
-        GameObject instantiatedBumpImage = ScenarioImageManager.GetOverlayImage(pathSprite);
-        instantiatedBumpImage.transform.SetParent(transform);
+        GameObject instantiatedBumpImage = ScenarioImageManager.GetOverlayImage(pathSprite, transform);
         instantiatedBumpImage.transform.position = boardController.GetCellEdgePosition(position, direction);
         float imageRotation = GetImageRotation(direction);
         instantiatedBumpImage.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, imageRotation));

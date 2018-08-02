@@ -47,4 +47,18 @@ public static class LinqExtensions {
     {
         return list[rng.Next(list.Count)];
     }
+
+    public static T GetRandomElementInRange<T>(this IList<T> list, int min, int max)
+    {
+        if (min < 0)
+        {
+            min = 0;
+        }
+        if (max > list.Count)
+        {
+            max = list.Count;
+        }
+
+        return list[rng.Next(min, max)];
+    }
 }
