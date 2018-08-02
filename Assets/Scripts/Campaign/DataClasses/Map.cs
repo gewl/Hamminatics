@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Map {
-    public MapNode currentPlayerNode;
     public int depth;
 
     public List<List<MapNode>> nodeLayers;
@@ -29,7 +28,6 @@ public class Map {
         List<List<MapNode>> layers = new List<List<MapNode>>();
 
         MapNode starterNode = new MapNode(MapNodeType.Start, 0);
-        currentPlayerNode = starterNode;
 
         // Every map starts with a layer of one (starter) node.
         layers.Add(new List<MapNode>() { starterNode });
@@ -103,5 +101,10 @@ public class Map {
 
             return new MapNode(thisNodeType, layer);
         }
+    }
+
+    public MapNode GetStarterNode()
+    {
+        return nodeLayers[0][0];
     }
 }

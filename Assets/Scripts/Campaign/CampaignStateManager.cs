@@ -24,6 +24,12 @@ public class CampaignStateManager : MonoBehaviour {
     {
         Map currentMap = currentCampaign.currentMap;
         mapController.DrawMap(currentMap);
-        mapController.UpdateMapState(currentMap);
+        mapController.UpdateMapState(currentCampaign);
+    }
+
+    public void UpdatePlayerPosition(MapNode newPlayerNode)
+    {
+        currentCampaign.UpdatePlayerNode(newPlayerNode);
+        mapController.UpdateMapState(currentCampaign);
     }
 }

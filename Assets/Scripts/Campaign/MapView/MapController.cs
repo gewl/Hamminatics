@@ -7,8 +7,18 @@ using UnityEngine.Events;
 
 public class MapController : MonoBehaviour {
 
+    MapNode currentPlayerNode;
+    MapNode lastPlayerNode;
     Image mapBackgroundImage;
     float height, width, mapNodeXVariance;
+
+    [SerializeField]
+    CampaignInfoPane infoPane;
+
+    [SerializeField]
+    Transform nodes;
+    [SerializeField]
+    Transform paths;
 
     [SerializeField]
     GameObject mapNodePrefab;
@@ -26,6 +36,10 @@ public class MapController : MonoBehaviour {
     Color potentialDestinationColor;
     [SerializeField]
     Color potentialPathColor;
+    [SerializeField]
+    Color pastPathColor;
+    [SerializeField]
+    Color defaultPathColor;
 
     private void Awake()
     {
@@ -68,7 +82,7 @@ public class MapController : MonoBehaviour {
             for (int j = 0; j < nodesInLayer; j++)
             {
                 MapNode node = layer[j];
-                GameObject drawnNode = Instantiate(mapNodePrefab, transform);
+                GameObject drawnNode = Instantiate(mapNodePrefab, nodes);
                 node.AssociateNodeWithController(drawnNode.GetComponent<MapNodeController>());
                 RectTransform newNodeRect = drawnNode.GetComponent<RectTransform>();
                 newNodeRect.localPosition = new Vector2(mapNodeXVariance * (j - 1), yGapBetweenLayers * i + baseLayerYCoord);
@@ -89,7 +103,7 @@ public class MapController : MonoBehaviour {
 
     void DrawPath(MapNodeController targetNodeController, MapNodeController parentNodeController)
     {
-        GameObject pathToNode = Instantiate(mapPathPrefab, transform);
+        GameObject pathToNode = Instantiate(mapPathPrefab, paths);
         LineRenderer pathRenderer = pathToNode.GetComponent<LineRenderer>();
 
         Vector3 parentPosition = parentNodeController.GetPosition();
@@ -101,34 +115,66 @@ public class MapController : MonoBehaviour {
         parentNodeController.AddPath(targetNodeController.depictedNode, pathRenderer);
     }
 
-    public void UpdateMapState(Map map)
+    public void UpdateMapState(CampaignState campaign)
     {
+        Map map = campaign.currentMap;
         map.nodeLayers.ForEach(layer => layer.ForEach(node => node.NodeController.DeactivateHighlight()));
 
-        MapNode currentPlayerNode = map.currentPlayerNode;
-        currentPlayerNode.NodeController.UpdateHighlight(playerNodeColor);
-        foreach (MapNode child in currentPlayerNode.children)
+        if (campaign.CurrentPlayerNode != currentPlayerNode)
         {
-            child.NodeController.UpdateHighlight(potentialDestinationColor);
-            LineRenderer pathToChild = currentPlayerNode.NodeController.GetPath(child);
-            pathToChild.startColor = potentialPathColor;
-            pathToChild.endColor = potentialPathColor;
-        }
+            lastPlayerNode = currentPlayerNode;
 
+            if (lastPlayerNode != null)
+            {
+                lastPlayerNode.NodeController.RevertSprite();
+            }
+
+            currentPlayerNode = campaign.CurrentPlayerNode;
+            currentPlayerNode.NodeController.UpdateHighlight(playerNodeColor);
+            currentPlayerNode.NodeController.SwapSprite(campaign.player.EntitySprite);
+
+            foreach (Transform path in paths)
+            {
+                LineRenderer pathRenderer = path.GetComponent<LineRenderer>();
+                pathRenderer.startColor = defaultPathColor;
+                pathRenderer.endColor = defaultPathColor;
+            }
+
+            foreach (MapNode child in currentPlayerNode.children)
+            {
+                child.NodeController.UpdateHighlight(potentialDestinationColor);
+                LineRenderer pathToChild = currentPlayerNode.NodeController.GetPath(child);
+                pathToChild.startColor = potentialPathColor;
+                pathToChild.endColor = potentialPathColor;
+            }
+
+            int pastPlayerNodeCount = campaign.pastPlayerNodes.Count;   
+            for (int i = 0; i < pastPlayerNodeCount; i++)
+            {
+                MapNode pastNode = campaign.pastPlayerNodes[i];
+                MapNode nextNode = campaign.CurrentPlayerNode;
+                if (i < pastPlayerNodeCount - 1)
+                {
+                    nextNode = campaign.pastPlayerNodes[i + 1];
+                }
+                LineRenderer pastPath = pastNode.NodeController.GetPath(nextNode);
+                pastPath.startColor = pastPathColor;
+                pastPath.endColor = pastPathColor;
+            }
+        }
     }
 
+    #region map node info
     void OnMapNodeClick(MapNode node)
     {
-        Debug.Log("node clicked: " + node.nodeType);
-        Debug.Log(node.NodeController.GetComponent<RectTransform>().rect.center);
-        Debug.Log(node.NodeController.GetComponent<RectTransform>().anchoredPosition);
-        Debug.Log(node.NodeController.GetComponent<RectTransform>().position);
-        Debug.Log(node.NodeController.transform.position);
+        infoPane.HandleMapNodeClick(node, currentPlayerNode);
     }
     
     UnityAction GenerateMapNodeClickListener(MapNode node)
     {
         return () => OnMapNodeClick(node);
     }
+
+    #endregion
 
 }

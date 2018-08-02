@@ -49,6 +49,8 @@ public class MapNodeController : MonoBehaviour {
 
     Dictionary<MapNode, LineRenderer> pathsToChildren;
 
+    Sprite nodeSprite;
+
     private void Awake()
     {
         pathsToChildren = new Dictionary<MapNode, LineRenderer>();
@@ -77,7 +79,9 @@ public class MapNodeController : MonoBehaviour {
     {
         depictedNode = _depictedNode;
 
-        NodeImage.sprite = CampaignImageManager.GetMapNodeImage(depictedNode.nodeType);
+        nodeSprite = CampaignImageManager.GetMapNodeImage(depictedNode.nodeType);
+
+        NodeImage.sprite = nodeSprite;
     }
 
     public void DeactivateHighlight()
@@ -89,6 +93,16 @@ public class MapNodeController : MonoBehaviour {
     {
         Highlight.gameObject.SetActive(true);
         Highlight.color = newColor;
+    }
+
+    public void RevertSprite()
+    {
+        NodeImage.sprite = nodeSprite;
+    }
+
+    public void SwapSprite(Sprite newSprite)
+    {
+        NodeImage.sprite = newSprite;
     }
     #endregion
 }

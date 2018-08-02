@@ -7,6 +7,7 @@ public static class ScenarioStateDelegates {
     public delegate void NoParametersDelegate();
     public static NoParametersDelegate OnCardDeselected;
 
+    #region scenario delegates
     public delegate void PositionDelegate(Vector2Int position);
     public static PositionDelegate OnPositionAttacked;
 
@@ -28,4 +29,5 @@ public static class ScenarioStateDelegates {
 
     public delegate void SpecificItemDelegate(ItemData item);
     public static SpecificItemDelegate OnItemSelected;
+    #endregion
 }

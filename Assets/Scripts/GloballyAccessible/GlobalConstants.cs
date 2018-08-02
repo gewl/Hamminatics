@@ -92,3 +92,10 @@ public enum MapNodeType
     Store,
     End
 }
+
+public enum Layer
+{
+    Campaign,
+    Scenario,
+    Event
+}
