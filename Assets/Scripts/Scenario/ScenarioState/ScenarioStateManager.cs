@@ -218,7 +218,6 @@ public class ScenarioStateManager : MonoBehaviour {
 
     public void RegisterExitArrowClick()
     {
-        Debug.Log("exit arrow clicked");
         gameStateManager.SwitchToCampaign();
     }
 

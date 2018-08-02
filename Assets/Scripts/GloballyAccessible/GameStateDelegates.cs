@@ -30,4 +30,9 @@ public static class ScenarioStateDelegates {
     public delegate void SpecificItemDelegate(ItemData item);
     public static SpecificItemDelegate OnItemSelected;
     #endregion
+
+    #region Campaign delegates
+    public delegate void InventoryDelegate(Inventory inventory);
+    public static InventoryDelegate OnInventoryChange;
+    #endregion
 }

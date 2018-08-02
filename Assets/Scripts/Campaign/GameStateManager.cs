@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameStateManager : MonoBehaviour {
     const string PLAYER_ID = "Player";
 
-    public static CampaignState currentCampaign;
+    public static CampaignState CurrentCampaign { get; private set; }
 
     [SerializeField]
     MapController mapController;
@@ -17,22 +17,22 @@ public class GameStateManager : MonoBehaviour {
         EntityData player = DataManager.GetEntityData(PLAYER_ID);
         int mapLayerCount = 6;
 
-        currentCampaign = new CampaignState(new Inventory(), new Map(0, mapLayerCount), player);
+        CurrentCampaign = new CampaignState(new Inventory(), new Map(0, mapLayerCount), player);
 
         InitializeMap();
     }
 
     void InitializeMap()
     {
-        Map currentMap = currentCampaign.currentMap;
+        Map currentMap = CurrentCampaign.currentMap;
         mapController.DrawMap(currentMap);
-        mapController.UpdateMapState(currentCampaign);
+        mapController.UpdateMapState(CurrentCampaign);
     }
 
     public void UpdatePlayerPosition(MapNode newPlayerNode)
     {
-        currentCampaign.UpdatePlayerNode(newPlayerNode);
-        mapController.UpdateMapState(currentCampaign);
+        CurrentCampaign.UpdatePlayerNode(newPlayerNode);
+        mapController.UpdateMapState(CurrentCampaign);
 
         switch (newPlayerNode.nodeType)
         {
