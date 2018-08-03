@@ -12,24 +12,28 @@ public class MapController : MonoBehaviour {
     Image mapBackgroundImage;
     float height, width, mapNodeXVariance;
 
+    [Header("Scene references")]
     [SerializeField]
-    CampaignInfoPane infoPane;
-
-    [SerializeField]
-    Transform nodes;
-    [SerializeField]
-    Transform paths;
-
-    [SerializeField]
-    GameObject mapNodePrefab;
-    [SerializeField]
-    GameObject mapPathPrefab;
+    NodeInfoPane infoPane;
 
     [SerializeField]
     MapNodeController entranceNodeController;
     [SerializeField]
     MapNodeController exitNodeController;
 
+    [SerializeField]
+    Transform nodes;
+    [SerializeField]
+    Transform paths;
+
+    [Header("Prefabs")]
+    [SerializeField]
+    GameObject mapNodePrefab;
+    [SerializeField]
+    GameObject mapPathPrefab;
+
+
+    [Header("Map Colors")]
     [SerializeField]
     Color playerNodeColor;
     [SerializeField]

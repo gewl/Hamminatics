@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Name: _GenericMove
   m_EditorClassIdentifier: 
   ID: _GenericMove
-  Cost: 0
-  Direction: 6
-  Range: 1
+  description: Placeholder description.
+  cost: 0
+  direction: 6
+  range: 1
+  cardImage: {fileID: 21300000, guid: 231b70999e6a5f844ad173dc0425dc43, type: 3}

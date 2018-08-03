@@ -5,7 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName ="Card/AttackCard")]
 public class AttackCardData : CardData
 {
-    public override CardCategory Category { get { return CardCategory.Attack; } }
+    public override CardCategory category { get { return CardCategory.Attack; } }
     public int Damage = 1;
-    public Sprite PointerSprite;
 }

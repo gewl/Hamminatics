@@ -162,13 +162,13 @@ public class ScenarioStateManager : MonoBehaviour {
     {
         ResetBoard(CurrentScenarioState, upcomingScenarioStates);
 
-        int cardRange = card.Range;
+        int cardRange = card.range;
 
         // Movement availability is always 'from' player's current position.
         // Other actions are 'from' player's projected position.
-        Vector2Int playerOrigin = card.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
+        Vector2Int playerOrigin = card.category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
 
-        if (card.Category == CardCategory.Movement)
+        if (card.category == CardCategory.Movement)
         {
             BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
         }
@@ -193,7 +193,7 @@ public class ScenarioStateManager : MonoBehaviour {
         if (potentialCardTargets.Contains(tileClickedPosition))
         {
             CardData selectedCard = equippedCardsManager.GetSelectedCard();
-            Vector2Int playerOrigin = selectedCard.Category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
+            Vector2Int playerOrigin = selectedCard.category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
             turnStackController.AddToPlayerTurn(selectedCard, Player, playerOrigin, tileClickedPosition);
             equippedCardsManager.ClearSelectedCard();
             GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);

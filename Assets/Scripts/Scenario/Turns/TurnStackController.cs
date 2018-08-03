@@ -54,7 +54,7 @@ public class TurnStackController : MonoBehaviour {
 
     public void AddToPlayerTurn(CardData card, EntityData player, Vector2Int originPosition, Vector2Int targetPosition)
     {
-        if (card.Category == CardCategory.Movement)
+        if (card.category == CardCategory.Movement)
         {
             UpdatePlayerTurn_Movement(originPosition, targetPosition);
         }
@@ -78,7 +78,7 @@ public class TurnStackController : MonoBehaviour {
         Tile playerTile = BoardController.CurrentBoard.GetTileAtPosition(originPosition);
         Tile targetTile = BoardController.CurrentBoard.GetTileAtPosition(targetPosition);
         GetPlayerTurn().action = new Action(card, player, BoardHelperFunctions.GetDirectionBetweenTiles(playerTile, targetTile), BoardHelperFunctions.GetLinearDistanceBetweenTiles(playerTile, targetTile));
-        energyManager.UpdateProjectedEnergyCost(card.Cost);
+        energyManager.UpdateProjectedEnergyCost(card.cost);
     }
 
     public void ChangePlayerTurnPosition(int newIndex)

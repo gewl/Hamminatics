@@ -5,5 +5,5 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName="Card/MovementCard")]
 public class MovementCardData : CardData {
-    public override CardCategory Category { get { return CardCategory.Movement; } }
+    public override CardCategory category { get { return CardCategory.Movement; } }
 }

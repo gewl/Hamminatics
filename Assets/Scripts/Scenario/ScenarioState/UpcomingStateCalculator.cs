@@ -121,7 +121,7 @@ public static class UpcomingStateCalculator
 
         // TODO: This is pretty bare-bones right now because it isn't clear how other card categories will be
         // implemented--need to get it more set up once the basic structure of the state list is running.
-        switch (action.card.Category)
+        switch (action.card.category)
         {
             case CardCategory.Movement:
                 return GetNextGameStateFromMove(newState, entityCopy, action.direction);

@@ -11,6 +11,15 @@ public class GameStateManager : MonoBehaviour {
     MapController mapController;
     [SerializeField]
     ScenarioStateManager scenarioManager;
+    [SerializeField]
+    GameObject dimmer;
+
+    static GameStateManager instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
@@ -71,5 +80,10 @@ public class GameStateManager : MonoBehaviour {
         CurrentCampaign.player = lastScenarioState.player;
         CurrentCampaign.inventory = lastScenarioState.inventory;
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
+    }
+
+    public static void SetDim(bool isDim)
+    {
+        instance.dimmer.gameObject.SetActive(isDim);
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
-public class CampaignInfoPane : MonoBehaviour {
+public class NodeInfoPane : MonoBehaviour {
 
     MapNode selectedMapNode;
     [SerializeField]

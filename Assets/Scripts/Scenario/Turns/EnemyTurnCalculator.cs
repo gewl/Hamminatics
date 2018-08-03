@@ -36,10 +36,10 @@ public class EnemyTurnCalculator : MonoBehaviour {
             Tile enemyTile = BoardController.CurrentBoard.GetTileAtPosition(enemyPosition);
 
             MovementCardData enemyMovementCard = enemy.movementCard;
-            int enemyMoveRange = enemyMovementCard.Range;
+            int enemyMoveRange = enemyMovementCard.range;
 
             AttackCardData enemyAttackCard = enemy.attackCard;
-            int enemyAttackRange = enemyAttackCard.Range;
+            int enemyAttackRange = enemyAttackCard.range;
 
             List<Tile> potentialMoveTargetTiles = BoardHelperFunctions.GetPotentialBranchingTargets(enemyPosition, enemyMoveRange);
 

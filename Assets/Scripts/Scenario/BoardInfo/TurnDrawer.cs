@@ -176,7 +176,7 @@ public class TurnDrawer : MonoBehaviour {
 
     void DrawState(ProjectedGameState projectedState, ProjectedGameState nextState, EntityData lastActiveEntity)
     {
-        CardCategory actionCardCategory = projectedState.action.card.Category;
+        CardCategory actionCardCategory = projectedState.action.card.category;
         if (actionCardCategory == CardCategory.Movement)
         {
             DrawMoveState(projectedState, nextState, lastActiveEntity);
@@ -305,9 +305,9 @@ public class TurnDrawer : MonoBehaviour {
         bool isEntityAliveNextState = nextState == null || nextState
             .scenarioState
             .HasEntityWhere(e => e == activeEntity);
-        bool isEntitysLastMove = projectedState.action.card.Category == CardCategory.Movement &&
+        bool isEntitysLastMove = projectedState.action.card.category == CardCategory.Movement &&
             (nextState == null ||
-            nextState.action.card.Category != CardCategory.Movement ||
+            nextState.action.card.category != CardCategory.Movement ||
             nextState.activeEntity.ID != activeEntity.ID);
             
         Vector2Int positionLastState = projectedState
@@ -325,7 +325,7 @@ public class TurnDrawer : MonoBehaviour {
 
         bool isNextMoveFailedBump = nextState.bump != null &&
             nextState.activeEntity.Position == activeEntity.Position;
-        if (projectedState.action.card.Category == CardCategory.Movement && 
+        if (projectedState.action.card.category == CardCategory.Movement && 
             !isEntitysLastMove &&
             !isNextMoveFailedBump && 
             isEntityAliveNextState)
@@ -493,7 +493,7 @@ public class TurnDrawer : MonoBehaviour {
             GenerateAndPositionCellImage(attackedPosition, 0f, tileTargetedSprite, activeEntity.IdentifyingColor);
 
             AttackCardData cardData = projectedState.action.card as AttackCardData;
-            Sprite pointerSprite = cardData.PointerSprite;
+            Sprite pointerSprite = cardData.cardImage;
 
             float rotation = GetImageRotation(projectedState.action.direction);
             GameObject abilityPointer = ScenarioImageManager.GetAbilityPointer(pointerSprite, rotation);
