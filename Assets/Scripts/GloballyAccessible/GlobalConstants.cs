@@ -99,3 +99,16 @@ public enum Layer
     Scenario,
     Event
 }
+
+#region event handling
+public class EventType
+{
+    public const string CHANGE_VALUE = "changeValue";
+}
+
+public class ChangeValueTarget
+{
+    public const string HEALTH = "health";
+    public const string GOLD = "gold";
+}
+#endregion

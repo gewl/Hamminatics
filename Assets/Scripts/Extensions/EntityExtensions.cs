@@ -4,6 +4,9 @@ using UnityEngine;
 
 public static class EntityExtensions {
 
+    /// <summary>
+    /// Only for use in scenario.
+    /// </summary>
     public static void DealDamage(this EntityData entity, int amount, ScenarioState gameState)
     {
         int newHealth = entity.CurrentHealth - amount;
@@ -25,4 +28,14 @@ public static class EntityExtensions {
         }
     }
 
+    /// <summary>
+    /// Only for use in campaign view (outside of scenario).
+    /// </summary>
+    /// <param name="entity">Entity to have health changed.</param>
+    /// <param name="value">Value to be added to entity health.</param>
+    public static void ChangeHealthValue(this EntityData entity, int value)
+    {
+        int newHealth = entity.CurrentHealth + value;
+        entity.SetHealth(newHealth);
+    }
 }

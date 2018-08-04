@@ -12,6 +12,8 @@ public class GameStateManager : MonoBehaviour {
     [SerializeField]
     ScenarioStateManager scenarioManager;
     [SerializeField]
+    EventPane eventPane;
+    [SerializeField]
     GameObject dimmer;
 
     static GameStateManager instance;
@@ -53,7 +55,7 @@ public class GameStateManager : MonoBehaviour {
                 SwitchToScenario();
                 break;
             case MapNodeType.Event:
-                Debug.Log("moved to " + newPlayerNode.nodeType);
+                TriggerEvent();
                 break;
             case MapNodeType.Store:
                 Debug.Log("moved to " + newPlayerNode.nodeType);
@@ -66,6 +68,41 @@ public class GameStateManager : MonoBehaviour {
         }
     }
 
+    #region event processing
+    public void ProcessEventOutcome(string effect, string stringData, int intData)
+    {
+        switch (effect)
+        {
+            case EventType.CHANGE_VALUE:
+                HandleChangeValue(stringData, intData);
+                break;
+            default:
+                Debug.LogError("No handler found for effect: " + effect);
+                break;
+        }
+
+        GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
+    }
+
+    void HandleChangeValue(string stringData, int intData)
+    {
+        switch (stringData)
+        {
+            case ChangeValueTarget.GOLD:
+                CurrentCampaign.inventory.gold += intData;
+                break;
+            case ChangeValueTarget.HEALTH:
+                CurrentCampaign.player.ChangeHealthValue(intData);
+                break;
+            default:
+                Debug.LogError("Unable to HandleChangeValue because stringData not found: " + stringData);
+                break;
+        }
+
+    }
+    #endregion
+
+    #region focus/pane switching
     void SwitchToScenario()
     {
         mapController.gameObject.SetActive(false);
@@ -82,8 +119,21 @@ public class GameStateManager : MonoBehaviour {
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
     }
 
+    void TriggerEvent()
+    {
+        eventPane.DisplayEvent(CurrentCampaign);
+        SetDim(true);
+    }
+
+    public void CloseEventPane()
+    {
+        eventPane.gameObject.SetActive(false);
+        SetDim(false);
+    }
+
     public static void SetDim(bool isDim)
     {
         instance.dimmer.gameObject.SetActive(isDim);
     }
+    #endregion
 }

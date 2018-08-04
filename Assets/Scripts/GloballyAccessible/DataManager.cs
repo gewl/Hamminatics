@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public class DataManager : MonoBehaviour {
     const string TRAP_DIR = "Data/Items/Traps/";
     const string TILE_DIR = "Sprites/Tiles/";
 
-    const string GEN_MOVEMENT_CARD_LOC = "Data/Cards/InternalUse/_GenericMove";
+    const string GEN_MOVEMENT_CARD_PATH = "Data/Cards/InternalUse/_GenericMove";
     static CardData _genericMovementCard;
     static CardData GenericMovementCard
     {
@@ -18,7 +19,7 @@ public class DataManager : MonoBehaviour {
         {
             if (_genericMovementCard == null)
             {
-                _genericMovementCard = Resources.Load<CardData>(GEN_MOVEMENT_CARD_LOC);
+                _genericMovementCard = Resources.Load<CardData>(GEN_MOVEMENT_CARD_PATH);
             }
 
             return _genericMovementCard;
@@ -34,6 +35,12 @@ public class DataManager : MonoBehaviour {
     static Dictionary<string, CardData> cachedCardData;
     static Dictionary<string, Sprite> cachedTileSprites;
 
+    const string EVENTS_PATH = "Data/JSON/Events/";
+    const string EVENTS_KEY = "events";
+
+    static List<JSONObject> currentLayerEvents;
+    static int currentDepth = -1;
+
     private void Awake()
     {
         cachedEntityData = new Dictionary<string, EntityData>();
@@ -42,6 +49,7 @@ public class DataManager : MonoBehaviour {
         cachedTrapData = new Dictionary<string, TrapData>();
     }
 
+    #region scriptable objects
     public static EntityData GetEntityData(string entityName)
     {
         if (cachedEntityData.ContainsKey(entityName))
@@ -107,7 +115,9 @@ public class DataManager : MonoBehaviour {
             null
         };
     }
+    #endregion
 
+    #region sprites
     public static Sprite GetTileSprite(string ID)
     {
         if (cachedTileSprites.ContainsKey(ID))
@@ -121,4 +131,20 @@ public class DataManager : MonoBehaviour {
             return loadedTileSprite;
         }
     }
+    #endregion
+
+    #region json/events
+    public static JSONObject GetRandomEventByDepth(int depth)
+    {
+        if (depth != currentDepth || currentLayerEvents.Count == 0)
+        {
+            TextAsset eventsText = Resources.Load<TextAsset>(EVENTS_PATH + depth.ToString());
+            JSONObject layerEventObject = new JSONObject(eventsText.text);
+            currentLayerEvents = layerEventObject[EVENTS_KEY].list;
+            currentDepth = depth;
+        }
+
+        return currentLayerEvents.GetAndRemoveRandomElement();
+    }
+    #endregion
 }

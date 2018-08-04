@@ -48,6 +48,14 @@ public static class LinqExtensions {
         return list[rng.Next(list.Count)];
     }
 
+    public static T GetAndRemoveRandomElement<T>(this IList<T> list)
+    {
+        int randomIndex = rng.Next(list.Count);
+        T itemAtIndex = list[randomIndex];
+        list.RemoveAt(randomIndex);
+        return itemAtIndex;
+    }
+
     public static T GetRandomElementInRange<T>(this IList<T> list, int min, int max)
     {
         if (min < 0)

@@ -1,0 +1,28 @@
+{
+	"events": [
+		{
+			"id": "placeholder_event",
+			"name": "Placeholder Event",
+			"description": "This is a placeholder event.",
+			"requirements": {},
+			"outcomes": [
+				{
+					"button_text": "Take some damage.",
+					"outcome_title": "Uh-oh!",
+					"outcome_description": "You chose to take some damage.",
+					"effect": "changeValue",
+					"string_data": "health",
+					"int_data": -1
+				},
+				{
+					"button_text": "Get some gold.",
+					"outcome_title": "Yay!",
+					"outcome_description": "You chose to get some gold.",
+					"effect": "changeValue",
+					"string_data": "gold",
+					"int_data": 1
+				}
+			]
+		}
+	]
+}

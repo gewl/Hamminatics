@@ -20,7 +20,7 @@ public class CampaignState {
         player = _player;
 
         UpdateMap(_currentMap);
-        depth = 0;
+        depth = 1;
     }
 
     public void UpdatePlayerNode(MapNode newNode)

@@ -32,7 +32,6 @@ public class MapController : MonoBehaviour {
     [SerializeField]
     GameObject mapPathPrefab;
 
-
     [Header("Map Colors")]
     [SerializeField]
     Color playerNodeColor;
