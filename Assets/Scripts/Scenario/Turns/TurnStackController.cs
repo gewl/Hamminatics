@@ -78,7 +78,7 @@ public class TurnStackController : MonoBehaviour {
         Tile playerTile = BoardController.CurrentBoard.GetTileAtPosition(originPosition);
         Tile targetTile = BoardController.CurrentBoard.GetTileAtPosition(targetPosition);
         GetPlayerTurn().action = new Action(card, player, BoardHelperFunctions.GetDirectionBetweenTiles(playerTile, targetTile), BoardHelperFunctions.GetLinearDistanceBetweenTiles(playerTile, targetTile));
-        energyManager.UpdateProjectedEnergyCost(card.cost);
+        energyManager.UpdateProjectedEnergyCost(card.energyCost);
     }
 
     public void ChangePlayerTurnPosition(int newIndex)

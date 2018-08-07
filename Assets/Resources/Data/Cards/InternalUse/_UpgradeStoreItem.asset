@@ -9,13 +9,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5daf06a50df7c364ca33d7628e7a574c, type: 3}
-  m_Name: Fireball
+  m_Name: _UpgradeStoreItem
   m_EditorClassIdentifier: 
-  ID: Fireball
-  description: Placeholder description.
-  energyCost: 1
-  baseGoldCost: 3
+  ID: Upgrade
+  description: Improve one of your cards.
+  energyCost: 0
+  baseGoldCost: 5
   direction: 6
   range: 1
-  cardImage: {fileID: 21300000, guid: 8b87fa5f9ab459c4fa448f7b94cabcfa, type: 3}
-  Damage: 3
+  cardImage: {fileID: 21300000, guid: 231b70999e6a5f844ad173dc0425dc43, type: 3}
+  Damage: 1

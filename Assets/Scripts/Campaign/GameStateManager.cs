@@ -113,7 +113,7 @@ public class GameStateManager : MonoBehaviour {
 
     void DisplayStore()
     {
-        storePane.ShowStore(CurrentCampaign.depth, CurrentCampaign.inventory);
+        storePane.ShowStore(CurrentCampaign.depth);
         mapController.ShowMap(false);
         SetDim(true);
     }

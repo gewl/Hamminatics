@@ -77,7 +77,7 @@ public class EquippedCardsManager : SerializedMonoBehaviour {
             }
 
             cardTitles[i].text = card.ID;
-            cardButtons[i].interactable = energyManager.CurrentEnergy >= card.cost;
+            cardButtons[i].interactable = energyManager.CurrentEnergy >= card.energyCost;
         }
     }
 
