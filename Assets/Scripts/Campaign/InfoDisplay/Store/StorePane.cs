@@ -14,6 +14,13 @@ public class StorePane : MonoBehaviour {
     Text infoCardDescText;
 
     [SerializeField]
+    GameObject costInfo;
+    [SerializeField]
+    Text infoCardGoldCostText;
+    [SerializeField]
+    Text infoCardEnergyCostText;
+
+    [SerializeField]
     CardData healthItem;
     [SerializeField]
     CardData upgradeItem;
@@ -22,7 +29,7 @@ public class StorePane : MonoBehaviour {
     CardData DEBUG_purchasableCard;
 
     CardData[] availableItems;
-    int selectedCardIndex;
+    int selectedItemIndex;
 
     private void Awake()
     {
@@ -32,8 +39,9 @@ public class StorePane : MonoBehaviour {
     public void ShowStore(int depth)
     {
         gameObject.SetActive(true);
-        buyItemButton.interactable = false;
-        selectedCardIndex = -1;
+        costInfo.SetActive(false);
+
+        selectedItemIndex = -1;
 
         // TODO: Actually generate store inventory
         availableItems = new CardData[4]
@@ -61,6 +69,16 @@ public class StorePane : MonoBehaviour {
 
     public void OnItemClick(int itemIndex)
     {
-        Debug.Log("Item clicked: " + itemIndex);
+        selectedItemIndex = itemIndex;
+
+        costInfo.SetActive(true);
+        CardData item = availableItems[selectedItemIndex];
+
+        infoCardTitleText.text = item.ID;
+        infoCardDescText.text = item.description;
+        infoCardGoldCostText.text = item.baseGoldCost.ToString();
+        infoCardEnergyCostText.text = item.energyCost.ToString();
+
+        buyItemButton.interactable = GameStateManager.CurrentCampaign.inventory.gold >= item.baseGoldCost;
     }
 }
