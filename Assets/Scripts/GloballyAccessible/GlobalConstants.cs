@@ -100,6 +100,13 @@ public enum Layer
     Event
 }
 
+public enum StoreItem
+{
+    Card,
+    Health,
+    Upgrade
+}
+
 #region event handling
 public class EventType
 {

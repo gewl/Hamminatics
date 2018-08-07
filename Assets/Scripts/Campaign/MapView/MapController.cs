@@ -22,6 +22,8 @@ public class MapController : MonoBehaviour {
     MapNodeController exitNodeController;
 
     [SerializeField]
+    GameObject campaignBackground;
+    [SerializeField]
     Transform nodes;
     [SerializeField]
     Transform paths;
@@ -164,6 +166,13 @@ public class MapController : MonoBehaviour {
                 pastPath.endColor = pastPathColor;
             }
         }
+    }
+
+    public void ShowMap(bool shouldShow)
+    {
+        nodes.gameObject.SetActive(shouldShow);
+        paths.gameObject.SetActive(shouldShow);
+        campaignBackground.gameObject.SetActive(shouldShow);
     }
 
     #region map node info

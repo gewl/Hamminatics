@@ -14,6 +14,8 @@ public class GameStateManager : MonoBehaviour {
     [SerializeField]
     EventPane eventPane;
     [SerializeField]
+    StorePane storePane;
+    [SerializeField]
     GameObject dimmer;
 
     static GameStateManager instance;
@@ -58,7 +60,7 @@ public class GameStateManager : MonoBehaviour {
                 TriggerEvent();
                 break;
             case MapNodeType.Store:
-                Debug.Log("moved to " + newPlayerNode.nodeType);
+                DisplayStore();
                 break;
             case MapNodeType.End:
                 Debug.Log("moved to " + newPlayerNode.nodeType);
@@ -107,6 +109,20 @@ public class GameStateManager : MonoBehaviour {
     {
         mapController.gameObject.SetActive(false);
         scenarioManager.GenerateAndDrawScenario(CurrentCampaign.depth);
+    }
+
+    void DisplayStore()
+    {
+        storePane.ShowStore(CurrentCampaign.depth, CurrentCampaign.inventory);
+        mapController.ShowMap(false);
+        SetDim(true);
+    }
+
+    public void LeaveStore()
+    {
+        storePane.gameObject.SetActive(false);
+        mapController.ShowMap(true);
+        SetDim(false);
     }
 
     public void SwitchToCampaign(ScenarioState lastScenarioState)
