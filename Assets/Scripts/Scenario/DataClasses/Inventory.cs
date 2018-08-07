@@ -9,7 +9,7 @@ public class Inventory {
 
     public Inventory()
     {
-        gold = 0;
+        gold = 20;
         equippedCards = DataManager.GetBasicCards();
     }
 

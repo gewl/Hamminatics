@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class StorePane : MonoBehaviour {
     StoreItemDisplay[] itemDisplays;
@@ -31,9 +32,23 @@ public class StorePane : MonoBehaviour {
     CardData[] availableItems;
     int selectedItemIndex;
 
+    const string ITEM_BOUGHT_TITLE = "Very good!";
+    const string ITEM_BOUGHT_DESC = "Anything else I can get for you?";
+
     private void Awake()
     {
         itemDisplays = GetComponentsInChildren<StoreItemDisplay>();
+    }
+
+    void ResetInfoPane()
+    {
+        selectedItemIndex = -1;
+
+        costInfo.SetActive(false);
+
+        infoCardTitleText.text = ITEM_BOUGHT_TITLE;
+        infoCardDescText.text = ITEM_BOUGHT_DESC;
+        buyItemButton.interactable = false;
     }
 
     public void ShowStore(int depth)
@@ -52,6 +67,11 @@ public class StorePane : MonoBehaviour {
             null
         };
 
+        DrawItems();
+    }
+
+    void DrawItems()
+    {
         for (int i = 0; i < itemDisplays.Length; i++)
         {
             CardData availableItem = availableItems[i];
@@ -79,6 +99,18 @@ public class StorePane : MonoBehaviour {
         infoCardGoldCostText.text = item.baseGoldCost.ToString();
         infoCardEnergyCostText.text = item.energyCost.ToString();
 
-        buyItemButton.interactable = GameStateManager.CurrentCampaign.inventory.gold >= item.baseGoldCost;
+        CampaignState currentCampaign = GameStateManager.CurrentCampaign;
+        bool isItemHealthAndPlayerHealthy = item == healthItem && 
+            currentCampaign.player.CurrentHealth == currentCampaign.player.MaxHealth;
+        buyItemButton.interactable = currentCampaign.inventory.gold >= item.baseGoldCost && !isItemHealthAndPlayerHealthy;
+    }
+
+    public void OnBuyItem()
+    {
+        CardData item = availableItems[selectedItemIndex];
+
+        availableItems[selectedItemIndex] = null;
+        DrawItems();
+        ResetInfoPane();
     }
 }
