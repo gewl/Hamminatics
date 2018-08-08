@@ -8,6 +8,9 @@ public class StorePane : MonoBehaviour {
     StoreItemDisplay[] itemDisplays;
 
     [SerializeField]
+    ItemSlotPickerController slotPicker;
+
+    [SerializeField]
     Button buyItemButton;
     [SerializeField]
     Text infoCardTitleText;
@@ -55,6 +58,7 @@ public class StorePane : MonoBehaviour {
     {
         gameObject.SetActive(true);
         costInfo.SetActive(false);
+        buyItemButton.interactable = false;
 
         selectedItemIndex = -1;
 
@@ -112,5 +116,11 @@ public class StorePane : MonoBehaviour {
         availableItems[selectedItemIndex] = null;
         DrawItems();
         ResetInfoPane();
+
+        // TODO: Bake this into extension method or something.
+        GameStateManager.CurrentCampaign.inventory.gold -= item.baseGoldCost;
+        GameStateDelegates.OnCampaignStateUpdated(GameStateManager.CurrentCampaign);
+
+        slotPicker.DisplaySlotPicker(item);
     }
 }
