@@ -208,7 +208,6 @@ public static class UpcomingStateCalculator
 
                 if (isNextTileOccupied)
                 {
-                    Debug.Log("next tile occupied");
                     ResolveBump(target, gameState.GetTileOccupant(nextTile), fromAttackerToTarget, gameState);
                     break;
                 }
