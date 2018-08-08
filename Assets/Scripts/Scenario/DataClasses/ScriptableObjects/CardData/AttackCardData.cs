@@ -6,5 +6,25 @@ using UnityEngine;
 public class AttackCardData : CardData
 {
     public override CardCategory category { get { return CardCategory.Attack; } }
-    public int Damage = 1;
+    public int damage = 1;
+
+    public override void Upgrade()
+    {
+        damage++;
+        range++;
+    }
+
+    public override string GetUpgradeText()
+    {
+        return "Improves damage and range.";
+    }
+
+    public override string GetStatText()
+    {
+        string results = "";
+        results += "Energy cost: " + energyCost + "\n";
+        results += "Range: " + range + "\n";
+        results += "Damage: " + damage + "\n";
+        return results;
+    }
 }

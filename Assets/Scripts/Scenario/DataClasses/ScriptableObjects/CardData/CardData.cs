@@ -11,4 +11,8 @@ public abstract class CardData : ScriptableObject {
     public AbilityDirection direction = AbilityDirection.AllDirections;
     public int range = 1;
     public Sprite cardImage;
+
+    public abstract void Upgrade();
+    public abstract string GetUpgradeText();
+    public abstract string GetStatText();
 }

@@ -36,7 +36,7 @@ public class InventorySlotDisplay : MonoBehaviour {
         if (card == null)
         {
             cardImage.sprite = openSlotSprite;
-            cardTitle.text = "Free Slot";
+            cardTitle.text = "No Card In Slot";
             blockInteractionOverlay.SetActive(true);
         }
         else

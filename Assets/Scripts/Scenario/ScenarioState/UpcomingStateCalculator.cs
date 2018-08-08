@@ -152,7 +152,7 @@ public static class UpcomingStateCalculator
 
         EntityData targetEntity = newState.GetTileOccupant(targetTile);
 
-        targetEntity.DealDamage(card.Damage, newState);
+        targetEntity.DealDamage(card.damage, newState);
 
         return newProjectedState;
     }

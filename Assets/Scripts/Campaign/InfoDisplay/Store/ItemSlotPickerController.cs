@@ -18,11 +18,16 @@ public class ItemSlotPickerController : MonoBehaviour {
     const string INELIGIBLE_TEXT = "You can't place a new card in that slot.";
     const string REPLACE_PROMPT_PREFIX = "Do you want to replace ";
     const string PLACE_PROMPT_PREFIX = "Place in slot ";
+    const string NEW_CARD_TITLE_PREFIX = "Pick a slot for ";
 
     const string UPGRADE_TEXT = "Choose a card to upgrade.";
+    const string UPGRADE_PROMPT_PREFIX = "Do you want to upgrade ";
+    const string UPGRADE_TITLE_TEXT = "Choose a card to upgrade:";
 
     InventorySlotDisplay[] slotDisplays;
 
+    [SerializeField]
+    Text titleText;
     [SerializeField]
     Text confirmationText;
     [SerializeField]
@@ -42,6 +47,13 @@ public class ItemSlotPickerController : MonoBehaviour {
         isChoosingUpgrade = true;
         gameObject.SetActive(true);
         ReturnToUpgradeDefault();
+        titleText.text = UPGRADE_TITLE_TEXT;
+
+        for (int i = 0; i < slotDisplays.Length; i++)
+        {
+            CardData card = GameStateManager.CurrentCampaign.inventory.equippedCards[i];
+            slotDisplays[i].UpdateDisplay_Update(card);
+        }
     }
 
     void ReturnToUpgradeDefault()
@@ -54,9 +66,26 @@ public class ItemSlotPickerController : MonoBehaviour {
 
     void PickSlot_Upgrade(int slot)
     {
+        selectedSlot = slot;
+        CardData cardInSlot = GameStateManager.CurrentCampaign.inventory.equippedCards[slot];
 
+        if (cardInSlot == null)
+        {
+            ReturnToUpgradeDefault();
+            return;
+        }
+
+        confirmationText.text = UPGRADE_PROMPT_PREFIX + cardInSlot.ID + "?\n" + cardInSlot.GetUpgradeText();
+        confirmButton.gameObject.SetActive(true);
+        denyButton.gameObject.SetActive(true);
     }
 
+    void ConfirmPick_Upgrade()
+    {
+        CardData cardInSlot = GameStateManager.CurrentCampaign.inventory.equippedCards[selectedSlot];
+        cardInSlot.Upgrade();
+        gameObject.SetActive(false);
+    }
     #endregion
 
     #region for new card
@@ -66,6 +95,7 @@ public class ItemSlotPickerController : MonoBehaviour {
         newCard = _newCard;
         gameObject.SetActive(true);
         ReturnToNewCardDefault();
+        titleText.text = NEW_CARD_TITLE_PREFIX + newCard.ID + ":";
 
         for (int i = 0; i < slotDisplays.Length; i++)
         {
@@ -110,7 +140,8 @@ public class ItemSlotPickerController : MonoBehaviour {
         selectedSlot = -1;
     }
 
-    public void ConfirmPick()
+
+    public void ConfirmPick_NewCard()
     {
         GameStateManager.CurrentCampaign.inventory.equippedCards[selectedSlot] = newCard;
         gameObject.SetActive(false);
@@ -126,6 +157,30 @@ public class ItemSlotPickerController : MonoBehaviour {
         else
         {
             PickSlot_Upgrade(slot);
+        }
+    }
+
+    public void ReturnToDefault()
+    {
+        if (!isChoosingUpgrade)
+        {
+            ReturnToNewCardDefault();
+        }
+        else
+        {
+            ReturnToUpgradeDefault();
+        }
+    }
+
+    public void ConfirmPick()
+    {
+        if (!isChoosingUpgrade)
+        {
+            ConfirmPick_NewCard();
+        }
+        else
+        {
+            ConfirmPick_Upgrade();
         }
     }
 }

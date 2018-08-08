@@ -29,7 +29,7 @@ public class CampaignCardDisplay : MonoBehaviour {
             {
                 cardTitle = card.ID;
                 cardImage = card.cardImage;
-                cardDesc = card.description;
+                cardDesc = card.description + "\n" + card.GetStatText();
             }
 
             cardRow.UpdateCardRow(cardTitle, cardImage, cardDesc);

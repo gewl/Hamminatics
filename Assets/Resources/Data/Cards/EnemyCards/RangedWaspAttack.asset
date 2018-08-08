@@ -13,8 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: RangedWaspAttack
   description: Placeholder description.
-  cost: 0
+  energyCost: 0
+  baseGoldCost: 0
   direction: 6
-  range: 1
+  range: 3
   cardImage: {fileID: 21300000, guid: 06bb56dab4b3a2846893847b6014b02a, type: 3}
-  Damage: 1
+  damage: 1
