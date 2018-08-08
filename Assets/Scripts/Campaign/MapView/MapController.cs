@@ -56,14 +56,12 @@ public class MapController : MonoBehaviour {
     public void DrawMap(Map map)
     {
         int numberOfLayers = map.nodeLayers.Count;
-        float layerPixelHeight = height / (numberOfLayers - 1);
 
         MapNode entrance = map.nodeLayers[0][0];
         entrance.AssociateNodeWithController(entranceNodeController);
         RectTransform entranceRect = entranceNodeController.GetComponent<RectTransform>();
         entranceNodeController.GetComponent<Button>().onClick.AddListener(GenerateMapNodeClickListener(entrance));
 
-        float halfHeight = entranceRect.rect.height / 2f;
         mapNodeXVariance = (width - (entranceRect.rect.width * 1.5f)) / 2f;
 
         MapNode exit = map.nodeLayers[numberOfLayers - 1][0];

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(menuName = "Entity")]
 public class EntityData : ScriptableObject {
@@ -31,6 +32,8 @@ public class EntityData : ScriptableObject {
 
     public MovementCardData movementCard;
     public AttackCardData attackCard;
+
+    public List<ModifierData> activeModifiers;
 
     public void SetHealth(int newHealth)
     {
@@ -71,6 +74,7 @@ public class EntityData : ScriptableObject {
         copy.movementCard = movementCard;
         copy.attackCard = attackCard;
         copy.dropItem = dropItem;
+        copy.activeModifiers = activeModifiers; 
 
         return copy;
     }

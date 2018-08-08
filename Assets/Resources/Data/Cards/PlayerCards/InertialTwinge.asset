@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5daf06a50df7c364ca33d7628e7a574c, type: 3}
-  m_Name: Attack
+  m_Name: InertialTwinge
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -20,12 +20,13 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  ID: Attack
-  description: Placeholder description.
+  ID: Inertial Twinge
+  description: Adjust a body's velocity, to that body's shock and displeasure.
   energyCost: 0
-  baseGoldCost: 0
+  baseGoldCost: 2
   direction: 6
-  range: 1
-  cardImage: {fileID: 21300000, guid: 06bb56dab4b3a2846893847b6014b02a, type: 3}
-  modifiers: []
-  damage: 1
+  range: 3
+  cardImage: {fileID: 21300000, guid: 231b70999e6a5f844ad173dc0425dc43, type: 3}
+  modifiers:
+  - {fileID: 11400000, guid: eac7fa1213dc054458174d2c659ce29b, type: 2}
+  damage: 0

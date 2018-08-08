@@ -71,12 +71,9 @@ public class Map {
         layers.Add(new List<MapNode>() { endNode });
 
         // Place store randomly in one of two final (non-exit) layers.
-        // TODO: moving store up to test store code, uncomment this to put back at end of map
-        //int layersCount = layers.Count;
-        //int shopLayer = rand.Next(layersCount - 3, layersCount - 2);
-        //layers[shopLayer].GetRandomElement<MapNode>().nodeType = MapNodeType.Store;
-
-        layers[1].GetRandomElement<MapNode>().nodeType = MapNodeType.Store;
+        int layersCount = layers.Count;
+        int shopLayer = rand.Next(layersCount - 3, layersCount - 2);
+        layers[shopLayer].GetRandomElement<MapNode>().nodeType = MapNodeType.Store;
 
         return layers;
     }

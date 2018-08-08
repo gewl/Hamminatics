@@ -109,7 +109,7 @@ public static class BoardHelperFunctions {
 
     static public bool AreTwoPositionsLinear(Vector2Int position1, Vector2Int position2)
     {
-        return AreTwoTilesLinear(BoardController.CurrentBoard.GetTileAt(position1), BoardController.CurrentBoard.GetTileAt(position2));
+        return AreTwoTilesLinear(BoardController.CurrentBoard.GetTileAtPosition(position1), BoardController.CurrentBoard.GetTileAtPosition(position2));
     }
 
     static public bool AreTwoTilesLinear(Tile tile1, Tile tile2)
@@ -191,7 +191,7 @@ public static class BoardHelperFunctions {
 
     static public List<Tile> GetDirectlyReachableTiles(Vector2Int position)
     {
-        return GetDirectlyReachableTiles(BoardController.CurrentBoard.GetTileAt(position));
+        return GetDirectlyReachableTiles(BoardController.CurrentBoard.GetTileAtPosition(position));
     }
 
     static public List<Tile> GetDirectlyReachableTiles(Tile startingTile)

@@ -29,6 +29,7 @@ public class DataManager : MonoBehaviour {
     const string BASIC_ATTACK_ID = "Attack";
     const string BASIC_MOVE_ID = "Move";
     const string FIREBALL_ID = "Fireball";
+    const string TWINGE_ID = "InertialTwinge";
 
     static Dictionary<string, EntityData> cachedEntityData;
     static Dictionary<string, TrapData> cachedTrapData;
@@ -112,7 +113,7 @@ public class DataManager : MonoBehaviour {
             GetPlayerCardData(BASIC_MOVE_ID),
             GetPlayerCardData(BASIC_ATTACK_ID),
             GetPlayerCardData(FIREBALL_ID),
-            null
+            GetPlayerCardData(TWINGE_ID)
         };
     }
     #endregion

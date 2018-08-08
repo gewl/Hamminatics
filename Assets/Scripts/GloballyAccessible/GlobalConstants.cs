@@ -75,7 +75,9 @@ public enum ModifierCategory
     Weaken,
     Strength,
     DamageOverTime,
-    HealOverTime
+    HealOverTime,
+    Push,
+    Pull
 }
 
 public struct Constants

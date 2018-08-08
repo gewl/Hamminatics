@@ -94,19 +94,8 @@ public static class UpcomingStateCalculator
         }
 
         EntityData tileOccupant = newState.GetTileOccupant(nextTile.Position);
-        Tile projectedBumpTile = nextTile.GetDirectionalNeighbor(move);
 
-        bool bumpCanPush = projectedBumpTile != null && !newState.IsTileOccupied(projectedBumpTile);
-
-        if (bumpCanPush)
-        {
-            Vector2Int projectedBumpPosition = projectedBumpTile.Position;
-            tileOccupant.SetPosition(projectedBumpPosition, newState);
-            entityCopy.SetPosition(nextTile.Position, newState);
-        }
-
-        tileOccupant.DealDamage(1, newState);
-        entityCopy.DealDamage(1, newState);
+        ResolveBump(entity, tileOccupant, move, newState);
 
         Bump bump = new Bump(entityCopy, tileOccupant);
 
@@ -154,8 +143,107 @@ public static class UpcomingStateCalculator
 
         targetEntity.DealDamage(card.damage, newState);
 
+        List<ModifierData> attackModifiers = action.card.modifiers;
+        if (attackModifiers != null && attackModifiers.Count > 0)
+        {
+            for (int i = 0; i < attackModifiers.Count; i++)
+            {
+                ApplyModifierToAttack(targetEntity, attackModifiers[i], entity, newState);
+            }
+        }
+
         return newProjectedState;
     }
+
+    static void ApplyModifierToAttack(EntityData target, ModifierData modifier, EntityData attacker, ScenarioState gameState)
+    {
+        switch (modifier.modifierCategory)
+        {
+            case ModifierCategory.Slow:
+                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
+                break;
+            case ModifierCategory.Speed:
+                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
+                break;
+            case ModifierCategory.Weaken:
+                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
+                break;
+            case ModifierCategory.Strength:
+                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
+                break;
+            case ModifierCategory.DamageOverTime:
+                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
+                break;
+            case ModifierCategory.HealOverTime:
+                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
+                break;
+            case ModifierCategory.Push:
+                ApplyModifierToAttack_Push(target, modifier, attacker, gameState);
+                break;
+            case ModifierCategory.Pull:
+                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
+                break;
+            default:
+                break;
+        }
+    }
+
+    static void ApplyModifierToAttack_Push(EntityData target, ModifierData modifier, EntityData attacker, ScenarioState gameState)
+    {
+        Direction fromAttackerToTarget = BoardHelperFunctions.GetDirectionFromPosition(attacker.Position, target.Position);
+        int pushMagnitude = modifier.value;
+
+        while (pushMagnitude > 0)
+        {
+            Tile currentTargetTile = BoardController
+                .CurrentBoard
+                .GetTileAtPosition(target.Position);
+            bool canPushTarget = currentTargetTile
+                .ConnectsToNeighbor(fromAttackerToTarget);
+
+            if (canPushTarget)
+            {
+                Tile nextTile = currentTargetTile.GetDirectionalNeighbor(fromAttackerToTarget);
+                bool isNextTileOccupied = nextTile.IsOccupied(gameState);
+
+                if (isNextTileOccupied)
+                {
+                    Debug.Log("next tile occupied");
+                    ResolveBump(target, gameState.GetTileOccupant(nextTile), fromAttackerToTarget, gameState);
+                    break;
+                }
+                else
+                {
+                    target.SetPosition(currentTargetTile.GetDirectionalNeighbor(fromAttackerToTarget).Position, gameState);
+                    pushMagnitude--;
+                }
+            }
+            else
+            {
+                target.DealDamage(1, gameState);
+                break;
+            }
+        }
+    }
     #endregion
+
+    static void ResolveBump(EntityData bumper, EntityData bumpee, Direction bumpDirection, ScenarioState state)
+    {
+        Tile projectedBumpTile = BoardController
+            .CurrentBoard
+            .GetTileAtPosition(bumpee.Position);
+
+        bool bumpCanPush = projectedBumpTile != null && !state.IsTileOccupied(projectedBumpTile);
+
+        if (bumpCanPush)
+        {
+            Vector2Int projectedBumpPosition = projectedBumpTile.Position;
+            bumper.SetPosition(bumpee.Position, state);
+            bumpee.SetPosition(projectedBumpPosition, state);
+        }
+
+        bumpee.DealDamage(1, state);
+        bumper.DealDamage(1, state);
+    }
 
 }

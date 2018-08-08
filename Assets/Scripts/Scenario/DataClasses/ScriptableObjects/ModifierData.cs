@@ -22,6 +22,5 @@ public class ModifierData : ScriptableObject {
         copy.duration = duration;
 
         return copy;
-
     }
 }
