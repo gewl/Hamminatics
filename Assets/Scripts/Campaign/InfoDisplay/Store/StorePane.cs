@@ -119,8 +119,19 @@ public class StorePane : MonoBehaviour {
 
         // TODO: Bake this into extension method or something.
         GameStateManager.CurrentCampaign.inventory.gold -= item.baseGoldCost;
-        GameStateDelegates.OnCampaignStateUpdated(GameStateManager.CurrentCampaign);
 
-        slotPicker.DisplaySlotPicker(item);
+        if (item == healthItem)
+        {
+            GameStateManager.CurrentCampaign.player.ChangeHealthValue(1);
+        }
+        else if (item == upgradeItem)
+        {
+            slotPicker.DisplaySlotPickerForUpgrade();
+        }
+        else
+        {
+            slotPicker.DisplaySlotPicker(item);
+        }
+        GameStateDelegates.OnCampaignStateUpdated(GameStateManager.CurrentCampaign);
     }
 }

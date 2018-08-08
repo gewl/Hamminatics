@@ -11,18 +11,40 @@ public class InventorySlotDisplay : MonoBehaviour {
     Text cardTitle;
     [SerializeField]
     Sprite openSlotSprite;
+    [SerializeField]
+    GameObject blockInteractionOverlay;
 
-    public void UpdateDisplay(CardData card)
+    public void UpdateDisplay_NewCard(CardData card)
     {
         if (card == null)
         {
             cardImage.sprite = openSlotSprite;
             cardTitle.text = "Free Slot";
+            blockInteractionOverlay.SetActive(false);
         }
         else
         {
             cardImage.sprite = card.cardImage;
             cardTitle.text = card.ID;
+
+            blockInteractionOverlay.SetActive(card.category == CardCategory.Movement);
+        }
+    }
+
+    public void UpdateDisplay_Update(CardData card)
+    {
+        if (card == null)
+        {
+            cardImage.sprite = openSlotSprite;
+            cardTitle.text = "Free Slot";
+            blockInteractionOverlay.SetActive(true);
+        }
+        else
+        {
+            cardImage.sprite = card.cardImage;
+            cardTitle.text = card.ID;
+
+            blockInteractionOverlay.SetActive(false);
         }
     }
 }

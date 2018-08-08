@@ -7,6 +7,7 @@ public class ItemSlotPickerController : MonoBehaviour {
 
     CardData newCard;
     int selectedSlot = -1;
+    bool isChoosingUpgrade = false;
 
     const string DEFAULT_PREFIX = "Choose a slot for ";
 
@@ -17,6 +18,8 @@ public class ItemSlotPickerController : MonoBehaviour {
     const string INELIGIBLE_TEXT = "You can't place a new card in that slot.";
     const string REPLACE_PROMPT_PREFIX = "Do you want to replace ";
     const string PLACE_PROMPT_PREFIX = "Place in slot ";
+
+    const string UPGRADE_TEXT = "Choose a card to upgrade.";
 
     InventorySlotDisplay[] slotDisplays;
 
@@ -32,20 +35,46 @@ public class ItemSlotPickerController : MonoBehaviour {
         slotDisplays = GetComponentsInChildren<InventorySlotDisplay>();
     }
 
-    public void DisplaySlotPicker(CardData _newCard)
+    #region for upgrade
+
+    public void DisplaySlotPickerForUpgrade()
     {
+        isChoosingUpgrade = true;
+        gameObject.SetActive(true);
+        ReturnToUpgradeDefault();
+    }
+
+    void ReturnToUpgradeDefault()
+    {
+        confirmationText.text = UPGRADE_TEXT;
+        confirmButton.gameObject.SetActive(false);
+        denyButton.gameObject.SetActive(false);
+        selectedSlot = -1;
+    }
+
+    void PickSlot_Upgrade(int slot)
+    {
+
+    }
+
+    #endregion
+
+    #region for new card
+    public void DisplaySlotPicker(CardData _newCard, bool isUpgrading = false)
+    {
+        isChoosingUpgrade = false;
         newCard = _newCard;
         gameObject.SetActive(true);
-        ReturnToDefault();
+        ReturnToNewCardDefault();
 
         for (int i = 0; i < slotDisplays.Length; i++)
         {
             CardData card = GameStateManager.CurrentCampaign.inventory.equippedCards[i];
-            slotDisplays[i].UpdateDisplay(card);
+            slotDisplays[i].UpdateDisplay_NewCard(card);
         }
     }
 
-    public void PickSlot(int slot)
+    void PickSlot_NewCard(int slot)
     {
         if (slot == 0)
         {
@@ -73,7 +102,7 @@ public class ItemSlotPickerController : MonoBehaviour {
         }
     }
 
-    public void ReturnToDefault()
+    public void ReturnToNewCardDefault()
     {
         confirmationText.text = DEFAULT_PREFIX + newCard.ID;
         confirmButton.gameObject.SetActive(false);
@@ -85,5 +114,18 @@ public class ItemSlotPickerController : MonoBehaviour {
     {
         GameStateManager.CurrentCampaign.inventory.equippedCards[selectedSlot] = newCard;
         gameObject.SetActive(false);
+    }
+    #endregion
+
+    public void PickSlot(int slot)
+    {
+        if (!isChoosingUpgrade)
+        {
+            PickSlot_NewCard(slot);
+        }
+        else
+        {
+            PickSlot_Upgrade(slot);
+        }
     }
 }
