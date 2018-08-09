@@ -171,6 +171,10 @@ public static class UpcomingStateCalculator
         {
             for (int i = 0; i < attackModifiers.Count; i++)
             {
+                if (targetEntity.activeModifiers.Count >= Constants.MAX_MODIFIERS)
+                {
+                    break;
+                }
                 ApplyModifierToAttack(targetEntity, attackModifiers[i], entity, newState);
             }
         }

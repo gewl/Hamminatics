@@ -84,6 +84,7 @@ public struct Constants
 {
     public const string PLAYER_ID = "Player";
     public const int MAX_EQUIPPED_CARDS = 4;
+    public const int MAX_MODIFIERS = 8;
 }
 
 public enum MapNodeType
