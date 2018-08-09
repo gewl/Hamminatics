@@ -28,5 +28,5 @@ MonoBehaviour:
   range: 3
   cardImage: {fileID: 21300000, guid: 231b70999e6a5f844ad173dc0425dc43, type: 3}
   modifiers:
-  - {fileID: 11400000, guid: eac7fa1213dc054458174d2c659ce29b, type: 2}
+  - {fileID: 11400000, guid: 4d66e07f5df960940967d98b01f409d5, type: 2}
   damage: 0

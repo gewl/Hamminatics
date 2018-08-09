@@ -178,19 +178,24 @@ public static class UpcomingStateCalculator
                 Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
                 break;
             case ModifierCategory.Push:
-                ApplyModifierToAttack_Push(target, modifier, attacker, gameState);
+                ApplyModifierToAttack_PushPull(target, modifier, attacker, gameState, ModifierCategory.Push);
                 break;
             case ModifierCategory.Pull:
-                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
+                ApplyModifierToAttack_PushPull(target, modifier, attacker, gameState, ModifierCategory.Pull);
                 break;
             default:
                 break;
         }
     }
 
-    static void ApplyModifierToAttack_Push(EntityData target, ModifierData modifier, EntityData attacker, ScenarioState gameState)
+    static void ApplyModifierToAttack_PushPull(EntityData target, ModifierData modifier, EntityData attacker, ScenarioState gameState, ModifierCategory pushOrPull)
     {
-        Direction fromAttackerToTarget = BoardHelperFunctions.GetDirectionFromPosition(attacker.Position, target.Position);
+        // Default to push;
+        Direction forceDirection = BoardHelperFunctions.GetDirectionFromPosition(attacker.Position, target.Position);
+        if (pushOrPull == ModifierCategory.Pull)
+        {
+            forceDirection = BoardHelperFunctions.GetDirectionFromPosition(target.Position, attacker.Position);
+        }
         int pushMagnitude = modifier.value;
 
         while (pushMagnitude > 0)
@@ -199,21 +204,21 @@ public static class UpcomingStateCalculator
                 .CurrentBoard
                 .GetTileAtPosition(target.Position);
             bool canPushTarget = currentTargetTile
-                .ConnectsToNeighbor(fromAttackerToTarget);
+                .ConnectsToNeighbor(forceDirection);
 
             if (canPushTarget)
             {
-                Tile nextTile = currentTargetTile.GetDirectionalNeighbor(fromAttackerToTarget);
+                Tile nextTile = currentTargetTile.GetDirectionalNeighbor(forceDirection);
                 bool isNextTileOccupied = nextTile.IsOccupied(gameState);
 
                 if (isNextTileOccupied)
                 {
-                    ResolveBump(target, gameState.GetTileOccupant(nextTile), fromAttackerToTarget, gameState);
+                    ResolveBump(target, gameState.GetTileOccupant(nextTile), forceDirection, gameState);
                     break;
                 }
                 else
                 {
-                    target.SetPosition(currentTargetTile.GetDirectionalNeighbor(fromAttackerToTarget).Position, gameState);
+                    target.SetPosition(currentTargetTile.GetDirectionalNeighbor(forceDirection).Position, gameState);
                     pushMagnitude--;
                 }
             }
@@ -224,6 +229,7 @@ public static class UpcomingStateCalculator
             }
         }
     }
+    
     #endregion
 
     static void ResolveBump(EntityData bumper, EntityData bumpee, Direction bumpDirection, ScenarioState state)
