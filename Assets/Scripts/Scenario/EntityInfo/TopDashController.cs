@@ -28,19 +28,19 @@ public class TopDashController : MonoBehaviour {
     void DisplayCardInfo(CardData card)
     {
         textInfoHandler.gameObject.SetActive(true);
-        textInfoHandler.UpdateText(card);
+        textInfoHandler.DisplayCardInfo(card);
     }
 
     void DisplayEntityInfo(EntityData entity, ScenarioState currentGameState, List<ProjectedGameState> upcomingStates)
     {
         textInfoHandler.gameObject.SetActive(true);
-        textInfoHandler.UpdateText(entity);
+        textInfoHandler.DisplayEntityInfo(entity);
     }
 
     void DisplayItemInfo(ItemData item)
     {
         textInfoHandler.gameObject.SetActive(true);
-        textInfoHandler.UpdateText(item);
+        textInfoHandler.DisplayItemInfo(item);
     }
 
     void HideInfoPanel()

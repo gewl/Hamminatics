@@ -7,6 +7,8 @@ public class InfoPanelHandler : MonoBehaviour {
 
     Text title;
     Text body;
+    [SerializeField]
+    ModifierDisplay modifierDisplay;
 
     private void Awake()
     {
@@ -14,22 +16,29 @@ public class InfoPanelHandler : MonoBehaviour {
         body = transform.GetChild(1).GetComponent<Text>();
     }
 
-    public void UpdateText(CardData card)
+    public void DisplayCardInfo(CardData card)
     {
         title.text = card.ID;
         string newBodyText = "Energy cost: " + card.energyCost + "\n\n" + card.description;
         body.text = newBodyText;
+
+        modifierDisplay.gameObject.SetActive(false);
     }
 
-    public void UpdateText(EntityData entity)
+    public void DisplayEntityInfo(EntityData entity)
     {
         title.text = entity.ID;
         body.text = entity.description;
+
+        modifierDisplay.gameObject.SetActive(true);
+        modifierDisplay.UpdateDisplayedModifiers(entity.activeModifiers);
     }
 
-    public void UpdateText(ItemData item)
+    public void DisplayItemInfo(ItemData item)
     {
         title.text = item.ID;
         body.text = item.description;
+
+        modifierDisplay.gameObject.SetActive(false);
     }
 }
