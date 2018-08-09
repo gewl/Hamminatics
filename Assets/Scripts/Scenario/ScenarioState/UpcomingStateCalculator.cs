@@ -63,9 +63,32 @@ public static class UpcomingStateCalculator
 
                 mostRecentState = updatedState.scenarioState;
             }
+
+            UpdateEntityModifiers(entity, mostRecentState);
         }
 
         return projectedGameStates;
+    }
+
+    static void UpdateEntityModifiers(EntityData entity, ScenarioState gameState)
+    {
+        for (int i = 0; i < entity.activeModifiers.Count; i++)
+        {
+            ModifierData modifier = entity.activeModifiers[i];
+
+            if (modifier.modifierCategory == ModifierCategory.DamageOverTime)
+            {
+                entity.DealDamage(modifier.value, gameState);
+            }
+            else if (modifier.modifierCategory == ModifierCategory.HealOverTime)
+            {
+                entity.ChangeHealthValue(modifier.value);
+            }
+
+            modifier.duration--;
+        }
+
+        entity.activeModifiers = entity.activeModifiers.Where(modifier => modifier.duration > 0).ToList();
     }
 
     #region state generation
@@ -159,24 +182,6 @@ public static class UpcomingStateCalculator
     {
         switch (modifier.modifierCategory)
         {
-            case ModifierCategory.Slow:
-                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
-                break;
-            case ModifierCategory.Speed:
-                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
-                break;
-            case ModifierCategory.Weaken:
-                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
-                break;
-            case ModifierCategory.Strength:
-                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
-                break;
-            case ModifierCategory.DamageOverTime:
-                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
-                break;
-            case ModifierCategory.HealOverTime:
-                Debug.Log("Applying modifier of type: " + modifier.modifierCategory);
-                break;
             case ModifierCategory.Push:
                 ApplyModifierToAttack_PushPull(target, modifier, attacker, gameState, ModifierCategory.Push);
                 break;
@@ -184,13 +189,14 @@ public static class UpcomingStateCalculator
                 ApplyModifierToAttack_PushPull(target, modifier, attacker, gameState, ModifierCategory.Pull);
                 break;
             default:
+                target.activeModifiers.Add(Object.Instantiate(modifier));
                 break;
         }
     }
 
     static void ApplyModifierToAttack_PushPull(EntityData target, ModifierData modifier, EntityData attacker, ScenarioState gameState, ModifierCategory pushOrPull)
     {
-        // Default to push;
+        // Default to push, check for pull.
         Direction forceDirection = BoardHelperFunctions.GetDirectionFromPosition(attacker.Position, target.Position);
         if (pushOrPull == ModifierCategory.Pull)
         {

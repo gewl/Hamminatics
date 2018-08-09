@@ -29,7 +29,7 @@ public static class EntityExtensions {
     }
 
     /// <summary>
-    /// Only for use in campaign view (outside of scenario).
+    /// Only for use in campaign view OR healing in scenario.
     /// </summary>
     /// <param name="entity">Entity to have health changed.</param>
     /// <param name="value">Value to be added to entity health.</param>

@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Name: Wasp
   m_EditorClassIdentifier: 
   ID: Wasp
-  Health: 1
+  description: Placeholder description.
+  _maxHealth: 5
   EntitySprite: {fileID: 21300000, guid: 177bc482176a21d4bb0e4c3b4a23bde2, type: 3}
   Speed: 2
   IdentifyingColor: {r: 0.9862069, g: 1, b: 0, a: 1}
-  Position: {x: 0, y: 0}
   dropItem: {fileID: 11400000, guid: efcce6bb7cfc22b4295ee6c3cdd6d825, type: 2}
   movementCard: {fileID: 11400000, guid: 7eb599ec2e87a724f909c00b1e5184ea, type: 2}
   attackCard: {fileID: 11400000, guid: e1df8ea6f83e9f44daf04f84e149c83f, type: 2}
+  activeModifiers: []

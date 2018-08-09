@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 [CreateAssetMenu(menuName = "Entity")]
 public class EntityData : ScriptableObject {
@@ -74,7 +75,7 @@ public class EntityData : ScriptableObject {
         copy.movementCard = movementCard;
         copy.attackCard = attackCard;
         copy.dropItem = dropItem;
-        copy.activeModifiers = activeModifiers; 
+        copy.activeModifiers = activeModifiers.Select(modifier => modifier.Copy()).ToList();
 
         return copy;
     }
