@@ -38,12 +38,12 @@ public class GameStateManager : MonoBehaviour {
         CurrentCampaign = new CampaignState(new Inventory(), new Map(0, mapLayerCount), player);
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
 
-        InitializeMap();
+        InitializeFirstMap();
     }
 
-    void InitializeMap()
+    void InitializeFirstMap()
     {
-        Map currentMap = CurrentCampaign.currentMap;
+        Map currentMap = CurrentCampaign.CurrentMap;
         mapController.DrawMap(currentMap);
         mapController.UpdateMapState(CurrentCampaign);
     }
@@ -68,11 +68,22 @@ public class GameStateManager : MonoBehaviour {
                 DisplayStore();
                 break;
             case MapNodeType.End:
-                Debug.Log("moved to " + newPlayerNode.nodeType);
+                GenerateNewMap();
                 break;
             default:
                 break;
         }
+    }
+
+    void GenerateNewMap()
+    {
+        CurrentCampaign.depth++;
+        Map newMap = new Map(CurrentCampaign.depth, 2);
+        CurrentCampaign.UpdateMap(newMap);
+        mapController.DrawMap(newMap);
+        mapController.UpdateMapState(CurrentCampaign);
+
+        GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
     }
 
     #region event processing

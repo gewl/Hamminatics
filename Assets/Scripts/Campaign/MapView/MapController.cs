@@ -119,7 +119,7 @@ public class MapController : MonoBehaviour {
 
     public void UpdateMapState(CampaignState campaign)
     {
-        Map map = campaign.currentMap;
+        Map map = campaign.CurrentMap;
         map.nodeLayers.ForEach(layer => layer.ForEach(node => node.NodeController.DeactivateHighlight()));
 
         if (campaign.CurrentPlayerNode != currentPlayerNode)

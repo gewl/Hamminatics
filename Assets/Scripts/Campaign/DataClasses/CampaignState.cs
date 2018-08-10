@@ -5,7 +5,7 @@ using UnityEngine;
 public class CampaignState {
 
     public Inventory inventory;
-    public Map currentMap;
+    public Map CurrentMap { get; private set; }
     public EntityData player;
     public MapNode CurrentPlayerNode { get; private set; }
     public int depth;
@@ -31,8 +31,8 @@ public class CampaignState {
 
     public void UpdateMap(Map newMap)
     {
-        currentMap = newMap;
-        CurrentPlayerNode = currentMap.GetStarterNode();
+        CurrentMap = newMap;
+        CurrentPlayerNode = CurrentMap.GetStarterNode();
         pastPlayerNodes = new List<MapNode>();
     }
 }
