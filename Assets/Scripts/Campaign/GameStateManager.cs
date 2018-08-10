@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class GameStateManager : MonoBehaviour {
     const string PLAYER_ID = "Player";
@@ -15,8 +17,11 @@ public class GameStateManager : MonoBehaviour {
     EventPane eventPane;
     [SerializeField]
     StorePane storePane;
+
     [SerializeField]
     GameObject dimmer;
+    [SerializeField]
+    EventTrigger fullScreenTrigger;
 
     static GameStateManager instance;
 
@@ -150,6 +155,24 @@ public class GameStateManager : MonoBehaviour {
     public static void SetDim(bool isDim)
     {
         instance.dimmer.gameObject.SetActive(isDim);
+    }
+
+    public static void ActiveFullScreenTrigger(UnityAction<BaseEventData> pointerClickHandler)
+    {
+        instance.fullScreenTrigger.gameObject.SetActive(true);
+
+        EventTrigger.Entry entry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerClick
+        };
+        entry.callback.AddListener(pointerClickHandler);
+        instance.fullScreenTrigger.triggers.Add(entry);
+    }
+
+    public static void DisableFullScreenTrigger()
+    {
+        instance.fullScreenTrigger.triggers.Clear();
+        instance.fullScreenTrigger.gameObject.SetActive(false);
     }
     #endregion
 }
