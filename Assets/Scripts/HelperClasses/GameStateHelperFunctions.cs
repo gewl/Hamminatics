@@ -118,6 +118,11 @@ public static class GameStateHelperFunctions {
         return state.GetAllEntities().Find(e => predicate(e));
     }
 
+    public static List<EntityData> GetAllEntitiesWhere(this ScenarioState state, Predicate<EntityData> predicate)
+    {
+        return state.GetAllEntities().FindAll(e => predicate(e)).ToList();
+    }
+
     public static bool HasEntityWhere(this ScenarioState state, Predicate<EntityData> predicate)
     {
         return state.GetAllEntities().Any(e => predicate(e));

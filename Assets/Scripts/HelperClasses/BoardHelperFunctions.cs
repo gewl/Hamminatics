@@ -151,6 +151,11 @@ public static class BoardHelperFunctions {
         Vector2Int position1 = tile1.Position;
         Vector2Int position2 = tile2.Position;
 
+        return GetLinearDistanceBetweenPositions(position1, position2);
+    }
+
+    static public int GetLinearDistanceBetweenPositions(Vector2Int position1, Vector2Int position2)
+    {
         if (position1.x == position2.x && position1.y == position2.y)
         {
             Debug.LogError("Attempted to find linear distance between non-linear tiles.");

@@ -37,7 +37,7 @@ public static class UpcomingStateCalculator
 
                 mostRecentState = updatedState.scenarioState;
 
-                if (updatedState.bump != null)
+                if (updatedState.bumps.Count > 0)
                 {
                     break;
                 }

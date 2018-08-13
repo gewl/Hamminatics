@@ -126,7 +126,7 @@ public class TurnDrawer : MonoBehaviour {
                 .Position;
 
             bool isSelectedEntityState = projectedState.activeEntity == selectedEntity;
-            bool isSelectedEntityBumped = projectedState.bump != null && projectedState.bump.bumpedEntity == selectedEntity;
+            bool isSelectedEntityBumped = projectedState.IsEntityBumped(selectedEntity);
             bool isSelectedEntityAttacked = projectedState.attackedPositions.Contains(selectedEntityPositionThisState);
 
             if (isSelectedEntityState || isSelectedEntityBumped || isSelectedEntityAttacked)
@@ -177,14 +177,19 @@ public class TurnDrawer : MonoBehaviour {
     void DrawState(ProjectedGameState projectedState, ProjectedGameState nextState, EntityData lastActiveEntity)
     {
         CardCategory actionCardCategory = projectedState.action.card.category;
-        if (actionCardCategory == CardCategory.Movement)
-        {
-            DrawMoveState(projectedState, nextState, lastActiveEntity);
-        }
-        else if (actionCardCategory == CardCategory.Attack)
+
+        projectedState.GetMovedEntities().ForEach(e => DrawMove(projectedState, nextState, e, lastActiveEntity));
+
+        //if (actionCardCategory == CardCategory.Movement)
+        //{
+        //    DrawMoveState(projectedState, nextState, lastActiveEntity);
+        //}
+        if (actionCardCategory == CardCategory.Attack)
         {
             DrawAttackState(projectedState);
         }
+
+        projectedState.bumps.ForEach(b => DrawBump(b.bumpingEntity, projectedState, nextState, b));
     }
 
     void DrawItemDurations(List<ItemData> items)
@@ -262,6 +267,63 @@ public class TurnDrawer : MonoBehaviour {
     }
 
     #region Movement drawing
+    void DrawMove(ProjectedGameState projectedState, ProjectedGameState nextState, EntityData movingEntity, EntityData lastActiveEntity)
+    {
+        Vector2Int positionThisState = movingEntity.Position;
+        Vector2Int positionLastState = projectedState
+            .scenarioState
+            .lastGameState
+            .GetEntityWhere(e => e.ID == movingEntity.ID)
+            .Position;
+        Vector2Int positionTwoStatesAgo = projectedState
+            .scenarioState
+            .lastGameState
+            .lastGameState
+            .GetEntityWhere(e => e.ID == movingEntity.ID)
+            .Position;
+
+        bool isEntitysFirstMove = positionLastState == positionTwoStatesAgo || movingEntity != lastActiveEntity;
+        bool isEntitysLastMove = nextState == null ||
+            (nextState.scenarioState.HasEntityWhere(e => e == movingEntity) &&
+            nextState.scenarioState.GetEntityWhere(e => e == movingEntity).Position == movingEntity.Position);
+
+        if (isEntitysLastMove)
+        {
+            DrawPath_Ending(movingEntity, positionLastState, positionThisState);
+        }
+        else
+        {
+            if (isEntitysFirstMove)
+            {
+                DrawPath_Beginning(movingEntity, positionLastState, positionThisState);
+            }
+            DrawPath_Between(movingEntity, positionLastState, positionThisState, nextState.scenarioState.GetEntityWhere(e => e == movingEntity).Position);
+        }
+
+        int distanceCovered = BoardHelperFunctions.GetLinearDistanceBetweenPositions(positionLastState, positionThisState);
+
+        if (distanceCovered > 1)
+        {
+            Direction directionToDestination = BoardHelperFunctions.GetDirectionFromPosition(positionLastState, positionThisState);
+            GameBoard currentBoard = BoardController.CurrentBoard;
+
+            Tile lastTile = currentBoard.GetTileAtPosition(positionLastState);
+            Tile currentTile = lastTile.GetDirectionalNeighbor(directionToDestination);
+            Tile nextTile = currentTile.GetDirectionalNeighbor(directionToDestination);
+            int intermediaryPathCount = 0;
+
+            while (intermediaryPathCount < distanceCovered - 1)
+            {
+                DrawPath_Between(movingEntity, lastTile.Position, currentTile.Position, nextTile.Position);
+                lastTile = currentTile;
+                currentTile = nextTile;
+                nextTile = currentTile.GetDirectionalNeighbor(directionToDestination);
+
+                intermediaryPathCount++;
+            }
+        }
+    }
+
     void DrawMoveState(ProjectedGameState projectedState, ProjectedGameState nextState, EntityData lastActiveEntity)
     {
         EntityData activeEntity = projectedState.activeEntity;
@@ -282,7 +344,7 @@ public class TurnDrawer : MonoBehaviour {
             (activeEntity.ID == activeEntityTwoStatesAgo.ID &&
             activeEntity.Position == activeEntityTwoStatesAgo.Position);
 
-        bool isFailedBump = projectedState.bump != null &&
+        bool isFailedBump = projectedState.DoesEntityBump(activeEntity) && 
             positionLastState == positionThisState;
 
         if (isEntitysFirstMove && !isFailedBump)
@@ -290,17 +352,17 @@ public class TurnDrawer : MonoBehaviour {
             DrawPath_Beginning(activeEntity, positionLastState, positionThisState);
         }
 
-        if (projectedState.bump == null)
+        if (!projectedState.DoesEntityBump(activeEntity))
         {
-            DrawPath(activeEntity, lastActiveEntity, projectedState, nextState);
+            DrawPath(activeEntity, projectedState, nextState);
         }
         else
         {
-            DrawBump(activeEntity, lastActiveEntity, projectedState, nextState);
+            projectedState.bumps.ForEach(b => DrawBump(activeEntity, projectedState, nextState, b));
         }
     }
 
-    void DrawPath(EntityData activeEntity, EntityData lastActiveEntity, ProjectedGameState projectedState, ProjectedGameState nextState)
+    void DrawPath(EntityData activeEntity, ProjectedGameState projectedState, ProjectedGameState nextState)
     {
         bool isEntityAliveNextState = nextState == null || nextState
             .scenarioState
@@ -323,7 +385,7 @@ public class TurnDrawer : MonoBehaviour {
             return;
         }
 
-        bool isNextMoveFailedBump = nextState.bump != null &&
+        bool isNextMoveFailedBump = nextState.DoesEntityBump(nextState.activeEntity) &&
             nextState.activeEntity.Position == activeEntity.Position;
         if (projectedState.action.card.category == CardCategory.Movement && 
             !isEntitysLastMove &&
@@ -361,6 +423,19 @@ public class TurnDrawer : MonoBehaviour {
         GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, entity.IdentifyingColor);
     }
 
+    void DrawPath_Ending(EntityData entity, Vector2Int positionLastState, Vector2Int positionThisState)
+    {
+        if (positionThisState == positionLastState)
+        {
+            return;
+        }
+
+        Sprite pathSprite = ScenarioImageManager.GetPathSprite(PathType.Terminating);
+        Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionLastState);
+
+        GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, entity.IdentifyingColor);
+    }
+
     PathType GetPathType(Vector2Int positionLastState, Vector2Int positionThisState, Vector2Int positionNextState)
     {
         if (BoardHelperFunctions.AreTwoPositionsLinear(positionLastState, positionNextState))
@@ -383,35 +458,27 @@ public class TurnDrawer : MonoBehaviour {
         }
     }
 
-    void DrawPath_Ending(EntityData entity, Vector2Int positionLastState, Vector2Int positionThisState)
+    void DrawBump(EntityData bumpingEntity, ProjectedGameState projectedState, ProjectedGameState nextState, Bump bump)
     {
-        if (positionThisState == positionLastState)
-        {
-            return;
-        }
-
-        Sprite pathSprite = ScenarioImageManager.GetPathSprite(PathType.Terminating);
-        Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionLastState);
-
-        GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, entity.IdentifyingColor);
-    }
-
-    void DrawBump(EntityData activeEntity, EntityData lastActiveEntity, ProjectedGameState projectedState, ProjectedGameState nextState)
-    {
-        bool isEntitysFirstMove = lastActiveEntity == null || activeEntity.ID != lastActiveEntity.ID;
-        Bump bump = projectedState.bump;
-        Vector2Int positionThisState = activeEntity.Position;
+        Vector2Int positionTwoStatesAgo = projectedState
+            .scenarioState
+            .lastGameState
+            .lastGameState
+            .GetEntityWhere(e => e.ID == bumpingEntity.ID)
+            .Position;
+        Vector2Int positionThisState = bumpingEntity.Position;
         Vector2Int positionLastState = projectedState
             .scenarioState
             .lastGameState
-            .GetEntityWhere(e => e.ID == activeEntity.ID)
+            .GetEntityWhere(e => e.ID == bumpingEntity.ID)
             .Position;
+        bool isEntitysFirstMove = positionLastState == positionTwoStatesAgo;
 
-        bool bumpSucceeds = activeEntity.Position != positionLastState;
+        bool bumpSucceeds = bumpingEntity.Position != positionLastState;
 
         if (bumpSucceeds)
         {
-            DrawPath_Ending(activeEntity, positionLastState, positionThisState);
+            DrawPath_Ending(bumpingEntity, positionLastState, positionThisState);
             DrawSuccessfulBumpEffect(positionThisState, BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionLastState));
 
             DrawPath_Beginning(bump.bumpedEntity, positionThisState, bump.bumpedEntity.Position);
@@ -421,25 +488,19 @@ public class TurnDrawer : MonoBehaviour {
             Vector2Int bumpedEntityPosition = bump.bumpedEntity.Position;
             Sprite pathSprite = ScenarioImageManager.GetPathSprite(PathType.Beginning);
             Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(bumpedEntityPosition, positionThisState);
-            GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, activeEntity.IdentifyingColor);
+            GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, bumpingEntity.IdentifyingColor);
 
             DrawFailedBumpEffect(positionThisState,
                 BoardHelperFunctions.GetDirectionFromPosition(positionThisState, bumpedEntityPosition));
         }
         else
         {
-            Vector2Int positionTwoStatesAgo = projectedState
-                .scenarioState
-                .lastGameState
-                .lastGameState
-                .GetEntityWhere(e => e.ID == activeEntity.ID)
-                .Position;
             PathType pathType = GetFailedBumpPathType(positionTwoStatesAgo, positionThisState, bump.bumpedEntity.Position);
             Sprite pathSprite = ScenarioImageManager.GetPathSprite(pathType);
             Vector2Int bumpedEntityPosition = bump.bumpedEntity.Position;
             Direction directionOfEntrance = BoardHelperFunctions.GetDirectionFromPosition(positionThisState, positionTwoStatesAgo);
 
-            GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, activeEntity.IdentifyingColor);
+            GenerateAndPositionCellImage(positionThisState, GetImageRotation(directionOfEntrance), pathSprite, bumpingEntity.IdentifyingColor);
             DrawFailedBumpEffect(positionThisState,
                 BoardHelperFunctions.GetDirectionFromPosition(positionThisState, bumpedEntityPosition));
         }
