@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: SimpleSpikeTrap
   m_EditorClassIdentifier: 
   ID: Simple Spike Trap
-  description: Placeholder description.
+  description: A crude and ingenious invention, laying in wait.
   Duration: 5
   sprite: {fileID: 21300000, guid: f54dd28c2f05515479644f20fae64236, type: 3}
   Position: {x: 0, y: 0}
