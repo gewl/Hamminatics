@@ -200,6 +200,10 @@ public static class UpcomingStateCalculator
 
     static void ApplyModifierToAttack_PushPull(EntityData target, ModifierData modifier, EntityData attacker, ScenarioState gameState, ModifierCategory pushOrPull)
     {
+        if (attacker.Position == target.Position)
+        {
+            return;
+        }
         // Default to push, check for pull.
         Direction forceDirection = BoardHelperFunctions.GetDirectionFromPosition(attacker.Position, target.Position);
         if (pushOrPull == ModifierCategory.Pull)

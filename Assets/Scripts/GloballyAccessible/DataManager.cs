@@ -29,7 +29,7 @@ public class DataManager : MonoBehaviour {
     const string BASIC_ATTACK_ID = "Attack";
     const string BASIC_MOVE_ID = "Move";
     const string KINESIS_ID = "Kinesis";
-    const string CARD4_ID = "IntroduceSepsis";
+    const string CARD4_ID = "InertialTwinge";
 
     static Dictionary<string, EntityData> cachedEntityData;
     static Dictionary<string, TrapData> cachedTrapData;
