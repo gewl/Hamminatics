@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5daf06a50df7c364ca33d7628e7a574c, type: 3}
-  m_Name: Attack
+  m_Name: MediumMeleeAttack
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -20,12 +20,12 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  ID: Attack
-  description: Strike an enemy with whatever's at hand.
+  ID: MediumMeleeAttack
+  description: Placeholder description.
   energyCost: 0
   baseGoldCost: 0
   direction: 6
   range: 1
-  cardImage: {fileID: 21300000, guid: 06bb56dab4b3a2846893847b6014b02a, type: 3}
+  cardImage: {fileID: 0}
   modifiers: []
-  damage: 1
+  damage: 2

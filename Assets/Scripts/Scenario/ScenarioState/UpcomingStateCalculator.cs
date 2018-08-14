@@ -164,7 +164,8 @@ public static class UpcomingStateCalculator
 
         EntityData targetEntity = newState.GetTileOccupant(targetTile);
 
-        targetEntity.DealDamage(card.damage, newState);
+        int cardDamage = card.damage + entity.GetAttackModifierValue();
+        targetEntity.DealDamage(cardDamage, newState);
 
         List<ModifierData> attackModifiers = action.card.modifiers;
         if (attackModifiers != null && attackModifiers.Count > 0)

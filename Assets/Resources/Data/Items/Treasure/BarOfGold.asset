@@ -9,11 +9,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a5e85f02ce24c0419b4687a94a957cc, type: 3}
-  m_Name: BagOfSilver
+  m_Name: BarOfGold
   m_EditorClassIdentifier: 
-  ID: Bag of Silver
-  description: A bag of silver. Worth 3 gold.
+  ID: Bar of Gold
+  description: A bar of gold. Worth three gold pieces.
   Duration: 3
-  sprite: {fileID: 21300002, guid: a4a70d3b3ea291649bd574e12be94eb4, type: 3}
+  sprite: {fileID: 21300016, guid: a4a70d3b3ea291649bd574e12be94eb4, type: 3}
   Position: {x: 0, y: 0}
   value: 3

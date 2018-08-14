@@ -4,7 +4,7 @@ using System.Linq;
 
 [CreateAssetMenu(menuName = "Entity")]
 public class EntityData : ScriptableObject {
-    public string ID;
+    public string ID = "_newID";
     public string description = "Placeholder description.";
 
     [SerializeField]
@@ -41,24 +41,56 @@ public class EntityData : ScriptableObject {
         _currentHealth = newHealth;
     }
 
-    public override int GetHashCode()
+    public void SetPosition(Vector2Int newPosition, ScenarioState state)
     {
-        int result = 37;
+        _position = newPosition;
 
-        result = result * 23 + ID.GetHashCode();
+        ItemData itemData = state.GetItemInPosition(newPosition);
+
+        if (itemData == null || itemData.CollectionType != ItemCollectionType.OnStep)
+        {
+            return;
+        }
+
+        state.CollectItem(itemData, this);
+    }
+
+    public int GetMovementModifierValue()
+    {
+        int result = 0;
+
+        activeModifiers.ForEach(m =>
+        {
+            if (m.modifierCategory == ModifierCategory.Speed)
+            {
+                result += m.value;
+            }
+            else if (m.modifierCategory == ModifierCategory.Slow)
+            {
+                result -= m.value;
+            }
+        });
+
         return result;
     }
 
-    public override bool Equals(object other)
+    public int GetAttackModifierValue()
     {
-        if (other == null || GetType() != other.GetType())
+        int result = 0;
+
+        activeModifiers.ForEach(m =>
         {
-            return false;
-        }
+            if (m.modifierCategory == ModifierCategory.Strength)
+            {
+                result += m.value;
+            }
+            else if (m.modifierCategory == ModifierCategory.Weaken)
+            {
+                result -= m.value;
+            }
+        });
 
-        EntityData entity = (EntityData)other;
-
-        return entity.ID == ID;
+        return result;
     }
 
     public EntityData Copy()
@@ -80,19 +112,27 @@ public class EntityData : ScriptableObject {
         return copy;
     }
 
-    public void SetPosition(Vector2Int newPosition, ScenarioState state)
+    #region overrides
+    public override int GetHashCode()
     {
-        _position = newPosition;
+        int result = 37;
 
-        ItemData itemData = state.GetItemInPosition(newPosition);
+        result = result * 23 + ID.GetHashCode();
+        return result;
+    }
 
-        if (itemData == null || itemData.CollectionType != ItemCollectionType.OnStep)
+    public override bool Equals(object other)
+    {
+        if (other == null || GetType() != other.GetType())
         {
-            return;
+            return false;
         }
 
-        state.CollectItem(itemData, this);
+        EntityData entity = (EntityData)other;
+
+        return entity.ID == ID;
     }
+
 
     public static bool operator ==(EntityData entity1, EntityData entity2)
     {
@@ -107,4 +147,5 @@ public class EntityData : ScriptableObject {
     {
         return !(entity1 == entity2);
     }
+    #endregion
 }

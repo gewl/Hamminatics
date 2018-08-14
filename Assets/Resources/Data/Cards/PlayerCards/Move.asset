@@ -11,9 +11,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89c15fc49055fbd47b1ee00511a769ff, type: 3}
   m_Name: Move
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   ID: Move
-  description: Placeholder description.
-  cost: 0
+  description: 
+  energyCost: 0
+  baseGoldCost: 0
   direction: 6
   range: 3
   cardImage: {fileID: 21300000, guid: 231b70999e6a5f844ad173dc0425dc43, type: 3}
+  modifiers: []

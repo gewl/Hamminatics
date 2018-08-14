@@ -170,6 +170,7 @@ public class ScenarioStateManager : MonoBehaviour {
 
         if (card.category == CardCategory.Movement)
         {
+            cardRange += Player.GetMovementModifierValue();
             BoardHelperFunctions.GetPotentialBranchingTargets(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
         }
         else

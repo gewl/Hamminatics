@@ -16,9 +16,9 @@ MonoBehaviour:
     dead.'
   _maxHealth: 2
   EntitySprite: {fileID: 0}
-  Speed: 3
-  IdentifyingColor: {r: 0, g: 0, b: 0, a: 0}
-  dropItem: {fileID: 0}
-  movementCard: {fileID: 0}
-  attackCard: {fileID: 0}
+  Speed: 4
+  IdentifyingColor: {r: 0.5955882, g: 1, b: 0.86612576, a: 1}
+  dropItem: {fileID: 11400000, guid: a5eb630c9f57c3b4aa9383653810e36b, type: 2}
+  movementCard: {fileID: 11400000, guid: 7eb599ec2e87a724f909c00b1e5184ea, type: 2}
+  attackCard: {fileID: 11400000, guid: 7976fce2e91140948b5bcce173f85f1b, type: 2}
   activeModifiers: []
