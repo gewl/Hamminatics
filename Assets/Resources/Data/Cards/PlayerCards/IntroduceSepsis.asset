@@ -22,7 +22,7 @@ MonoBehaviour:
     SerializationNodes: []
   ID: Introduce Sepsis
   description: Placeholder description.
-  energyCost: 0
+  energyCost: 1
   baseGoldCost: 2
   direction: 6
   range: 3

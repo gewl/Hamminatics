@@ -23,9 +23,10 @@ MonoBehaviour:
   ID: Kinesis
   description: Placeholder description.
   energyCost: 1
-  baseGoldCost: 3
+  baseGoldCost: 1
   direction: 6
   range: 3
   cardImage: {fileID: 21300000, guid: 8b87fa5f9ab459c4fa448f7b94cabcfa, type: 3}
-  modifiers: []
+  modifiers:
+  - {fileID: 0}
   damage: 1

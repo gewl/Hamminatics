@@ -159,6 +159,18 @@ public static class UpcomingStateCalculator
         newProjectedState.AddAttackedPosition(targetTile.Position);
         if (!newState.IsTileOccupied(targetTile))
         {
+            List<ModifierData> modifiersToResolve = action.card.modifiers
+                .Where(m => 
+                    m.modifierCategory == ModifierCategory.Blowback || 
+                    m.modifierCategory == ModifierCategory.FollowUp)
+                .ToList();
+
+            for (int i = 0; i < modifiersToResolve.Count; i++)
+            {
+                ModifierData modifier = modifiersToResolve[i];
+                ApplyModifierToAttack_BlowbackFollowUp(modifier, entity, newState, action.direction, modifier.modifierCategory);
+            }
+
             return newProjectedState;
         }
 
@@ -172,30 +184,36 @@ public static class UpcomingStateCalculator
         {
             for (int i = 0; i < attackModifiers.Count; i++)
             {
-                if (targetEntity.activeModifiers.Count >= Constants.MAX_MODIFIERS)
-                {
-                    break;
-                }
-                ApplyModifierToAttack(targetEntity, attackModifiers[i], entity, newState);
+                ApplyModifierToAttack(targetEntity, attackModifiers[i], entity, newState, action.direction);
             }
         }
 
         return newProjectedState;
     }
 
-    static void ApplyModifierToAttack(EntityData target, ModifierData modifier, EntityData attacker, ScenarioState gameState)
+    static void ApplyModifierToAttack(EntityData target, ModifierData modifier, EntityData attacker, ScenarioState gameState, Direction direction)
     {
         switch (modifier.modifierCategory)
         {
             case ModifierCategory.Push:
                 ApplyModifierToAttack_PushPull(target, modifier, attacker, gameState, ModifierCategory.Push);
-                break;
+                return;
             case ModifierCategory.Pull:
                 ApplyModifierToAttack_PushPull(target, modifier, attacker, gameState, ModifierCategory.Pull);
-                break;
+                return;
+            case ModifierCategory.Blowback:
+                ApplyModifierToAttack_BlowbackFollowUp(modifier, attacker, gameState, direction, ModifierCategory.Blowback);
+                return;
+            case ModifierCategory.FollowUp:
+                ApplyModifierToAttack_BlowbackFollowUp(modifier, attacker, gameState, direction, ModifierCategory.FollowUp);
+                return;
             default:
+                if (target.activeModifiers.Count >= Constants.MAX_MODIFIERS)
+                {
+                    return;
+                }
                 target.activeModifiers.Add(Object.Instantiate(modifier));
-                break;
+                return;
         }
     }
 
@@ -244,7 +262,67 @@ public static class UpcomingStateCalculator
             }
         }
     }
+
+    static void ApplyModifierToAttack_BlowbackFollowUp(ModifierData modifier, EntityData entity, ScenarioState gameState, Direction actionDirection, ModifierCategory blowbackOrFollowUp)
+    {
+        Direction forceDirection = actionDirection;
+
+        if (blowbackOrFollowUp == ModifierCategory.Blowback)
+        {
+            forceDirection = ReverseDirection(forceDirection);
+        }
+        int pushMagnitude = modifier.value;
+
+        while (pushMagnitude > 0)
+        {
+            Tile currentEntityTile = BoardController
+                .CurrentBoard
+                .GetTileAtPosition(entity.Position);
+            bool canPushTarget = currentEntityTile
+                .ConnectsToNeighbor(forceDirection);
+
+            if (canPushTarget)
+            {
+                Tile nextTile = currentEntityTile.GetDirectionalNeighbor(forceDirection);
+                bool isNextTileOccupied = nextTile.IsOccupied(gameState);
+
+                if (isNextTileOccupied)
+                {
+                    ResolveBump(entity, gameState.GetTileOccupant(nextTile), forceDirection, gameState);
+                    break;
+                }
+                else
+                {
+                    entity.SetPosition(currentEntityTile.GetDirectionalNeighbor(forceDirection).Position, gameState);
+                    pushMagnitude--;
+                }
+            }
+            else
+            {
+                entity.DealDamage(1, gameState);
+                break;
+            }
+
+        }
+    }
     
+    static Direction ReverseDirection(Direction inputDirection)
+    {
+        switch (inputDirection)
+        {
+            case Direction.Up:
+                return Direction.Down;
+            case Direction.Right:
+                return Direction.Left;
+            case Direction.Down:
+                return Direction.Up;
+            case Direction.Left:
+                return Direction.Right;
+            default:
+                Debug.LogError("Bad input to ReverseDirection method: " + inputDirection);
+                return Direction.Up;
+        }
+    }
     #endregion
 
     static void ResolveBump(EntityData bumper, EntityData bumpee, Direction bumpDirection, ScenarioState state)

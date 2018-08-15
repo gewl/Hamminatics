@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class EntityExtensions {
@@ -37,5 +38,48 @@ public static class EntityExtensions {
     {
         int newHealth = entity.CurrentHealth + value;
         entity.SetHealth(newHealth);
+    }
+
+    public static int GetMovementModifierValue(this EntityData entity)
+    {
+        int result = 0;
+
+        entity.activeModifiers.ForEach(m =>
+        {
+            if (m.modifierCategory == ModifierCategory.Speed)
+            {
+                result += m.value;
+            }
+            else if (m.modifierCategory == ModifierCategory.Slow)
+            {
+                result -= m.value;
+            }
+        });
+
+        return result;
+    }
+
+    public static int GetAttackModifierValue(this EntityData entity)
+    {
+        int result = 0;
+
+        entity.activeModifiers.ForEach(m =>
+        {
+            if (m.modifierCategory == ModifierCategory.Strength)
+            {
+                result += m.value;
+            }
+            else if (m.modifierCategory == ModifierCategory.Weaken)
+            {
+                result -= m.value;
+            }
+        });
+
+        return result;
+    }
+
+    public static List<ModifierData> GetModifiersOfCategory(this EntityData entity, params ModifierCategory[] categories)
+    {
+        return entity.activeModifiers.Where(m => categories.Any(c => c == m.modifierCategory)).ToList();
     }
 }
