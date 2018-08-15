@@ -56,7 +56,7 @@ public class ScenarioStateManager : MonoBehaviour {
         {
             if (upcomingScenarioStates.Any(state => state.activeEntity == Player))
             {
-                return upcomingScenarioStates.Last(s => s.activeEntity == Player).activeEntity.Position;
+                return upcomingScenarioStates.Last(s => s.activeEntity == Player && s.action.card.category == CardCategory.Movement).activeEntity.Position;
             }
             else
             {

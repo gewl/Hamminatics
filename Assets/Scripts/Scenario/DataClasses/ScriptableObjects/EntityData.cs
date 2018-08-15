@@ -55,44 +55,6 @@ public class EntityData : ScriptableObject {
         state.CollectItem(itemData, this);
     }
 
-    public int GetMovementModifierValue()
-    {
-        int result = 0;
-
-        activeModifiers.ForEach(m =>
-        {
-            if (m.modifierCategory == ModifierCategory.Speed)
-            {
-                result += m.value;
-            }
-            else if (m.modifierCategory == ModifierCategory.Slow)
-            {
-                result -= m.value;
-            }
-        });
-
-        return result;
-    }
-
-    public int GetAttackModifierValue()
-    {
-        int result = 0;
-
-        activeModifiers.ForEach(m =>
-        {
-            if (m.modifierCategory == ModifierCategory.Strength)
-            {
-                result += m.value;
-            }
-            else if (m.modifierCategory == ModifierCategory.Weaken)
-            {
-                result -= m.value;
-            }
-        });
-
-        return result;
-    }
-
     public EntityData Copy()
     {
         EntityData copy = ScriptableObject.Instantiate(this) as EntityData;
