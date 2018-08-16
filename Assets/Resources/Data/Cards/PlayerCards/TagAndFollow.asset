@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5daf06a50df7c364ca33d7628e7a574c, type: 3}
-  m_Name: InertialTwinge
+  m_Name: TagAndFollow
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -20,13 +20,13 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  ID: Inertial Twinge
-  description: Adjust a body's velocity, to that body's shock and displeasure.
-  energyCost: 1
-  baseGoldCost: 2
+  ID: Tag and Follow
+  description: First you tap them, then you tackle.
+  energyCost: 3
+  baseGoldCost: 5
   direction: 6
-  range: 3
-  cardImage: {fileID: 21300000, guid: 231b70999e6a5f844ad173dc0425dc43, type: 3}
+  range: 2
+  cardImage: {fileID: 21300000, guid: 06bb56dab4b3a2846893847b6014b02a, type: 3}
   modifiers:
-  - {fileID: 11400000, guid: e8380a4d11b0fcc41ae96e74f1aadb2f, type: 2}
-  damage: 1
+  - {fileID: 11400000, guid: 8b026614b0f4bd1418b89c3198dc9ef1, type: 2}
+  damage: 3

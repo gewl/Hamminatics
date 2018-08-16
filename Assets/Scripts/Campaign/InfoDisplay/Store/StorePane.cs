@@ -8,6 +8,8 @@ public class StorePane : MonoBehaviour {
     StoreItemDisplay[] itemDisplays;
 
     [SerializeField]
+    StoreInventoryGenerator inventoryGenerator;
+    [SerializeField]
     ItemSlotPickerController slotPicker;
 
     [SerializeField]
@@ -24,10 +26,30 @@ public class StorePane : MonoBehaviour {
     [SerializeField]
     Text infoCardEnergyCostText;
 
-    [SerializeField]
-    CardData healthItem;
-    [SerializeField]
-    CardData upgradeItem;
+    string _healthItemID;
+    string HealthItemID
+    {
+        get
+        {
+            if (_healthItemID == null)
+            {
+                _healthItemID = inventoryGenerator.GetHealthID();
+            }
+            return _healthItemID;
+        }
+    }
+    string _upgradeItemID;
+    string UpgradeItemID
+    {
+        get
+        {
+            if (_upgradeItemID == null)
+            {
+                _upgradeItemID = inventoryGenerator.GetUpgradeID();
+            }
+            return _upgradeItemID;
+        }
+    }
 
     [SerializeField]
     CardData DEBUG_purchasableCard;
@@ -63,13 +85,7 @@ public class StorePane : MonoBehaviour {
         selectedItemIndex = -1;
 
         // TODO: Actually generate store inventory
-        availableItems = new CardData[4]
-        {
-            healthItem,
-            upgradeItem,
-            DEBUG_purchasableCard,
-            null
-        };
+        availableItems = inventoryGenerator.GenerateStoreInventory(depth);
 
         DrawItems();
     }
@@ -104,7 +120,7 @@ public class StorePane : MonoBehaviour {
         infoCardEnergyCostText.text = item.energyCost.ToString();
 
         CampaignState currentCampaign = GameStateManager.CurrentCampaign;
-        bool isItemHealthAndPlayerHealthy = item == healthItem && 
+        bool isItemHealthAndPlayerHealthy = item.ID == HealthItemID && 
             currentCampaign.player.CurrentHealth == currentCampaign.player.MaxHealth;
         buyItemButton.interactable = currentCampaign.inventory.gold >= item.baseGoldCost && !isItemHealthAndPlayerHealthy;
     }
@@ -120,11 +136,11 @@ public class StorePane : MonoBehaviour {
         // TODO: Bake this into extension method or something.
         GameStateManager.CurrentCampaign.inventory.gold -= item.baseGoldCost;
 
-        if (item == healthItem)
+        if (item.ID == HealthItemID)
         {
             GameStateManager.CurrentCampaign.player.ChangeHealthValue(1);
         }
-        else if (item == upgradeItem)
+        else if (item.ID == UpgradeItemID)
         {
             slotPicker.DisplaySlotPickerForUpgrade();
         }

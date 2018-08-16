@@ -21,7 +21,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   ID: Introduce Sepsis
-  description: Placeholder description.
+  description: Creates slow pain.
   energyCost: 1
   baseGoldCost: 2
   direction: 6

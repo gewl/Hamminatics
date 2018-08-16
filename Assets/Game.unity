@@ -18177,6 +18177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 068428c6c20289043b97510c9ff61943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryGenerator: {fileID: 0}
   slotPicker: {fileID: 1381373948}
   buyItemButton: {fileID: 428576721}
   infoCardTitleText: {fileID: 515474489}
@@ -18184,8 +18185,6 @@ MonoBehaviour:
   costInfo: {fileID: 393214220}
   infoCardGoldCostText: {fileID: 859810525}
   infoCardEnergyCostText: {fileID: 783113416}
-  healthItem: {fileID: 11400000, guid: 17f7c65a969f446458d428482d5308e5, type: 2}
-  upgradeItem: {fileID: 11400000, guid: 4a921661b25de9246ba8bdd03ea5f62b, type: 2}
   DEBUG_purchasableCard: {fileID: 11400000, guid: 4e21395c4b5505e4ba7cdf5970c8a077,
     type: 2}
 --- !u!114 &1554493870
@@ -24207,6 +24206,7 @@ GameObject:
   - component: {fileID: 2085722983}
   - component: {fileID: 2085722982}
   - component: {fileID: 2085722986}
+  - component: {fileID: 2085722987}
   m_Layer: 0
   m_Name: CampaignLayer
   m_TagString: Untagged
@@ -24423,6 +24423,86 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+--- !u!114 &2085722987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2085722980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f570b82a40ce1eb4c8e1a4cb9c6f1973, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 764b992462dd17f49a9e3ac231d6b6f1, type: 2}
+    - {fileID: 11400000, guid: 4e21395c4b5505e4ba7cdf5970c8a077, type: 2}
+    - {fileID: 11400000, guid: 76dd9b78ecb3d0745ab66906a3a9e201, type: 2}
+    - {fileID: 11400000, guid: 9fecb526a89484f46beb619058c0860f, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: depthCardsMap
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.Collections.Generic.List`1[[CardData,
+        Assembly-CSharp]], mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 2|System.Collections.Generic.List`1[[CardData, Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  healthItem: {fileID: 11400000, guid: 17f7c65a969f446458d428482d5308e5, type: 2}
+  upgradeItem: {fileID: 11400000, guid: 4a921661b25de9246ba8bdd03ea5f62b, type: 2}
+  chancesOfHealthInSlot1: 70
 --- !u!1 &2085946288
 GameObject:
   m_ObjectHideFlags: 0
