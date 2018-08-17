@@ -84,7 +84,6 @@ public class StorePane : MonoBehaviour {
 
         selectedItemIndex = -1;
 
-        // TODO: Actually generate store inventory
         availableItems = inventoryGenerator.GenerateStoreInventory(depth);
 
         DrawItems();

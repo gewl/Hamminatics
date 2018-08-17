@@ -18177,7 +18177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 068428c6c20289043b97510c9ff61943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryGenerator: {fileID: 0}
+  inventoryGenerator: {fileID: 2085722987}
   slotPicker: {fileID: 1381373948}
   buyItemButton: {fileID: 428576721}
   infoCardTitleText: {fileID: 515474489}
@@ -24503,6 +24503,9 @@ MonoBehaviour:
   healthItem: {fileID: 11400000, guid: 17f7c65a969f446458d428482d5308e5, type: 2}
   upgradeItem: {fileID: 11400000, guid: 4a921661b25de9246ba8bdd03ea5f62b, type: 2}
   chancesOfHealthInSlot1: 70
+  chancesOfUpgradeInSlot2: 40
+  chancesOfCardInSlot3: 70
+  chancesOfCardInSlot4: 40
 --- !u!1 &2085946288
 GameObject:
   m_ObjectHideFlags: 0

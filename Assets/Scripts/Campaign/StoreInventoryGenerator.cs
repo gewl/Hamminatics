@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
@@ -32,6 +33,17 @@ public class StoreInventoryGenerator : SerializedMonoBehaviour {
     {
         CardData[] newInventory = new CardData[4];
 
+        while (!depthCardsMap.ContainsKey(depth))
+        {
+            depth--;
+        }
+        List<CardData> availableCardList = depthCardsMap[depth].ToList();
+
+        newInventory[0] = GenerateSlotItem(ref availableCardList, 100 - chancesOfHealthInSlot1, healthItem);
+        newInventory[1] = GenerateSlotItem(ref availableCardList, 100 - chancesOfUpgradeInSlot2, upgradeItem);
+        newInventory[2] = GenerateSlotItem(ref availableCardList, chancesOfCardInSlot3, null);
+        newInventory[3] = GenerateSlotItem(ref availableCardList, chancesOfCardInSlot4, null);
+
         return newInventory;
     }
 
@@ -43,5 +55,19 @@ public class StoreInventoryGenerator : SerializedMonoBehaviour {
     public string GetUpgradeID()
     {
         return upgradeItem.ID;
+    }
+
+    CardData GenerateSlotItem(ref List<CardData> availableCards, int cardOdds, CardData nonCardOption)
+    {
+        int randomInt = rand.Next(1, 101);
+
+        CardData result = nonCardOption;
+
+        if (randomInt <= cardOdds)
+        {
+            result = availableCards.GetAndRemoveRandomElement();
+        }
+
+        return result;
     }
 }
