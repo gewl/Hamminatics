@@ -37,14 +37,14 @@ public static class BoardHelperFunctions {
         }
     }
 
-    static public List<Tile> GetPotentialLinearTargets(Vector2Int startingPosition, int range)
+    static public List<Tile> GetTilesWithinLinearRange(Vector2Int startingPosition, int range)
     {
         Tile startingTile = BoardController.CurrentBoard.GetTileAtPosition(startingPosition);
 
-        return GetPotentialLinearTargets(startingTile, range);
+        return GetTilesWithinLinearRange(startingTile, range);
     }
 
-    static public List<Tile> GetPotentialLinearTargets(Tile startingTile, int range)
+    static public List<Tile> GetTilesWithinLinearRange(Tile startingTile, int range)
     {
         List<Tile> potentialTargets = new List<Tile>();
 
@@ -65,13 +65,13 @@ public static class BoardHelperFunctions {
         return potentialTargets;
     }
 
-    static public List<Tile> GetPotentialBranchingTargets(Vector2Int position, int range)
+    static public List<Tile> GetAllTilesWithinRange(Vector2Int position, int range)
     {
-        return GetPotentialBranchingTargets(BoardController.CurrentBoard.GetTileAtPosition(position), range);
+        return GetAllTilesWithinRange(BoardController.CurrentBoard.GetTileAtPosition(position), range);
     }
 
     // For branching/multidirectional searching.
-    static public List<Tile> GetPotentialBranchingTargets(Tile startingTile, int range, List<Tile> checkedTiles = null)
+    static public List<Tile> GetAllTilesWithinRange(Tile startingTile, int range, List<Tile> checkedTiles = null)
     {
         if (range == 0)
         {
@@ -101,10 +101,51 @@ public static class BoardHelperFunctions {
         List<Tile> resultsOfRecursion = new List<Tile>();
         for (int i = 0; i < potentialTargets.Count; i++)
         {
-            resultsOfRecursion.AddRange(GetPotentialBranchingTargets(potentialTargets[i], range, checkedTiles));
+            resultsOfRecursion.AddRange(GetAllTilesWithinRange(potentialTargets[i], range, checkedTiles));
         }
 
         return potentialTargets.Union(resultsOfRecursion).ToList();
+    }
+
+    static public List<Tile> GetAllTilesAtRange(Vector2Int position, int range)
+    {
+        return GetAllTilesAtRange(BoardController.CurrentBoard.GetTileAtPosition(position), range);
+    }
+
+    static public List<Tile> GetAllTilesAtRange(Tile startingTile, int range, List<Tile> checkedTiles = null)
+    {
+        if (range == 0)
+        {
+            return new List<Tile> { startingTile };
+        }
+        if (checkedTiles == null)
+        {
+            checkedTiles = new List<Tile> { startingTile };
+        }
+
+        List<Tile> touchedTiles = new List<Tile>();
+
+        for (int i = 0; i < startingTile.Neighbors.Count; i++)
+        {
+            Tile potentialTarget = startingTile.Neighbors[i];
+
+            if (checkedTiles.Contains(potentialTarget))
+            {
+                continue; 
+            }
+
+            checkedTiles.Add(potentialTarget);
+            touchedTiles.Add(potentialTarget);
+        }
+
+        range--;
+        List<Tile> resultsOfRecursion = new List<Tile>();
+        for (int i = 0; i < touchedTiles.Count; i++)
+        {
+            resultsOfRecursion.AddRange(GetAllTilesWithinRange(touchedTiles[i], range, checkedTiles));
+        }
+
+        return resultsOfRecursion;
     }
 
     static public bool AreTwoPositionsLinear(Vector2Int position1, Vector2Int position2)

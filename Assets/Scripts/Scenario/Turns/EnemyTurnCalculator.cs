@@ -41,7 +41,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
             AttackCardData enemyAttackCard = enemy.attackCard;
             int enemyAttackRange = enemyAttackCard.range;
 
-            List<Tile> potentialMoveTargetTiles = BoardHelperFunctions.GetPotentialBranchingTargets(enemyPosition, enemyMoveRange);
+            List<Tile> potentialMoveTargetTiles = BoardHelperFunctions.GetAllTilesWithinRange(enemyPosition, enemyMoveRange);
 
             List<Tile> sortedPotentialMoveTargets = SortTilesByMoveEligibility(enemyTile, potentialMoveTargetTiles, enemyAttackRange);
 
@@ -71,7 +71,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
             // ELSE attack from projected movement tile
             Tile projectedMovementTile = targetMovementTile.DistanceFromPlayer == 0 ? BoardController.CurrentBoard.GetTileAtPosition(enemyPosition) : targetMovementTile;
 
-            List<Tile> potentialAttackTargetTiles = BoardHelperFunctions.GetPotentialLinearTargets(projectedMovementTile.Position, enemyAttackRange);
+            List<Tile> potentialAttackTargetTiles = BoardHelperFunctions.GetTilesWithinLinearRange(projectedMovementTile.Position, enemyAttackRange);
             List<Tile> sortedPotentialAttackTargets = SortTilesByAttackEligibility(potentialAttackTargetTiles);
             Tile targetAttackTile = sortedPotentialAttackTargets[0];
 
