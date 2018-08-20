@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System;
+using static Predicates.EntityPredicates;
 
 public static class EntityExtensions {
 
@@ -13,7 +15,7 @@ public static class EntityExtensions {
         int newHealth = entity.CurrentHealth - amount;
         entity.SetHealth(newHealth);
 
-        if (entity.CurrentHealth <= 0)
+        if (entity.CheckThat(IsDead))
         {
             gameState.enemies.RemoveAll(e => e == entity);
 
@@ -22,7 +24,7 @@ public static class EntityExtensions {
 
             if (itemToSpawn != null && !gameState.DoesPositionContainItem(positionToSpawn))
             {
-                TreasureData itemInstance = Object.Instantiate(itemToSpawn);
+                TreasureData itemInstance = UnityEngine.Object.Instantiate(itemToSpawn);
                 itemInstance.Position = positionToSpawn;
                 gameState.items.Add(itemInstance);
             }
@@ -81,5 +83,10 @@ public static class EntityExtensions {
     public static List<ModifierData> GetModifiersOfCategory(this EntityData entity, params ModifierCategory[] categories)
     {
         return entity.activeModifiers.Where(m => categories.Any(c => c == m.modifierCategory)).ToList();
+    }
+
+    public static bool CheckThat(this EntityData entity, Predicate<EntityData> predicate)
+    {
+        return predicate(entity);
     }
 }
