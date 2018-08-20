@@ -171,8 +171,7 @@ public class ScenarioStateManager : MonoBehaviour {
         if (card.category == CardCategory.Movement)
         {
             cardRange += Player.GetMovementModifierValue();
-            //BoardHelperFunctions.GetAllTilesWithinRange(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
-            BoardHelperFunctions.GetAllTilesAtRange(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
+            BoardHelperFunctions.GetAllTilesWithinRange(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
         }
         else
         {

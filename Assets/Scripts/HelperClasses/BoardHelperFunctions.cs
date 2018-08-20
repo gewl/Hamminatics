@@ -142,7 +142,7 @@ public static class BoardHelperFunctions {
         List<Tile> resultsOfRecursion = new List<Tile>();
         for (int i = 0; i < touchedTiles.Count; i++)
         {
-            resultsOfRecursion.AddRange(GetAllTilesWithinRange(touchedTiles[i], range, checkedTiles));
+            resultsOfRecursion.AddRange(GetAllTilesAtRange(touchedTiles[i], range, checkedTiles));
         }
 
         return resultsOfRecursion;
