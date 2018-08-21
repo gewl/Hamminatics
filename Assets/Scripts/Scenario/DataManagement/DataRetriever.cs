@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DataManager : MonoBehaviour {
+public class DataRetriever : MonoBehaviour {
 
     const string ENTITY_DIR = "Data/Entities/";
     const string PLAYER_CARD_DIR = "Data/Cards/PlayerCards/";

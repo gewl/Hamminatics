@@ -107,12 +107,12 @@ public static class BoardHelperFunctions {
         return potentialTargets.Union(resultsOfRecursion).ToList();
     }
 
-    static public List<Tile> GetAllTilesAtRange(Vector2Int position, int range)
+    static public List<Tile> GetAllTilesAtDistance(Vector2Int position, int range)
     {
-        return GetAllTilesAtRange(BoardController.CurrentBoard.GetTileAtPosition(position), range);
+        return GetAllTilesAtDistance(BoardController.CurrentBoard.GetTileAtPosition(position), range);
     }
 
-    static public List<Tile> GetAllTilesAtRange(Tile startingTile, int range, List<Tile> checkedTiles = null)
+    static public List<Tile> GetAllTilesAtDistance(Tile startingTile, int range, List<Tile> checkedTiles = null)
     {
         if (range == 0)
         {
@@ -142,7 +142,7 @@ public static class BoardHelperFunctions {
         List<Tile> resultsOfRecursion = new List<Tile>();
         for (int i = 0; i < touchedTiles.Count; i++)
         {
-            resultsOfRecursion.AddRange(GetAllTilesAtRange(touchedTiles[i], range, checkedTiles));
+            resultsOfRecursion.AddRange(GetAllTilesAtDistance(touchedTiles[i], range, checkedTiles));
         }
 
         return resultsOfRecursion;

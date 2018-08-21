@@ -106,7 +106,7 @@ public class BoardController : MonoBehaviour {
         {
             for (int x = 0; x < boardWidth; x++)
             {
-                boardTileImages[x, y].sprite = DataManager.GetTileSprite(currentBoard.Tiles[x, y].ID);
+                boardTileImages[x, y].sprite = DataRetriever.GetTileSprite(currentBoard.Tiles[x, y].ID);
 
                 if (debuggingTileDistances)
                 {

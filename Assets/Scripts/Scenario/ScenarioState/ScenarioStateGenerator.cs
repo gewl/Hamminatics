@@ -14,19 +14,12 @@ public class ScenarioStateGenerator {
 
     const string SPIKE_TRAP_ID = "SimpleSpikeTrap";
 
-    public static ScenarioState GenerateNewScenarioState(Vector2Int entrance, Vector2Int exit, int boardWidth)
+    public static ScenarioState GenerateNewScenarioState(GameBoard board, EnemySpawnGroupData enemySpawnGroup)
     {
-        //EntityData squid = DataManager.GetEntityData(SQUID_ID);
-        //EntityData squid2 = DataManager.GetEntityData(SQUID_ID);
-        EntityData wasp = DataManager.GetEntityData(WASP_ID);
-        List<EntityData> enemies = new List<EntityData>()
-        {
-            //squid,
-            //squid2,
-            wasp
-        };
+        EntityData wasp = DataRetriever.GetEntityData(WASP_ID);
+        List<EntityData> enemies = enemySpawnGroup.EnemiesToSpawn.Select(e => ScriptableObject.Instantiate(e)).ToList();
 
-        TrapData spikeTrap = DataManager.GetTrapData(SPIKE_TRAP_ID);
+        TrapData spikeTrap = DataRetriever.GetTrapData(SPIKE_TRAP_ID);
 
         List<ItemData> items = new List<ItemData>()
         {
@@ -38,25 +31,39 @@ public class ScenarioStateGenerator {
 
         ScenarioState generatedState = new ScenarioState(enemies, items);
         EntityData player = generatedState.player;
-        player.SetPosition(entrance, generatedState);
-        generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, boardWidth, player);
-        generatedState = RandomizeItemStartingCoordinates(generatedState, items, exit, boardWidth);
+        player.SetPosition(board.Entrance.Position, generatedState);
+        generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, board.BoardWidth, board.GetTileAtPosition(player.Position), board);
+        generatedState = RandomizeItemStartingCoordinates(generatedState, items, board.Exit.Position, board.BoardWidth);
 
         return generatedState;
     }
 
-    static ScenarioState RandomizeEntityStartingCoordinates(ScenarioState state, List<EntityData> entities, int boardWidth, EntityData player)
+    static ScenarioState RandomizeEntityStartingCoordinates(ScenarioState state, List<EntityData> entities, int boardWidth, Tile playerTile, GameBoard board)
     {
         for (int i = 0; i < entities.Count; i++)
         {
-            Vector2Int newPosition = GenerateRandomVector2IntInBounds(boardWidth);
+            EntityData entity = entities[i];
+            int entityRange = entity.attackCard.range;
+            int minimumRange = entityRange + 1;
+            int maximumRange = entityRange + 3;
 
-            while (player.Position == newPosition || entities.Any<EntityData>(entity => entity.Position == newPosition))
+            // Upper bound is exclusive.
+            int spawnRange = GenerateSpawnRange(minimumRange, maximumRange + 1);
+            List<Tile> possibleSpawnTiles = BoardHelperFunctions.GetAllTilesAtDistance(playerTile, spawnRange);
+
+            Tile spawnTile = possibleSpawnTiles.GetAndRemoveRandomElement();
+
+            while (playerTile == spawnTile || entities.Any(e => e.Position == spawnTile.Position))
             {
-                newPosition = GenerateRandomVector2IntInBounds(boardWidth);
+                if (possibleSpawnTiles.Count == 0)
+                {
+                    spawnRange++;
+                    possibleSpawnTiles = BoardHelperFunctions.GetAllTilesAtDistance(playerTile, spawnRange);
+                }
+                spawnTile = BoardHelperFunctions.GetAllTilesAtDistance(playerTile, spawnRange).GetRandomElement();
             }
 
-            entities[i].SetPosition(newPosition, state);
+            entities[i].SetPosition(spawnTile.Position, state);
         }
 
         return state;
@@ -78,6 +85,19 @@ public class ScenarioStateGenerator {
         }
 
         return state;
+    }
+
+    static int GenerateSpawnRange(int minimumRange, int maximumRange)
+    {
+        if (rnd == null)
+        {
+            rnd = new System.Random();
+        }
+
+        lock (syncLock)
+        {
+            return rnd.Next(minimumRange, maximumRange);
+        }
     }
 
     static Vector2Int GenerateRandomVector2IntInBounds(int maxValue)

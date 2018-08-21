@@ -45,7 +45,7 @@ public class EventPane : MonoBehaviour {
     {
         int currentDepth = campaignState.depth;
 
-        JSONObject eventObject = DataManager.GetRandomEventByDepth(currentDepth);
+        JSONObject eventObject = DataRetriever.GetRandomEventByDepth(currentDepth);
 
         gameObject.SetActive(true);
 

@@ -32,7 +32,7 @@ public class GameStateManager : MonoBehaviour {
 
     private void Start()
     {
-        EntityData player = DataManager.GetEntityData(PLAYER_ID);
+        EntityData player = DataRetriever.GetEntityData(PLAYER_ID);
         int mapLayerCount = 6;
 
         CurrentCampaign = new CampaignState(new Inventory(), new Map(0, mapLayerCount), player);
@@ -50,7 +50,8 @@ public class GameStateManager : MonoBehaviour {
 
     public void UpdatePlayerPosition(MapNode newPlayerNode)
     {
-        CurrentCampaign.UpdatePlayerNode(newPlayerNode);
+        float nodeDistance = CurrentCampaign.CurrentMap.GetNodeDistance(newPlayerNode);
+        CurrentCampaign.UpdatePlayerNode(newPlayerNode, nodeDistance);
         mapController.UpdateMapState(CurrentCampaign);
 
         switch (newPlayerNode.nodeType)
@@ -124,7 +125,7 @@ public class GameStateManager : MonoBehaviour {
     void SwitchToScenario()
     {
         mapController.gameObject.SetActive(false);
-        scenarioManager.GenerateAndDrawScenario(CurrentCampaign.depth);
+        scenarioManager.GenerateAndDrawScenario(CurrentCampaign.depth, CurrentCampaign.progressThroughMap);
     }
 
     void DisplayStore()

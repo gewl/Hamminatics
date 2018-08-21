@@ -10,7 +10,7 @@ public class Inventory {
     public Inventory()
     {
         gold = 20;
-        equippedCards = DataManager.GetBasicCards();
+        equippedCards = DataRetriever.GetBasicCards();
     }
 
     public Inventory(int _gold, CardData[] _equippedCards)

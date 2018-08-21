@@ -6,7 +6,7 @@ using Predicates;
 
 public static class UpcomingStateCalculator
 {
-    static CardData GenericMovementCard { get { return DataManager.GetGenericMovementCard(); } }
+    static CardData GenericMovementCard { get { return DataRetriever.GetGenericMovementCard(); } }
 
     public static List<ProjectedGameState> CalculateUpcomingStates(ScenarioState currentState)
     {

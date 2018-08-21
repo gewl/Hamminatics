@@ -183,7 +183,6 @@ public class MapController : MonoBehaviour {
     {
         return () => OnMapNodeClick(node);
     }
-
     #endregion
 
 }

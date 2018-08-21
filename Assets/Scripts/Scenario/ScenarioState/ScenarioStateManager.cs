@@ -7,6 +7,8 @@ public class ScenarioStateManager : MonoBehaviour {
 
     [SerializeField]
     GameStateManager gameStateManager;
+    [SerializeField]
+    EnemySpawnGroupManager enemySpawnGroupManager;
     
     TurnStackController _turnStackController;
     TurnStackController turnStackController
@@ -91,17 +93,12 @@ public class ScenarioStateManager : MonoBehaviour {
     #endregion
 
     #region initialization/reset
-    public void InitializeScenarioState(GameBoard board)
-    {
-        CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board.Entrance.Position, board.Exit.Position, board.BoardWidth);
-    }
-
-
-    public void GenerateAndDrawScenario(int depth)
+    public void GenerateAndDrawScenario(int depth, float nodeDistance)
     {
         gameObject.SetActive(true);
         GameBoard board = boardController.GenerateBoard();
-        CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board.Entrance.Position, board.Exit.Position, board.BoardWidth);
+        EnemySpawnGroupData enemySpawnGroup = enemySpawnGroupManager.GetEnemySpawnGroups(depth).GetRandomElement();
+        CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board, enemySpawnGroup);
         GenerateNextTurnStack(CurrentScenarioState);
         PlaceExitArrow(exitArrow, boardController.currentBoard.Exit.Position, boardController.currentBoard.BoardWidth);
         GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);

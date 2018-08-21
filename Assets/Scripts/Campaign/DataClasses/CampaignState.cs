@@ -9,6 +9,7 @@ public class CampaignState {
     public EntityData player;
     public MapNode CurrentPlayerNode { get; private set; }
     public int depth;
+    public float progressThroughMap;
 
     public List<MapNode> pastPlayerNodes;
 
@@ -23,10 +24,11 @@ public class CampaignState {
         depth = 1;
     }
 
-    public void UpdatePlayerNode(MapNode newNode)
+    public void UpdatePlayerNode(MapNode newNode, float _progressThroughMap)
     {
         pastPlayerNodes.Add(CurrentPlayerNode);
         CurrentPlayerNode = newNode;
+        progressThroughMap = _progressThroughMap;
     }
 
     public void UpdateMap(Map newMap)
@@ -34,5 +36,6 @@ public class CampaignState {
         CurrentMap = newMap;
         CurrentPlayerNode = CurrentMap.GetStarterNode();
         pastPlayerNodes = new List<MapNode>();
+        progressThroughMap = 0.0f;
     }
 }

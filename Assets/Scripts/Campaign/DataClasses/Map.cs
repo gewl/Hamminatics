@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;  
 
 public class Map {
     public int depth;
@@ -114,5 +115,12 @@ public class Map {
     public MapNode GetStarterNode()
     {
         return nodeLayers[0][0];
+    }
+
+    // Return node layer's distance 'through' map as a percentage, for e.g. scaling difficulty
+    // as player progresses in map.
+    public float GetNodeDistance(MapNode node)
+    {
+        return nodeLayers.FindIndex(layer => layer.Contains(node)) / nodeLayers.Count;
     }
 }
