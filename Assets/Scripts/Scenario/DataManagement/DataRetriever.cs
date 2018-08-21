@@ -6,6 +6,7 @@ using UnityEngine;
 public class DataRetriever : MonoBehaviour {
 
     const string ENTITY_DIR = "Data/Entities/";
+    const string MODIFIER_DIR = "Data/Modifiers/";
     const string PLAYER_CARD_DIR = "Data/Cards/PlayerCards/";
     const string ENEMY_CARD_DIR = "Data/Cards/EnemyCards";
     const string TRAP_DIR = "Data/Items/Traps/";
@@ -115,6 +116,12 @@ public class DataRetriever : MonoBehaviour {
             null,
             null
         };
+    }
+
+    public static ModifierData GetModifier(string modifierFileName)
+    {
+        ModifierData modifierData = Resources.Load<ModifierData>(MODIFIER_DIR + modifierFileName);
+        return Instantiate(modifierData);
     }
     #endregion
 

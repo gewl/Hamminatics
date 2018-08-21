@@ -106,6 +106,9 @@ public class GameStateManager : MonoBehaviour {
             case EventType.TRIGGER_SCENARIO:
                 HandleTriggerScenario(stringData, intData);
                 break;
+            case EventType.APPLY_MODIFIER:
+                HandleApplyModifier(stringData, intData);
+                break;
             default:
                 Debug.LogError("No handler found for effect: " + effect);
                 break;
@@ -141,6 +144,12 @@ public class GameStateManager : MonoBehaviour {
         EnemySpawnGroupData enemySpawnGroup = enemySpawnGroupManager.GetEventScenarioEnemySpawn(stringData);
         SwitchToScenario(enemySpawnGroup);
     }
+
+    void HandleApplyModifier(string stringData, int intData)
+    {
+        ModifierData newModifier = DataRetriever.GetModifier(stringData);
+        CurrentCampaign.player.activeModifiers.Add(newModifier);
+    }
     #endregion
 
     #region focus/pane switching
@@ -153,7 +162,7 @@ public class GameStateManager : MonoBehaviour {
     void SwitchToScenario(EnemySpawnGroupData enemySpawnGroup)
     {
         mapController.gameObject.SetActive(false);
-        scenarioManager.GenerateAndDrawScenario(CurrentCampaign.depth, CurrentCampaign.progressThroughMap);
+        scenarioManager.GenerateAndDrawScenario(enemySpawnGroup);
     }
 
     void DisplayStore()
@@ -176,6 +185,7 @@ public class GameStateManager : MonoBehaviour {
         mapController.gameObject.SetActive(true);
 
         CurrentCampaign.player = lastScenarioState.player;
+        CurrentCampaign.player.activeModifiers.Clear();
         CurrentCampaign.inventory = lastScenarioState.inventory;
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
     }

@@ -10,4 +10,6 @@ public class EnemySpawnGroupData : ScriptableObject {
     List<EntityData> enemiesToSpawn;
 
     public List<EntityData> EnemiesToSpawn { get { return enemiesToSpawn; } }
+
+    public CardData scenarioReward;
 }

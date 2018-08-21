@@ -1,26 +1,26 @@
 {
 	"events": [
 		{
-			"id": "placeholder_event",
-			"name": "Placeholder Event",
-			"description": "This is a placeholder event.",
+			"id": "countenance_a_memory",
+			"name": "Countenance A Memory",
+			"description": "As you navigate the dim halls of the Abbey, a recollection begins to sneak up on you. At first it's just a faint touch, but as time passes you feel it approaching the distinct, nudging out of the periphery. Will you face the memory, or excise that part of yourself?",
 			"requirements": {},
 			"outcomes": [
 				{
-					"button_text": "Take some damage.",
-					"outcome_title": "Uh-oh!",
-					"outcome_description": "You chose to take some damage.",
-					"effect": "changeValue",
-					"string_data": "health",
+					"button_text": "Face the memory.",
+					"outcome_title": "For better or for worse.",
+					"outcome_description": "Acknowledged, and surpassed. You hope it will not recur again.",
+					"effect": "triggerScenario",
+					"string_data": "CountenanceAMemory",
 					"int_data": -1
 				},
 				{
-					"button_text": "Get Kinesis.",
-					"outcome_title": "Yay!",
-					"outcome_description": "You get the Kinesis card.",
-					"effect": "offerCard",
-					"string_data": "Kinesis",
-					"int_data": 0
+					"button_text": "Excise and continue.",
+					"outcome_title": "It's done.",
+					"outcome_description": "A moment of pain, and the future lies ahead.",
+					"effect": "changeValue",
+					"string_data": "health",
+					"int_data": 1
 				}
 			]
 		},

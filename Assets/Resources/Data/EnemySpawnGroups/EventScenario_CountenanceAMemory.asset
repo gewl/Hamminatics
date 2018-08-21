@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4baf88cbbd41f643934befa9b4e5c05, type: 3}
+  m_Name: EventScenario_CountenanceAMemory
+  m_EditorClassIdentifier: 
+  ID: CountenanceAMemory
+  enemiesToSpawn:
+  - {fileID: 11400000, guid: 4e6f434b7b7862b4a971f28ab2b35875, type: 2}
+  scenarioReward: {fileID: 0}

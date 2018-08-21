@@ -3371,6 +3371,8 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  eventScenarios:
+  - {fileID: 11400000, guid: 6e017443d68e6fd4080aa226c8b7cb6f, type: 2}
 --- !u!224 &323374605
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11502,6 +11504,7 @@ MonoBehaviour:
   eventPane: {fileID: 457534522}
   storePane: {fileID: 1554493869}
   itemSlotPicker: {fileID: 1381373948}
+  enemySpawnGroupManager: {fileID: 323374602}
   dimmer: {fileID: 1572425273}
   fullScreenTrigger: {fileID: 1455142725}
 --- !u!114 &915970917
@@ -17033,7 +17036,7 @@ MonoBehaviour:
   confirmationText: {fileID: 108682060}
   confirmButton: {fileID: 329438687}
   denyButton: {fileID: 851466262}
-  skipCard: {fileID: 0}
+  skipCard: {fileID: 451763168}
 --- !u!1 &1411775423
 GameObject:
   m_ObjectHideFlags: 0
