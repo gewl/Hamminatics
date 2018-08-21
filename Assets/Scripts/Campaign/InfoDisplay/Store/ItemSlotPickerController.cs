@@ -34,16 +34,25 @@ public class ItemSlotPickerController : MonoBehaviour {
     Button confirmButton;
     [SerializeField]
     Button denyButton;
+    [SerializeField]
+    GameObject skipCard;
 
     private void Awake()
     {
         slotDisplays = GetComponentsInChildren<InventorySlotDisplay>();
     }
 
+    public void Close()
+    {
+        gameObject.SetActive(false);
+    }
+
     #region for upgrade
 
     public void DisplaySlotPickerForUpgrade()
     {
+        skipCard.SetActive(false);
+
         isChoosingUpgrade = true;
         gameObject.SetActive(true);
         ReturnToUpgradeDefault();
@@ -89,7 +98,14 @@ public class ItemSlotPickerController : MonoBehaviour {
     #endregion
 
     #region for new card
-    public void DisplaySlotPicker(CardData _newCard, bool isUpgrading = false)
+    public void OfferCard(CardData _newCard, bool isInStore = false)
+    {
+        skipCard.SetActive(!isInStore);
+
+        DisplaySlotPicker(_newCard);
+    }
+
+    void DisplaySlotPicker(CardData _newCard)
     {
         isChoosingUpgrade = false;
         newCard = _newCard;

@@ -15,14 +15,14 @@
 					"int_data": -1
 				},
 				{
-					"button_text": "Get some gold.",
+					"button_text": "Get Kinesis.",
 					"outcome_title": "Yay!",
-					"outcome_description": "You chose to get some gold.",
-					"effect": "changeValue",
-					"string_data": "gold",
-					"int_data": 1
+					"outcome_description": "You get the Kinesis card.",
+					"effect": "offerCard",
+					"string_data": "Kinesis",
+					"int_data": 0
 				}
 			]
-		}
+		},
 	]
 }

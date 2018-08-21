@@ -17,6 +17,8 @@ public class GameStateManager : MonoBehaviour {
     EventPane eventPane;
     [SerializeField]
     StorePane storePane;
+    [SerializeField]
+    ItemSlotPickerController itemSlotPicker;
 
     [SerializeField]
     GameObject dimmer;
@@ -95,6 +97,9 @@ public class GameStateManager : MonoBehaviour {
             case EventType.CHANGE_VALUE:
                 HandleChangeValue(stringData, intData);
                 break;
+            case EventType.OFFER_CARD:
+                HandleOfferCard(stringData, intData);
+                break;
             default:
                 Debug.LogError("No handler found for effect: " + effect);
                 break;
@@ -117,7 +122,12 @@ public class GameStateManager : MonoBehaviour {
                 Debug.LogError("Unable to HandleChangeValue because stringData not found: " + stringData);
                 break;
         }
+    }
 
+    void HandleOfferCard(string stringData, int intData)
+    {
+        CardData newCard = DataRetriever.GetPlayerCardData(stringData);
+        itemSlotPicker.OfferCard(newCard);
     }
     #endregion
 

@@ -145,7 +145,7 @@ public class StorePane : MonoBehaviour {
         }
         else
         {
-            slotPicker.DisplaySlotPicker(item);
+            slotPicker.OfferCard(item, true);
         }
         GameStateDelegates.OnCampaignStateUpdated(GameStateManager.CurrentCampaign);
     }

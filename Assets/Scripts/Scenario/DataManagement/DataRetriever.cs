@@ -112,8 +112,8 @@ public class DataRetriever : MonoBehaviour {
         {
             GetPlayerCardData(BASIC_MOVE_ID),
             GetPlayerCardData(BASIC_ATTACK_ID),
-            GetPlayerCardData(KINESIS_ID),
-            GetPlayerCardData(CARD4_ID)
+            null,
+            null
         };
     }
     #endregion
