@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Enemy Spawn Group")]
 public class EnemySpawnGroupData : ScriptableObject {
 
+    public string ID;
     [SerializeField]
     List<EntityData> enemiesToSpawn;
 

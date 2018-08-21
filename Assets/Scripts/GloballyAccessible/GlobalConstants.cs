@@ -117,6 +117,7 @@ public class EventType
 {
     public const string CHANGE_VALUE = "changeValue";
     public const string OFFER_CARD = "offerCard";
+    public const string TRIGGER_SCENARIO = "triggerScenario";
 }
 
 public class ChangeValueTarget

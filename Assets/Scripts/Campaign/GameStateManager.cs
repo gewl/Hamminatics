@@ -21,6 +21,9 @@ public class GameStateManager : MonoBehaviour {
     ItemSlotPickerController itemSlotPicker;
 
     [SerializeField]
+    EnemySpawnGroupManager enemySpawnGroupManager;
+
+    [SerializeField]
     GameObject dimmer;
     [SerializeField]
     EventTrigger fullScreenTrigger;
@@ -100,6 +103,9 @@ public class GameStateManager : MonoBehaviour {
             case EventType.OFFER_CARD:
                 HandleOfferCard(stringData, intData);
                 break;
+            case EventType.TRIGGER_SCENARIO:
+                HandleTriggerScenario(stringData, intData);
+                break;
             default:
                 Debug.LogError("No handler found for effect: " + effect);
                 break;
@@ -129,10 +135,22 @@ public class GameStateManager : MonoBehaviour {
         CardData newCard = DataRetriever.GetPlayerCardData(stringData);
         itemSlotPicker.OfferCard(newCard);
     }
+
+    void HandleTriggerScenario(string stringData, int intData)
+    {
+        EnemySpawnGroupData enemySpawnGroup = enemySpawnGroupManager.GetEventScenarioEnemySpawn(stringData);
+        SwitchToScenario(enemySpawnGroup);
+    }
     #endregion
 
     #region focus/pane switching
     void SwitchToScenario()
+    {
+        mapController.gameObject.SetActive(false);
+        scenarioManager.GenerateAndDrawScenario(CurrentCampaign.depth, CurrentCampaign.progressThroughMap);
+    }
+
+    void SwitchToScenario(EnemySpawnGroupData enemySpawnGroup)
     {
         mapController.gameObject.SetActive(false);
         scenarioManager.GenerateAndDrawScenario(CurrentCampaign.depth, CurrentCampaign.progressThroughMap);

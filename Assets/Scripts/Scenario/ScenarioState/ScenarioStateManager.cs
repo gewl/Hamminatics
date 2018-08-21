@@ -95,9 +95,14 @@ public class ScenarioStateManager : MonoBehaviour {
     #region initialization/reset
     public void GenerateAndDrawScenario(int depth, float nodeDistance)
     {
+        EnemySpawnGroupData enemySpawnGroup = enemySpawnGroupManager.GetEnemySpawnGroups(depth).GetRandomElement();
+        GenerateAndDrawScenario(enemySpawnGroup);
+    }
+
+    public void GenerateAndDrawScenario(EnemySpawnGroupData enemySpawnGroup)
+    {
         gameObject.SetActive(true);
         GameBoard board = boardController.GenerateBoard();
-        EnemySpawnGroupData enemySpawnGroup = enemySpawnGroupManager.GetEnemySpawnGroups(depth).GetRandomElement();
         CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board, enemySpawnGroup);
         GenerateNextTurnStack(CurrentScenarioState);
         PlaceExitArrow(exitArrow, boardController.currentBoard.Exit.Position, boardController.currentBoard.BoardWidth);
