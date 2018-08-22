@@ -6,9 +6,7 @@ using Sirenix.OdinInspector;
 
 public class StoreInventoryGenerator : SerializedMonoBehaviour {
     [SerializeField]
-    CardData healthItem;
-    [SerializeField]
-    CardData upgradeItem;
+    GameStateManager gameStateManager;
 
     [SerializeField]
     Dictionary<int, List<CardData>> depthCardsMap;
@@ -39,8 +37,8 @@ public class StoreInventoryGenerator : SerializedMonoBehaviour {
         }
         List<CardData> availableCardList = depthCardsMap[depth].ToList();
 
-        newInventory[0] = GenerateSlotItem(ref availableCardList, 100 - chancesOfHealthInSlot1, healthItem);
-        newInventory[1] = GenerateSlotItem(ref availableCardList, 100 - chancesOfUpgradeInSlot2, upgradeItem);
+        newInventory[0] = GenerateSlotItem(ref availableCardList, 100 - chancesOfHealthInSlot1, gameStateManager.HealthCard);
+        newInventory[1] = GenerateSlotItem(ref availableCardList, 100 - chancesOfUpgradeInSlot2, gameStateManager.UpgradeCard);
         newInventory[2] = GenerateSlotItem(ref availableCardList, chancesOfCardInSlot3, null);
         newInventory[3] = GenerateSlotItem(ref availableCardList, chancesOfCardInSlot4, null);
 
@@ -49,12 +47,12 @@ public class StoreInventoryGenerator : SerializedMonoBehaviour {
 
     public string GetHealthID()
     {
-        return healthItem.ID;
+        return gameStateManager.HealthCard.ID;
     }
 
     public string GetUpgradeID()
     {
-        return upgradeItem.ID;
+        return gameStateManager.UpgradeCard.ID;
     }
 
     CardData GenerateSlotItem(ref List<CardData> availableCards, int cardOdds, CardData nonCardOption)

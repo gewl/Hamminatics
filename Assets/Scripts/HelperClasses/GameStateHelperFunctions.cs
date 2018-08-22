@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Linq;
 using static Helpers.Operators;
 
-public static class GameStateHelperFunctions {
+public static class ScenarioStateHelperFunctions {
     #region tile info
     public static bool IsTileValid(Vector2Int position)
     {
@@ -265,6 +265,6 @@ public static class GameStateHelperFunctions {
             newTurnStack.Push(newTurnList[i]);
         }
 
-        return new ScenarioState(playerCopy, enemyCopies, itemCopies, newTurnStack, inventoryCopy);
+        return new ScenarioState(playerCopy, enemyCopies, itemCopies, originalState.scenarioReward, newTurnStack, inventoryCopy);
     }
 }

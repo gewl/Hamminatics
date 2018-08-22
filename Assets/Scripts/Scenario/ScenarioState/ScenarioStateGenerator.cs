@@ -29,7 +29,7 @@ public class ScenarioStateGenerator {
         SpeedComparer comparer = new SpeedComparer();
         enemies.Sort(comparer);
 
-        ScenarioState generatedState = new ScenarioState(enemies, items);
+        ScenarioState generatedState = new ScenarioState(enemies, items, enemySpawnGroup.scenarioReward);
         EntityData player = generatedState.player;
         player.SetPosition(board.Entrance.Position, generatedState);
         generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, board.BoardWidth, board.GetTileAtPosition(player.Position), board);

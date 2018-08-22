@@ -24,5 +24,29 @@
 				}
 			]
 		},
+		{
+			"id": "remnants_of_a_battle",
+			"name": "Remnants of a Battle",
+			"description": "You step into a courtyard. It is quiet and peaceful. The sun beams down from overhead, but it's unusually chilly for the time of year. You are reminded of a museum you visited a couple years ago where you spent the day alone, walking from exhibit to exhibit, your thoughts falling aimlessly from one subject to the next. You used to do things like that more, you think. You don't do things like that much anymore. \n\nA few bodies lie around the courtyard, clearly the leftovers of a skirmish some months past. It is not clear to you if there were any survivors. \n\nThe closest body has a fat-looking patch upon his belt. You are drawn to it. Do you reach for it now, or spend a little while?",
+			"requirements": {},
+			"outcomes": [
+				{
+					"button_text": "Reach for it now.",
+					"outcome_title": "Another Man's Treasure",
+					"outcome_description": "The man's sack was filled with gold. You are a richer man than you were. He is not a poorer man than he was.",
+					"effect": "changeValue",
+					"string_data": "gold",
+					"int_data": 5
+				},
+				{
+					"button_text": "Reach for it later.",
+					"outcome_title": "A Ladybug Crawls Across Your Hand.",
+					"outcome_description": "You sit on a nearby bench a while, enjoying the open air. You are not in any particular hurry. You are not losing any time. When you are ready to go, you will leave, and you will leave this place behind.",
+					"effect": "offerCard",
+					"string_data": "PatientBlow",
+					"int_data": 0
+				}
+			]
+		}
 	]
 }

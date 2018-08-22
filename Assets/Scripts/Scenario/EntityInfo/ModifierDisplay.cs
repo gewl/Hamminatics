@@ -63,7 +63,7 @@ public class ModifierDisplay : MonoBehaviour {
         modifierName.text = modifierToDisplay.ID;
         modifierInfo.text = GetModifierInfoString(modifierToDisplay);
 
-        GameStateManager.ActiveFullScreenTrigger((BaseEventData data) => OnClickAnywhereWhenPaneExpanded());
+        GameStateManager.ActivateFullScreenTrigger((BaseEventData data) => OnClickAnywhereWhenPaneExpanded());
     }
 
     void OnClickAnywhereWhenPaneExpanded()

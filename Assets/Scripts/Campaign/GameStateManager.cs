@@ -19,6 +19,8 @@ public class GameStateManager : MonoBehaviour {
     StorePane storePane;
     [SerializeField]
     ItemSlotPickerController itemSlotPicker;
+    [SerializeField]
+    SimpleTextDisplay simpleTextDisplay;
 
     [SerializeField]
     EnemySpawnGroupManager enemySpawnGroupManager;
@@ -27,6 +29,13 @@ public class GameStateManager : MonoBehaviour {
     GameObject dimmer;
     [SerializeField]
     EventTrigger fullScreenTrigger;
+
+    [SerializeField]
+    CardData healthCard;
+    public CardData HealthCard { get { return healthCard; } }
+    [SerializeField]
+    CardData upgradeCard;
+    public CardData UpgradeCard { get { return upgradeCard; } }
 
     static GameStateManager instance;
 
@@ -187,7 +196,38 @@ public class GameStateManager : MonoBehaviour {
         CurrentCampaign.player = lastScenarioState.player;
         CurrentCampaign.player.activeModifiers.Clear();
         CurrentCampaign.inventory = lastScenarioState.inventory;
+
+        if (lastScenarioState.enemies.Count == 0)
+        {
+            CardData scenarioReward = lastScenarioState.scenarioReward;
+            if (scenarioReward == null)
+            {
+                scenarioReward = GenerateRandomScenarioReward();
+            }
+
+            if (scenarioReward == upgradeCard)
+            {
+                simpleTextDisplay.ShowTextDisplay(ScenarioRewardText.UPGRADE_TITLE, ScenarioRewardText.UPGRADE_BODY);
+                itemSlotPicker.DisplaySlotPickerForUpgrade();
+            }
+            else if (scenarioReward == healthCard)
+            {
+                simpleTextDisplay.ShowTextDisplay(ScenarioRewardText.HEALTH_TITLE, ScenarioRewardText.HEALTH_BODY);
+                CurrentCampaign.player.ChangeHealthValue(1);
+            }
+            else
+            {
+                simpleTextDisplay.ShowTextDisplay(ScenarioRewardText.NEW_CARD_TITLE, ScenarioRewardText.NEW_CARD_BODY);
+                itemSlotPicker.OfferCard(scenarioReward);
+            }
+        }
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
+    }
+
+    // TODO: Flesh this out?
+    CardData GenerateRandomScenarioReward()
+    {
+        return upgradeCard;
     }
 
     void TriggerEvent()
@@ -207,7 +247,7 @@ public class GameStateManager : MonoBehaviour {
         instance.dimmer.gameObject.SetActive(isDim);
     }
 
-    public static void ActiveFullScreenTrigger(UnityAction<BaseEventData> pointerClickHandler)
+    public static void ActivateFullScreenTrigger(UnityAction<BaseEventData> pointerClickHandler)
     {
         instance.fullScreenTrigger.gameObject.SetActive(true);
 
