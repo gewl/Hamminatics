@@ -137,7 +137,7 @@ public class StorePane : MonoBehaviour {
 
         if (item.ID == HealthItemID)
         {
-            GameStateManager.CurrentCampaign.player.ChangeHealthValue(1);
+            GameStateManager.CurrentCampaign.player.ChangeHealthValue_Campaign(1);
         }
         else if (item.ID == UpgradeItemID)
         {

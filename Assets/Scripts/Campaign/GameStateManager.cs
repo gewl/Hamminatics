@@ -137,7 +137,7 @@ public class GameStateManager : MonoBehaviour {
                 CurrentCampaign.inventory.gold += intData;
                 break;
             case ChangeValueTarget.HEALTH:
-                CurrentCampaign.player.ChangeHealthValue(intData);
+                CurrentCampaign.player.ChangeHealthValue_Campaign(intData);
                 break;
             default:
                 Debug.LogError("Unable to HandleChangeValue because stringData not found: " + stringData);
@@ -221,7 +221,7 @@ public class GameStateManager : MonoBehaviour {
             else if (scenarioReward == healthCard)
             {
                 simpleTextDisplay.ShowTextDisplay(ScenarioRewardText.HEALTH_TITLE, ScenarioRewardText.HEALTH_BODY);
-                CurrentCampaign.player.ChangeHealthValue(1);
+                CurrentCampaign.player.ChangeHealthValue_Campaign(1);
             }
             else
             {

@@ -97,31 +97,31 @@
 			]
 		},
 		{
-			"id": "passage_through_distaste",
-			"name": "Passage Through Distaste",
-			"description": "Coming around a corner, you see light falling out of an open doorway up ahead. You drop to your hands and knees and crawl to peer inside. It is an unremarkable room with no treasures. Beasts and unpleasant strangers are faffing about. There is nothing to compel interest or to motivate entry. It is a boring place filled with your enemies.\n\nTheir attention is consumed by their own pointless business. You could so easily slip by. In a lot of ways, that'd be the mature decision. (You've always believed people should be mature to one another.) And, yet, something holds you up. You've been wondering lately if you might, perhaps, be a big wimp. After all, you keep finding yourself in situations like these: On your hands and knees, on the ground, crawling like a little piggie, oinking and snuffling in the dirt, and so on. And just oinking right past this room might do a lot to confirm your suspicions. Do you risk it?",
+			"id": "moment_of_self_reflection",
+			"name": "Moment of Self-Reflection",
+			"description": "You developed your system of thought over the course of years by scaffolding your own beliefs atop theories and concepts you'd heard from others. The collected knowledge of the world—of the people that had preceded you, immortalized in books, shared and altered in conversation—had seemed a vast and immutable expanse of bedrock. Solid and secure. And your own thinking, your life, had taken that bedrock as its foundation, and so partook in its solidity. You had felt yourself a member of a vast community of friends and confidants, all of whom were waiting for you in the next room over.\n\nThis surety had given you resolve to enter the Abbey, and had kept your confidence alight through the first dim days of your passage through this gloomy, dwindled place. But as time as passed, things have changed. That comforting bedrock feels very far away. Your beliefs have begun to feel less like a home and more like a houseboat, built upon nothing, subject to the bucking of the waves. Your canon has fled you. The shore recedes. How will you repair the leaky vessel of your thought?",
 			"requirements": {},
 			"outcomes": [
 				{
-					"button_text": "Fight. I'm no coward.",
-					"outcome_title": "Self-Image Restored",
-					"outcome_description": "You're tired, and maybe a little roughed up, but at least you can rest confident knowing that you're not a baby.",
+					"button_text": "Grit my teeth and bear down.",
+					"outcome_title": "You are your own servant and master.",
+					"outcome_description": "There is no time for doubt. Let your mind deterioriate and your beliefs flee you. You will pay your dudes when the time comes. For now, there is work to be done.",
 					"effects": [
 						{
-						"type": "triggerScenario",
-						"string_data": "PassageThroughDistaste",
+						"type": "offerCard",
+						"string_data": "ForcibleReminder",
 						"int_data": 0
 						}
 					]
 				},
 				{
-					"button_text": "Pass by. I am perhaps a coward.",
-					"outcome_title": "You're Gonna Wonder A While",
-					"outcome_description": "You safely skirt past the door and scurry down the hall. Your body is intact. Can you say the same for your beliefs?\n\nYou will begin your next scenario Poisoned.",
+					"button_text": "Lighten my load.",
+					"outcome_title": "Bent, not broken.",
+					"outcome_description": "You allow yourself a bit of reprieve. Your thoughts soften, but so does your resolve. One step at a time.",
 					"effects": [
 						{
-						"type": "triggerScenario",
-						"string_data": "PassageThroughDistaste",
+						"type": "offerCard",
+						"string_data": "Half-AssedSabbatical",
 						"int_data": 0
 						}
 					]

@@ -9,10 +9,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f4b44f694a363b47935e3977e8c05ca, type: 3}
-  m_Name: Slow_2
+  m_Name: Slow_1_3
   m_EditorClassIdentifier: 
-  ID: _Modifier
-  sprite: {fileID: 21300000, guid: 231b70999e6a5f844ad173dc0425dc43, type: 3}
+  ID: Slow_1_3
+  sprite: {fileID: 21300000, guid: 8e659fb79aa71dd4bb6a723fc5433db0, type: 3}
   modifierCategory: 0
-  value: 2
-  duration: 2
+  value: 1
+  duration: 3

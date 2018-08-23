@@ -10,36 +10,49 @@ public static class EntityExtensions {
     /// <summary>
     /// Only for use in scenario.
     /// </summary>
-    public static void DealDamage(this EntityData entity, int amount, ScenarioState gameState)
+    public static void DealDamage(this EntityData entity, int amount, ScenarioState scenarioState)
     {
         int newHealth = entity.CurrentHealth - amount;
         entity.SetHealth(newHealth);
 
         if (entity.CheckThat(IsDead))
         {
-            gameState.enemies.RemoveAll(e => e == entity);
+            scenarioState.enemies.RemoveAll(e => e == entity);
 
             TreasureData itemToSpawn = entity.dropItem as TreasureData;
             Vector2Int positionToSpawn = entity.Position;
 
-            if (itemToSpawn != null && !gameState.DoesPositionContainItem(positionToSpawn))
+            if (itemToSpawn != null && !scenarioState.DoesPositionContainItem(positionToSpawn))
             {
                 TreasureData itemInstance = UnityEngine.Object.Instantiate(itemToSpawn);
                 itemInstance.Position = positionToSpawn;
-                gameState.items.Add(itemInstance);
+                scenarioState.items.Add(itemInstance);
             }
         }
     }
 
     /// <summary>
-    /// Only for use in campaign view OR healing in scenario.
+    /// Only for use in campaign view.
     /// </summary>
     /// <param name="entity">Entity to have health changed.</param>
     /// <param name="value">Value to be added to entity health.</param>
-    public static void ChangeHealthValue(this EntityData entity, int value)
+    public static void ChangeHealthValue_Campaign(this EntityData entity, int value)
     {
         int newHealth = entity.CurrentHealth + value;
+        newHealth = Mathf.Min(entity.MaxHealth, newHealth);
         entity.SetHealth(newHealth);
+    }
+
+    public static void ChangeHealthValue_Scenario(this EntityData entity, int value, ScenarioState scenarioState)
+    {
+        if (value > 0)
+        {
+            entity.ChangeHealthValue_Campaign(value);
+        }
+        else if (value < 0)
+        {
+            entity.DealDamage(value, scenarioState);
+        }
     }
 
     public static int GetMovementModifierValue(this EntityData entity)

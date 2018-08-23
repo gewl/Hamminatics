@@ -83,7 +83,7 @@ public static class UpcomingStateCalculator
             }
             else if (modifier.modifierCategory == ModifierCategory.HealOverTime)
             {
-                entity.ChangeHealthValue(modifier.value);
+                entity.ChangeHealthValue_Campaign(modifier.value);
             }
 
             modifier.duration--;
@@ -142,11 +142,16 @@ public static class UpcomingStateCalculator
                 return GetNextStateFromAction_Attack(newState,
                     entityCopy,
                     action);
+            case CardCategory.Self:
+                return GetNextStateFromAction_Self(newState,
+                    entityCopy,
+                    action);
             default:
                 return GetNextGameStateFromMove(newState, entityCopy, action.direction);
         }
     }
 
+    #region Attack action resolution
     static ProjectedGameState GetNextStateFromAction_Attack(ScenarioState newState, EntityData entity, Action action)
     {
         GameBoard testBoard = BoardController.CurrentBoard;
@@ -323,6 +328,20 @@ public static class UpcomingStateCalculator
                 Debug.LogError("Bad input to ReverseDirection method: " + inputDirection);
                 return Direction.Up;
         }
+    }
+    #endregion
+
+    static ProjectedGameState GetNextStateFromAction_Self(ScenarioState newState, EntityData entity, Action action)
+    {
+        SelfCardData card = action.card as SelfCardData;
+
+        ProjectedGameState newProjectedState = new ProjectedGameState(entity, newState, action);
+
+        entity.ChangeHealthValue_Scenario(card.healthChange, newState);
+
+        card.modifiers.ForEach(m => entity.activeModifiers.Add(Object.Instantiate(m)));
+
+        return newProjectedState;
     }
     #endregion
 
