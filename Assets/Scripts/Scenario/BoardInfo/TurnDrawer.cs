@@ -287,6 +287,11 @@ public class TurnDrawer : MonoBehaviour {
             (nextState.scenarioState.HasEntityWhere(e => e == movingEntity) &&
             nextState.scenarioState.GetEntityWhere(e => e == movingEntity).Position == movingEntity.Position);
 
+        if (nextState != null && !nextState.scenarioState.HasEntityWhere(e => e == movingEntity))
+        {
+            Debug.Log("entity does not exist next state");
+        }
+
         if (isEntitysLastMove)
         {
             DrawPath_Ending(movingEntity, positionLastState, positionThisState);

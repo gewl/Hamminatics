@@ -28,7 +28,8 @@ public class EventPane : MonoBehaviour {
     const string OUTCOME_BUTTON_TEXT = "button_text";
     const string OUTCOME_TITLE_TEXT = "outcome_title";
     const string OUTCOME_DESCRIPTION_TEXT = "outcome_description";
-    const string OUTCOME_EFFECT = "effect";
+    const string OUTCOME_EFFECTS = "effects";
+    const string OUTCOME_TYPE = "types";
     const string OUTCOME_STRING = "string_data";
     const string OUTCOME_INT = "int_data";
     #endregion
@@ -82,11 +83,16 @@ public class EventPane : MonoBehaviour {
     {
         JSONObject selectedOutcome = availableOutcomes[index];
 
-        string outcomeEffect = selectedOutcome.GetField(OUTCOME_EFFECT).str;
-        string outcomeStringData = selectedOutcome.GetField(OUTCOME_STRING).str;
-        int outcomeIntData = (int)selectedOutcome.GetField(OUTCOME_INT).f;
+        List<JSONObject> outcomeEffects = selectedOutcome.GetField(OUTCOME_EFFECTS).list;
 
-        gameStateManager.ProcessEventOutcome(outcomeEffect, outcomeStringData, outcomeIntData);
+        for (int i = 0; i < outcomeEffects.Count; i++)
+        {
+            JSONObject outcomeEffect = outcomeEffects[i];
+            string effectType = outcomeEffect.GetField(OUTCOME_TYPE).str;
+            string effectStringData = outcomeEffect.GetField(OUTCOME_STRING).str;
+            int effectIntData = (int)outcomeEffect.GetField(OUTCOME_INT).f;
+            gameStateManager.ProcessEventOutcome(effectType, effectStringData, effectIntData);
+        }
 
         eventTitle.text = selectedOutcome.GetField(OUTCOME_TITLE_TEXT).str;
         eventDescription.text = selectedOutcome.GetField(OUTCOME_DESCRIPTION_TEXT).str;

@@ -118,6 +118,9 @@ public class GameStateManager : MonoBehaviour {
             case EventType.APPLY_MODIFIER:
                 HandleApplyModifier(stringData, intData);
                 break;
+            case EventType.OFFER_UPGRADE:
+                HandleOfferUpgrade();
+                break;
             default:
                 Debug.LogError("No handler found for effect: " + effect);
                 break;
@@ -146,6 +149,11 @@ public class GameStateManager : MonoBehaviour {
     {
         CardData newCard = DataRetriever.GetPlayerCardData(stringData);
         itemSlotPicker.OfferCard(newCard);
+    }
+
+    void HandleOfferUpgrade()
+    {
+        itemSlotPicker.DisplaySlotPickerForUpgrade();
     }
 
     void HandleTriggerScenario(string stringData, int intData)

@@ -3451,6 +3451,7 @@ MonoBehaviour:
       Data: 
   eventScenarios:
   - {fileID: 11400000, guid: 6e017443d68e6fd4080aa226c8b7cb6f, type: 2}
+  - {fileID: 11400000, guid: 1d87af98f6221b24f90a2d7be5f62ad2, type: 2}
 --- !u!224 &323374605
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6143,7 +6144,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &457534521
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7370,10 +7371,10 @@ RectTransform:
   m_Father: {fileID: 1073771398}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 542.5, y: -180}
+  m_SizeDelta: {x: 155, y: 180}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &550625615
 MonoBehaviour:
@@ -8472,10 +8473,10 @@ RectTransform:
   m_Father: {fileID: 1073771398}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 77.5, y: -180}
+  m_SizeDelta: {x: 155, y: 180}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &645736984
 MonoBehaviour:
@@ -11389,10 +11390,10 @@ RectTransform:
   m_Father: {fileID: 1073771398}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 232.5, y: -180}
+  m_SizeDelta: {x: 155, y: 180}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &903595805
 MonoBehaviour:
@@ -11656,11 +11657,12 @@ MonoBehaviour:
   eventPane: {fileID: 457534522}
   storePane: {fileID: 1554493869}
   itemSlotPicker: {fileID: 1381373948}
+  simpleTextDisplay: {fileID: 1415068684}
   enemySpawnGroupManager: {fileID: 323374602}
   dimmer: {fileID: 1572425273}
   fullScreenTrigger: {fileID: 1455142725}
-  healthCard: {fileID: 0}
-  upgradeCard: {fileID: 0}
+  healthCard: {fileID: 11400000, guid: 17f7c65a969f446458d428482d5308e5, type: 2}
+  upgradeCard: {fileID: 11400000, guid: 4a921661b25de9246ba8bdd03ea5f62b, type: 2}
 --- !u!114 &915970917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13873,10 +13875,10 @@ RectTransform:
   m_Father: {fileID: 1073771398}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 387.5, y: -180}
+  m_SizeDelta: {x: 155, y: 180}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1063716719
 MonoBehaviour:
@@ -17429,13 +17431,14 @@ GameObject:
   - component: {fileID: 1415068683}
   - component: {fileID: 1415068682}
   - component: {fileID: 1415068681}
+  - component: {fileID: 1415068684}
   m_Layer: 5
   m_Name: SimpleTextDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1415068680
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17504,6 +17507,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1415068679}
+--- !u!114 &1415068684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1415068679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3948c028e0902dd45af3ef0f6c4b37cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleText: {fileID: 780891657}
+  bodyText: {fileID: 316465305}
 --- !u!1 &1432817493
 GameObject:
   m_ObjectHideFlags: 0
@@ -25242,7 +25258,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  gameStateManager: {fileID: 0}
+  gameStateManager: {fileID: 915970916}
   chancesOfHealthInSlot1: 70
   chancesOfUpgradeInSlot2: 40
   chancesOfCardInSlot3: 70

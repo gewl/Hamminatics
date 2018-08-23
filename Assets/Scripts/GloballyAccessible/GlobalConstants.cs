@@ -2,7 +2,8 @@
 public enum CardCategory
 {
     Movement,
-    Attack
+    Attack,
+    Self
 }
 
 public enum AbilityTarget
@@ -119,6 +120,7 @@ public class EventType
     public const string OFFER_CARD = "offerCard";
     public const string TRIGGER_SCENARIO = "triggerScenario";
     public const string APPLY_MODIFIER = "applyModifier";
+    public const string OFFER_UPGRADE = "offerUpgrade";
 }
 
 public class ChangeValueTarget

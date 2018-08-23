@@ -10,41 +10,121 @@
 					"button_text": "Face the memory.",
 					"outcome_title": "For better or for worse.",
 					"outcome_description": "Acknowledged, and surpassed. You hope it will not recur again.",
-					"effect": "triggerScenario",
-					"string_data": "CountenanceAMemory",
-					"int_data": -1
+					"effects":  [
+						{
+						"type": "triggerScenario",
+						"string_data": "CountenanceAMemory",
+						"int_data": -1
+						}
+					]
 				},
 				{
 					"button_text": "Excise and continue.",
 					"outcome_title": "It's done.",
 					"outcome_description": "A moment of pain, and the future lies ahead.",
-					"effect": "changeValue",
-					"string_data": "health",
-					"int_data": 1
+					"effects": [
+						{
+						"type": "changeValue",
+						"string_data": "health",
+						"int_data": 1
+						}
+					]
 				}
 			]
 		},
 		{
 			"id": "remnants_of_a_battle",
 			"name": "Remnants of a Battle",
-			"description": "You step into a courtyard. It is quiet and peaceful. The sun beams down from overhead, but it's unusually chilly for the time of year. You are reminded of a museum you visited a couple years ago where you spent the day alone, walking from exhibit to exhibit, your thoughts falling aimlessly from one subject to the next. You used to do things like that more, you think. You don't do things like that much anymore. \n\nA few bodies lie around the courtyard, clearly the leftovers of a skirmish some months past. It is not clear to you if there were any survivors. \n\nThe closest body has a fat-looking patch upon his belt. You are drawn to it. Do you reach for it now, or spend a little while?",
+			"description": "You step into a courtyard. It is quiet and peaceful. The sun beams down from overhead, but it's unusually chilly for the time of year. You are reminded of a museum you visited a couple years ago where you spent the day alone, walking f{},rom exhibit to exhibit, your thoughts falling aimlessly from one subject to the next. You used to do things like that more, you think. You don't do things like that much anymore. \n\nA few bodies lie around the courtyard, clearly the leftovers of a skirmish some months past. It is not clear to you if there were any survivors. \n\nThe closest body has a fat-looking pouch upon his belt. You are drawn to it. Do you reach for it now, or spend a little while?",
 			"requirements": {},
 			"outcomes": [
 				{
 					"button_text": "Reach for it now.",
 					"outcome_title": "Another Man's Treasure",
 					"outcome_description": "The man's sack was filled with gold. You are a richer man than you were. He is not a poorer man than he was.",
-					"effect": "changeValue",
-					"string_data": "gold",
-					"int_data": 5
+					"effects": [
+						{
+						"type": "changeValue",
+						"string_data": "gold",
+						"int_data": 5
+						}
+					]
 				},
 				{
 					"button_text": "Reach for it later.",
 					"outcome_title": "A Ladybug Crawls Across Your Hand.",
 					"outcome_description": "You sit on a nearby bench a while, enjoying the open air. You are not in any particular hurry. You are not losing any time. When you are ready to go, you will leave, and you will leave this place behind.",
-					"effect": "offerCard",
-					"string_data": "PatientBlow",
-					"int_data": 0
+					"effects": [
+						{
+						"type": "offerCard",
+						"string_data": "PatientBlow",
+						"int_data": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "an_unhappy_event",
+			"name": "An Unhappy Event",
+			"description": "Coming around a corner, you see light falling out of an open doorway up ahead. You drop to your hands and knees and crawl to peer inside. It is an unremarkable room with no treasures. Beasts and unpleasant strangers are faffing about. There is nothing to compel interest or to motivate entry. It is a boring place filled with your enemies.\n\nTheir attention is consumed by their own pointless business. You could so easily slip by. In a lot of ways, that'd be the mature decision. (You've always believed people should be mature to one another.) And, yet, something holds you up. You've been wondering lately if you might, perhaps, be a big wimp. After all, you keep finding yourself in situations like these: On your hands and knees, on the ground, crawling like a little piggie, oinking and snuffling in the dirt, and so on. And just oinking right past this room might do a lot to confirm your suspicions. Do you risk it?",
+			"requirements": {},
+			"outcomes": [
+				{
+					"button_text": "Fight. I'm no coward.",
+					"outcome_title": "Self-Image Restored",
+					"outcome_description": "You're tired, and maybe a little roughed up, but at least you can rest confident knowing that you're not a baby.",
+					"effects": [
+						{
+						"type": "triggerScenario",
+						"string_data": "AnUnhappyEvent",
+						"int_data": 0
+						}
+					]
+				},
+				{
+					"button_text": "Pass by. I am perhaps a coward.",
+					"outcome_title": "You're Gonna Wonder A While",
+					"outcome_description": "You safely skirt past the door and scurry down the hall. Your body is intact. Can you say the same for your beliefs?\n\nYou will begin your next scenario Poisoned.",
+					"effects": [
+						{
+						"type": "applyModifier",
+						"string_data": "Poison_1_3",
+						"int_data": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "passage_through_distaste",
+			"name": "Passage Through Distaste",
+			"description": "Coming around a corner, you see light falling out of an open doorway up ahead. You drop to your hands and knees and crawl to peer inside. It is an unremarkable room with no treasures. Beasts and unpleasant strangers are faffing about. There is nothing to compel interest or to motivate entry. It is a boring place filled with your enemies.\n\nTheir attention is consumed by their own pointless business. You could so easily slip by. In a lot of ways, that'd be the mature decision. (You've always believed people should be mature to one another.) And, yet, something holds you up. You've been wondering lately if you might, perhaps, be a big wimp. After all, you keep finding yourself in situations like these: On your hands and knees, on the ground, crawling like a little piggie, oinking and snuffling in the dirt, and so on. And just oinking right past this room might do a lot to confirm your suspicions. Do you risk it?",
+			"requirements": {},
+			"outcomes": [
+				{
+					"button_text": "Fight. I'm no coward.",
+					"outcome_title": "Self-Image Restored",
+					"outcome_description": "You're tired, and maybe a little roughed up, but at least you can rest confident knowing that you're not a baby.",
+					"effects": [
+						{
+						"type": "triggerScenario",
+						"string_data": "PassageThroughDistaste",
+						"int_data": 0
+						}
+					]
+				},
+				{
+					"button_text": "Pass by. I am perhaps a coward.",
+					"outcome_title": "You're Gonna Wonder A While",
+					"outcome_description": "You safely skirt past the door and scurry down the hall. Your body is intact. Can you say the same for your beliefs?\n\nYou will begin your next scenario Poisoned.",
+					"effects": [
+						{
+						"type": "triggerScenario",
+						"string_data": "PassageThroughDistaste",
+						"int_data": 0
+						}
+					]
 				}
 			]
 		}
