@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5daf06a50df7c364ca33d7628e7a574c, type: 3}
-  m_Name: ForcefulSummon
+  m_Name: ImperativeRequest
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -20,7 +20,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  ID: Forceful Summon
+  ID: Imperative Request
   description: Originally a cantrip invented to retrieve distant objects in the home,
     it's now been repurposed.
   energyCost: 2

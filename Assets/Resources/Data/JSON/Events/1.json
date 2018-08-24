@@ -127,6 +127,38 @@
 					]
 				}
 			]
+		},
+		{
+			"id": "new_weird_friend",
+			"name": "New Weird Friend",
+			"description": "There are communities down here. You hadn't expected that. You feel silly, you should have known. There are open caverns lit with oil lanterns, unsteady rope bridges over nothing at all, warrens of bedrooms and mess halls carved out of the stone. Knotted ropes are strung between landmarks so travelers can find their way. You hold onto them for dear life, blinking against the dim with each tentative step forward. Children, born and raised in the Abbey, skip past you without hesitation. Sometimes you catch glimpses of their faces in the guttering light, their pupils wide and black, their emotions unguarded.\n\nYou come to one of these communities exhausted and underslept. A man hears your passage across the rope bridge and meets you at the end. He's whip-thin and hunched, with big teeth that catch light. He offers you a place to sleep, and you graciously accept. When you awake, he's there waiting for you with a knapsack full of food. He offers you a table and his company, but understands if you have to get going.",
+			"requirements": {},
+			"outcomes": [
+				{
+					"button_text": "Sit with the guy.",
+					"outcome_title": "A Nice Meal",
+					"outcome_description": "You and the guy talk for a while. He excitedly shares some local gossip with you, and acts politely interested when you talk about your life before the Abbey. Right before you leave, he tells you a somewhat involved joke. The punchline doesn't strike you as immediately funny, but there's something slanty and difficult about it. It sticks with you for a few days. You begin to suspect that there's something meaningful in that lack of understanding, in that gap between your thinking and the precise intent of the punchline. That if you could understand it totally, innately, as humor, as the joke's teller did, whatever obstacle lies between you and the people who live down here, in the Abbey, would cease to block your way.",
+					"effects": [
+						{
+						"type": "offerCard",
+						"string_data": "BizarreJoke",
+						"int_data": 0
+						}
+					]
+				},
+				{
+					"button_text": "Say goodbye to the guy.",
+					"outcome_title": "Goodbye, Guy",
+					"outcome_description": "You say goodbye to the guy and continue on your way. You don't open the food for a few hours, once you've put some miles between yourself and the village. The sack contains a loaf of sourdough bread, two types of hard cheese, a bushel of cave bananas, kiwis, salted butter, mole jerky, and a pewter butter knife, all thoughtfully packed to prevent any of the food being bruised or jostled as you move. You feel an immense gratitude toward this stranger and his kindness, and you hope you meet him again.",
+					"effects": [
+						{
+						"type": "offerCard",
+						"string_data": "RestivePause",
+						"int_data": 0
+						}
+					]
+				}
+			]
 		}
 	]
 }
