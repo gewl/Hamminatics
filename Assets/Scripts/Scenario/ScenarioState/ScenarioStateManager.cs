@@ -95,7 +95,7 @@ public class ScenarioStateManager : MonoBehaviour {
     #region initialization/reset
     public void GenerateAndDrawScenario(int depth, float nodeDistance)
     {
-        EnemySpawnGroupData enemySpawnGroup = enemySpawnGroupManager.GetEnemySpawnGroups(depth).GetRandomElement();
+        EnemySpawnGroupData enemySpawnGroup = enemySpawnGroupManager.GetEnemySpawnGroup(depth, nodeDistance);
         GenerateAndDrawScenario(enemySpawnGroup);
     }
 

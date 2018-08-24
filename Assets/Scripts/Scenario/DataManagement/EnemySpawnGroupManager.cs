@@ -16,7 +16,10 @@ public class EnemySpawnGroupManager : SerializedMonoBehaviour {
     [SerializeField]
     List<EnemySpawnGroupData> eventScenarios;
 
-    public List<EnemySpawnGroupData> GetEnemySpawnGroups(int depth)
+    [SerializeField]
+    float nodeDistanceVariance = 0.2f;
+
+    List<EnemySpawnGroupData> GetEnemySpawnGroups(int depth)
     {
         if (!depthSpawnGroupsMap.ContainsKey(depth))
         {
@@ -24,6 +27,22 @@ public class EnemySpawnGroupManager : SerializedMonoBehaviour {
             return depthSpawnGroupsMap[1];
         }
         return depthSpawnGroupsMap[depth];
+    }
+
+    public EnemySpawnGroupData GetEnemySpawnGroup(int depth, float nodeDistance)
+    {
+        List<EnemySpawnGroupData> enemySpawnGroups = GetEnemySpawnGroups(depth);
+        int groupsCount = enemySpawnGroups.Count;
+
+        int scaledIndex = Mathf.RoundToInt(nodeDistance * groupsCount);
+        System.Random rand = new System.Random();
+        int scaledVariance = Mathf.RoundToInt(groupsCount * nodeDistanceVariance);
+        int adjustedIndex = scaledIndex + rand.Next(-scaledVariance, scaledVariance);
+
+        adjustedIndex = Mathf.Max(0, adjustedIndex);
+        adjustedIndex = Mathf.Min(groupsCount, adjustedIndex);
+
+        return enemySpawnGroups[adjustedIndex];
     }
 
     public EnemySpawnGroupData GetEventScenarioEnemySpawn(string enemySpawnID)
