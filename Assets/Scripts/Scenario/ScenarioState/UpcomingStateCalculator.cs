@@ -28,7 +28,7 @@ public static class UpcomingStateCalculator
 
                 if (!entityIsAliveToMove)
                 {
-                    continue;
+                    break;
                 }
 
                 ProjectedGameState updatedState = GetNextGameStateFromMove(mostRecentState, entity, move);
@@ -40,7 +40,7 @@ public static class UpcomingStateCalculator
 
                 if (updatedState.bumps.Count > 0)
                 {
-                    continue;
+                    break;
                 }
             }
 

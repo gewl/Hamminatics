@@ -47,9 +47,11 @@ public class ScenarioStateGenerator {
             int minimumRange = entityRange + 1;
             int maximumRange = entityRange + 3;
 
+            Tile entityTile = board.GetTileAtPosition(entity.Position);
+
             // Upper bound is exclusive.
             int spawnRange = GenerateSpawnRange(minimumRange, maximumRange + 1);
-            List<Tile> possibleSpawnTiles = BoardHelperFunctions.GetAllTilesAtDistance(playerTile, spawnRange);
+            List<Tile> possibleSpawnTiles = playerTile.GetAllTilesAtDistance(spawnRange);
 
             Tile spawnTile = possibleSpawnTiles.GetAndRemoveRandomElement();
 
@@ -58,9 +60,9 @@ public class ScenarioStateGenerator {
                 if (possibleSpawnTiles.Count == 0)
                 {
                     spawnRange++;
-                    possibleSpawnTiles = BoardHelperFunctions.GetAllTilesAtDistance(playerTile, spawnRange);
+                    possibleSpawnTiles = playerTile.GetAllTilesAtDistance(spawnRange);
                 }
-                spawnTile = BoardHelperFunctions.GetAllTilesAtDistance(playerTile, spawnRange).GetRandomElement();
+                spawnTile = playerTile.GetAllTilesAtDistance(spawnRange).GetRandomElement();
             }
 
             entities[i].SetPosition(spawnTile.Position, state);

@@ -162,6 +162,7 @@ public class ScenarioStateManager : MonoBehaviour {
     #region player interaction handling
     public void HighlightPotentialCardTargets(CardData card)
     {
+        GameBoard currentBoard = boardController.currentBoard;
         ResetBoard(CurrentScenarioState, upcomingScenarioStates);
 
         int cardRange = card.range;
@@ -169,15 +170,16 @@ public class ScenarioStateManager : MonoBehaviour {
         // Movement availability is always 'from' player's current position.
         // Other actions are 'from' player's projected position.
         Vector2Int playerOrigin = card.category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
+        Tile playerTile = currentBoard.GetTileAtPosition(playerOrigin);
 
         if (card.category == CardCategory.Movement)
         {
             cardRange += Player.GetMovementModifierValue();
-            BoardHelperFunctions.GetAllTilesWithinRange(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
+            playerTile.GetAllTilesWithinRange(cardRange).ForEach(t => HighlightCell(t.Position));
         }
         else
         {
-            BoardHelperFunctions.GetTilesWithinLinearRange(playerOrigin, cardRange).ForEach(t => HighlightCell(t.Position));
+            playerTile.GetTilesWithinLinearRange(cardRange).ForEach(t => HighlightCell(t.Position));
         }
     }
 
