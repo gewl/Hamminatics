@@ -261,6 +261,7 @@ public class ScenarioStateManager : MonoBehaviour {
         while (upcomingStateQueue.Count > 0)
         {
             ProjectedGameState dequeuedProjectedState = upcomingStateQueue.Dequeue();
+            GameStateDelegates.OnResolvingState?.Invoke(dequeuedProjectedState);
             ScenarioState nextScenarioState = dequeuedProjectedState.scenarioState;
 
             UpdateScenarioState(nextScenarioState);

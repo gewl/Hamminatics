@@ -30,6 +30,21 @@ public class TurnStackController : MonoBehaviour {
     [SerializeField]
     EnergyManager energyManager;
 
+    private void OnEnable()
+    {
+        GameStateDelegates.OnResolvingState += ResolvingStateHandler; 
+    }
+
+    private void OnDisable()
+    {
+        GameStateDelegates.OnResolvingState -= ResolvingStateHandler; 
+    }
+
+    void ResolvingStateHandler(ProjectedGameState projectedState)
+    {
+        endRoundButton.interactable = false;
+    }
+
     public void AddNewTurn(Turn newTurn)
     {
         TurnStack.Push(newTurn);

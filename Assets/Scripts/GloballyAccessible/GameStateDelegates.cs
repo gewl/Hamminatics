@@ -15,8 +15,8 @@ public static class GameStateDelegates {
     public static UpcomingStatesChangeDelegate OnCurrentScenarioStateChange;
     public static UpcomingStatesChangeDelegate ReturnToDefaultBoard;
 
-    public delegate void ResolvingTurnDelegate(Turn turn);
-    public static ResolvingTurnDelegate OnResolvingTurn;
+    public delegate void ProjectedGameStateDelegate(ProjectedGameState projectedState);
+    public static ProjectedGameStateDelegate OnResolvingState;
 
     public delegate void GameStateChangeDelegate(ScenarioState updatedGameState);
     public static GameStateChangeDelegate OnRoundEnded;
