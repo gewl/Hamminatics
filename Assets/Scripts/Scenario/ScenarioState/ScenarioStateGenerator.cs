@@ -122,6 +122,6 @@ public class SpeedComparer : IComparer<EntityData>
 {
     public int Compare(EntityData entity1, EntityData entity2)
     {
-        return entity1.Speed > entity2.Speed ? 1 : -1;
+        return entity1.Speed < entity2.Speed ? 1 : -1;
     }
 }

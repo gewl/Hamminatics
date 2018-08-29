@@ -284,13 +284,8 @@ public class TurnDrawer : MonoBehaviour {
 
         bool isEntitysFirstMove = positionLastState == positionTwoStatesAgo || movingEntity != lastActiveEntity;
         bool isEntitysLastMove = nextState == null ||
-            (nextState.scenarioState.HasEntityWhere(e => e == movingEntity) &&
-            nextState.scenarioState.GetEntityWhere(e => e == movingEntity).Position == movingEntity.Position);
-
-        if (nextState != null && !nextState.scenarioState.HasEntityWhere(e => e == movingEntity))
-        {
-            Debug.Log("entity does not exist next state");
-        }
+            !nextState.scenarioState.HasEntityWhere(e => e == movingEntity) ||
+            nextState.scenarioState.GetEntityWhere(e => e == movingEntity).Position == movingEntity.Position;
 
         if (isEntitysLastMove)
         {
