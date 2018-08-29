@@ -53,6 +53,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
             while (turnIndex < sortedPotentialTurns.Count &&
                 tilesToTargetMovementTile.Any(tile => gameState.DoesPositionContainItemWhere(tile.Position, item => item.itemCategory == ItemCategory.Trap)))
             {
+                turnIndex++;
                 selectedTurnTargets = sortedPotentialTurns[turnIndex];
                 movesToTargetMovementTile = BoardHelperFunctions.FindPathBetweenTiles(enemyTile, selectedTurnTargets.targetMovementTile);
                 tilesToTargetMovementTile = BoardHelperFunctions.GetTilesOnPath(enemyTile, movesToTargetMovementTile);
@@ -103,7 +104,7 @@ public class EnemyTurnCalculator : MonoBehaviour {
 
         result += Mathf.Abs(startingTile.Position.x - turn.targetMovementTile.Position.x);
         result += Mathf.Abs(startingTile.Position.y - turn.targetMovementTile.Position.y);
-        result += turn.targetAttackTile.DistanceFromPlayer;
+        result += (turn.targetAttackTile.DistanceFromPlayer * 5);
         result += upcomingEntityTargets.Any(target => target.targetAttackTile == turn.targetAttackTile) ? 15 : 0;
 
         return result;
