@@ -50,6 +50,7 @@ public class GameStateManager : MonoBehaviour {
         int mapLayerCount = 6;
 
         CurrentCampaign = new CampaignState(new Inventory(), new Map(0, mapLayerCount), player);
+        DataRetriever.UpdateDepthData(CurrentCampaign.depth);
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
 
         InitializeFirstMap();
@@ -98,6 +99,7 @@ public class GameStateManager : MonoBehaviour {
         mapController.DrawMap(newMap);
         mapController.UpdateMapState(CurrentCampaign);
 
+        DataRetriever.UpdateDepthData(CurrentCampaign.depth);
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
     }
 
@@ -147,7 +149,7 @@ public class GameStateManager : MonoBehaviour {
 
     void HandleOfferCard(string stringData, int intData)
     {
-        CardData newCard = DataRetriever.GetPlayerCardData(stringData);
+        CardData newCard = DataRetriever.GetPlayerCardData(stringData, CurrentCampaign.depth);
         itemSlotPicker.OfferCard(newCard);
     }
 
@@ -235,7 +237,7 @@ public class GameStateManager : MonoBehaviour {
     // TODO: Flesh this out?
     CardData GenerateRandomScenarioReward()
     {
-        return upgradeCard;
+        return null;
     }
 
     void TriggerEvent()

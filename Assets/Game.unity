@@ -3452,6 +3452,7 @@ MonoBehaviour:
   eventScenarios:
   - {fileID: 11400000, guid: 6e017443d68e6fd4080aa226c8b7cb6f, type: 2}
   - {fileID: 11400000, guid: 1d87af98f6221b24f90a2d7be5f62ad2, type: 2}
+  nodeDistanceVariance: 0.2
 --- !u!224 &323374605
 RectTransform:
   m_ObjectHideFlags: 0

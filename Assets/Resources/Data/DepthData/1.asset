@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dcf051140b982746aa34a387906e40c, type: 3}
+  m_Name: 1
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  ID: 1
+  randomCardPool:
+  - {fileID: 11400000, guid: 0b71ed31a674e814fafd09cc63b9e7a0, type: 2}
+  - {fileID: 11400000, guid: 143c0aac2232ed0459c3f3fa4ff0ce10, type: 2}
+  - {fileID: 11400000, guid: 2cdf628c797b8854bba726a1731f30e3, type: 2}
+  - {fileID: 11400000, guid: e9538c1181fe21f42b4388f2d82b5c97, type: 2}
+  - {fileID: 11400000, guid: 96e07d3518a3a704d923a45bf300ed82, type: 2}
+  - {fileID: 11400000, guid: b4aaf89feccce6c4180c6ef95ef08aa8, type: 2}
+  - {fileID: 11400000, guid: 764b992462dd17f49a9e3ac231d6b6f1, type: 2}
+  - {fileID: 11400000, guid: 76dd9b78ecb3d0745ab66906a3a9e201, type: 2}
+  - {fileID: 11400000, guid: 4e21395c4b5505e4ba7cdf5970c8a077, type: 2}
+  - {fileID: 11400000, guid: a5c22655c181d8143b408169a9a1d0c6, type: 2}
+  - {fileID: 11400000, guid: a54ee641608090b408a9506c14c6cae7, type: 2}
+  - {fileID: 11400000, guid: 9fecb526a89484f46beb619058c0860f, type: 2}
+  eventPool: {fileID: 4900000, guid: 9d44680eda133c743b9b7efc9d908526, type: 3}
+  randomEnemySpawnPool:
+  - {fileID: 11400000, guid: b270afeed7d5e0646be2178a44d56065, type: 2}
+  - {fileID: 11400000, guid: 3958e5dffef365f4c8f4c1b82e745582, type: 2}
+  - {fileID: 11400000, guid: 9a372bbcc013e3c4b842582e68686cda, type: 2}
+  - {fileID: 11400000, guid: 1217cb7f040c6b14f98975cc04214eb5, type: 2}
+  - {fileID: 11400000, guid: 7a24127cfdf1e5040b60eb9b7e26acca, type: 2}
+  eventScenarioSpawnPool:
+  - {fileID: 11400000, guid: 1d87af98f6221b24f90a2d7be5f62ad2, type: 2}
+  - {fileID: 11400000, guid: 6e017443d68e6fd4080aa226c8b7cb6f, type: 2}
+  goldValueMultiplier: 1

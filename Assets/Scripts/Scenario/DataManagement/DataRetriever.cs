@@ -8,9 +8,12 @@ public class DataRetriever : MonoBehaviour {
     const string ENTITY_DIR = "Data/Entities/";
     const string MODIFIER_DIR = "Data/Modifiers/";
     const string PLAYER_CARD_DIR = "Data/Cards/PlayerCards/";
-    const string ENEMY_CARD_DIR = "Data/Cards/EnemyCards";
+    const string ENEMY_CARD_DIR = "Data/Cards/EnemyCards/";
     const string TRAP_DIR = "Data/Items/Traps/";
     const string TILE_DIR = "Sprites/Tiles/";
+    const string DEPTH_DATA_DIR = "Data/DepthData/";
+
+    const string DEPTH_FILE_PREFIX = "Depth_";
 
     const string GEN_MOVEMENT_CARD_PATH = "Data/Cards/InternalUse/_GenericMove";
     static CardData _genericMovementCard;
@@ -43,6 +46,8 @@ public class DataRetriever : MonoBehaviour {
     static List<JSONObject> currentLayerEvents;
     static int currentDepth = -1;
 
+    static DepthData currentDepthData;
+
     private void Awake()
     {
         cachedEntityData = new Dictionary<string, EntityData>();
@@ -51,17 +56,28 @@ public class DataRetriever : MonoBehaviour {
         cachedTrapData = new Dictionary<string, TrapData>();
     }
 
-    #region scriptable objects
-    public static EntityData GetEntityData(string entityName)
+    public static void UpdateDepthData(int newDepth)
     {
-        if (cachedEntityData.ContainsKey(entityName))
+        if (currentDepth == newDepth)
         {
-            return Instantiate(cachedEntityData[entityName]);
+            return;
+        }
+
+        currentDepth = newDepth;
+        currentDepthData = Resources.Load<DepthData>(DEPTH_DATA_DIR + DEPTH_FILE_PREFIX + newDepth);
+    }
+
+    #region scriptable objects
+    public static EntityData GetEntityData(string entityID)
+    {
+        if (cachedEntityData.ContainsKey(entityID))
+        {
+            return Instantiate(cachedEntityData[entityID]);
         }
         else
         {
-            EntityData loadedEntityData = Resources.Load<EntityData>(ENTITY_DIR + entityName);
-            cachedEntityData[entityName] = loadedEntityData;
+            EntityData loadedEntityData = Resources.Load<EntityData>(ENTITY_DIR + entityID);
+            cachedEntityData[entityID] = loadedEntityData;
             return Instantiate(loadedEntityData);
         }
     }
@@ -79,6 +95,18 @@ public class DataRetriever : MonoBehaviour {
         }
 
         CardData loadedCardData = Resources.Load<CardData>(PLAYER_CARD_DIR + cardName);
+        cachedCardData[cardName] = loadedCardData;
+        return Instantiate(loadedCardData);
+    }
+
+    public static CardData GetPlayerCardData(string cardName, int currentDepth)
+    {
+        if (cachedEntityData.ContainsKey(cardName))
+        {
+            return cachedCardData[cardName];
+        }
+
+        CardData loadedCardData = Resources.Load<CardData>(PLAYER_CARD_DIR + DEPTH_FILE_PREFIX + currentDepth + "/" + cardName);
         cachedCardData[cardName] = loadedCardData;
         return Instantiate(loadedCardData);
     }
