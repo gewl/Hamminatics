@@ -31,6 +31,14 @@ public class InventorySlotDisplay : MonoBehaviour {
         }
     }
 
+    public void UpdateDisplay_UpdateInvalid(CardData card)
+    {
+        cardImage.sprite = card.cardImage;
+        cardTitle.text = card.ID;
+
+        blockInteractionOverlay.SetActive(true);
+    }
+
     public void UpdateDisplay_Update(CardData card)
     {
         if (card == null)

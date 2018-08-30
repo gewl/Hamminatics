@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -36,12 +37,22 @@ public class GameStateManager : MonoBehaviour {
     [SerializeField]
     CardData upgradeCard;
     public CardData UpgradeCard { get { return upgradeCard; } }
+    [SerializeField]
+    CardData goldRewardCard;
+    public CardData GoldRewardCard { get { return goldRewardCard; } }
 
     static GameStateManager instance;
+
+    // Scenario rewards. Remainder is gold.
+    int oddsOfNewCard = 20;
+    int oddsOfUpgrade = 30;
+
+    System.Random rand;
 
     private void Awake()
     {
         instance = this;
+        rand = new System.Random();
     }
 
     private void Start()
@@ -225,6 +236,11 @@ public class GameStateManager : MonoBehaviour {
                 simpleTextDisplay.ShowTextDisplay(ScenarioRewardText.HEALTH_TITLE, ScenarioRewardText.HEALTH_BODY);
                 CurrentCampaign.player.ChangeHealthValue_Campaign(1);
             }
+            else if (scenarioReward == goldRewardCard)
+            {
+                simpleTextDisplay.ShowTextDisplay(ScenarioRewardText.GOLD_TITLE, ScenarioRewardText.GOLD_BODY);
+                CurrentCampaign.inventory.gold += (5 * DataRetriever.GetDepthGoldMultiplier());
+            }
             else
             {
                 simpleTextDisplay.ShowTextDisplay(ScenarioRewardText.NEW_CARD_TITLE, ScenarioRewardText.NEW_CARD_BODY);
@@ -234,10 +250,22 @@ public class GameStateManager : MonoBehaviour {
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
     }
 
-    // TODO: Flesh this out?
     CardData GenerateRandomScenarioReward()
     {
-        return upgradeCard;
+        int randomNumber = rand.Next(1, 101);
+        CardData scenarioReward = goldRewardCard;
+
+        if (randomNumber <= oddsOfNewCard)
+        {
+            CardData[] currentlyEquippedCards = CurrentCampaign.inventory.equippedCards;
+            List<CardData> availableCardPool = DataRetriever.GetRandomCardPool().Where(card => !currentlyEquippedCards.Contains(card)).ToList();
+            scenarioReward = availableCardPool.GetRandomElement();
+        }
+        else if (randomNumber <= oddsOfNewCard + oddsOfUpgrade)
+        {
+            scenarioReward = upgradeCard;
+        }
+        return scenarioReward;
     }
 
     void TriggerEvent()
@@ -253,6 +281,7 @@ public class GameStateManager : MonoBehaviour {
     }
 
     public static void SetDim(bool isDim)
+
     {
         instance.dimmer.gameObject.SetActive(isDim);
     }

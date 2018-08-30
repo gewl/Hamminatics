@@ -61,7 +61,14 @@ public class ItemSlotPickerController : MonoBehaviour {
         for (int i = 0; i < slotDisplays.Length; i++)
         {
             CardData card = GameStateManager.CurrentCampaign.inventory.equippedCards[i];
-            slotDisplays[i].UpdateDisplay_Update(card);
+            if (i == 0)
+            {
+                slotDisplays[i].UpdateDisplay_UpdateInvalid(card);
+            }
+            else
+            {
+                slotDisplays[i].UpdateDisplay_Update(card);
+            }
         }
     }
 

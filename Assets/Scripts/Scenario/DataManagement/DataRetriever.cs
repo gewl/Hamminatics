@@ -72,6 +72,11 @@ public class DataRetriever : MonoBehaviour {
         }
     }
 
+    public static int GetDepthGoldMultiplier()
+    {
+        return currentDepthData.goldValueMultiplier;
+    }
+
     public static List<EnemySpawnGroupData> GetEnemySpawnGroups()
     {
         return currentDepthData.randomEnemySpawnPool;
