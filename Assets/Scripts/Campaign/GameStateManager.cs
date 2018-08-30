@@ -237,7 +237,7 @@ public class GameStateManager : MonoBehaviour {
     // TODO: Flesh this out?
     CardData GenerateRandomScenarioReward()
     {
-        return null;
+        return upgradeCard;
     }
 
     void TriggerEvent()

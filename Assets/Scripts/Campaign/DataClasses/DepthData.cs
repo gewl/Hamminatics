@@ -11,6 +11,5 @@ public class DepthData : SerializedScriptableObject {
     public List<CardData> randomCardPool;
     public TextAsset eventPool;
     public List<EnemySpawnGroupData> randomEnemySpawnPool;
-    public List<EnemySpawnGroupData> eventScenarioSpawnPool;
     public int goldValueMultiplier = 1;
 }

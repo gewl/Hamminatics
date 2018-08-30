@@ -11,8 +11,8 @@ public class DataRetriever : MonoBehaviour {
     const string ENEMY_CARD_DIR = "Data/Cards/EnemyCards/";
     const string TRAP_DIR = "Data/Items/Traps/";
     const string TILE_DIR = "Sprites/Tiles/";
-    const string DEPTH_DATA_DIR = "Data/DepthData/";
 
+    const string DEPTH_DATA_DIR = "Data/DepthData/";
     const string DEPTH_FILE_PREFIX = "Depth_";
 
     const string GEN_MOVEMENT_CARD_PATH = "Data/Cards/InternalUse/_GenericMove";
@@ -64,7 +64,22 @@ public class DataRetriever : MonoBehaviour {
         }
 
         currentDepth = newDepth;
-        currentDepthData = Resources.Load<DepthData>(DEPTH_DATA_DIR + DEPTH_FILE_PREFIX + newDepth);
+
+        DepthData newDepthData = Resources.Load<DepthData>(DEPTH_DATA_DIR + DEPTH_FILE_PREFIX + newDepth);
+        if (newDepthData != null)
+        {
+            currentDepthData = newDepthData;
+        }
+    }
+
+    public static List<EnemySpawnGroupData> GetEnemySpawnGroups()
+    {
+        return currentDepthData.randomEnemySpawnPool;
+    }
+
+    public static List<CardData> GetRandomCardPool()
+    {
+        return currentDepthData.randomCardPool;
     }
 
     #region scriptable objects

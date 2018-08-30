@@ -156,7 +156,6 @@ public class ItemSlotPickerController : MonoBehaviour {
         selectedSlot = -1;
     }
 
-
     public void ConfirmPick_NewCard()
     {
         GameStateManager.CurrentCampaign.inventory.equippedCards[selectedSlot] = newCard;

@@ -8,9 +8,6 @@ public class StoreInventoryGenerator : SerializedMonoBehaviour {
     [SerializeField]
     GameStateManager gameStateManager;
 
-    [SerializeField]
-    Dictionary<int, List<CardData>> depthCardsMap;
-
     [SerializeField, Range(1, 100)]
     int chancesOfHealthInSlot1;
     [SerializeField, Range(1, 100)]
@@ -30,12 +27,7 @@ public class StoreInventoryGenerator : SerializedMonoBehaviour {
     public CardData[] GenerateStoreInventory(int depth)
     {
         CardData[] newInventory = new CardData[4];
-
-        while (!depthCardsMap.ContainsKey(depth))
-        {
-            depth--;
-        }
-        List<CardData> availableCardList = depthCardsMap[depth].ToList();
+        List<CardData> availableCardList = DataRetriever.GetRandomCardPool().ToList();
 
         newInventory[0] = GenerateSlotItem(ref availableCardList, 100 - chancesOfHealthInSlot1, gameStateManager.HealthCard);
         newInventory[1] = GenerateSlotItem(ref availableCardList, 100 - chancesOfUpgradeInSlot2, gameStateManager.UpgradeCard);

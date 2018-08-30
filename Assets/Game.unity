@@ -3381,74 +3381,12 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: b270afeed7d5e0646be2178a44d56065, type: 2}
-    - {fileID: 11400000, guid: 9a372bbcc013e3c4b842582e68686cda, type: 2}
-    - {fileID: 11400000, guid: 3958e5dffef365f4c8f4c1b82e745582, type: 2}
-    - {fileID: 11400000, guid: 7a24127cfdf1e5040b60eb9b7e26acca, type: 2}
-    - {fileID: 11400000, guid: 1217cb7f040c6b14f98975cc04214eb5, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: depthSpawnGroupsMap
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.Collections.Generic.List`1[[EnemySpawnGroupData,
-        Assembly-CSharp]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 2|System.Collections.Generic.List`1[[EnemySpawnGroupData, Assembly-CSharp]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 5
-    - Name: 
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 2
-    - Name: 
-      Entry: 10
-      Data: 3
-    - Name: 
-      Entry: 10
-      Data: 4
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   eventScenarios:
   - {fileID: 11400000, guid: 6e017443d68e6fd4080aa226c8b7cb6f, type: 2}
   - {fileID: 11400000, guid: 1d87af98f6221b24f90a2d7be5f62ad2, type: 2}
@@ -25196,69 +25134,12 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 764b992462dd17f49a9e3ac231d6b6f1, type: 2}
-    - {fileID: 11400000, guid: 4e21395c4b5505e4ba7cdf5970c8a077, type: 2}
-    - {fileID: 11400000, guid: 76dd9b78ecb3d0745ab66906a3a9e201, type: 2}
-    - {fileID: 11400000, guid: 9fecb526a89484f46beb619058c0860f, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: depthCardsMap
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.Collections.Generic.List`1[[CardData,
-        Assembly-CSharp]], mscorlib]], mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 2|System.Collections.Generic.List`1[[CardData, Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 4
-    - Name: 
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 10
-      Data: 2
-    - Name: 
-      Entry: 10
-      Data: 3
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   gameStateManager: {fileID: 915970916}
   chancesOfHealthInSlot1: 70
   chancesOfUpgradeInSlot2: 40

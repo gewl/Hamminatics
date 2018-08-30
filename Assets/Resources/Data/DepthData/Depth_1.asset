@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5dcf051140b982746aa34a387906e40c, type: 3}
-  m_Name: 1
+  m_Name: Depth_1
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -41,7 +41,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9a372bbcc013e3c4b842582e68686cda, type: 2}
   - {fileID: 11400000, guid: 1217cb7f040c6b14f98975cc04214eb5, type: 2}
   - {fileID: 11400000, guid: 7a24127cfdf1e5040b60eb9b7e26acca, type: 2}
-  eventScenarioSpawnPool:
-  - {fileID: 11400000, guid: 1d87af98f6221b24f90a2d7be5f62ad2, type: 2}
-  - {fileID: 11400000, guid: 6e017443d68e6fd4080aa226c8b7cb6f, type: 2}
   goldValueMultiplier: 1
