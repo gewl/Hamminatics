@@ -127,6 +127,22 @@ public static class TileExtensions {
         return predicate(tile);
     }
 
+    public static List<Tile> GetAllTilesInDirection(this Tile startingTile, Direction direction, int range)
+    {
+        List<Tile> results = new List<Tile>();
+
+        Tile nextTile = startingTile.GetDirectionalNeighbor(direction);
+        while (range > 0 && nextTile != null)
+        {
+            results.Add(nextTile);
+
+            nextTile = nextTile.GetDirectionalNeighbor(direction);
+            range--;
+        }
+
+        return results;
+    }
+
     #region Enemy turn calculation methods
     // All tiles within [range] steps from starting tile, along cardinal directions.
     static public List<Tile> GetTilesWithinLinearRange(this Tile startingTile, int range)
@@ -135,16 +151,7 @@ public static class TileExtensions {
 
         foreach (Direction direction in Enum.GetValues(typeof(Direction)))
         {
-            int rangeRemaining = range;
-            Tile nextTile = startingTile.GetDirectionalNeighbor(direction);
-
-            while (rangeRemaining > 0 && nextTile != null)
-            {
-                potentialTargets.Add(nextTile);
-
-                nextTile = nextTile.GetDirectionalNeighbor(direction);
-                rangeRemaining--;
-            }
+            potentialTargets.AddRange(startingTile.GetAllTilesInDirection(direction, range));
         }
 
         return potentialTargets;

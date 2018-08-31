@@ -6,12 +6,11 @@ public enum CardCategory
     Self
 }
 
-public enum AbilityTarget
+public enum TargetType
 {
-    Self,
-    Targeted,
-    Line,
-    Anywhere
+    Single,
+    AreaOfEffect,
+    Line
 }
 #endregion
 
@@ -90,6 +89,7 @@ public struct Constants
     public const int MAX_MODIFIERS = 8;
 }
 
+#region campaign map
 public enum MapNodeType
 {
     Start,
@@ -112,6 +112,7 @@ public enum StoreItem
     Health,
     Upgrade
 }
+#endregion
 
 #region event handling
 public class EventType

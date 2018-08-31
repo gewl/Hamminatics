@@ -7,6 +7,7 @@ public class AttackCardData : CardData
 {
     public override CardCategory category { get { return CardCategory.Attack; } }
     public int damage = 1;
+    public TargetType targetType = TargetType.Single;
 
     public override void Upgrade()
     {

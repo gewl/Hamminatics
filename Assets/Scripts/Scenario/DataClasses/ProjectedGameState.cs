@@ -53,6 +53,11 @@ public class ProjectedGameState {
         attackedPositions.Add(attackedPosition);
     }
 
+    public void AddAttackedPositions(IEnumerable<Vector2Int> _attackedPositions)
+    {
+        attackedPositions.AddRange(_attackedPositions);
+    }
+
     public bool IsEntityBumped(EntityData entity)
     {
         return bumps.Any(b => b.bumpedEntity == entity);

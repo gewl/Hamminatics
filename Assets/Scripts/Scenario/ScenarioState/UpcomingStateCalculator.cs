@@ -156,14 +156,38 @@ public static class UpcomingStateCalculator
     {
         GameBoard testBoard = BoardController.CurrentBoard;
         AttackCardData card = action.card as AttackCardData;
+        TargetType attackTargetType = card.targetType;
 
         Tile attackOriginTile = BoardController.CurrentBoard.GetTileAtPosition(entity.Position);
-        Tile targetTile = newState.FindFirstOccupiedTileInDirection(attackOriginTile, action.direction, action.distance);
+
+        List<Tile> targetTiles = new List<Tile>();
+
+        switch (attackTargetType)
+        {
+            case TargetType.Single:
+                targetTiles.Add(newState.FindFirstOccupiedTileInDirection(attackOriginTile, action.direction, action.distance));
+                break;
+            case TargetType.AreaOfEffect:
+                Tile impactTile = newState.FindFirstOccupiedTileInDirection(attackOriginTile, action.direction, action.distance);
+                targetTiles.Add(impactTile);
+                targetTiles.AddRange(impactTile.Neighbors);
+                break;
+            case TargetType.Line:
+                targetTiles.AddRange(attackOriginTile.GetAllTilesInDirection(action.direction, action.card.range));
+                break;
+            default:
+                break;
+        }
 
         ProjectedGameState newProjectedState = new ProjectedGameState(entity, newState, action);
 
-        newProjectedState.AddAttackedPosition(targetTile.Position);
-        if (!newState.IsTileOccupied(targetTile))
+        newProjectedState.AddAttackedPositions(targetTiles.Select(t => t.Position));
+
+        List<EntityData> affectedEntities = targetTiles
+            .Select(t => newState.GetTileOccupant(t))
+            .Where(o => o != null)
+            .ToList();
+        if (affectedEntities.Count == 0)
         {
             List<ModifierData> modifiersToResolve = action.card.modifiers
                 .Where(m => 
@@ -180,17 +204,20 @@ public static class UpcomingStateCalculator
             return newProjectedState;
         }
 
-        EntityData targetEntity = newState.GetTileOccupant(targetTile);
-
-        int cardDamage = card.damage + entity.GetAttackModifierValue();
-        targetEntity.DealDamage(cardDamage, newState);
-
-        List<ModifierData> attackModifiers = action.card.modifiers;
-        if (attackModifiers != null && attackModifiers.Count > 0)
+        for (int i = 0; i < affectedEntities.Count; i++)
         {
-            for (int i = 0; i < attackModifiers.Count; i++)
+            EntityData affectedEntity = affectedEntities[i];
+
+            int cardDamage = card.damage + entity.GetAttackModifierValue();
+            affectedEntity.DealDamage(cardDamage, newState);
+
+            List<ModifierData> attackModifiers = action.card.modifiers;
+            if (attackModifiers != null && attackModifiers.Count > 0)
             {
-                ApplyModifierToAttack(targetEntity, attackModifiers[i], entity, newState, action.direction);
+                for (int j = 0; i < attackModifiers.Count; i++)
+                {
+                    ApplyModifierToAttack(affectedEntity, attackModifiers[j], entity, newState, action.direction);
+                }
             }
         }
 
