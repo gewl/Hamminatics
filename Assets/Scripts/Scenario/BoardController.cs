@@ -314,6 +314,21 @@ public class BoardController : MonoBehaviour {
         return cellRectTransform.rect.width;
     }
 
+    /// <summary>
+    /// Get positions of outermost corners of corner tiles in world space.
+    /// </summary>
+    /// <returns>Returns a 4-element array of positions, starting at the upper-right, proceeding clockwise.</returns>
+    public Vector2[] GetBoardCorners()
+    {
+        return new Vector2[4]
+        {
+            GetCellCornerPosition(new Vector2Int(boardWidth - 1, 0), Direction.Up, Direction.Right),
+            GetCellCornerPosition(new Vector2Int(boardWidth - 1, boardWidth - 1), Direction.Down, Direction.Right),
+            GetCellCornerPosition(new Vector2Int(0, boardWidth - 1), Direction.Down, Direction.Left),
+            GetCellCornerPosition(new Vector2Int(0, 0), Direction.Up, Direction.Left)
+        };
+    }
+
     #region DEBUG ONLY
     public static void TurnTileColor(Tile tile, Color color)
     {
