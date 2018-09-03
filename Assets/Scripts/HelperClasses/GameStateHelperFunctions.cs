@@ -282,7 +282,7 @@ public static class ScenarioStateHelperFunctions {
             newTurnStack.Push(newTurnList[i]);
         }
 
-        return new ScenarioState(playerCopy, enemyCopies, itemCopies, originalState.scenarioReward, newTurnStack, inventoryCopy, originalState.stagnatedPositions, originalState.threatenedStagnationPositions, originalState.roundsUntilStagnationSpreads);
+        return new ScenarioState(playerCopy, enemyCopies, itemCopies, originalState.scenarioReward, newTurnStack, inventoryCopy, originalState.stagnatedPositions, originalState.threatenedStagnationPositions, originalState.stagnationState);
     }
 
     public static void UpdateStagnation(this ScenarioState state, GameBoard board)
