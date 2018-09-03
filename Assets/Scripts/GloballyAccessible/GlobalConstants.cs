@@ -14,6 +14,13 @@ public enum TargetType
 }
 #endregion
 
+public enum StagnationStates
+{
+    Dormant,
+    Threatening,
+    Moving
+}
+
 #region board/paths
 public enum Direction
 {

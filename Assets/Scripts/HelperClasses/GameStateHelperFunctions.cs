@@ -37,6 +37,23 @@ public static class ScenarioStateHelperFunctions {
         return updatedPosition;
     }
 
+    public static Direction ReverseDirection(Direction inputDirection)
+    {
+        switch (inputDirection)
+        {
+            case Direction.Up:
+                return Direction.Down;
+            case Direction.Right:
+                return Direction.Left;
+            case Direction.Down:
+                return Direction.Up;
+            case Direction.Left:
+                return Direction.Right;
+            default:
+                Debug.LogError("Bad input to ReverseDirection method: " + inputDirection);
+                return Direction.Up;
+        }
+    }
     #endregion
 
     #region entity info/manip
@@ -265,6 +282,67 @@ public static class ScenarioStateHelperFunctions {
             newTurnStack.Push(newTurnList[i]);
         }
 
-        return new ScenarioState(playerCopy, enemyCopies, itemCopies, originalState.scenarioReward, newTurnStack, inventoryCopy);
+        return new ScenarioState(playerCopy, enemyCopies, itemCopies, originalState.scenarioReward, newTurnStack, inventoryCopy, originalState.stagnatedPositions, originalState.threatenedStagnationPositions, originalState.roundsUntilStagnationSpreads);
+    }
+
+    public static void UpdateStagnation(this ScenarioState state, GameBoard board)
+    {
+        switch (state.stagnationState)
+        {
+            case StagnationStates.Dormant:
+                state.stagnationState = StagnationStates.Threatening;
+                break;
+            case StagnationStates.Threatening:
+                state.ThreatenNewPositions(board);
+                state.stagnationState = StagnationStates.Moving;
+                break;
+            case StagnationStates.Moving:
+                state.stagnatedPositions.AddRange(state.threatenedStagnationPositions);
+                state.threatenedStagnationPositions.Clear();
+                state.stagnationState = StagnationStates.Threatening;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static void ThreatenNewPositions(this ScenarioState state, GameBoard board)
+    {
+        if (state.stagnatedPositions.Count >= board.Width * board.Width)
+        {
+            return;
+        }
+        if (state.stagnatedPositions.Count == 0)
+        {
+            Direction startingDirection = ReverseDirection(state.stagnationDirection);
+            state.threatenedStagnationPositions = board.GetBorderTiles(startingDirection).Select(t => t.Position).ToList();
+            return;
+        }
+
+        Func<Tile, bool> tilePositionFunc = t => t.Position == Vector2.zero;
+
+        switch (state.stagnationDirection)
+        {
+            case Direction.Up:
+                int lowYValue = state.stagnatedPositions.Select(p => p.y).Min() - 1;
+                tilePositionFunc = t => t.Position.y == lowYValue;
+                break;
+            case Direction.Right:
+                int highXValue = state.stagnatedPositions.Select(p => p.x).Max() + 1;
+                tilePositionFunc = t => t.Position.x == highXValue;
+                break;
+            case Direction.Down:
+                int highYValue = state.stagnatedPositions.Select(p => p.y).Max() + 1;
+                tilePositionFunc = t => t.Position.y == highYValue;
+                break;
+            case Direction.Left:
+                int lowXValue = state.stagnatedPositions.Select(p => p.x).Min() - 1;
+                tilePositionFunc = t => t.Position.x == lowXValue;
+                break;
+            default:
+                break;
+        }
+
+        state.threatenedStagnationPositions = board.GetTilesWhere(tilePositionFunc).Select(t => t.Position).ToList();
     }
 }

@@ -1,13 +1,41 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class StagnationImageController : MonoBehaviour {
 
-    Vector2[] boardCorners;
+    [SerializeField]
+    Sprite threateningStagnationSprite;
+    [SerializeField]
+    BoardController boardController;
 
-    public void Initialize(Vector2[] _boardCorners)
+    private void OnEnable()
     {
-        boardCorners = _boardCorners;      
+        GameStateDelegates.OnRoundEnded += DrawStagnation;
+    }
+
+    private void OnDisable()
+    {
+        GameStateDelegates.OnRoundEnded -= DrawStagnation; 
+    }
+
+    void DrawStagnation(ScenarioState state)
+    {
+        List<Vector2Int> stagnatedPositions = state.stagnatedPositions;
+
+        for (int i = 0; i < stagnatedPositions.Count; i++)
+        {
+            GameObject instantiatedStagnationTile = ScenarioImageManager.GetStagnationTile();
+            instantiatedStagnationTile.transform.SetParent(transform);
+            instantiatedStagnationTile.transform.position = boardController.GetCellPosition(stagnatedPositions[i]);
+        }
+
+        List<Vector2Int> threateningPositions = state.threatenedStagnationPositions;
+        for (int i = 0; i < threateningPositions.Count; i++)
+        {
+            GameObject instantiatedThreatenedImage = ScenarioImageManager.GetOverlayImage(threateningStagnationSprite, transform);
+            instantiatedThreatenedImage.transform.position = boardController.GetCellPosition(stagnatedPositions[i]);
+        }
     }
 }

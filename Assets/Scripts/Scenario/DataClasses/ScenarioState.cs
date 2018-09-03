@@ -10,9 +10,14 @@ public class ScenarioState {
 
     public Stack<Turn> turnStack;
     public ScenarioState lastGameState;
-    public CardData scenarioReward; 
+    public CardData scenarioReward;
 
-    public ScenarioState(List<EntityData> _enemies, List<ItemData> _items, CardData _scenarioReward)
+    public List<Vector2Int> stagnatedPositions;
+    public List<Vector2Int> threatenedStagnationPositions;
+    public Direction stagnationDirection;
+    public StagnationStates stagnationState;
+
+    public ScenarioState(List<EntityData> _enemies, List<ItemData> _items, CardData _scenarioReward, Direction _stagnationDirection)
     {
         player = GameStateManager.CurrentCampaign.player;
         enemies = _enemies;
@@ -21,9 +26,13 @@ public class ScenarioState {
         turnStack = new Stack<Turn>();
         inventory = GameStateManager.CurrentCampaign.inventory.Copy();
         scenarioReward = _scenarioReward;
+
+        stagnationDirection = _stagnationDirection;
+        stagnatedPositions = new List<Vector2Int>();
+        stagnationState = StagnationStates.Dormant;
     }
 
-    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, CardData _scenarioReward, Stack<Turn> _turns, Inventory _inventory)
+    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, CardData _scenarioReward, Stack<Turn> _turns, Inventory _inventory, List<Vector2Int> _stagnatedPosition, List<Vector2Int> _threatenedPositions, StagnationStates _stagnationState)
     {
         player = _player;
         enemies = _enemies;
@@ -31,6 +40,8 @@ public class ScenarioState {
         items = _items;
         inventory = _inventory;
         scenarioReward = _scenarioReward;
+        stagnatedPositions = _stagnatedPosition;
+        threatenedStagnationPositions = _threatenedPositions;
     }
 
     public void UpdateTurnStack(Stack<Turn> newTurnStack)

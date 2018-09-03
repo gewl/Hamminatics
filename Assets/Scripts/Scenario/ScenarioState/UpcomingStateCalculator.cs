@@ -302,7 +302,7 @@ public static class UpcomingStateCalculator
 
         if (blowbackOrFollowUp == ModifierCategory.Blowback)
         {
-            forceDirection = ReverseDirection(forceDirection);
+            forceDirection = ScenarioStateHelperFunctions.ReverseDirection(forceDirection);
         }
         int pushMagnitude = modifier.value;
 
@@ -339,23 +339,6 @@ public static class UpcomingStateCalculator
         }
     }
     
-    static Direction ReverseDirection(Direction inputDirection)
-    {
-        switch (inputDirection)
-        {
-            case Direction.Up:
-                return Direction.Down;
-            case Direction.Right:
-                return Direction.Left;
-            case Direction.Down:
-                return Direction.Up;
-            case Direction.Left:
-                return Direction.Right;
-            default:
-                Debug.LogError("Bad input to ReverseDirection method: " + inputDirection);
-                return Direction.Up;
-        }
-    }
     #endregion
 
     static ProjectedGameState GetNextStateFromAction_Self(ScenarioState newState, EntityData entity, Action action)

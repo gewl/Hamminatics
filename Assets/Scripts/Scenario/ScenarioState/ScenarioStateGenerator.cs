@@ -29,13 +29,34 @@ public class ScenarioStateGenerator {
         SpeedComparer comparer = new SpeedComparer();
         enemies.Sort(comparer);
 
-        ScenarioState generatedState = new ScenarioState(enemies, items, enemySpawnGroup.scenarioReward);
+        Direction stagnationDirection = GetStagnationDirectionFromEntrance(board.Entrance.Position, board.Width);
+        ScenarioState generatedState = new ScenarioState(enemies, items, enemySpawnGroup.scenarioReward, stagnationDirection);
         EntityData player = generatedState.player;
         player.SetPosition(board.Entrance.Position, generatedState);
-        generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, board.BoardWidth, board.GetTileAtPosition(player.Position), board);
-        generatedState = RandomizeItemStartingCoordinates(generatedState, items, board.Exit.Position, board.BoardWidth);
+        generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, board.Width, board.GetTileAtPosition(player.Position), board);
+        generatedState = RandomizeItemStartingCoordinates(generatedState, items, board.Exit.Position, board.Width);
 
         return generatedState;
+    }
+
+    static Direction GetStagnationDirectionFromEntrance(Vector2Int entrancePosition, int boardWidth)
+    {
+        if (entrancePosition.x == 0)
+        {
+            return Direction.Right;
+        }
+        else if (entrancePosition.x == boardWidth - 1)
+        {
+            return Direction.Left;
+        }
+        else if (entrancePosition.y == 0)
+        {
+            return Direction.Down;
+        }
+        else
+        {
+            return Direction.Up;
+        }
     }
 
     static ScenarioState RandomizeEntityStartingCoordinates(ScenarioState state, List<EntityData> entities, int boardWidth, Tile playerTile, GameBoard board)

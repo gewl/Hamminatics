@@ -6,10 +6,40 @@ using UnityEngine;
 
 public static class BoardHelperFunctions {
 
-    #region Exposed methods for data retrieval
     static public Tile GetTileAtPosition(this GameBoard board, Vector2Int position)
     {
         return board.Tiles[position.x, position.y];
+    }
+
+    static public List<Tile> GetTilesWhere(this GameBoard board, Func<Tile, bool> testFunc)
+    {
+        return board.Tiles.Cast<Tile>().Where(testFunc).ToList();
+    }
+
+    static public List<Tile> GetBorderTiles(this GameBoard board, Direction direction)
+    {
+        Func<Tile, bool> positionTest = t => t.Position.x == 0;
+
+        switch (direction)
+        {
+            case Direction.Up:
+                positionTest = t => t.Position.y == 0;
+                break;
+            case Direction.Right:
+                positionTest = t => t.Position.x == board.Width - 1;
+                break;
+            case Direction.Down:
+                positionTest = t => t.Position.x == board.Width - 1;
+                break;
+            default:
+                break;
+        }
+
+        return board
+            .Tiles
+            .Cast<Tile>()
+            .Where(positionTest)
+            .ToList();
     }
 
     public static Direction GetDirectionFromPosition(Vector2Int startingPosition, Vector2Int targetPosition)
@@ -236,6 +266,4 @@ public static class BoardHelperFunctions {
 
         return tilesOnPath;
     }
-
-    #endregion
 }

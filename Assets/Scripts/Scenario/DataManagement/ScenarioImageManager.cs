@@ -18,6 +18,9 @@ public class ScenarioImageManager : SerializedMonoBehaviour {
     GameObject abilityPointerPrefab;
 
     [SerializeField]
+    GameObject stagnationTile;
+
+    [SerializeField]
     Dictionary<CardCategory, Dictionary<Direction, Sprite>> abilityImages;
 
     [SerializeField]
@@ -71,6 +74,11 @@ public class ScenarioImageManager : SerializedMonoBehaviour {
     public static Sprite GetPathSprite(PathType path)
     {
         return instance.pathSprites[path];
+    }
+
+    public static GameObject GetStagnationTile()
+    {
+        return GameObject.Instantiate(instance.stagnationTile);
     }
 
 }

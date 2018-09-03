@@ -3775,6 +3775,8 @@ MonoBehaviour:
     type: 2}
   abilityPointerPrefab: {fileID: 1913382652620346, guid: 846bbc2c4028bec488a19f7e5c9c5985,
     type: 2}
+  stagnationTile: {fileID: 1521426169739860, guid: a40f048bb02350b4dadf68e968bf2846,
+    type: 2}
 --- !u!114 &323374607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15829,11 +15831,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1250407321}
   - component: {fileID: 1250407325}
-  - component: {fileID: 1250407324}
   - component: {fileID: 1250407323}
   - component: {fileID: 1250407322}
   m_Layer: 5
-  m_Name: StagnationImage
+  m_Name: StagnationImageLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15887,33 +15888,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &1250407324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1250407320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.5661765, g: 0.5661765, b: 0.5661765, a: 0.578}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 9b096ca34b5444947895a9b072714a91, type: 3}
-  m_Type: 3
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 0
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
 --- !u!222 &1250407325
 CanvasRenderer:
   m_ObjectHideFlags: 0
