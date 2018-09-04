@@ -51,7 +51,8 @@ public class EnemyTurnCalculator : MonoBehaviour {
 
             // Enemies will not move through traps if they have any other moves available.
             while (turnIndex < sortedPotentialTurns.Count &&
-                tilesToTargetMovementTile.Any(tile => gameState.DoesPositionContainItemWhere(tile.Position, item => item.itemCategory == ItemCategory.Trap)))
+                tilesToTargetMovementTile.Any(tile => gameState.DoesPositionContainItemWhere(tile.Position, item => item.itemCategory == ItemCategory.Trap) ||
+                gameState.IsTileOccupied(tile)))
             {
                 turnIndex++;
                 selectedTurnTargets = sortedPotentialTurns[turnIndex];
@@ -102,10 +103,11 @@ public class EnemyTurnCalculator : MonoBehaviour {
     {
         int result = 0;
 
-        result += Mathf.Abs(startingTile.Position.x - turn.targetMovementTile.Position.x);
-        result += Mathf.Abs(startingTile.Position.y - turn.targetMovementTile.Position.y);
+        result += Mathf.Abs(startingTile.Position.x - turn.targetMovementTile.Position.x) * 2;
+        result += Mathf.Abs(startingTile.Position.y - turn.targetMovementTile.Position.y) * 2;
         result += (turn.targetAttackTile.DistanceFromPlayer * 5);
         result += upcomingEntityTargets.Any(target => target.targetAttackTile == turn.targetAttackTile) ? 15 : 0;
+        result += upcomingEntityTargets.Any(target => target.targetMovementTile == turn.targetAttackTile) ? 20 : 0;
 
         return result;
     }

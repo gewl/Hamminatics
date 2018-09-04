@@ -30,7 +30,7 @@ public class ScenarioStateGenerator {
         enemies.Sort(comparer);
 
         Direction stagnationDirection = GetStagnationDirectionFromEntrance(board.Entrance.Position, board.Width);
-        Debug.Log(stagnationDirection.ToString());
+
         ScenarioState generatedState = new ScenarioState(enemies, items, enemySpawnGroup.scenarioReward, stagnationDirection);
         EntityData player = generatedState.player;
         player.SetPosition(board.Entrance.Position, generatedState);
@@ -42,7 +42,7 @@ public class ScenarioStateGenerator {
 
     static Direction GetStagnationDirectionFromEntrance(Vector2Int entrancePosition, int boardWidth)
     {
-        Debug.Log(entrancePosition);
+
         if (entrancePosition.x == 0)
         {
             return Direction.Right;
