@@ -147,7 +147,7 @@ public class ScenarioStateManager : MonoBehaviour {
     {
         if (!isResolvingTurn)
         {
-            upcomingScenarioStates = UpcomingStateCalculator.CalculateUpcomingStates(CurrentScenarioState);
+            upcomingScenarioStates = UpcomingStateCalculator.CalculateUpcomingStates(CurrentScenarioState, BoardController.CurrentBoard);
             turnDrawer.DrawUpcomingStates(CurrentScenarioState, upcomingScenarioStates);
         }
     }
@@ -274,7 +274,7 @@ public class ScenarioStateManager : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
         }
 
-        CurrentScenarioState.UpdateStagnation(boardController.currentBoard);
+        //CurrentScenarioState.UpdateStagnation(boardController.currentBoard);
         CurrentScenarioState.items = UpdateItemDurations(CurrentScenarioState);
         UpdateExitArrowVisibility();
 

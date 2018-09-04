@@ -282,12 +282,11 @@ public static class ScenarioStateHelperFunctions {
             newTurnStack.Push(newTurnList[i]);
         }
 
-        return new ScenarioState(playerCopy, enemyCopies, itemCopies, originalState.scenarioReward, newTurnStack, inventoryCopy, originalState.stagnatedPositions, originalState.threatenedStagnationPositions, originalState.stagnationState);
+        return new ScenarioState(playerCopy, enemyCopies, itemCopies, originalState.scenarioReward, newTurnStack, inventoryCopy, originalState.stagnatedPositions, originalState.threatenedStagnationPositions, originalState.stagnationState, originalState.stagnationDirection);
     }
 
     public static void UpdateStagnation(this ScenarioState state, GameBoard board)
     {
-        Debug.Log("old stagnation state: " + state.stagnationState.ToString());
         switch (state.stagnationState)
         {
             case StagnationStates.Dormant:
@@ -305,11 +304,11 @@ public static class ScenarioStateHelperFunctions {
             default:
                 break;
         }
-        Debug.Log("new stagnation state: " + state.stagnationState.ToString());
     }
 
     public static void ThreatenNewPositions(this ScenarioState state, GameBoard board)
     {
+
         if (state.stagnatedPositions.Count >= board.Width * board.Width)
         {
             return;

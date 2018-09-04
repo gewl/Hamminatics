@@ -8,7 +8,7 @@ public static class UpcomingStateCalculator
 {
     static CardData GenericMovementCard { get { return DataRetriever.GetGenericMovementCard(); } }
 
-    public static List<ProjectedGameState> CalculateUpcomingStates(ScenarioState currentState)
+    public static List<ProjectedGameState> CalculateUpcomingStates(ScenarioState currentState, GameBoard board)
     {
         List<ProjectedGameState> projectedGameStates = new List<ProjectedGameState>();
 
@@ -67,6 +67,18 @@ public static class UpcomingStateCalculator
 
             UpdateEntityModifiers(entity, mostRecentState);
         }
+
+        ScenarioState lastCalculatedState = projectedGameStates.Last().scenarioState;
+
+        lastCalculatedState.UpdateStagnation(board);
+        lastCalculatedState.stagnatedPositions.ForEach(p =>
+        {
+            EntityData stagnatedEntity = lastCalculatedState.GetTileOccupant(p);
+            if (stagnatedEntity != null)
+            {
+                stagnatedEntity.DealDamage(1, lastCalculatedState);
+            }
+        });
 
         return projectedGameStates;
     }

@@ -30,10 +30,10 @@ public class ScenarioState {
         stagnationDirection = _stagnationDirection;
         stagnatedPositions = new List<Vector2Int>();
         threatenedStagnationPositions = new List<Vector2Int>();
-        stagnationState = StagnationStates.Dormant;
+        stagnationState = StagnationStates.Threatening;
     }
 
-    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, CardData _scenarioReward, Stack<Turn> _turns, Inventory _inventory, List<Vector2Int> _stagnatedPosition, List<Vector2Int> _threatenedPositions, StagnationStates _stagnationState)
+    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, CardData _scenarioReward, Stack<Turn> _turns, Inventory _inventory, List<Vector2Int> _stagnatedPosition, List<Vector2Int> _threatenedPositions, StagnationStates _stagnationState, Direction _stagnationDirection)
     {
         player = _player;
         enemies = _enemies;
@@ -41,9 +41,11 @@ public class ScenarioState {
         items = _items;
         inventory = _inventory;
         scenarioReward = _scenarioReward;
+
         stagnatedPositions = _stagnatedPosition;
         threatenedStagnationPositions = _threatenedPositions;
         stagnationState = _stagnationState;
+        stagnationDirection = _stagnationDirection;
     }
 
     public void UpdateTurnStack(Stack<Turn> newTurnStack)
