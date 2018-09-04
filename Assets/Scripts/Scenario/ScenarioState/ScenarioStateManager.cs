@@ -274,16 +274,17 @@ public class ScenarioStateManager : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
         }
 
+        CurrentScenarioState.UpdateStagnation(boardController.currentBoard);
         CurrentScenarioState.items = UpdateItemDurations(CurrentScenarioState);
         UpdateExitArrowVisibility();
 
         GameStateDelegates.OnRoundEnded?.Invoke(CurrentScenarioState);
 
         isResolvingTurn = false;
+        upcomingScenarioStates.Clear();
 
         GameStateDelegates.OnCurrentScenarioStateChange?.Invoke(CurrentScenarioState, upcomingScenarioStates);
 
-        upcomingScenarioStates.Clear();
         GenerateNextTurnStack(CurrentScenarioState);
     }
 

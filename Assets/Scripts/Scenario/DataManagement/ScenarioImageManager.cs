@@ -38,9 +38,9 @@ public class ScenarioImageManager : SerializedMonoBehaviour {
         return instance.tileTargetedSprite;
     }
 
-    public static GameObject GetAbilityPointer(Sprite cardSprite, float rotation)
+    public static GameObject GetAbilityPointer(Sprite cardSprite, float rotation, Transform parent)
     {
-        GameObject abilityPointer = GameObject.Instantiate(instance.abilityPointerPrefab);
+        GameObject abilityPointer = GameObject.Instantiate(instance.abilityPointerPrefab, parent);
 
         abilityPointer.GetComponent<Image>().sprite = cardSprite;
         abilityPointer.GetComponent<RectTransform>().rotation = Quaternion.Euler(new Vector3(0f, 0f, rotation));
@@ -76,9 +76,9 @@ public class ScenarioImageManager : SerializedMonoBehaviour {
         return instance.pathSprites[path];
     }
 
-    public static GameObject GetStagnationTile()
+    public static GameObject GetStagnationTile(Transform parent)
     {
-        return GameObject.Instantiate(instance.stagnationTile);
+        return GameObject.Instantiate(instance.stagnationTile, parent);
     }
 
 }

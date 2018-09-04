@@ -22,12 +22,12 @@ public class StagnationImageController : MonoBehaviour {
 
     void DrawStagnation(ScenarioState state)
     {
+        Clear();
         List<Vector2Int> stagnatedPositions = state.stagnatedPositions;
 
         for (int i = 0; i < stagnatedPositions.Count; i++)
         {
-            GameObject instantiatedStagnationTile = ScenarioImageManager.GetStagnationTile();
-            instantiatedStagnationTile.transform.SetParent(transform);
+            GameObject instantiatedStagnationTile = ScenarioImageManager.GetStagnationTile(transform);
             instantiatedStagnationTile.transform.position = boardController.GetCellPosition(stagnatedPositions[i]);
         }
 
@@ -35,7 +35,15 @@ public class StagnationImageController : MonoBehaviour {
         for (int i = 0; i < threateningPositions.Count; i++)
         {
             GameObject instantiatedThreatenedImage = ScenarioImageManager.GetOverlayImage(threateningStagnationSprite, transform);
-            instantiatedThreatenedImage.transform.position = boardController.GetCellPosition(stagnatedPositions[i]);
+            instantiatedThreatenedImage.transform.position = boardController.GetCellPosition(threateningPositions[i]);
+        }
+    }
+
+    void Clear()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 }

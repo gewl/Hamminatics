@@ -10,6 +10,20 @@ public class BoardController : MonoBehaviour {
     ScenarioStateManager gameStateManager;
     static BoardController instance;
 
+    float _canvasScale = -1f;
+    float CanvasScale
+    {
+        get
+        {
+            if (_canvasScale == -1f)
+            {
+                _canvasScale = GetComponentInParent<CanvasScaler>().GetComponent<RectTransform>().localScale.x;
+            }
+
+            return _canvasScale;
+        }
+    }
+
     bool boardInitialized = false;
     static int boardWidth = 5;
     public static int BoardWidth { get { return boardWidth; } }
@@ -311,7 +325,7 @@ public class BoardController : MonoBehaviour {
     public float GetTileWidth()
     {
         RectTransform cellRectTransform = boardTiles[0,0].GetComponent<RectTransform>();
-        return cellRectTransform.rect.width;
+        return cellRectTransform.rect.width * CanvasScale;
     }
 
     /// <summary>

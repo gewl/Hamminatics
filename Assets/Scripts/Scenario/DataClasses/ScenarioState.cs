@@ -29,6 +29,7 @@ public class ScenarioState {
 
         stagnationDirection = _stagnationDirection;
         stagnatedPositions = new List<Vector2Int>();
+        threatenedStagnationPositions = new List<Vector2Int>();
         stagnationState = StagnationStates.Dormant;
     }
 
@@ -42,6 +43,7 @@ public class ScenarioState {
         scenarioReward = _scenarioReward;
         stagnatedPositions = _stagnatedPosition;
         threatenedStagnationPositions = _threatenedPositions;
+        stagnationState = _stagnationState;
     }
 
     public void UpdateTurnStack(Stack<Turn> newTurnStack)

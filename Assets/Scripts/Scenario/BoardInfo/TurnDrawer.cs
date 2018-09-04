@@ -557,10 +557,10 @@ public class TurnDrawer : MonoBehaviour {
             Sprite pointerSprite = cardData.cardImage;
 
             float rotation = GetImageRotation(projectedState.action.direction);
-            GameObject abilityPointer = ScenarioImageManager.GetAbilityPointer(pointerSprite, rotation);
 
-            abilityPointer.transform.SetParent(transform);
+            GameObject abilityPointer = ScenarioImageManager.GetAbilityPointer(pointerSprite, rotation, transform);
             abilityPointer.transform.position = GetPointerImagePosition(activeEntity.Position, projectedState.action.direction);
+
             if (!drawingSelectedEntity)
             {
                 Color pointerColor = Color.white;
