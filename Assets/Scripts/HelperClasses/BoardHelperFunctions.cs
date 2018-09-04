@@ -29,7 +29,7 @@ public static class BoardHelperFunctions {
                 positionTest = t => t.Position.x == board.Width - 1;
                 break;
             case Direction.Down:
-                positionTest = t => t.Position.x == board.Width - 1;
+                positionTest = t => t.Position.y == board.Width - 1;
                 break;
             default:
                 break;
