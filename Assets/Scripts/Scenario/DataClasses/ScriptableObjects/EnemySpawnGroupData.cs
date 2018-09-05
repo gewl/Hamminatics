@@ -6,6 +6,13 @@ using UnityEngine;
 public class EnemySpawnGroupData : ScriptableObject {
 
     public string ID;
+    public float probabilityWeight = 1f;
+
+    [HideInInspector]
+    public float probabilityRangeFrom;
+    [HideInInspector]
+    public float probabilityRangeTo;
+
     [SerializeField]
     List<EntityData> enemiesToSpawn;
 

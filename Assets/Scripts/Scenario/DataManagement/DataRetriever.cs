@@ -56,6 +56,30 @@ public class DataRetriever : MonoBehaviour {
         cachedTrapData = new Dictionary<string, TrapData>();
     }
 
+    private void OnEnable()
+    {
+        GameStateDelegates.OnCampaignStateUpdated += OnCampaignStateUpdate;
+    }
+
+    private void OnDisable()
+    {
+        GameStateDelegates.OnCampaignStateUpdated -= OnCampaignStateUpdate;
+    }
+
+    void OnCampaignStateUpdate(CampaignState newState)
+    {
+        if (newState.depth != currentDepth)
+        {
+            DepthData newDepthData = Resources.Load<DepthData>(DEPTH_DATA_DIR + DEPTH_FILE_PREFIX + newState.depth);
+
+            if (newDepthData != null)
+            {
+                currentDepthData = newDepthData;
+                currentDepth = newState.depth;
+            }
+        }
+    }
+
     public static void UpdateDepthData(int newDepth)
     {
         if (currentDepth == newDepth)
