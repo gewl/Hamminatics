@@ -41,6 +41,10 @@ public class GameStateManager : MonoBehaviour {
     CardData goldRewardCard;
     public CardData GoldRewardCard { get { return goldRewardCard; } }
 
+    // TODO: Dynamic player selection/assignment in opening menu
+    [SerializeField]
+    EntityData playerData;
+
     static GameStateManager instance;
 
     // Scenario rewards. Remainder is gold.
@@ -57,7 +61,7 @@ public class GameStateManager : MonoBehaviour {
 
     private void Start()
     {
-        EntityData player = DataRetriever.GetEntityData(PLAYER_ID);
+        EntityData player = ScriptableObject.Instantiate(playerData);
         int mapLayerCount = 6;
 
         CurrentCampaign = new CampaignState(new Inventory(), new Map(0, mapLayerCount), player);

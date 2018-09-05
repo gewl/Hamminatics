@@ -12,5 +12,12 @@ MonoBehaviour:
   m_Name: GolemRemainsSquid
   m_EditorClassIdentifier: 
   ID: 
-  enemiesToSpawn: []
+  probabilityWeight: 1
+  probabilityRangeFrom: 5
+  probabilityRangeTo: 6
+  enemiesToSpawn:
+  - {fileID: 11400000, guid: e8d66c356d190ea4982381c38abedc38, type: 2}
+  - {fileID: 11400000, guid: 7d5dd57af76babf42ab804c856dd963a, type: 2}
+  - {fileID: 11400000, guid: 5c278f090804e6b418bae94c33fbe40b, type: 2}
+  itemsToSpawn: []
   scenarioReward: {fileID: 0}

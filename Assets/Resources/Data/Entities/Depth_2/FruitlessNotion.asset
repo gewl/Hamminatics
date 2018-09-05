@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e174c53b44b9ae4582d787d13eebd90, type: 3}
+  m_Name: FruitlessNotion
+  m_EditorClassIdentifier: 
+  ID: Fruitless Notion
+  description: Surprisingly resilient, consistently tempting, perpetually ill-advised.
+  _maxHealth: 4
+  EntitySprite: {fileID: 21300000, guid: fd5c7f2b49e4cb24a8a3779bdd2a7d9f, type: 3}
+  Speed: 2
+  IdentifyingColor: {r: 0.34791303, g: 0.72794116, b: 0.38198444, a: 1}
+  dropItem: {fileID: 11400000, guid: efcce6bb7cfc22b4295ee6c3cdd6d825, type: 2}
+  movementCard: {fileID: 11400000, guid: 7eb599ec2e87a724f909c00b1e5184ea, type: 2}
+  attackCard: {fileID: 11400000, guid: 9ac05f9f62d29ef418ec503603845111, type: 2}
+  activeModifiers: []

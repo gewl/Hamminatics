@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 [CreateAssetMenu(menuName ="DepthData")]
 public class DepthData : SerializedScriptableObject {
 
+    public string locationName;
     public int ID = -1;
 
     public List<CardData> randomCardPool;

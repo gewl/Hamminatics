@@ -112,20 +112,6 @@ public class DataRetriever : MonoBehaviour {
     }
 
     #region scriptable objects
-    public static EntityData GetEntityData(string entityID)
-    {
-        if (cachedEntityData.ContainsKey(entityID))
-        {
-            return Instantiate(cachedEntityData[entityID]);
-        }
-        else
-        {
-            EntityData loadedEntityData = Resources.Load<EntityData>(ENTITY_DIR + entityID);
-            cachedEntityData[entityID] = loadedEntityData;
-            return Instantiate(loadedEntityData);
-        }
-    }
-
     public static CardData GetGenericMovementCard()
     {
         return GenericMovementCard;
@@ -151,18 +137,6 @@ public class DataRetriever : MonoBehaviour {
         }
 
         CardData loadedCardData = Resources.Load<CardData>(PLAYER_CARD_DIR + DEPTH_FILE_PREFIX + currentDepth + "/" + cardName);
-        cachedCardData[cardName] = loadedCardData;
-        return Instantiate(loadedCardData);
-    }
-
-    public static CardData GetEnemyCardData(string cardName)
-    {
-        if (cachedEntityData.ContainsKey(cardName))
-        {
-            return cachedCardData[cardName];
-        }
-
-        CardData loadedCardData = Resources.Load<CardData>(ENEMY_CARD_DIR + cardName);
         cachedCardData[cardName] = loadedCardData;
         return Instantiate(loadedCardData);
     }
