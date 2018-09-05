@@ -33,9 +33,6 @@ public class EnemySpawnGroupManager : SerializedMonoBehaviour {
         adjustedDistance = Mathf.Max(0, adjustedDistance);
         adjustedDistance = Mathf.Min(probabilityTotalWeight, adjustedDistance);
 
-        Debug.Log(adjustedDistance);
-        Debug.Log(probabilityTotalWeight);
-
         return PickSpawnGroup(adjustedDistance);
     }
 
@@ -50,7 +47,7 @@ public class EnemySpawnGroupManager : SerializedMonoBehaviour {
             EnemySpawnGroupData spawnGroup = cachedSpawnTable[i];
             spawnGroup.probabilityRangeFrom = currentProbabilityWeightTotal;
             currentProbabilityWeightTotal += spawnGroup.probabilityWeight;
-            spawnGroup.probabilityRangeFrom = currentProbabilityWeightTotal;
+            spawnGroup.probabilityRangeTo = currentProbabilityWeightTotal;
         }
 
         probabilityTotalWeight = currentProbabilityWeightTotal;
