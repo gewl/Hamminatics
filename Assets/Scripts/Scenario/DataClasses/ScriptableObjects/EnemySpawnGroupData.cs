@@ -17,6 +17,11 @@ public class EnemySpawnGroupData : ScriptableObject {
     List<EntityData> enemiesToSpawn;
 
     public List<EntityData> EnemiesToSpawn { get { return enemiesToSpawn; } }
+    
+    [SerializeField]
+    List<ItemData> itemsToSpawn;
+
+    public List<ItemData> ItemsToSpawn { get { return itemsToSpawn; } }
 
     public CardData scenarioReward;
 }

@@ -9,22 +9,12 @@ public class ScenarioStateGenerator {
     private static readonly object syncLock = new object();
 
     const string PLAYER_ID = "Player";
-    const string SQUID_ID = "Squid";
-    const string WASP_ID = "Wasp";
-
-    const string SPIKE_TRAP_ID = "SimpleSpikeTrap";
 
     public static ScenarioState GenerateNewScenarioState(GameBoard board, EnemySpawnGroupData enemySpawnGroup)
     {
-        EntityData wasp = DataRetriever.GetEntityData(WASP_ID);
         List<EntityData> enemies = enemySpawnGroup.EnemiesToSpawn.Select(e => ScriptableObject.Instantiate(e)).ToList();
 
-        TrapData spikeTrap = DataRetriever.GetTrapData(SPIKE_TRAP_ID);
-
-        List<ItemData> items = new List<ItemData>()
-        {
-            spikeTrap
-        };
+        List<ItemData> items = enemySpawnGroup.ItemsToSpawn.Select(t => ScriptableObject.Instantiate(t)).ToList();
 
         SpeedComparer comparer = new SpeedComparer();
         enemies.Sort(comparer);
