@@ -74,7 +74,8 @@ public class ScenarioStateManager : MonoBehaviour {
     public bool IsResolvingTurn { get { return isResolvingTurn; } }
 
     // Fields for click+drag movement handling.
-    bool isDragging = false;
+    CardData movementCard;
+    bool isDraggingMove = false;
     int movementRange;
     List<Tile> movementTiles;
 
@@ -206,10 +207,23 @@ public class ScenarioStateManager : MonoBehaviour {
         if (potentialCardTargets.Contains(tileClickedPosition))
         {
             CardData selectedCard = equippedCardsManager.GetSelectedCard();
-            Vector2Int playerOrigin = selectedCard.category == CardCategory.Movement ? Player.Position : ProjectedPlayerPosition;
-            turnStackController.AddToPlayerTurn(selectedCard, Player, playerOrigin, tileClickedPosition);
-            equippedCardsManager.ClearSelectedCard();
-            GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
+            bool isMovement = selectedCard.category == CardCategory.Movement;
+
+            Vector2Int playerOrigin = isMovement ? Player.Position : ProjectedPlayerPosition;
+            if (isMovement)
+            {
+                movementCard = selectedCard;     
+                movementRange = selectedCard.range;
+                movementTiles = new List<Tile>();
+                isDraggingMove = true;
+                AddTileToMove(boardController.currentBoard.GetTileAtPosition(tileClickedPosition));
+            }
+            else
+            {
+                turnStackController.AddToPlayerTurn(selectedCard, Player, playerOrigin, tileClickedPosition);
+                equippedCardsManager.ClearSelectedCard();
+                GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
+            }
         }
         else if (selectedEntity != null || selectedItem != null)
         {
@@ -225,6 +239,57 @@ public class ScenarioStateManager : MonoBehaviour {
             ItemData tileItem = CurrentScenarioState.GetItemInPosition(tileClickedPosition);
             SelectItem(tileItem);
         }
+    }
+
+    // Either extends move to tile, or shortens move to tile if tile already present in move.
+    public void AddTileToMove(Tile newTile)
+    {
+        if (!isDraggingMove)
+        {
+            return;
+        }
+
+        if (newTile.Position == Player.Position)
+        {
+            StopMovementPathing();
+        }
+        else if (movementTiles.Contains(newTile))
+        {
+            int originalMoveLength = movementTiles.Count;
+            int index = movementTiles.IndexOf(newTile);
+
+            movementTiles = movementTiles.GetRange(0, index + 1).ToList();
+            int newMoveLength = movementTiles.Count;
+            int lostMoves = originalMoveLength - newMoveLength;
+            movementRange += lostMoves;
+        }
+        else if (movementRange > 0)
+        {
+            movementRange--;
+            movementTiles.Add(newTile);
+        }
+        turnStackController.AddToPlayerTurn(movementCard, Player, boardController.currentBoard.GetTileAtPosition(Player.Position), movementTiles);
+        GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
+
+        if (movementRange > 0)
+        {
+            newTile
+                .Neighbors
+                .Where(n => n.Position != Player.Position)
+                .ToList()
+                .ForEach(t => boardController.HighlightSelectedCell(t.Position));
+        }
+    }
+
+    public void StopMovementPathing()
+    {
+        if (!isDraggingMove)
+        {
+            return;
+        }
+        isDraggingMove = false;
+        equippedCardsManager.ClearSelectedCard();
+        GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
     }
 
     public void RegisterExitArrowClick()

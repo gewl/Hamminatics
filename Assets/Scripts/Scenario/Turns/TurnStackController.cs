@@ -80,6 +80,22 @@ public class TurnStackController : MonoBehaviour {
         endRoundButton.interactable = IsPlayerTurnComplete();
         OnTurnStackUpdate(new List<Turn>(TurnStack));
     }
+    
+    public void AddToPlayerTurn(CardData card, EntityData player, Tile originTile, List<Tile> tilePath)
+    {
+        List<Direction> directionPath = new List<Direction>();
+
+        for (int i = 0; i < tilePath.Count; i++)
+        {
+            Tile thisTile = tilePath[i];
+            Tile lastTile = i == 0 ? originTile : tilePath[i - 1];
+            directionPath.Add(lastTile.GetDirectionOfNeighbor(thisTile));
+        }
+
+        GetPlayerTurn().moves = directionPath;
+        endRoundButton.interactable = IsPlayerTurnComplete();
+        OnTurnStackUpdate(new List<Turn> (TurnStack));
+    }
 
     void UpdatePlayerTurn_Movement(Vector2Int originPosition, Vector2Int targetPosition)
     {

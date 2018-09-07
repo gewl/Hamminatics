@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 
 [ExecuteInEditMode]
 public class BoardController : MonoBehaviour {
-    ScenarioStateManager gameStateManager;
+    ScenarioStateManager scenarioStateManager;
     static BoardController instance;
 
     float _canvasScale = -1f;
@@ -33,6 +33,7 @@ public class BoardController : MonoBehaviour {
     Image[,] boardTileImages;
     Image[,] tileOccupantImages;
     Image[,] tileItemImages;
+    EventTrigger[,] tileEventTriggers;
 
     Color invisible;
     Color translucent;
@@ -49,10 +50,12 @@ public class BoardController : MonoBehaviour {
     GameObject debugExitTextPrefab;
     GameObject instantiatedExitText;
 
+    List<EventTrigger> lastListeningMovementTriggers;
+
     #region Lifecycle
     private void Awake()
     {
-        gameStateManager = GetComponentInParent<ScenarioStateManager>();
+        scenarioStateManager = GetComponentInParent<ScenarioStateManager>();
 
         invisible = new Color(1f, 1f, 1f, 0f);
         translucent = new Color(1f, 1f, 1f, 0.5f);
@@ -80,6 +83,7 @@ public class BoardController : MonoBehaviour {
         boardTileImages = new Image[boardWidth, boardWidth];
         tileOccupantImages = new Image[boardWidth, boardWidth];
         tileItemImages = new Image[boardWidth, boardWidth];
+        tileEventTriggers = new EventTrigger[boardWidth, boardWidth];
 
         int childCount = transform.childCount;
 
@@ -94,8 +98,9 @@ public class BoardController : MonoBehaviour {
 
             Image tileOccupant = cell.GetChild(0).GetComponent<Image>();
             tileOccupantImages[xCounter, yCounter] = tileOccupant;
-            AddTileEventTriggers(tileOccupant.GetComponent<EventTrigger>(), xCounter, yCounter);
-            //tileOccupant.GetComponent<EventType>().onClick.AddListener(GeneratePointerDownListener(xCounter, yCounter));
+            EventTrigger tileEventTrigger = tileOccupant.GetComponent<EventTrigger>();
+            tileEventTriggers[xCounter, yCounter] = tileEventTrigger;
+            AddPermanentTileEventTriggers(tileEventTrigger, xCounter, yCounter);
 
             Image tileItem = cell.GetChild(1).GetComponent<Image>();
             tileItemImages[xCounter, yCounter] = tileItem;
@@ -170,7 +175,7 @@ public class BoardController : MonoBehaviour {
     }
 
     #region tile event triggers
-    void AddTileEventTriggers(EventTrigger trigger, int x, int y)
+    void AddPermanentTileEventTriggers(EventTrigger trigger, int x, int y)
     {
         EventTrigger.Entry pointerDownEntry = new EventTrigger.Entry
         {
@@ -178,6 +183,20 @@ public class BoardController : MonoBehaviour {
         };
         pointerDownEntry.callback.AddListener(GeneratePointerDownListener(x, y));
         trigger.triggers.Add(pointerDownEntry);
+
+        EventTrigger.Entry pointerUpEntry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerUp
+        };
+        pointerUpEntry.callback.AddListener(GeneratePointerUpListener());
+        trigger.triggers.Add(pointerUpEntry);
+
+        EventTrigger.Entry pointerEnterEntry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerEnter
+        };
+        pointerEnterEntry.callback.AddListener(GeneratePointerEnterListener(x, y));
+        trigger.triggers.Add(pointerEnterEntry);
     }
 
     UnityAction<BaseEventData> GeneratePointerDownListener(int x, int y)
@@ -186,7 +205,25 @@ public class BoardController : MonoBehaviour {
 
         return (BaseEventData e) =>
         {
-            gameStateManager.RegisterPointerDown(cellPosition);
+            scenarioStateManager.RegisterPointerDown(cellPosition);
+        };
+    }
+
+    UnityAction<BaseEventData> GeneratePointerEnterListener(int x, int y)
+    {
+        Vector2Int cellPosition = new Vector2Int(x, y);
+
+        return (BaseEventData e) =>
+        {
+            scenarioStateManager.AddTileToMove(currentBoard.GetTileAtPosition(cellPosition));
+        };
+    }
+
+    UnityAction<BaseEventData> GeneratePointerUpListener()
+    {
+        return (BaseEventData e) =>
+        {
+            scenarioStateManager.StopMovementPathing();
         };
     }
 
@@ -274,6 +311,7 @@ public class BoardController : MonoBehaviour {
 
     #endregion
 
+    #region info retrieval
     public Vector2 GetCellPosition(Vector2Int position)
     {
         RectTransform cellRectTransform = boardTiles[position.x, position.y].GetComponent<RectTransform>();
@@ -358,6 +396,7 @@ public class BoardController : MonoBehaviour {
             GetCellCornerPosition(new Vector2Int(0, 0), Direction.Up, Direction.Left)
         };
     }
+    #endregion
 
     #region DEBUG ONLY
     public static void TurnTileColor(Tile tile, Color color)

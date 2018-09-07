@@ -28,6 +28,32 @@ public static class TileExtensions {
         }
     }
 
+    public static Direction GetDirectionOfNeighbor(this Tile tile, Tile neighbor)
+    {
+        if (!tile.Neighbors.Contains(neighbor))
+        {
+            Debug.LogError("Tile at position " + neighbor.Position + " is not a neighbor of tile at position " + tile.Position);
+            return Direction.Up;
+        }
+
+        if (neighbor.Position.x == tile.Position.x - 1)
+        {
+            return Direction.Left;
+        }
+        else if (neighbor.Position.x == tile.Position.x + 1)
+        {
+            return Direction.Right;
+        }
+        else if (neighbor.Position.y == tile.Position.y - 1)
+        {
+            return Direction.Up;
+        }
+        else 
+        {
+            return Direction.Down;
+        }
+    }
+
     public static bool HasNeighborWhere(this Tile tile, System.Predicate<Tile> predicate)
     {
         return tile.Neighbors.Exists(predicate);
