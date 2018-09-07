@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;  
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 [ExecuteInEditMode]
 public class BoardController : MonoBehaviour {
@@ -92,7 +94,8 @@ public class BoardController : MonoBehaviour {
 
             Image tileOccupant = cell.GetChild(0).GetComponent<Image>();
             tileOccupantImages[xCounter, yCounter] = tileOccupant;
-            tileOccupant.GetComponent<Button>().onClick.AddListener(GenerateCellClickListener(xCounter, yCounter));
+            AddTileEventTriggers(tileOccupant.GetComponent<EventTrigger>(), xCounter, yCounter);
+            //tileOccupant.GetComponent<EventType>().onClick.AddListener(GeneratePointerDownListener(xCounter, yCounter));
 
             Image tileItem = cell.GetChild(1).GetComponent<Image>();
             tileItemImages[xCounter, yCounter] = tileItem;
@@ -165,6 +168,29 @@ public class BoardController : MonoBehaviour {
         }
 #endif
     }
+
+    #region tile event triggers
+    void AddTileEventTriggers(EventTrigger trigger, int x, int y)
+    {
+        EventTrigger.Entry pointerDownEntry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerDown
+        };
+        pointerDownEntry.callback.AddListener(GeneratePointerDownListener(x, y));
+        trigger.triggers.Add(pointerDownEntry);
+    }
+
+    UnityAction<BaseEventData> GeneratePointerDownListener(int x, int y)
+    {
+        Vector2Int cellPosition = new Vector2Int(x, y);
+
+        return (BaseEventData e) =>
+        {
+            gameStateManager.RegisterPointerDown(cellPosition);
+        };
+    }
+
+    #endregion
 
     #region GUI manipulation
     void ClearBoard()
@@ -244,16 +270,6 @@ public class BoardController : MonoBehaviour {
         // If cell is already opaque (because e.g. it contains an entity), it remains opaque.
         float damageCellAlpha = Mathf.Max(cellImage.color.a, 0.5f);
         cellImage.color = new Color(.8f, 0f, 0f, damageCellAlpha);
-    }
-
-    UnityAction GenerateCellClickListener(int x, int y)
-    {
-        Vector2Int cellPosition = new Vector2Int(x, y);
-
-        return () =>
-        {
-            gameStateManager.RegisterCellClick(cellPosition);
-        };
     }
 
     #endregion

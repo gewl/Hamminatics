@@ -73,6 +73,11 @@ public class ScenarioStateManager : MonoBehaviour {
     bool isResolvingTurn = false;
     public bool IsResolvingTurn { get { return isResolvingTurn; } }
 
+    // Fields for click+drag movement handling.
+    bool isDragging = false;
+    int movementRange;
+    List<Tile> movementTiles;
+
     #region lifecycle
     private void OnEnable()
     {
@@ -177,7 +182,8 @@ public class ScenarioStateManager : MonoBehaviour {
         if (card.category == CardCategory.Movement)
         {
             cardRange += Player.GetMovementModifierValue();
-            playerTile.GetAllTilesWithinRange(cardRange).ForEach(t => HighlightCell(t.Position));
+            movementRange = cardRange;
+            playerTile.Neighbors.ForEach(t => HighlightCell(t.Position));
         }
         else
         {
@@ -191,7 +197,7 @@ public class ScenarioStateManager : MonoBehaviour {
         potentialCardTargets.Add(position);
     }
 
-    public void RegisterCellClick(Vector2Int tileClickedPosition)
+    public void RegisterPointerDown(Vector2Int tileClickedPosition)
     {
         if (isResolvingTurn)
         {
