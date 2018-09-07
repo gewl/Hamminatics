@@ -106,6 +106,8 @@ public class ScenarioStateManager : MonoBehaviour {
         CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board, enemySpawnGroup);
         GenerateNextTurnStack(CurrentScenarioState);
         PlaceExitArrow(exitArrow, boardController.currentBoard.Exit.Position, boardController.currentBoard.Width);
+
+        GameStateDelegates.OnNewScenario?.Invoke(CurrentScenarioState);
         GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
     }
 

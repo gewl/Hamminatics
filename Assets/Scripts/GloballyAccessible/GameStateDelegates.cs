@@ -18,8 +18,9 @@ public static class GameStateDelegates {
     public delegate void ProjectedGameStateDelegate(ProjectedGameState projectedState);
     public static ProjectedGameStateDelegate OnResolvingState;
 
-    public delegate void GameStateChangeDelegate(ScenarioState updatedGameState);
-    public static GameStateChangeDelegate OnRoundEnded;
+    public delegate void ScenarioStateDelegate(ScenarioState updatedGameState);
+    public static ScenarioStateDelegate OnNewScenario;
+    public static ScenarioStateDelegate OnRoundEnded;
 
     public delegate void CardDataDelegate(CardData card);
     public static CardDataDelegate OnCardSelected;

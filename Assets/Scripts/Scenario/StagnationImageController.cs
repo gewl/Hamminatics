@@ -12,12 +12,19 @@ public class StagnationImageController : MonoBehaviour {
 
     private void OnEnable()
     {
+        GameStateDelegates.OnNewScenario += OnNewScenarioHandler;
         GameStateDelegates.OnRoundEnded += DrawStagnation;
     }
 
     private void OnDisable()
     {
+        GameStateDelegates.OnNewScenario -= OnNewScenarioHandler;
         GameStateDelegates.OnRoundEnded -= DrawStagnation; 
+    }
+
+    void OnNewScenarioHandler(ScenarioState newState)
+    {
+        Clear();
     }
 
     void DrawStagnation(ScenarioState state)
