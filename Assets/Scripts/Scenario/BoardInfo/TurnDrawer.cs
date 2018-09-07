@@ -66,6 +66,11 @@ public class TurnDrawer : MonoBehaviour {
         {
             ProjectedGameState projectedState = upcomingStates[i];
 
+            if (projectedState.IsDummyState)
+            {
+                continue;
+            }
+
             ProjectedGameState nextState = i == upcomingStates.Count - 1 ?
                 null :
                 upcomingStates[i + 1];
@@ -86,6 +91,12 @@ public class TurnDrawer : MonoBehaviour {
         for (int i = 0; i < upcomingStates.Count; i++)
         {
             ProjectedGameState projectedState = upcomingStates[i];
+
+            if (projectedState.IsDummyState)
+            {
+                continue;
+            }
+
             ProjectedGameState nextState = i == upcomingStates.Count - 1 ?
                 null :
                 upcomingStates[i + 1];

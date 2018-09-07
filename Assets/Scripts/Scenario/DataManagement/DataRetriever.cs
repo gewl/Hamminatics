@@ -190,7 +190,7 @@ public class DataRetriever : MonoBehaviour {
     #region json/events
     public static JSONObject GetRandomEventByDepth(int depth)
     {
-        if (depth != currentDepth || currentLayerEvents.Count == 0)
+        if (depth != currentDepth || currentLayerEvents == null || currentLayerEvents.Count == 0)
         {
             TextAsset eventsText = Resources.Load<TextAsset>(EVENTS_PATH + depth.ToString());
             JSONObject layerEventObject = new JSONObject(eventsText.text);

@@ -68,6 +68,13 @@ public static class UpcomingStateCalculator
             UpdateEntityModifiers(entity, mostRecentState);
         }
 
+        // If enemies dead, duplicate current gamestate, just for stagnation projection purposes.
+        if (projectedGameStates.Count == 0)
+        {
+            ProjectedGameState fillerGameState = new ProjectedGameState(currentState.DeepCopy());
+            projectedGameStates.Add(fillerGameState);
+        }
+
         ScenarioState lastCalculatedState = projectedGameStates.Last().scenarioState;
 
         lastCalculatedState.UpdateStagnation(board);

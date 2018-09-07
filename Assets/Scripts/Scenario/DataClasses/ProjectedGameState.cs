@@ -12,6 +12,16 @@ public class ProjectedGameState {
     public List<Bump> bumps;
     public List<Vector2Int> attackedPositions;
 
+    private bool isDummyState = false;
+    public bool IsDummyState { get { return isDummyState; } }
+
+    public ProjectedGameState(ScenarioState _gameState)
+    {
+        activeEntity = null;
+        scenarioState = _gameState;
+        isDummyState = true;
+    }
+
     public ProjectedGameState(EntityData _activeEntity, ScenarioState _gameState, Action _action, Bump bump)
     {
         activeEntity = _activeEntity;
