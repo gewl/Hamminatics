@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e174c53b44b9ae4582d787d13eebd90, type: 3}
+  m_Name: PurestVenom
+  m_EditorClassIdentifier: 
+  ID: Purest Venom
+  description: Poison is an agent. Under the right circumstances, it can metastasize
+    and bloom.
+  _maxHealth: 1
+  EntitySprite: {fileID: 21300000, guid: 7f2e82d39fb5af946a47a2f0de977026, type: 3}
+  Speed: 1
+  IdentifyingColor: {r: 0, g: 1, b: 0.2965517, a: 1}
+  dropItem: {fileID: 11400000, guid: 884978629fc8bee41a130a632f81be5f, type: 2}
+  movementCard: {fileID: 11400000, guid: d34eb5f40323fa245881505bf0b3c41a, type: 2}
+  attackCard: {fileID: 11400000, guid: 88c4fc39119429e45b52a4314e0a07e1, type: 2}
+  activeModifiers: []
