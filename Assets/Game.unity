@@ -11605,7 +11605,8 @@ MonoBehaviour:
   fullScreenTrigger: {fileID: 1455142725}
   healthCard: {fileID: 11400000, guid: 17f7c65a969f446458d428482d5308e5, type: 2}
   upgradeCard: {fileID: 11400000, guid: 4a921661b25de9246ba8bdd03ea5f62b, type: 2}
-  goldRewardCard: {fileID: 0}
+  goldRewardCard: {fileID: 11400000, guid: 893f18f13a7c67b468dee70812ce787f, type: 2}
+  playerData: {fileID: 11400000, guid: 8680b62e746f7254097f5efed1944ead, type: 2}
 --- !u!114 &915970917
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -40,8 +40,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b270afeed7d5e0646be2178a44d56065, type: 2}
   - {fileID: 11400000, guid: 9a372bbcc013e3c4b842582e68686cda, type: 2}
   - {fileID: 11400000, guid: 3958e5dffef365f4c8f4c1b82e745582, type: 2}
+  - {fileID: 11400000, guid: b13d581c9f8099041937a6eba709d6a3, type: 2}
   - {fileID: 11400000, guid: 7a24127cfdf1e5040b60eb9b7e26acca, type: 2}
   - {fileID: 11400000, guid: 1217cb7f040c6b14f98975cc04214eb5, type: 2}
   - {fileID: 11400000, guid: fc0d42c2887ea1b4d975a8a5d128bef0, type: 2}
-  - {fileID: 11400000, guid: b13d581c9f8099041937a6eba709d6a3, type: 2}
   goldValueMultiplier: 1
