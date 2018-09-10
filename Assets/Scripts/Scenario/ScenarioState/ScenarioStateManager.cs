@@ -250,7 +250,11 @@ public class ScenarioStateManager : MonoBehaviour {
             return;
         }
 
-        if (newTile.Position == Player.Position)
+        Tile originTile = boardController.currentBoard.GetTileAtPosition(Player.Position);
+        Tile lastMovementTile = movementTiles.Count > 0 ? movementTiles.Last() : originTile;
+
+        bool isValidMove = lastMovementTile.Neighbors.Contains(newTile);
+        if (newTile.Position == Player.Position || !isValidMove)
         {
             StopMovementPathing();
             return;
@@ -270,7 +274,7 @@ public class ScenarioStateManager : MonoBehaviour {
             movementRange--;
             movementTiles.Add(newTile);
         }
-        turnStackController.AddToPlayerTurn(movementCard, Player, boardController.currentBoard.GetTileAtPosition(Player.Position), movementTiles);
+        turnStackController.AddToPlayerTurn(movementCard, Player, originTile, movementTiles);
         GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
 
         if (movementRange > 0)

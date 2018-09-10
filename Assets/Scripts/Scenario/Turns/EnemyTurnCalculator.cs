@@ -90,9 +90,9 @@ public class EnemyTurnCalculator : MonoBehaviour {
         result += Mathf.Abs(startingTile.Position.y - turn.targetMovementTile.Position.y) * 2;
         result += (turn.targetAttackTile.DistanceFromPlayer * 5);
         result += upcomingEntityTargets.Any(target => target.targetAttackTile == turn.targetAttackTile) ? 15 : 0;
-        result += upcomingEntityTargets.Any(target => expectedState.threatenedStagnationPositions.Contains(target.targetMovementTile.Position)) ? 20 : 0;
+        result += expectedState.threatenedStagnationPositions.Contains(turn.targetMovementTile.Position) ? 30 : 0;
         result += upcomingEntityTargets.Any(target => target.targetMovementTile == turn.targetAttackTile) ? 30 : 0;
-        result += upcomingEntityTargets.Any(target => expectedState.stagnatedPositions.Contains(target.targetMovementTile.Position)) ? 40 : 0;
+        result += expectedState.stagnatedPositions.Contains(turn.targetMovementTile.Position) ? 40 : 0;
 
         return result;
     }

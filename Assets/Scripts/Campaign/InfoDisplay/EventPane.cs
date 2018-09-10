@@ -29,7 +29,7 @@ public class EventPane : MonoBehaviour {
     const string OUTCOME_TITLE_TEXT = "outcome_title";
     const string OUTCOME_DESCRIPTION_TEXT = "outcome_description";
     const string OUTCOME_EFFECTS = "effects";
-    const string OUTCOME_TYPE = "types";
+    const string OUTCOME_TYPE = "type";
     const string OUTCOME_STRING = "string_data";
     const string OUTCOME_INT = "int_data";
     #endregion

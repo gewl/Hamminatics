@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CharacterInfoPane : MonoBehaviour {
@@ -76,12 +78,15 @@ public class CharacterInfoPane : MonoBehaviour {
     {
         cardDisplayPane.DisplayCards(GameStateManager.CurrentCampaign.inventory.equippedCards);
         GameStateManager.SetDim(true);
+        GameStateManager.ActivateFullScreenTrigger((BaseEventData data) => HideCards());
     }
 
     public void HideCards()
     {
         cardDisplayPane.gameObject.SetActive(false);
         GameStateManager.SetDim(false);
+
+        GameStateManager.DisableFullScreenTrigger();
     }
 
     #endregion
