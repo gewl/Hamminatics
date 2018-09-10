@@ -241,6 +241,7 @@ public class ScenarioStateManager : MonoBehaviour {
         }
     }
 
+    // TODO: This whole functionality probably needs a once-over for legibility/efficiency.
     // Either extends move to tile, or shortens move to tile if tile already present in move.
     public void AddTileToMove(Tile newTile)
     {
@@ -252,6 +253,7 @@ public class ScenarioStateManager : MonoBehaviour {
         if (newTile.Position == Player.Position)
         {
             StopMovementPathing();
+            return;
         }
         else if (movementTiles.Contains(newTile))
         {
