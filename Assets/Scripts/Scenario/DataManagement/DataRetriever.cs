@@ -192,7 +192,7 @@ public class DataRetriever : MonoBehaviour {
     {
         if (depth != currentDepth || currentLayerEvents == null || currentLayerEvents.Count == 0)
         {
-            TextAsset eventsText = Resources.Load<TextAsset>(EVENTS_PATH + depth.ToString());
+            TextAsset eventsText = currentDepthData.eventPool;
             JSONObject layerEventObject = new JSONObject(eventsText.text);
             currentLayerEvents = layerEventObject[EVENTS_KEY].list;
             currentDepth = depth;
