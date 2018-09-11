@@ -64,7 +64,6 @@ public class CharacterInfoPane : MonoBehaviour {
                 healthBubs[i].sprite = emptyHealthBub;
             }
         }
-
     }
 
     void UpdateInventoryDisplay(Inventory currentInventory)
