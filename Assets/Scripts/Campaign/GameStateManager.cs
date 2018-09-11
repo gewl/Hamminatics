@@ -48,8 +48,8 @@ public class GameStateManager : MonoBehaviour {
     static GameStateManager instance;
 
     // Scenario rewards. Remainder is gold.
-    int oddsOfNewCard = 20;
-    int oddsOfUpgrade = 30;
+    int oddsOfNewCard = 70;
+    int oddsOfUpgrade = 20;
 
     System.Random rand;
 
