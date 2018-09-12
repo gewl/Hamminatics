@@ -15,6 +15,8 @@ public class GameStateManager : MonoBehaviour {
     [SerializeField]
     ScenarioStateManager scenarioManager;
     [SerializeField]
+    MainMenuController mainMenuController;
+    [SerializeField]
     EventPane eventPane;
     [SerializeField]
     StorePane storePane;
@@ -59,8 +61,10 @@ public class GameStateManager : MonoBehaviour {
         rand = new System.Random();
     }
 
-    private void Start()
+    public void BeginCampaign()
     {
+        mainMenuController.gameObject.SetActive(false);
+        mapController.gameObject.SetActive(true);
         EntityData player = ScriptableObject.Instantiate(playerData);
         int mapLayerCount = 6;
 
