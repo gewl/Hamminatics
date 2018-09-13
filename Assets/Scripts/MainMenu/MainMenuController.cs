@@ -11,6 +11,8 @@ public class MainMenuController : SerializedMonoBehaviour {
     [SerializeField]
     GameObject whatScreen;
     [SerializeField]
+    GameObject chaosScreen;
+    [SerializeField]
     GameObject characterPicker;
 
     [SerializeField]
@@ -51,6 +53,17 @@ public class MainMenuController : SerializedMonoBehaviour {
 
         whatScreen.SetActive(true);
         currentScreen = whatScreen;
+    }
+
+    public void ShowChaosScreen()
+    {
+        if (currentScreen != null)
+        {
+            currentScreen.SetActive(false);
+        }
+
+        chaosScreen.SetActive(true);
+        currentScreen = chaosScreen;
     }
 
     public void ShowCharacterPicker()
