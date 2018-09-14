@@ -16,8 +16,9 @@ public class ScenarioState {
     public List<Vector2Int> threatenedStagnationPositions;
     public Direction stagnationDirection;
     public StagnationStates stagnationState;
+    public bool isBossScenario = false;
 
-    public ScenarioState(List<EntityData> _enemies, List<ItemData> _items, CardData _scenarioReward, Direction _stagnationDirection)
+    public ScenarioState(List<EntityData> _enemies, List<ItemData> _items, CardData _scenarioReward, Direction _stagnationDirection, bool _isBossScenario)
     {
         player = GameStateManager.CurrentCampaign.player;
         enemies = _enemies;
@@ -31,9 +32,11 @@ public class ScenarioState {
         stagnatedPositions = new List<Vector2Int>();
         threatenedStagnationPositions = new List<Vector2Int>();
         stagnationState = StagnationStates.Threatening;
+
+        isBossScenario = _isBossScenario;
     }
 
-    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, CardData _scenarioReward, Stack<Turn> _turns, Inventory _inventory, List<Vector2Int> _stagnatedPosition, List<Vector2Int> _threatenedPositions, StagnationStates _stagnationState, Direction _stagnationDirection)
+    public ScenarioState(EntityData _player, List<EntityData> _enemies, List<ItemData> _items, CardData _scenarioReward, Stack<Turn> _turns, Inventory _inventory, List<Vector2Int> _stagnatedPosition, List<Vector2Int> _threatenedPositions, StagnationStates _stagnationState, Direction _stagnationDirection, bool _isBossScenario)
     {
         player = _player;
         enemies = _enemies;
@@ -46,6 +49,8 @@ public class ScenarioState {
         threatenedStagnationPositions = _threatenedPositions;
         stagnationState = _stagnationState;
         stagnationDirection = _stagnationDirection;
+
+        isBossScenario = _isBossScenario;
     }
 
     public void UpdateTurnStack(Stack<Turn> newTurnStack)

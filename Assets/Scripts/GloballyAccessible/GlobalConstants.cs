@@ -103,7 +103,13 @@ public enum MapNodeType
     Scenario,
     Event,
     Store,
-    End
+    End,
+    Boss
+}
+
+public static class BossInfo
+{
+    public static int[] bossDepths = { 2 };
 }
 
 public enum Layer
@@ -152,3 +158,4 @@ public class ScenarioRewardText
     public const string GOLD_TITLE = "Abundance";
     public const string GOLD_BODY = "You've earned it.\n\nYou have gained some gold";
 }
+

@@ -106,6 +106,17 @@ public class DataRetriever : MonoBehaviour {
         return currentDepthData.randomEnemySpawnPool;
     }
 
+    public static EnemySpawnGroupData GetBossSpawnGroup()
+    {
+        if (currentDepthData.bossPool == null)
+        {
+            Debug.LogError("No boss pool found for depth: " + currentDepthData.ID);
+            return null;
+        }
+
+        return currentDepthData.bossPool;
+    }
+
     public static List<CardData> GetRandomCardPool()
     {
         return currentDepthData.randomCardPool;

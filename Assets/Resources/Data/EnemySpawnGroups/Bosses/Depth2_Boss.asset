@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4baf88cbbd41f643934befa9b4e5c05, type: 3}
+  m_Name: Depth2_Boss
+  m_EditorClassIdentifier: 
+  ID: Depth2Boss
+  probabilityWeight: 1
+  probabilityRangeFrom: 0
+  probabilityRangeTo: 0
+  enemiesToSpawn:
+  - {fileID: 11400000, guid: 8927d086cb38e8740b17a294066dfad6, type: 2}
+  itemsToSpawn: []
+  scenarioReward: {fileID: 0}

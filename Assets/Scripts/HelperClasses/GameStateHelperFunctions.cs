@@ -282,11 +282,15 @@ public static class ScenarioStateHelperFunctions {
             newTurnStack.Push(newTurnList[i]);
         }
 
-        return new ScenarioState(playerCopy, enemyCopies, itemCopies, originalState.scenarioReward, newTurnStack, inventoryCopy, originalState.stagnatedPositions, originalState.threatenedStagnationPositions, originalState.stagnationState, originalState.stagnationDirection);
+        return new ScenarioState(playerCopy, enemyCopies, itemCopies, originalState.scenarioReward, newTurnStack, inventoryCopy, originalState.stagnatedPositions, originalState.threatenedStagnationPositions, originalState.stagnationState, originalState.stagnationDirection, originalState.isBossScenario);
     }
 
     public static void UpdateStagnation(this ScenarioState state, GameBoard board)
     {
+        if (state.isBossScenario)
+        {
+            return;
+        }
         switch (state.stagnationState)
         {
             case StagnationStates.Dormant:

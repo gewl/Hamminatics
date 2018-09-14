@@ -10,7 +10,7 @@ public class ScenarioStateGenerator {
 
     const string PLAYER_ID = "Player";
 
-    public static ScenarioState GenerateNewScenarioState(GameBoard board, EnemySpawnGroupData enemySpawnGroup)
+    public static ScenarioState GenerateNewScenarioState(GameBoard board, EnemySpawnGroupData enemySpawnGroup, bool isBossScenario = false)
     {
         List<EntityData> enemies = enemySpawnGroup.EnemiesToSpawn.Select(e => ScriptableObject.Instantiate(e)).ToList();
 
@@ -21,11 +21,13 @@ public class ScenarioStateGenerator {
 
         Direction stagnationDirection = GetStagnationDirectionFromEntrance(board.Entrance.Position, board.Width);
 
-        ScenarioState generatedState = new ScenarioState(enemies, items, enemySpawnGroup.scenarioReward, stagnationDirection);
+        ScenarioState generatedState = new ScenarioState(enemies, items, enemySpawnGroup.scenarioReward, stagnationDirection, isBossScenario);
         EntityData player = generatedState.player;
         player.SetPosition(board.Entrance.Position, generatedState);
         generatedState = RandomizeEntityStartingCoordinates(generatedState, enemies, board.Width, board.GetTileAtPosition(player.Position), board);
-        generatedState = RandomizeItemStartingCoordinates(generatedState, items, board.Exit.Position, board.Width);
+
+        Vector2Int exitPosition = board.Exit == null ? Vector2Int.zero : board.Exit.Position;
+        generatedState = RandomizeItemStartingCoordinates(generatedState, items, exitPosition, board.Width);
 
         return generatedState;
     }

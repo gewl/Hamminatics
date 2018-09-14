@@ -21,10 +21,17 @@ public class Map {
         depth = _depth;
         rand = new Random();
 
-        nodeLayers = GenerateLayers(layerCount);
+        if (BossInfo.bossDepths.Contains(depth))
+        {
+            nodeLayers = GenerateBossLayers(depth);
+        }
+        else
+        {
+            nodeLayers = GenerateNormalLayers(layerCount);
+        }
     }
 
-    List<List<MapNode>> GenerateLayers(int numberOfLayers)
+    List<List<MapNode>> GenerateNormalLayers(int numberOfLayers)
     {
         List<List<MapNode>> layers = new List<List<MapNode>>();
 
@@ -78,6 +85,22 @@ public class Map {
             int shopLayer = rand.Next(layersCount - 3, layersCount - 2);
             layers[shopLayer].GetRandomElement<MapNode>().nodeType = MapNodeType.Store;
         }
+
+        return layers;
+    }
+
+    List<List<MapNode>> GenerateBossLayers(int depth)
+    {
+        List<List<MapNode>> layers = new List<List<MapNode>>();
+
+        MapNode starterNode = new MapNode(MapNodeType.Start, 0);
+        // Every map starts with a layer of one (starter) node.
+        layers.Add(new List<MapNode>() { starterNode });
+
+        MapNode bossNode = new MapNode(MapNodeType.Boss, 1);
+        layers.Add(new List<MapNode>() { bossNode });
+
+        starterNode.AddChild(bossNode);
 
         return layers;
     }

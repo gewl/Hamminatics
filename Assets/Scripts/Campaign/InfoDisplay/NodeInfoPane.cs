@@ -57,6 +57,8 @@ public class NodeInfoPane : MonoBehaviour {
                 return "A store.";
             case MapNodeType.End:
                 return "The exit from the zone.";
+            case MapNodeType.Boss:
+                return "A guardian of the Abbey.";
             default:
                 Debug.LogError("Incompatible nodetype.");
                 return "placeholder";

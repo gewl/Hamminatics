@@ -17,7 +17,7 @@ public class GameBoard {
     public Tile Exit { get; private set; } 
     List<Wall> walls;
 
-    public GameBoard()
+    public GameBoard(bool generateExit = true)
     {
         Width = BoardController.BoardWidth;
 
@@ -54,7 +54,10 @@ public class GameBoard {
         }
 
         Entrance = GenerateEntrance(Width);
-        Exit = GenerateExit(Width, Entrance.Position);
+        if (generateExit)
+        {
+            Exit = GenerateExit(Width, Entrance.Position);
+        }
 
         GenerateWalls();
 

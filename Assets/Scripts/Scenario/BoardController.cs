@@ -116,13 +116,14 @@ public class BoardController : MonoBehaviour {
         boardInitialized = true;
     }
 
-    public GameBoard GenerateBoard()
+    public GameBoard GenerateBoard(bool isBossRoom = false)
     {
         if (!boardInitialized)
         {
             InitializeBoard();
         }
-        currentBoard = new GameBoard();
+        bool doesBoardHaveExit = !isBossRoom;
+        currentBoard = new GameBoard(doesBoardHaveExit);
 
         for (int y = 0; y < boardWidth; y++)
         {
@@ -138,7 +139,7 @@ public class BoardController : MonoBehaviour {
             }
         }
 
-        if (debuggingExitPosition)
+        if (debuggingExitPosition && doesBoardHaveExit)
         {
             if (instantiatedExitText != null)
             {

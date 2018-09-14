@@ -111,8 +111,22 @@ public class ScenarioStateManager : MonoBehaviour {
         GameBoard board = boardController.GenerateBoard();
         CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board, enemySpawnGroup);
         GenerateNextTurnStack(CurrentScenarioState);
-        PlaceExitArrow(exitArrow, boardController.currentBoard.Exit.Position, boardController.currentBoard.Width);
+        if (board.Exit != null)
+        {
+            PlaceExitArrow(exitArrow, boardController.currentBoard.Exit.Position, boardController.currentBoard.Width);
+        }
 
+        GameStateDelegates.OnNewScenario?.Invoke(CurrentScenarioState);
+        GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
+    }
+
+    public void GenerateAndDrawBossScenario(EnemySpawnGroupData bossSpawnGroup)
+    {
+        gameObject.SetActive(true);
+        GameBoard board = boardController.GenerateBoard(true);
+        CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board, bossSpawnGroup, true);
+        GenerateNextTurnStack(CurrentScenarioState);
+        
         GameStateDelegates.OnNewScenario?.Invoke(CurrentScenarioState);
         GameStateDelegates.OnCurrentScenarioStateChange(CurrentScenarioState, upcomingScenarioStates);
     }
@@ -353,6 +367,10 @@ public class ScenarioStateManager : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
         }
 
+        if (CurrentScenarioState.isBossScenario && CurrentScenarioState.enemies.Count == 0)
+        {
+            Debug.Log("you've won!");
+        }
         //CurrentScenarioState.UpdateStagnation(boardController.currentBoard);
         CurrentScenarioState.items = UpdateItemDurations(CurrentScenarioState);
         UpdateExitArrowVisibility();
@@ -385,6 +403,10 @@ public class ScenarioStateManager : MonoBehaviour {
     
     void UpdateExitArrowVisibility()
     {
+        if (BoardController.CurrentBoard.Exit == null)
+        {
+            return;
+        }
         bool playerOnExit = Player.Position == BoardController.CurrentBoard.Exit.Position;
 
         exitArrow.SetActive(playerOnExit);

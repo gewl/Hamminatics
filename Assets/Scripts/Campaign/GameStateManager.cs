@@ -68,7 +68,7 @@ public class GameStateManager : MonoBehaviour {
         EntityData player = ScriptableObject.Instantiate(playerData);
         int mapLayerCount = 6;
 
-        CurrentCampaign = new CampaignState(new Inventory(), new Map(0, mapLayerCount), player);
+        CurrentCampaign = new CampaignState(new Inventory(), new Map(1, mapLayerCount), player);
         DataRetriever.UpdateDepthData(CurrentCampaign.depth);
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
 
@@ -104,6 +104,9 @@ public class GameStateManager : MonoBehaviour {
                 break;
             case MapNodeType.End:
                 GenerateNewMap();
+                break;
+            case MapNodeType.Boss:
+                SwitchToBossScenario(CurrentCampaign.depth);
                 break;
             default:
                 break;
@@ -201,6 +204,13 @@ public class GameStateManager : MonoBehaviour {
     {
         mapController.gameObject.SetActive(false);
         scenarioManager.GenerateAndDrawScenario(enemySpawnGroup);
+    }
+
+    void SwitchToBossScenario(int depth)
+    {
+        mapController.gameObject.SetActive(false);
+        EnemySpawnGroupData bossSpawnGroup = DataRetriever.GetBossSpawnGroup();
+        scenarioManager.GenerateAndDrawBossScenario(bossSpawnGroup);
     }
 
     void DisplayStore()
