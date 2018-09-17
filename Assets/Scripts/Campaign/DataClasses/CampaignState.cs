@@ -21,7 +21,7 @@ public class CampaignState {
         player = _player;
 
         UpdateMap(_currentMap);
-        depth = 1;
+        depth = _currentMap.depth;
     }
 
     public void UpdatePlayerNode(MapNode newNode, float _progressThroughMap)

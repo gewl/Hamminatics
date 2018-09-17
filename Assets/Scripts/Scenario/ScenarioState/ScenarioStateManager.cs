@@ -6,6 +6,8 @@ using System.Linq;
 public class ScenarioStateManager : MonoBehaviour {
 
     [SerializeField]
+    GameObject winScreen;
+    [SerializeField]
     GameStateManager gameStateManager;
     [SerializeField]
     EnemySpawnGroupManager enemySpawnGroupManager;
@@ -369,7 +371,8 @@ public class ScenarioStateManager : MonoBehaviour {
 
         if (CurrentScenarioState.isBossScenario && CurrentScenarioState.enemies.Count == 0)
         {
-            Debug.Log("you've won!");
+            winScreen.SetActive(true);
+            yield break;
         }
         //CurrentScenarioState.UpdateStagnation(boardController.currentBoard);
         CurrentScenarioState.items = UpdateItemDurations(CurrentScenarioState);
