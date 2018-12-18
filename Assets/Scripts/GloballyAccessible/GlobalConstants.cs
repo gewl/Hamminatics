@@ -109,7 +109,7 @@ public enum MapNodeType
 
 public static class BossInfo
 {
-    public static int[] bossDepths = { 2 };
+    public static int[] bossDepths = { 3 };
 }
 
 public enum Layer

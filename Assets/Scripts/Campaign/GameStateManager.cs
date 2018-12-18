@@ -68,7 +68,7 @@ public class GameStateManager : MonoBehaviour {
         EntityData player = ScriptableObject.Instantiate(playerData);
         int mapLayerCount = 6;
 
-        CurrentCampaign = new CampaignState(new Inventory(), new Map(2, mapLayerCount), player);
+        CurrentCampaign = new CampaignState(new Inventory(), new Map(1, mapLayerCount), player);
         DataRetriever.UpdateDepthData(CurrentCampaign.depth);
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
 
