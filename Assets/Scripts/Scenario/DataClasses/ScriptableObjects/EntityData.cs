@@ -22,7 +22,7 @@ public class EntityData : ScriptableObject {
         }
     }
 
-    public Sprite EntitySprite;
+    public Sprite entitySprite;
     public int Speed = 1;
     public Color IdentifyingColor;
     private Vector2Int _position;
@@ -62,7 +62,7 @@ public class EntityData : ScriptableObject {
         copy.ID = ID;
         copy._maxHealth = _maxHealth;
         copy._currentHealth = _currentHealth;
-        copy.EntitySprite = EntitySprite;
+        copy.entitySprite = entitySprite;
         copy.Speed = Speed;
         copy.IdentifyingColor = IdentifyingColor;
         copy._position = Position;

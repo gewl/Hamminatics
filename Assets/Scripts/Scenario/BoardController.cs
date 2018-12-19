@@ -285,7 +285,7 @@ public class BoardController : MonoBehaviour {
     {
         Vector2Int entityPosition = entity.Position;
         Image entityImage = tileOccupantImages[entityPosition.x, entityPosition.y];
-        entityImage.sprite = entity.EntitySprite;
+        entityImage.sprite = entity.entitySprite;
         entityImage.color = color;
     }
 

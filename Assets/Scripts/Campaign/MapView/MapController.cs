@@ -152,7 +152,7 @@ public class MapController : MonoBehaviour {
 
             currentPlayerNode = campaign.CurrentPlayerNode;
             currentPlayerNode.NodeController.UpdateHighlight(playerNodeColor);
-            currentPlayerNode.NodeController.SwapSprite(campaign.player.EntitySprite);
+            currentPlayerNode.NodeController.SwapSprite(campaign.player.entitySprite);
 
             foreach (Transform path in paths)
             {

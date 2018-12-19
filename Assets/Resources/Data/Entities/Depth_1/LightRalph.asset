@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -15,7 +15,7 @@ MonoBehaviour:
   description: They say Ralph spent his life in study, and chanced upon a vengeful
     passage...
   _maxHealth: 3
-  EntitySprite: {fileID: 21300000, guid: 9875c70f913a97c46ac2caa34a397f84, type: 3}
+  entitySprite: {fileID: 21300000, guid: 9875c70f913a97c46ac2caa34a397f84, type: 3}
   Speed: 4
   IdentifyingColor: {r: 0.8897059, g: 1, b: 0.9954361, a: 1}
   dropItem: {fileID: 0}

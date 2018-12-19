@@ -124,7 +124,7 @@ public class TurnDrawer : MonoBehaviour {
                         .Position;
                     if (!projectedState.scenarioState.HasEntityWhere(e => e.Position == selectedEntity.Position) && selectedEntity.Position != entityPositionLastState)
                     {
-                        GenerateAndPositionCellImage(entityPositionLastState, 0f, selectedEntity.EntitySprite, translucent);
+                        GenerateAndPositionCellImage(entityPositionLastState, 0f, selectedEntity.entitySprite, translucent);
                     }
                     GenerateAndPositionCellImage(entityPositionLastState, 0f, deadEntitySprite, Color.white);
                     continue;
@@ -167,7 +167,7 @@ public class TurnDrawer : MonoBehaviour {
                         {
                             if (!currentGameState.HasEntityWhere(currentEntity => currentEntity.Position == e.Position))
                             {
-                                GenerateAndPositionCellImage(e.Position, 0f, e.EntitySprite, translucent);
+                                GenerateAndPositionCellImage(e.Position, 0f, e.entitySprite, translucent);
                             }
                             GenerateAndPositionCellImage(e.Position, 0f, deadEntitySprite, Color.white);
                         }

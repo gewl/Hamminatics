@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -15,7 +15,7 @@ MonoBehaviour:
   description: 'The blame lies squarely with the family: They never told her she was
     dead.'
   _maxHealth: 2
-  EntitySprite: {fileID: 21300000, guid: f65812cf07c1e0f469a2ad0d45adde15, type: 3}
+  entitySprite: {fileID: 21300000, guid: f65812cf07c1e0f469a2ad0d45adde15, type: 3}
   Speed: 4
   IdentifyingColor: {r: 0.5955882, g: 1, b: 0.86612576, a: 1}
   dropItem: {fileID: 11400000, guid: a5eb630c9f57c3b4aa9383653810e36b, type: 2}

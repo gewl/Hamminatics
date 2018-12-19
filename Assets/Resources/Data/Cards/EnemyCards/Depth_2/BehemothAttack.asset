@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5daf06a50df7c364ca33d7628e7a574c, type: 3}
-  m_Name: NotionAttack
+  m_Name: BehemothAttack
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -20,14 +20,13 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  ID: NotionAttack
+  ID: BehemothAttack
   description: Placeholder description.
   energyCost: 0
   baseGoldCost: 0
   direction: 6
-  range: 2
-  cardImage: {fileID: 21300000, guid: 8b87fa5f9ab459c4fa448f7b94cabcfa, type: 3}
-  modifiers:
-  - {fileID: 11400000, guid: 417cc39bd4bdce54b8c959bed6f97751, type: 2}
-  damage: 2
-  targetType: 0
+  range: 1
+  cardImage: {fileID: 0}
+  modifiers: []
+  damage: 3
+  targetType: 1

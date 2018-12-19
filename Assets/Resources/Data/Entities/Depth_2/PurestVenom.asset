@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -15,7 +15,7 @@ MonoBehaviour:
   description: Poison is an agent. Under the right circumstances, it can metastasize
     and bloom.
   _maxHealth: 1
-  EntitySprite: {fileID: 21300000, guid: 7f2e82d39fb5af946a47a2f0de977026, type: 3}
+  entitySprite: {fileID: 21300000, guid: 7f2e82d39fb5af946a47a2f0de977026, type: 3}
   Speed: 1
   IdentifyingColor: {r: 0, g: 1, b: 0.2965517, a: 1}
   dropItem: {fileID: 11400000, guid: 884978629fc8bee41a130a632f81be5f, type: 2}

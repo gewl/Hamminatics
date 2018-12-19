@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -14,7 +14,7 @@ MonoBehaviour:
   ID: Squid
   description: Once a man's hand, he spoke carelessly, and lost his parts.
   _maxHealth: 3
-  EntitySprite: {fileID: 21300000, guid: 66951e7437876234f8e9cb0dd70c483e, type: 3}
+  entitySprite: {fileID: 21300000, guid: 66951e7437876234f8e9cb0dd70c483e, type: 3}
   Speed: 3
   IdentifyingColor: {r: 0.11724187, g: 0, b: 1, a: 1}
   dropItem: {fileID: 11400000, guid: efcce6bb7cfc22b4295ee6c3cdd6d825, type: 2}
