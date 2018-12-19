@@ -26,6 +26,8 @@ public class MapController : MonoBehaviour {
     [SerializeField]
     Transform nodes;
     [SerializeField]
+    Transform intermediaryNodeParent;
+    [SerializeField]
     Transform paths;
 
     [Header("Prefabs")]
@@ -53,8 +55,25 @@ public class MapController : MonoBehaviour {
         width = mapBackgroundImage.rectTransform.rect.width;
     }
 
+    void TearDownOldMap()
+    {
+        entranceNodeController.GetComponent<Button>().onClick.RemoveAllListeners();
+        exitNodeController.GetComponent<Button>().onClick.RemoveAllListeners();
+
+        foreach (Transform child in intermediaryNodeParent)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in paths)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
     public void DrawMap(Map map)
     {
+        TearDownOldMap();
+
         int numberOfLayers = map.nodeLayers.Count;
 
         MapNode entrance = map.nodeLayers[0][0];
@@ -84,7 +103,7 @@ public class MapController : MonoBehaviour {
             for (int j = 0; j < nodesInLayer; j++)
             {
                 MapNode node = layer[j];
-                GameObject drawnNode = Instantiate(mapNodePrefab, nodes);
+                GameObject drawnNode = Instantiate(mapNodePrefab, intermediaryNodeParent);
                 node.AssociateNodeWithController(drawnNode.GetComponent<MapNodeController>());
                 RectTransform newNodeRect = drawnNode.GetComponent<RectTransform>();
                 newNodeRect.localPosition = new Vector2(mapNodeXVariance * (j - 1), yGapBetweenLayers * i + baseLayerYCoord);

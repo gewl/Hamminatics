@@ -7659,8 +7659,7 @@ MonoBehaviour:
 
 
     I made it over the summer of 2018. I had a question: Can I make a fun turn-based
-    puzzle/tactics game in which the player has to make hard decisions about whether
-    they should let enemies move before them?
+    puzzle/tactics game in which turn ordering is a resource that has to be managed?
 
 
     The answer: Sort of!
@@ -9289,7 +9288,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 36
+    m_FontSize: 26
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 2
@@ -19734,7 +19733,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -80}
+  m_AnchoredPosition: {x: 20, y: -148}
   m_SizeDelta: {x: 580, y: 1434.9}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1166177950
@@ -23525,6 +23524,7 @@ RectTransform:
   m_Children:
   - {fileID: 554238301}
   - {fileID: 531457421}
+  - {fileID: 1514013563}
   m_Father: {fileID: 2085722981}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -24630,6 +24630,39 @@ MonoBehaviour:
   m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_EffectDistance: {x: 2, y: -4}
   m_UseGraphicAlpha: 1
+--- !u!1 &1514013562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1514013563}
+  m_Layer: 0
+  m_Name: IntermediaryNodes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1514013563
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1514013562}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1432817494}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1526345203
 GameObject:
   m_ObjectHideFlags: 0
@@ -28708,7 +28741,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1764241887
 RectTransform:
   m_ObjectHideFlags: 0
@@ -32844,7 +32877,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 30
+    m_FontSize: 23
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -33673,6 +33706,7 @@ MonoBehaviour:
   exitNodeController: {fileID: 531457422}
   campaignBackground: {fileID: 805496064}
   nodes: {fileID: 1432817494}
+  intermediaryNodeParent: {fileID: 1514013563}
   paths: {fileID: 1040130208}
   mapNodePrefab: {fileID: 1931605337670604, guid: 20fd160f84ab4804a8d44815ce912dd0,
     type: 2}

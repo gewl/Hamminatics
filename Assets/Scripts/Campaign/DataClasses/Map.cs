@@ -16,7 +16,7 @@ public class Map {
     int thirdNodeScenarioChance = 40;
 
     private Map() { }
-    public Map(int _depth, int layerCount)
+    public Map(int _depth)
     {
         depth = _depth;
         rand = new Random();
@@ -27,6 +27,7 @@ public class Map {
         }
         else
         {
+            int layerCount = rand.Next(6, 9);
             nodeLayers = GenerateNormalLayers(layerCount);
         }
     }

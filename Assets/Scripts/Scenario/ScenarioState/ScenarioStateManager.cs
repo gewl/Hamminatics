@@ -109,6 +109,7 @@ public class ScenarioStateManager : MonoBehaviour {
 
     public void GenerateAndDrawScenario(EnemySpawnGroupData enemySpawnGroup)
     {
+        exitArrow.SetActive(false);
         gameObject.SetActive(true);
         GameBoard board = boardController.GenerateBoard();
         CurrentScenarioState = ScenarioStateGenerator.GenerateNewScenarioState(board, enemySpawnGroup);

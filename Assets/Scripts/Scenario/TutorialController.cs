@@ -21,7 +21,7 @@ public class TutorialController : MonoBehaviour {
 
     public void DisableTutorial()
     {
-        touchBlocker.SetActive(true);
+        touchBlocker.SetActive(false);
         tutorialElements[tutorialElementPointer].SetActive(false);
     }
 

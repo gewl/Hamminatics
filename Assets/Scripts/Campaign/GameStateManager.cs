@@ -68,7 +68,7 @@ public class GameStateManager : MonoBehaviour {
         EntityData player = ScriptableObject.Instantiate(playerData);
         int mapLayerCount = 6;
 
-        CurrentCampaign = new CampaignState(new Inventory(), new Map(1, mapLayerCount), player);
+        CurrentCampaign = new CampaignState(new Inventory(), new Map(1), player);
         DataRetriever.UpdateDepthData(CurrentCampaign.depth);
         GameStateDelegates.OnCampaignStateUpdated(CurrentCampaign);
 
@@ -116,7 +116,7 @@ public class GameStateManager : MonoBehaviour {
     void GenerateNewMap()
     {
         CurrentCampaign.depth++;
-        Map newMap = new Map(CurrentCampaign.depth, 2);
+        Map newMap = new Map(CurrentCampaign.depth);
         CurrentCampaign.UpdateMap(newMap);
         mapController.DrawMap(newMap);
         mapController.UpdateMapState(CurrentCampaign);
