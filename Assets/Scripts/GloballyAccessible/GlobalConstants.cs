@@ -91,7 +91,7 @@ public enum ModifierCategory
 
 public struct Constants
 {
-    public const string PLAYER_ID = "Player";
+    public const string PLAYER_ID = "Gimbus the Desiremancer";
     public const int MAX_EQUIPPED_CARDS = 4;
     public const int MAX_MODIFIERS = 8;
 }

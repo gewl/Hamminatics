@@ -38,7 +38,7 @@ public class EventPane : MonoBehaviour {
 
     private void Awake()
     {
-        outcomeButtons = outcomeSelection.GetComponentsInChildren<Button>();
+        outcomeButtons = outcomeSelection.GetComponentsInChildren<Button>(true);
         buttonTexts = outcomeSelection.GetComponentsInChildren<Text>();
     }
 
@@ -51,7 +51,7 @@ public class EventPane : MonoBehaviour {
         gameObject.SetActive(true);
 
         eventTitle.text = eventObject.GetField(EVENT_NAME).str;
-        eventDescription.text = eventObject.GetField(EVENT_DESCRIPTION).str.Replace("\\n", "\n");
+        eventDescription.text = eventObject.GetField(EVENT_DESCRIPTION).str;
 
         availableOutcomes = eventObject.GetField(OUTCOMES_ARRAY).list;
         int numberOfOutcomes = availableOutcomes.Count;

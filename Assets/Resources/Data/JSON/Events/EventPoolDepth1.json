@@ -21,7 +21,7 @@
 				{
 					"button_text": "Excise and continue.",
 					"outcome_title": "It's done.",
-					"outcome_description": "A moment of pain, and the future lies ahead.",
+					"outcome_description": "A moment of pain, and the future lies ahead.\n\nTake one damage.",
 					"effects": [
 						{
 						"type": "changeValue",
@@ -41,7 +41,7 @@
 				{
 					"button_text": "Reach for it now.",
 					"outcome_title": "Another Man's Treasure",
-					"outcome_description": "The man's sack was filled with gold. You are a richer man than you were. He is not a poorer man than he was.",
+					"outcome_description": "The man's sack was filled with gold. You are a richer man than you were. He is not a poorer man than he was.\n\nReceive 5 gold.",
 					"effects": [
 						{
 						"type": "changeValue",
@@ -85,7 +85,7 @@
 				{
 					"button_text": "Pass by. I am perhaps a coward.",
 					"outcome_title": "You're Gonna Wonder A While",
-					"outcome_description": "You safely skirt past the door and scurry down the hall. Your body is intact. Can you say the same for your beliefs?\n\nYou will begin your next scenario Poisoned.",
+					"outcome_description": "You safely skirt past the door and scurry down the hall. Your body is intact. Can you say the same for your beliefs?\n\nYou will begin your next battle Poisoned.",
 					"effects": [
 						{
 						"type": "applyModifier",

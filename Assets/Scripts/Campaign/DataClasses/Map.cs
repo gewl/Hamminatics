@@ -27,7 +27,7 @@ public class Map {
         }
         else
         {
-            int layerCount = rand.Next(6, 9);
+            int layerCount = rand.Next(5, 8);
             nodeLayers = GenerateNormalLayers(layerCount);
         }
     }

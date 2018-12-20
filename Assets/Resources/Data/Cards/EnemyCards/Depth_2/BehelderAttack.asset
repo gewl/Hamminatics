@@ -3,13 +3,13 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5daf06a50df7c364ca33d7628e7a574c, type: 3}
-  m_Name: Absolution
+  m_Name: BehelderAttack
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -20,13 +20,14 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  ID: Absolution
+  ID: BehelderAttack
   description: Placeholder description.
-  energyCost: 4
-  baseGoldCost: 10
+  energyCost: 0
+  baseGoldCost: 0
   direction: 6
-  range: 2
-  cardImage: {fileID: 21300000, guid: 8b87fa5f9ab459c4fa448f7b94cabcfa, type: 3}
+  range: 3
+  cardImage: {fileID: 21300000, guid: a41c0778accf9184991441c470c10d09, type: 3}
   modifiers:
-  - {fileID: 11400000, guid: e8380a4d11b0fcc41ae96e74f1aadb2f, type: 2}
-  damage: 4
+  - {fileID: 11400000, guid: 05bc7db7914c8b947a85ccef823d49ab, type: 2}
+  damage: 1
+  targetType: 1

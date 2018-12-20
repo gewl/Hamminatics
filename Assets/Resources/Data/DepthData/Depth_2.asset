@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -27,4 +27,4 @@ MonoBehaviour:
   randomEnemySpawnPool:
   - {fileID: 0}
   goldValueMultiplier: 1
-  bossPool: {fileID: 11400000, guid: 3b2cc1514318868468a0fabbfb5bc973, type: 2}
+  bossPool: {fileID: 0}

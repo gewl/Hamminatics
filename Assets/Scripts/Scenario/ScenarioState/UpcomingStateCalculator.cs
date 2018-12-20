@@ -247,6 +247,8 @@ public static class UpcomingStateCalculator
     {
         switch (modifier.modifierCategory)
         {
+            // Cases account for modifiers that have some immediate impact (so far, all movement, of either attack target or attack source).
+            // Default case handles modifiers that apply lasting buff/debuff.
             case ModifierCategory.Push:
                 ApplyModifierToAttack_PushPull(target, modifier, attacker, gameState, ModifierCategory.Push);
                 return;

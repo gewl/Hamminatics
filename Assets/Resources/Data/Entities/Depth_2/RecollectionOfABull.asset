@@ -9,16 +9,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e174c53b44b9ae4582d787d13eebd90, type: 3}
-  m_Name: AilingBehemoth
+  m_Name: RecollectionOfABull
   m_EditorClassIdentifier: 
-  ID: Ailing Behemoth
-  description: Once a titan, now a shadow, and soon to be even less.
-  _maxHealth: 10
-  entitySprite: {fileID: 21300000, guid: 21a6bdac5bf017e468de8ce5e98218b9, type: 3}
+  ID: Recollection of a Bull
+  description: All it takes is cathexis and an animal. Passionate about charging.
+  _maxHealth: 4
+  entitySprite: {fileID: 21300000, guid: c3c4ba3f6aa059b4fbaff5c9a8eb2d9f, type: 3}
   Speed: 1
-  IdentifyingColor: {r: 0.7830189, g: 0.37087026, b: 0.040628344, a: 1}
+  IdentifyingColor: {r: 1, g: 0, b: 0, a: 1}
   dropItem: {fileID: 11400000, guid: efb8947d2fce4c44498292247daaae2d, type: 2}
   movementCard: {fileID: 11400000, guid: 654b721333882374b82396d1b7d67ada, type: 2}
-  attackCard: {fileID: 11400000, guid: 7f8c0e2bea566fb42bd3fd44e1b9b6cf, type: 2}
-  activeModifiers:
-  - {fileID: 11400000, guid: 658dfd3658b293442a016bf9b2814e18, type: 2}
+  attackCard: {fileID: 11400000, guid: 97523f1a68e046043a9072428833e185, type: 2}
+  activeModifiers: []

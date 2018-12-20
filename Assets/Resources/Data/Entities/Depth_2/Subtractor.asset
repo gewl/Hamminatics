@@ -9,15 +9,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e174c53b44b9ae4582d787d13eebd90, type: 3}
-  m_Name: Obtusity
+  m_Name: Subtractor
   m_EditorClassIdentifier: 
-  ID: Obtusity
-  description: A surprisingly-resilient abscess in space.
-  _maxHealth: 4
-  entitySprite: {fileID: 21300000, guid: 992cc4dfb87e42c4281c9a22097970cc, type: 3}
-  Speed: 3
-  IdentifyingColor: {r: 0.51507664, g: 0, b: 1, a: 1}
+  ID: Subtractor
+  description: Just a snake.
+  _maxHealth: 2
+  entitySprite: {fileID: 21300000, guid: 18f0d63753cd8284eb1535add8f65ba5, type: 3}
+  Speed: 4
+  IdentifyingColor: {r: 0.3524539, g: 0.6981132, b: 0.13501245, a: 1}
   dropItem: {fileID: 11400000, guid: 884978629fc8bee41a130a632f81be5f, type: 2}
-  movementCard: {fileID: 11400000, guid: d795a7befc81c354dbe74ba6b07573d5, type: 2}
-  attackCard: {fileID: 11400000, guid: 62f3e90b4d8623e4e85f249ff5361add, type: 2}
+  movementCard: {fileID: 11400000, guid: d34eb5f40323fa245881505bf0b3c41a, type: 2}
+  attackCard: {fileID: 11400000, guid: 3c055b10c83239c43a0673620ea8ae75, type: 2}
   activeModifiers: []

@@ -15,7 +15,7 @@ MonoBehaviour:
   description: Surprisingly resilient, consistently tempting, perpetually ill-advised.
   _maxHealth: 4
   entitySprite: {fileID: 21300000, guid: fd5c7f2b49e4cb24a8a3779bdd2a7d9f, type: 3}
-  Speed: 3
+  Speed: 5
   IdentifyingColor: {r: 0.34791303, g: 0.72794116, b: 0.38198444, a: 1}
   dropItem: {fileID: 11400000, guid: efcce6bb7cfc22b4295ee6c3cdd6d825, type: 2}
   movementCard: {fileID: 11400000, guid: 7eb599ec2e87a724f909c00b1e5184ea, type: 2}

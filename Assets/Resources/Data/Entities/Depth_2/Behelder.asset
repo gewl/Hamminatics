@@ -9,15 +9,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e174c53b44b9ae4582d787d13eebd90, type: 3}
-  m_Name: Obtusity
+  m_Name: Behelder
   m_EditorClassIdentifier: 
-  ID: Obtusity
-  description: A surprisingly-resilient abscess in space.
-  _maxHealth: 4
-  entitySprite: {fileID: 21300000, guid: 992cc4dfb87e42c4281c9a22097970cc, type: 3}
-  Speed: 3
-  IdentifyingColor: {r: 0.51507664, g: 0, b: 1, a: 1}
+  ID: Behelder
+  description: Apparently, it used to just be an eye.
+  _maxHealth: 2
+  entitySprite: {fileID: 21300000, guid: edf75ed04def9574a91d821253e5d9ef, type: 3}
+  Speed: 1
+  IdentifyingColor: {r: 0.27820748, g: 0, b: 0.5849056, a: 1}
   dropItem: {fileID: 11400000, guid: 884978629fc8bee41a130a632f81be5f, type: 2}
-  movementCard: {fileID: 11400000, guid: d795a7befc81c354dbe74ba6b07573d5, type: 2}
-  attackCard: {fileID: 11400000, guid: 62f3e90b4d8623e4e85f249ff5361add, type: 2}
+  movementCard: {fileID: 11400000, guid: 7eb599ec2e87a724f909c00b1e5184ea, type: 2}
+  attackCard: {fileID: 11400000, guid: ac2f15a749956194e8c29d3141d3e0cb, type: 2}
   activeModifiers: []
