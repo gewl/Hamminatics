@@ -21,7 +21,7 @@
 				{
 					"button_text": "Excise and continue.",
 					"outcome_title": "It's done.",
-					"outcome_description": "A moment of pain, and the future lies ahead.\n\nTake one damage.",
+					"outcome_description": "A moment of pain, and the future lies ahead. \n \nTake one damage.",
 					"effects": [
 						{
 						"type": "changeValue",
@@ -35,13 +35,13 @@
 		{
 			"id": "remnants_of_a_battle",
 			"name": "Remnants of a Battle",
-			"description": "You step into a courtyard. It is quiet and peaceful. The sun beams down from overhead, but it's unusually chilly for the time of year. You are reminded of a museum you visited a couple years ago where you spent the day alone, walking from exhibit to exhibit, your thoughts falling aimlessly from one subject to the next. You used to do things like that more, you think. You don't do things like that much anymore. \n\nA few bodies lie around the courtyard, clearly the leftovers of a skirmish some months past. It is not clear to you if there were any survivors. \n\nThe closest body has a fat-looking pouch upon his belt. You are drawn to it. Do you reach for it now, or spend a little while?",
+			"description": "You step into a courtyard. It is quiet and peaceful. The sun beams down from overhead, but it's unusually chilly for the time of year. You are reminded of a museum you visited a couple years ago where you spent the day alone, walking from exhibit to exhibit, your thoughts falling aimlessly from one subject to the next. You used to do things like that more, you think. You don't do things like that much anymore.  \n \nA few bodies lie around the courtyard, clearly the leftovers of a skirmish some months past. It is not clear to you if there were any survivors.  \n \nThe closest body has a fat-looking pouch upon his belt. You are drawn to it. Do you reach for it now, or spend a little while?",
 			"requirements": {},
 			"outcomes": [
 				{
 					"button_text": "Reach for it now.",
 					"outcome_title": "Another Man's Treasure",
-					"outcome_description": "The man's sack was filled with gold. You are a richer man than you were. He is not a poorer man than he was.\n\nReceive 5 gold.",
+					"outcome_description": "The man's sack was filled with gold. You are a richer man than you were. He is not a poorer man than he was. \n \nReceive 5 gold.",
 					"effects": [
 						{
 						"type": "changeValue",
@@ -67,7 +67,7 @@
 		{
 			"id": "an_unhappy_event",
 			"name": "An Unhappy Event",
-			"description": "Coming around a corner, you see light falling out of an open doorway up ahead. You drop to your hands and knees and crawl to peer inside. It is an unremarkable room with no treasures. Beasts and unpleasant strangers are faffing about. There is nothing to compel interest or to motivate entry. It is a boring place filled with your enemies.\n\nTheir attention is consumed by their own pointless business. You could so easily slip by. In a lot of ways, that'd be the mature decision. (You've always believed people should be mature to one another.) And, yet, something holds you up. You've been wondering lately if you might, perhaps, be a big wimp. After all, you keep finding yourself in situations like these: On your hands and knees, on the ground, crawling like a little piggie, oinking and snuffling in the dirt, and so on. And just oinking right past this room might do a lot to confirm your suspicions. Do you risk it?",
+			"description": "Coming around a corner, you see light falling out of an open doorway up ahead. You drop to your hands and knees and crawl to peer inside. It is an unremarkable room with no treasures. Beasts and unpleasant strangers are faffing about. There is nothing to compel interest or to motivate entry. It is a boring place filled with your enemies. \n \nTheir attention is consumed by their own pointless business. You could so easily slip by. In a lot of ways, that'd be the mature decision. (You've always believed people should be mature to one another.) And, yet, something holds you up. You've been wondering lately if you might, perhaps, be a big wimp. After all, you keep finding yourself in situations like these: On your hands and knees, on the ground, crawling like a little piggie, oinking and snuffling in the dirt, and so on. And just oinking right past this room might do a lot to confirm your suspicions. Do you risk it?",
 			"requirements": {},
 			"outcomes": [
 				{
@@ -85,7 +85,7 @@
 				{
 					"button_text": "Pass by. I am perhaps a coward.",
 					"outcome_title": "You're Gonna Wonder A While",
-					"outcome_description": "You safely skirt past the door and scurry down the hall. Your body is intact. Can you say the same for your beliefs?\n\nYou will begin your next battle Poisoned.",
+					"outcome_description": "You safely skirt past the door and scurry down the hall. Your body is intact. Can you say the same for your beliefs? \n \nYou will begin your next battle Poisoned.",
 					"effects": [
 						{
 						"type": "applyModifier",
@@ -99,7 +99,7 @@
 		{
 			"id": "moment_of_self_reflection",
 			"name": "Moment of Self-Reflection",
-			"description": "You developed your system of thought over the course of years by scaffolding your own beliefs atop theories and concepts you'd heard from others. The collected knowledge of the world--of the people that had preceded you, immortalized in books, shared and altered in conversation--had seemed a vast and immutable expanse of bedrock. Solid and secure. And your own thinking, your life, had taken that bedrock as its foundation, and so partook in its solidity. You had felt yourself a member of a vast community of friends and confidants, all of whom were waiting for you in the next room over.\n\nThis surety had given you resolve to enter the Abbey, and had kept your confidence alight through the first dim days of your passage through this gloomy, dwindled place. But as time as passed, things have changed. That comforting bedrock feels very far away. Your beliefs have begun to feel less like a home and more like a houseboat, built upon nothing, subject to the bucking of the waves. Your canon has fled you. The shore recedes. How will you repair the leaky vessel of your thought?",
+			"description": "You developed your system of thought over the course of years by scaffolding your own beliefs atop theories and concepts you'd heard from others. The collected knowledge of the world--of the people that had preceded you, immortalized in books, shared and altered in conversation--had seemed a vast and immutable expanse of bedrock. Solid and secure. And your own thinking, your life, had taken that bedrock as its foundation, and so partook in its solidity. You had felt yourself a member of a vast community of friends and confidants, all of whom were waiting for you in the next room over. \n \nThis surety had given you resolve to enter the Abbey, and had kept your confidence alight through the first dim days of your passage through this gloomy, dwindled place. But as time as passed, things have changed. That comforting bedrock feels very far away. Your beliefs have begun to feel less like a home and more like a houseboat, built upon nothing, subject to the bucking of the waves. Your canon has fled you. The shore recedes. How will you repair the leaky vessel of your thought?",
 			"requirements": {},
 			"outcomes": [
 				{
@@ -131,7 +131,7 @@
 		{
 			"id": "new_weird_friend",
 			"name": "New Weird Friend",
-			"description": "There are communities down here. You hadn't expected that. You feel silly, you should have known. There are open caverns lit with oil lanterns, unsteady rope bridges over nothing at all, warrens of bedrooms and mess halls carved out of the stone. Knotted ropes are strung between landmarks so travelers can find their way. You hold onto them for dear life, blinking against the dim with each tentative step forward. Children, born and raised in the Abbey, skip past you without hesitation. Sometimes you catch glimpses of their faces in the guttering light, their pupils wide and black, their emotions unguarded.\n\nYou come to one of these communities exhausted and underslept. A man hears your passage across the rope bridge and meets you at the end. He's whip-thin and hunched, with big teeth that catch light. He offers you a place to sleep, and you graciously accept. When you awake, he's there waiting for you with a knapsack full of food. He offers you a table and his company, but understands if you have to get going.",
+			"description": "There are communities down here. You hadn't expected that. You feel silly, you should have known. There are open caverns lit with oil lanterns, unsteady rope bridges over nothing at all, warrens of bedrooms and mess halls carved out of the stone. Knotted ropes are strung between landmarks so travelers can find their way. You hold onto them for dear life, blinking against the dim with each tentative step forward. Children, born and raised in the Abbey, skip past you without hesitation. Sometimes you catch glimpses of their faces in the guttering light, their pupils wide and black, their emotions unguarded. \n \nYou come to one of these communities exhausted and underslept. A man hears your passage across the rope bridge and meets you at the end. He's whip-thin and hunched, with big teeth that catch light. He offers you a place to sleep, and you graciously accept. When you awake, he's there waiting for you with a knapsack full of food. He offers you a table and his company, but understands if you have to get going.",
 			"requirements": {},
 			"outcomes": [
 				{

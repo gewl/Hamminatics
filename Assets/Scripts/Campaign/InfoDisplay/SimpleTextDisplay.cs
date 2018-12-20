@@ -15,7 +15,7 @@ public class SimpleTextDisplay : MonoBehaviour {
     {
         gameObject.SetActive(true);
         titleText.text = title;
-        bodyText.text = body;
+        bodyText.text = body.Replace("\\n", "\n");
 
         GameStateManager.ActivateFullScreenTrigger((BaseEventData data) => OnClickAnywhereWhenPaneExpanded());
     }

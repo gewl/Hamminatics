@@ -51,7 +51,7 @@ public class EventPane : MonoBehaviour {
         gameObject.SetActive(true);
 
         eventTitle.text = eventObject.GetField(EVENT_NAME).str;
-        eventDescription.text = eventObject.GetField(EVENT_DESCRIPTION).str;
+        eventDescription.text = eventObject.GetField(EVENT_DESCRIPTION).str.Replace("\\n", "\n");
 
         availableOutcomes = eventObject.GetField(OUTCOMES_ARRAY).list;
         int numberOfOutcomes = availableOutcomes.Count;
@@ -95,7 +95,7 @@ public class EventPane : MonoBehaviour {
         }
 
         eventTitle.text = selectedOutcome.GetField(OUTCOME_TITLE_TEXT).str;
-        eventDescription.text = selectedOutcome.GetField(OUTCOME_DESCRIPTION_TEXT).str;
+        eventDescription.text = selectedOutcome.GetField(OUTCOME_DESCRIPTION_TEXT).str.Replace("\\n", "\n");
 
         for (int i = 0; i < outcomeButtons.Length; i++)
         {
