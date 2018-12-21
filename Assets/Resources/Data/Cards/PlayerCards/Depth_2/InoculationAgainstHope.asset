@@ -8,8 +8,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5daf06a50df7c364ca33d7628e7a574c, type: 3}
-  m_Name: PatientBlow
+  m_Script: {fileID: 11500000, guid: 357bb60a163059c4fa9abfe5387a94e4, type: 3}
+  m_Name: InoculationAgainstHope
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -20,14 +20,13 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  ID: Patient Blow
-  description: You find strength in your solidity.
-  energyCost: 1
-  baseGoldCost: 7
+  ID: Inoculation Against Hope
+  description: A minute dose is sufficient to galvanize.
+  energyCost: 3
+  baseGoldCost: 5
   direction: 6
   range: 1
-  cardImage: {fileID: 21300000, guid: 231b70999e6a5f844ad173dc0425dc43, type: 3}
+  cardImage: {fileID: 21300000, guid: 6935fe88009481f4b9f11c3f05ecb94a, type: 3}
   modifiers:
-  - {fileID: 11400000, guid: 1df54984f57a8204baed7dce24753c46, type: 2}
-  damage: 2
-  targetType: 0
+  - {fileID: 11400000, guid: 243bc73e24d521d4590800356059d085, type: 2}
+  healthChange: 1

@@ -21,14 +21,13 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   ID: Overwhelming Pleasure
-  description: A blast of force.
+  description: A wanting blast.
   energyCost: 3
-  baseGoldCost: 4
+  baseGoldCost: 6
   direction: 6
   range: 3
   cardImage: {fileID: 21300000, guid: 8b87fa5f9ab459c4fa448f7b94cabcfa, type: 3}
   modifiers:
-  - {fileID: 11400000, guid: eac7fa1213dc054458174d2c659ce29b, type: 2}
-  - {fileID: 11400000, guid: 58c6c30d48272e34b8300ec1b10bbdea, type: 2}
+  - {fileID: 11400000, guid: 4d66e07f5df960940967d98b01f409d5, type: 2}
   damage: 2
   targetType: 0

@@ -1,0 +1,100 @@
+{
+  "events": [
+    {
+      "id": "stumble_across_an_ancestor",
+      "name": "Stumble Across An Ancestor",
+      "description": "It's late, and you've stumbled into a dim section of the Archives. You fear that you may be lost. You light a match and hold it close to a nearby stack of books in the hope of gleaning any information about where you might be. (The stack, as with most books you've seen in the Archives thus far, are damp. No fear of catching fire.) \n \nIt takes you a moment to realize that you recognize the book on top of the stack. Actually, you recognize every book in the stack. You're in the section pertaining to your own greatest scholarly interest! What are the odds? \n \nYou don't, however, recognize the book on the bottom of the stack. You haul it out, knocking a few books onto the floor in the process. Opening it, you find your entire own philosophy, stated eloquently and lucidly, piece-by-piece. How is this possible? You had believed your beliefs to be original, or at least novel. Did you somehow plagiarize a book you'd never read? You feel shaken, and a little queasy.",
+      "requirements": {},
+      "outcomes": [
+        {
+          "button_text": "Try to accept this.",
+          "outcome_title": "Nothing New Under The Sun",
+          "outcome_description": "You feel humiliated and a little embarrassed. How many people had thought you were just ripping this book off? What else are you blind to? Have you ever had an original idea? You can't really know. You can never really know. You sense, with some panic, a gulf of meaninglessness in the darkness just beyond the low light of your thoughts. \n \nAnd, yet, you feel a little grateful, too. Better to know, and live chastened, then to spend a life in ignorance. At least now you can do something about it...even if you haven't figured out what that something is yet. \n\nYou may upgrade a card.",
+          "effects": [
+            {
+              "type": "offerUpgrade",
+              "string_data": "",
+              "int_data": -1
+            }
+          ]
+        },
+        {
+          "button_text": "Try to ignore this.",
+          "outcome_title": "Out of Sight, Out of Mind",
+          "outcome_description": "It is easier, you decide, to pretend as though you simply didn't see this book. You never lit the match; you never found your bearings. Your thoughts are your own. You developed them in the context of your own life, informed by your own experiences, in response to ideas that you actually were exposed to. Nothing can take that away from you, nothing can retroactively change the truth. And you know the truth. You feel emboldened. \n\nBegin your next battle Strengthened.",
+          "effects": [
+            {
+              "type": "applyModifier",
+              "string_data": "Strength_2_3",
+              "int_data": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "step_on_a_snake",
+      "name": "Step On A Snake",
+      "description": "One day, you step on a snake.",
+      "requirements": {},
+      "outcomes": [
+        {
+          "button_text": "Ah! Oh no!",
+          "outcome_title": "I'm Afraid So",
+          "outcome_description": "The snake has bitten you, too. \n\nStart your next battle Weakened.",
+          "effects": [
+            {
+              "type": "applyModifier",
+              "string_data": "Weaken_1_3",
+              "int_data": -1
+            }
+          ]
+        },
+        {
+          "button_text": "I stepped on a snake!",
+          "outcome_title": "Yes, You Stepped On A Snake",
+          "outcome_description": "Additionally, the snake has bitten you. \n\nTake a lil damage.",
+          "effects": [
+            {
+              "type": "changeValue",
+              "string_data": "health",
+              "int_data": -1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "write_an_event",
+      "name": "Write An Event",
+      "description": "You get a buzz on your cell phone. It's a text from your friend. Well, not really your friend. Someone you used to be close with, but from whom you've grown apart over the last couple years. You say 'grown apart', but that's not really the truth of it. It's not just about diverging interests. There are things about who they are as a person—their values, their interests—that have always bothered you, and it increasingly feels like exactly those things that are becoming exacerbated as time goes on. You don't like how they talk about people, you don't like what their attention seems to gravitate to. It seems selfish to assume that you're staying the same and they're changing, but you have a hard time reconciling who they increasingly are with who you knew them to be. Are they changing that much? Or is it all you, your changes, your perception? What would it take to return to how things were? Would you even want that? \n\nAnyway, they want you to write an event for a video game they're working on.",
+      "requirements": {},
+      "outcomes": [
+        {
+          "button_text": "I'll write the event.",
+          "outcome_title": "You Wrote The Event",
+          "outcome_description": "Very big of you, to put your personal feelings aside. Or maybe you had selfish motives. Honestly, that'd be fun. Anyway, you get paid scale. Congratulations. Please join the union for game writers. \n\nYou get 5 gold.",
+          "effects": [
+            {
+              "type": "changeValue",
+              "string_data": "gold",
+              "int_data": 5
+            }
+          ]
+        },
+        {
+          "button_text": "I will not write the event.",
+          "outcome_title": "You Would Not Write The Event",
+          "outcome_description": "You ignore the text. Which is fine. It's just what you do now. You have probably put more strain on an already-ailing friendship today, but...you're in the Archives. You're fighting monsters and collecting cards. If they have a problem with that, so be it. \n\nUpgrade a card, for some reason.",
+          "effects": [
+            {
+              "type": "offerUpgrade",
+              "string_data": "",
+              "int_data": -1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

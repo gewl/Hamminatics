@@ -9,7 +9,7 @@ public class Inventory {
 
     public Inventory()
     {
-        gold = 20;
+        gold = 5;
         equippedCards = DataRetriever.GetBasicCards();
     }
 

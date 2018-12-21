@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -25,10 +25,11 @@ MonoBehaviour:
     it sticks with you.\n\nDeal damage to an enemy. If they survive, they'll heal
     it off over time.
   energyCost: 3
-  baseGoldCost: 3
+  baseGoldCost: 5
   direction: 6
   range: 1
   cardImage: {fileID: 21300000, guid: 8b87fa5f9ab459c4fa448f7b94cabcfa, type: 3}
   modifiers:
   - {fileID: 11400000, guid: 067beb67b94bf454794864497a2bcbb5, type: 2}
   damage: 3
+  targetType: 0

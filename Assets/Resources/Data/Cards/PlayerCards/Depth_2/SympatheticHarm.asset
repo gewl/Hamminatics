@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5daf06a50df7c364ca33d7628e7a574c, type: 3}
-  m_Name: PatientBlow
+  m_Name: SympatheticHarm
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -20,14 +20,13 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  ID: Patient Blow
-  description: You find strength in your solidity.
-  energyCost: 1
-  baseGoldCost: 7
+  ID: Sympathetic Harm
+  description: Put some hurt on everyone around. Everyone. Around.
+  energyCost: 2
+  baseGoldCost: 5
   direction: 6
   range: 1
-  cardImage: {fileID: 21300000, guid: 231b70999e6a5f844ad173dc0425dc43, type: 3}
-  modifiers:
-  - {fileID: 11400000, guid: 1df54984f57a8204baed7dce24753c46, type: 2}
+  cardImage: {fileID: 21300000, guid: 06bb56dab4b3a2846893847b6014b02a, type: 3}
+  modifiers: []
   damage: 2
-  targetType: 0
+  targetType: 1

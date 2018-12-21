@@ -22,9 +22,19 @@ MonoBehaviour:
     SerializationNodes: []
   locationName: The Archive
   ID: 2
-  randomCardPool: []
-  eventPool: {fileID: 0}
-  randomEnemySpawnPool:
-  - {fileID: 0}
+  randomCardPool:
+  - {fileID: 11400000, guid: 24308aed2b6b6cd47bfb66feb81d8271, type: 2}
+  - {fileID: 11400000, guid: 9c130d426ecd97f498c3dbaaa6c4883e, type: 2}
+  - {fileID: 11400000, guid: 39eb943a86324cb48bcb8506a5b3ffac, type: 2}
+  - {fileID: 11400000, guid: f335b7e66c79014469aa53b29b6b1d35, type: 2}
+  - {fileID: 11400000, guid: 5c0e9ac17e5ea3c4f94597efe60e1d09, type: 2}
+  - {fileID: 11400000, guid: 143c0aac2232ed0459c3f3fa4ff0ce10, type: 2}
+  - {fileID: 11400000, guid: b4aaf89feccce6c4180c6ef95ef08aa8, type: 2}
+  - {fileID: 11400000, guid: 76dd9b78ecb3d0745ab66906a3a9e201, type: 2}
+  - {fileID: 11400000, guid: 4e21395c4b5505e4ba7cdf5970c8a077, type: 2}
+  - {fileID: 11400000, guid: 0b71ed31a674e814fafd09cc63b9e7a0, type: 2}
+  - {fileID: 11400000, guid: 9fecb526a89484f46beb619058c0860f, type: 2}
+  eventPool: {fileID: 4900000, guid: 1ba1650333b4f704694305c295156587, type: 3}
+  randomEnemySpawnPool: []
   goldValueMultiplier: 1
   bossPool: {fileID: 0}
