@@ -35,6 +35,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0b71ed31a674e814fafd09cc63b9e7a0, type: 2}
   - {fileID: 11400000, guid: 9fecb526a89484f46beb619058c0860f, type: 2}
   eventPool: {fileID: 4900000, guid: 1ba1650333b4f704694305c295156587, type: 3}
-  randomEnemySpawnPool: []
+  randomEnemySpawnPool:
+  - {fileID: 11400000, guid: 90348ef0e504f464fb7ac85f6ce75495, type: 2}
+  - {fileID: 11400000, guid: edd2e6d93dfe21343b6630ed6bc987d9, type: 2}
+  - {fileID: 11400000, guid: a0a616a3e5565d64ab9560f55f22304f, type: 2}
+  - {fileID: 11400000, guid: c97b895e2aae656408f0346825fdfb8a, type: 2}
+  - {fileID: 11400000, guid: 66aa1bf2a37743046b05e3a9741f27b0, type: 2}
+  - {fileID: 11400000, guid: d41fd1eedf05072479c40c52e5f26358, type: 2}
+  - {fileID: 11400000, guid: 608e35ff083ca5343a5280504a97309b, type: 2}
+  - {fileID: 11400000, guid: a4e7edbde967d5946853331a5ed5a710, type: 2}
+  - {fileID: 11400000, guid: 0bccb8f0313b9f74fa406addcfba3ca0, type: 2}
   goldValueMultiplier: 1
   bossPool: {fileID: 0}
