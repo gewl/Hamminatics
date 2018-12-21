@@ -21,7 +21,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   ID: Move
-  description: 
+  description: Use your feet, then you...beat.
   energyCost: 0
   baseGoldCost: 0
   direction: 6

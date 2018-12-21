@@ -70,6 +70,7 @@ public class DataRetriever : MonoBehaviour {
     {
         if (newState.depth != currentDepth)
         {
+            Debug.Log("loading new depth data for depth: " + newState.depth);
             DepthData newDepthData = Resources.Load<DepthData>(DEPTH_DATA_DIR + DEPTH_FILE_PREFIX + newState.depth);
 
             if (newDepthData != null)

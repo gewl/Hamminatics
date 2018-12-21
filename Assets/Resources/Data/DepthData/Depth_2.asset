@@ -24,7 +24,6 @@ MonoBehaviour:
   ID: 2
   randomCardPool:
   - {fileID: 11400000, guid: 24308aed2b6b6cd47bfb66feb81d8271, type: 2}
-  - {fileID: 11400000, guid: 9c130d426ecd97f498c3dbaaa6c4883e, type: 2}
   - {fileID: 11400000, guid: 39eb943a86324cb48bcb8506a5b3ffac, type: 2}
   - {fileID: 11400000, guid: f335b7e66c79014469aa53b29b6b1d35, type: 2}
   - {fileID: 11400000, guid: 5c0e9ac17e5ea3c4f94597efe60e1d09, type: 2}
@@ -45,5 +44,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 608e35ff083ca5343a5280504a97309b, type: 2}
   - {fileID: 11400000, guid: a4e7edbde967d5946853331a5ed5a710, type: 2}
   - {fileID: 11400000, guid: 0bccb8f0313b9f74fa406addcfba3ca0, type: 2}
-  goldValueMultiplier: 1
+  goldValueMultiplier: 2
   bossPool: {fileID: 0}

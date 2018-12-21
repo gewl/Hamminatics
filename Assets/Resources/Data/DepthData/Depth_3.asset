@@ -25,5 +25,5 @@ MonoBehaviour:
   randomCardPool: []
   eventPool: {fileID: 0}
   randomEnemySpawnPool: []
-  goldValueMultiplier: 1
+  goldValueMultiplier: 3
   bossPool: {fileID: 11400000, guid: 3b2cc1514318868468a0fabbfb5bc973, type: 2}
