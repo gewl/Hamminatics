@@ -48,17 +48,17 @@ public class NodeInfoPane : MonoBehaviour {
         switch (nodeType)
         {
             case MapNodeType.Start:
-                return "The entrance to the zone.";
+                return "The staircase you came down. You won't be going back that way.";
             case MapNodeType.Scenario:
-                return "A scenario.";
+                return "Ghouls, goblins, gold. Take and receive damage. Use mechanics for your pleasure.";
             case MapNodeType.Event:
-                return "An event.";
+                return "Could be good, could be bad. But one thing's for certain. It'll be good or bad.";
             case MapNodeType.Store:
-                return "A store.";
+                return "The fundament of commerce...the humble small business.";
             case MapNodeType.End:
-                return "The exit from the zone.";
+                return "A staircase leading downward. The only apparent exit.";
             case MapNodeType.Boss:
-                return "A guardian of the Abbey.";
+                return "One of the guardians of this place.";
             default:
                 Debug.LogError("Incompatible nodetype.");
                 return "placeholder";

@@ -16,7 +16,7 @@ MonoBehaviour:
   _maxHealth: 2
   entitySprite: {fileID: 21300000, guid: 18f0d63753cd8284eb1535add8f65ba5, type: 3}
   Speed: 4
-  IdentifyingColor: {r: 0.3524539, g: 0.6981132, b: 0.13501245, a: 1}
+  IdentifyingColor: {r: 0.18752718, g: 0.4339623, b: 0.030704875, a: 1}
   dropItem: {fileID: 11400000, guid: 884978629fc8bee41a130a632f81be5f, type: 2}
   movementCard: {fileID: 11400000, guid: d34eb5f40323fa245881505bf0b3c41a, type: 2}
   attackCard: {fileID: 11400000, guid: 3c055b10c83239c43a0673620ea8ae75, type: 2}
