@@ -19,6 +19,8 @@ public class CharacterInfoPane : MonoBehaviour {
     [SerializeField]
     Text goldAmountText;
     [SerializeField]
+    Text artifactAmountText;
+    [SerializeField]
     CampaignCardDisplay cardDisplayPane;
 
     [Header("Miscellaneous")]
@@ -69,6 +71,7 @@ public class CharacterInfoPane : MonoBehaviour {
     void UpdateInventoryDisplay(Inventory currentInventory)
     {
         goldAmountText.text = currentInventory.gold.ToString();
+        artifactAmountText.text = currentInventory.artifacts.ToString();
     }
     #endregion
 

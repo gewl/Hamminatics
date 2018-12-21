@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: Obtusity
   m_EditorClassIdentifier: 
   ID: Obtusity
-  description: A surprisingly-resilient abscess in space.
-  _maxHealth: 4
+  description: An abscess in space.
+  _maxHealth: 3
   entitySprite: {fileID: 21300000, guid: 992cc4dfb87e42c4281c9a22097970cc, type: 3}
   Speed: 3
   IdentifyingColor: {r: 0.51507664, g: 0, b: 1, a: 1}

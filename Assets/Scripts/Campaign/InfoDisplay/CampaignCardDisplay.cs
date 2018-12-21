@@ -24,7 +24,7 @@ public class CampaignCardDisplay : MonoBehaviour {
 
             string cardTitle = NO_CARD_TITLE;
             Sprite cardImage = null;
-            string cardDesc = NO_CARD_DESC;
+            string cardDesc = NO_CARD_DESC.Replace("\\n", "\n");
             if (card != null)
             {
                 cardTitle = card.ID;

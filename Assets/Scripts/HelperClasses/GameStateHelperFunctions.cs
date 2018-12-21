@@ -201,6 +201,14 @@ public static class ScenarioStateHelperFunctions {
                 TrapData trap = item as TrapData;
                 ApplyTrapToEntity(state, trap, collector);
                 break;
+            case ItemCategory.Artifact:
+                if (collector != state.player)
+                {
+                    break;
+                }
+                state.inventory.artifacts++;
+                state.items.Remove(item);
+                break;
             default:
                 break;
         }

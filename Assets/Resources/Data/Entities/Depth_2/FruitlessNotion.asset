@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: Fruitless Notion
   description: Surprisingly resilient, consistently tempting, perpetually ill-advised.
-  _maxHealth: 4
+  _maxHealth: 3
   entitySprite: {fileID: 21300000, guid: fd5c7f2b49e4cb24a8a3779bdd2a7d9f, type: 3}
   Speed: 5
   IdentifyingColor: {r: 0.34791303, g: 0.72794116, b: 0.38198444, a: 1}

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4baf88cbbd41f643934befa9b4e5c05, type: 3}
+  m_Name: NotionVenomSubtractor
+  m_EditorClassIdentifier: 
+  ID: 
+  probabilityWeight: 1
+  probabilityRangeFrom: 0
+  probabilityRangeTo: 0
+  enemiesToSpawn:
+  - {fileID: 11400000, guid: 514bd404c7a93834bae42b230118df8e, type: 2}
+  - {fileID: 11400000, guid: d94095b4e01ebdb40b95a1550f196c3a, type: 2}
+  - {fileID: 11400000, guid: cb23a3286cdeb054ea0c185bbe85ac1c, type: 2}
+  itemsToSpawn:
+  - {fileID: 11400000, guid: 1c44f1723abac2c4a8de017776898e66, type: 2}
+  scenarioReward: {fileID: 0}
