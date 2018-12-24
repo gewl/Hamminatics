@@ -66,7 +66,6 @@ public class GameStateManager : MonoBehaviour {
         mainMenuController.gameObject.SetActive(false);
         mapController.gameObject.SetActive(true);
         EntityData player = ScriptableObject.Instantiate(playerData);
-        int mapLayerCount = 6;
 
         CurrentCampaign = new CampaignState(new Inventory(), new Map(1), player);
         DataRetriever.UpdateDepthData(CurrentCampaign.depth);

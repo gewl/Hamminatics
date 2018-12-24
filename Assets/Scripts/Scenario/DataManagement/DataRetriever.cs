@@ -68,17 +68,7 @@ public class DataRetriever : MonoBehaviour {
 
     void OnCampaignStateUpdate(CampaignState newState)
     {
-        if (newState.depth != currentDepth)
-        {
-            Debug.Log("loading new depth data for depth: " + newState.depth);
-            DepthData newDepthData = Resources.Load<DepthData>(DEPTH_DATA_DIR + DEPTH_FILE_PREFIX + newState.depth);
-
-            if (newDepthData != null)
-            {
-                currentDepthData = newDepthData;
-                currentDepth = newState.depth;
-            }
-        }
+        UpdateDepthData(newState.depth);
     }
 
     public static void UpdateDepthData(int newDepth)
@@ -94,7 +84,25 @@ public class DataRetriever : MonoBehaviour {
         if (newDepthData != null)
         {
             currentDepthData = newDepthData;
+
+            TextAsset eventsText = newDepthData.eventPool;
+            JSONObject layerEventObject = new JSONObject(eventsText.text);
+            currentLayerEvents = layerEventObject[EVENTS_KEY].list;
         }
+        else
+        {
+            Debug.LogError("Couldn't load depth data for depth: " + newDepth);
+        }
+    }
+
+    public static string GetDepthName(int depth)
+    {
+        if (currentDepth != depth)
+        {
+            UpdateDepthData(depth);
+        }
+
+        return currentDepthData.locationName;
     }
 
     public static int GetDepthGoldMultiplier()
@@ -202,6 +210,7 @@ public class DataRetriever : MonoBehaviour {
     #region json/events
     public static JSONObject GetRandomEventByDepth(int depth)
     {
+        Debug.Log("getting event by depth: " + depth);
         if (depth != currentDepth || currentLayerEvents == null || currentLayerEvents.Count == 0)
         {
             TextAsset eventsText = currentDepthData.eventPool;

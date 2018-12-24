@@ -26,6 +26,8 @@ public class CharacterInfoPane : MonoBehaviour {
     [Header("Miscellaneous")]
     [SerializeField]
     Text depthText;
+    [SerializeField]
+    Text depthNameText;
 
     Image[] healthBubs;
 
@@ -51,6 +53,7 @@ public class CharacterInfoPane : MonoBehaviour {
         UpdateInventoryDisplay(newCampaignState.inventory);
 
         depthText.text = newCampaignState.depth.ToString();
+        depthNameText.text = DataRetriever.GetDepthName(newCampaignState.depth);
     }
 
     void UpdateHealthDisplay(int currentHealth)

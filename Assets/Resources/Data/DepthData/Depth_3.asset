@@ -23,7 +23,7 @@ MonoBehaviour:
   locationName: The Inchoate
   ID: 3
   randomCardPool: []
-  eventPool: {fileID: 0}
+  eventPool: {fileID: 4900000, guid: 1ba1650333b4f704694305c295156587, type: 3}
   randomEnemySpawnPool: []
   goldValueMultiplier: 3
   bossPool: {fileID: 11400000, guid: 3b2cc1514318868468a0fabbfb5bc973, type: 2}
