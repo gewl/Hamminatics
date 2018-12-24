@@ -13,7 +13,7 @@ public class TurnQueueDash : MonoBehaviour {
 
     List<Turn> currentlyDepictedTurns;
 
-    QueuedTurnController[] queuedTurnController;
+    QueuedTurnController[] queuedTurnControllers;
     Image[] turnImages;
     Outline[] turnOutlines;
 
@@ -32,17 +32,17 @@ public class TurnQueueDash : MonoBehaviour {
     {
         canvasScaler = GetComponentInParent<CanvasScaler>();
 
-        queuedTurnController = GetComponentsInChildren<QueuedTurnController>();
-        turnImages = new Image[queuedTurnController.Length];
-        turnOutlines = new Outline[queuedTurnController.Length];
+        queuedTurnControllers = GetComponentsInChildren<QueuedTurnController>();
+        turnImages = new Image[queuedTurnControllers.Length];
+        turnOutlines = new Outline[queuedTurnControllers.Length];
 
-        for (int i = 0; i < queuedTurnController.Length; i++)
+        for (int i = 0; i < queuedTurnControllers.Length; i++)
         {
-            turnImages[i] = queuedTurnController[i].GetComponent<Image>();
-            turnOutlines[i] = queuedTurnController[i].GetComponent<Outline>();
+            turnImages[i] = queuedTurnControllers[i].GetComponent<Image>();
+            turnOutlines[i] = queuedTurnControllers[i].GetComponent<Outline>();
         }
 
-        turnsAreBudged = new bool[queuedTurnController.Length];
+        turnsAreBudged = new bool[queuedTurnControllers.Length];
 
         layoutGroup = GetComponent<LayoutGroup>();
     }
@@ -99,23 +99,23 @@ public class TurnQueueDash : MonoBehaviour {
 
         for (int i = 0; i < turns.Count; i++)
         {
-            queuedTurnController[i].gameObject.SetActive(true);
-            queuedTurnController[i].UpdateDepictedTurn(turns[i]);
+            queuedTurnControllers[i].gameObject.SetActive(true);
+            queuedTurnControllers[i].UpdateDepictedTurn(turns[i]);
 
             turnImages[i].color = turns[i].Entity.IdentifyingColor;
             if (turns[i].Entity.ID == Constants.PLAYER_ID)
             {
-                queuedTurnController[i].isPlayerTurn = true;
+                queuedTurnControllers[i].isPlayerTurn = true;
             }
             else
             {
-                queuedTurnController[i].isPlayerTurn = false;
+                queuedTurnControllers[i].isPlayerTurn = false;
             }
         }
 
-        for (int j = turns.Count; j < queuedTurnController.Length; j++)
+        for (int j = turns.Count; j < queuedTurnControllers.Length; j++)
         {
-            queuedTurnController[j].gameObject.SetActive(false);
+            queuedTurnControllers[j].gameObject.SetActive(false);
         }
     }
     #endregion
@@ -147,12 +147,12 @@ public class TurnQueueDash : MonoBehaviour {
 
             if (!turnsAreBudged[i] && turnBackgroundImage.transform.position.x < draggingTurnX)
             {
-                queuedTurnController[i].ToggleBudgedStatus(true);
+                queuedTurnControllers[i].ToggleBudgedStatus(true);
                 turnsAreBudged[i] = true;
             }
             else if (turnsAreBudged[i] && turnBackgroundImage.transform.position.x > draggingTurnX)
             {
-                queuedTurnController[i].ToggleBudgedStatus(false);
+                queuedTurnControllers[i].ToggleBudgedStatus(false);
                 turnsAreBudged[i] = false;
             }
         }
@@ -160,24 +160,27 @@ public class TurnQueueDash : MonoBehaviour {
 
     public void OnQueuedTurnDrop()
     {
-        for (int i = 0; i < queuedTurnController.Length; i++)
+        for (int i = 0; i < queuedTurnControllers.Length; i++)
         {
-            queuedTurnController[i].OnOtherTurnDragEnded();
+            queuedTurnControllers[i].OnOtherTurnDragEnded();
         }
 
         int newPlayerTurnIndex = 0;
-        for (int i = 0; i < queuedTurnController.Length; i++)
+        for (int i = 0; i < queuedTurnControllers.Length; i++)
         {
-            Transform turnTransform = queuedTurnController[i].transform;
+            Transform queuedTurnTransform = queuedTurnControllers[i].transform;
 
-            if (turnTransform == draggingTurn)
+            // If moving turn to later in the queue, don't count the turn for the purpose of determining how many turns it's succeeding.
+            // (Was giving higher-than-expected value when player's turn was moving later.)
+            if (queuedTurnTransform == draggingTurn)
             {
+                newPlayerTurnIndex--;
                 continue;
             }
 
-            if (!turnTransform.gameObject.activeSelf || turnTransform.position.x > draggingTurn.position.x)
+            if (!queuedTurnTransform.gameObject.activeSelf || queuedTurnTransform.position.x > draggingTurn.position.x)
             {
-                newPlayerTurnIndex = i;
+                newPlayerTurnIndex += i;
                 break;
             }
         }
@@ -194,12 +197,12 @@ public class TurnQueueDash : MonoBehaviour {
         for (int i = 0; i < turnIndex; i++)
         {
             turnsAreBudged[i] = true;
-            queuedTurnController[i].RecalculateBudgedPosition(true);
+            queuedTurnControllers[i].RecalculateBudgedPosition(true);
         }
         for (int i = turnIndex; i < turnsAreBudged.Length; i++)
         {
             turnsAreBudged[i] = false;
-            queuedTurnController[i].RecalculateBudgedPosition(false);
+            queuedTurnControllers[i].RecalculateBudgedPosition(false);
         }
     }
     #endregion

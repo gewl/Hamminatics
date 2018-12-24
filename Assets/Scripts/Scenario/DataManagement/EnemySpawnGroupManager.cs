@@ -20,8 +20,7 @@ public class EnemySpawnGroupManager : SerializedMonoBehaviour {
         if (depth != cachedDepth)
         {
             List<EnemySpawnGroupData> newSpawnTable = DataRetriever.GetEnemySpawnGroups();
-            Debug.Log("loading new spawn table for depth: " + depth);
-            Debug.Log("spawn table has this number of spawn groups: " + newSpawnTable.Count);
+
             if (newSpawnTable != null && newSpawnTable.Count > 0)
             {
                 ValidateAndCacheSpawnTable(newSpawnTable);

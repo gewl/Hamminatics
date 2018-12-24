@@ -117,10 +117,11 @@ public class TurnStackController : MonoBehaviour {
         List<Turn> turnList = TurnStack.ToList();
 
         Turn playerTurn = GetPlayerTurn();
+        turnList.Remove(playerTurn);
 
         Stack<Turn> newTurnStack = new Stack<Turn>();
 
-        for (int i = turnList.Count - 1; i >= newIndex; i--) 
+        for (int i = 0; i < newIndex; i++) 
         {
             Turn turn = turnList[i];
             if (turn.IsPlayerTurn())
@@ -133,7 +134,7 @@ public class TurnStackController : MonoBehaviour {
 
         newTurnStack.Push(playerTurn);
 
-        for (int i = newIndex - 1; i >= 0; i--)
+        for (int i = newIndex; i < turnList.Count; i++)
         {
             Turn turn = turnList[i];
             if (turn.IsPlayerTurn())
@@ -144,8 +145,8 @@ public class TurnStackController : MonoBehaviour {
             newTurnStack.Push(turn);
         }
 
-        TurnStack = newTurnStack;
-        energyManager.UpdateProjectedEnergyGain(newIndex - 1);
+        TurnStack = new Stack<Turn>(newTurnStack);
+        energyManager.UpdateProjectedEnergyGain(newIndex);
         OnTurnStackUpdate(TurnStack.ToList<Turn>());
     }
 
