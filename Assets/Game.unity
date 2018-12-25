@@ -3756,7 +3756,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Gimbus the Heavymancer
+  m_Text: Hadbo the Desiremancer
 --- !u!222 &241197255
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10987,7 +10987,7 @@ MonoBehaviour:
   startGameButton: {fileID: 13415626}
   classText: {fileID: 1814713107}
   classNames:
-  - Gimbus the Desiremancer
+  - Hadbo the Desiremancer
   - Crelba the Agitatrix
   - Amnesiac Orc
   - Maledictor Tess
