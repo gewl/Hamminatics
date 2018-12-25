@@ -2,7 +2,7 @@
   "events": [
     {
       "id": "stumble_across_an_ancestor",
-      "name": "Stumble Across An Ancestor",
+      "name": "A Stumble Across",
       "description": "It's late, and you've stumbled into a dim section of the Archives. You fear that you may be lost. You light a match and hold it close to a nearby stack of books in the hope of gleaning any information about where you might be. (The stack, as with most books you've seen in the Archives thus far, are damp. No fear of catching fire.) \n \nIt takes you a moment to realize that you recognize the book on top of the stack. Actually, you recognize every book in the stack. You're in the section pertaining to your own greatest scholarly interest! What are the odds? \n \nYou don't, however, recognize the book on the bottom of the stack. You haul it out, knocking a few books onto the floor in the process. Opening it, you find your entire own philosophy, stated eloquently and lucidly, piece-by-piece. How is this possible? You had believed your beliefs to be original, or at least novel. Did you somehow plagiarize a book you'd never read? You feel shaken, and a little queasy.",
       "requirements": {},
       "outcomes": [
