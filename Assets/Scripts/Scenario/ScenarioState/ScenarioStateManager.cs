@@ -11,6 +11,8 @@ public class ScenarioStateManager : MonoBehaviour {
     GameStateManager gameStateManager;
     [SerializeField]
     EnemySpawnGroupManager enemySpawnGroupManager;
+    [SerializeField]
+    GameObject lostScreen;
     
     TurnStackController _turnStackController;
     TurnStackController turnStackController
@@ -203,6 +205,10 @@ public class ScenarioStateManager : MonoBehaviour {
             movementRange = cardRange;
             playerTile.Neighbors.ForEach(t => HighlightCell(t.Position));
         }
+        else if (card.category == CardCategory.Self)
+        {
+            HighlightCell(playerTile.Position);
+        }
         else
         {
             playerTile.GetTilesWithinLinearRange(cardRange).ForEach(t => HighlightCell(t.Position));
@@ -383,6 +389,12 @@ public class ScenarioStateManager : MonoBehaviour {
 
         isResolvingTurn = false;
         upcomingScenarioStates.Clear();
+
+        if (Player.CurrentHealth == 0)
+        {
+            lostScreen.SetActive(true);
+            yield break;
+        }
 
         GameStateDelegates.OnCurrentScenarioStateChange?.Invoke(CurrentScenarioState, upcomingScenarioStates);
 
