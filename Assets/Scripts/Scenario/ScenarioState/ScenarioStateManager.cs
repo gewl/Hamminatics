@@ -366,6 +366,24 @@ public class ScenarioStateManager : MonoBehaviour {
             GameStateDelegates.OnResolvingState?.Invoke(dequeuedProjectedState);
             ScenarioState nextScenarioState = dequeuedProjectedState.scenarioState;
 
+            Debug.Log("NEXT TURN");
+            Debug.Log(dequeuedProjectedState.activeEntity + ": " + dequeuedProjectedState.action.card.name);
+            if (dequeuedProjectedState.action.card.category == CardCategory.Attack)
+            {
+                AttackCardData attackCard = dequeuedProjectedState.action.card as AttackCardData;
+                Debug.Log("dealing " + attackCard.damage + " damage to:");
+                dequeuedProjectedState.attackedPositions.Select(p => nextScenarioState.GetTileOccupant(p)).Where(e => e != null).ToList().ForEach(e => Debug.Log(e.ID + ", new health:" + e.CurrentHealth));
+            }
+            else
+            {
+                Debug.Log("moving");
+            }
+
+            if (dequeuedProjectedState.bumps.Count > 0)
+            {
+                dequeuedProjectedState.bumps.ForEach(b => Debug.Log(b.bumpingEntity + " bumping " + b.bumpedEntity));
+            }
+
             UpdateScenarioState(nextScenarioState);
 
             upcomingScenarioStates = new List<ProjectedGameState>(upcomingStateQueue);
@@ -381,7 +399,6 @@ public class ScenarioStateManager : MonoBehaviour {
             winScreen.SetActive(true);
             yield break;
         }
-        //CurrentScenarioState.UpdateStagnation(boardController.currentBoard);
         CurrentScenarioState.items = UpdateItemDurations(CurrentScenarioState);
         UpdateExitArrowVisibility();
 
