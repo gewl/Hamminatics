@@ -68,24 +68,25 @@ public static class UpcomingStateCalculator
             UpdateEntityModifiers(entity, mostRecentState);
         }
 
+        // TODO: As-is, this was causing a bunch of problems with state calculation. Gotta bugfix it.
         // If enemies dead, duplicate current gamestate, just for stagnation projection purposes.
-        if (projectedGameStates.Count == 0)
-        {
-            ProjectedGameState fillerGameState = new ProjectedGameState(currentState.DeepCopy());
-            projectedGameStates.Add(fillerGameState);
-        }
+        //if (projectedGameStates.Count == 0)
+        //{
+        //    ProjectedGameState fillerGameState = new ProjectedGameState(currentState.DeepCopy());
+        //    projectedGameStates.Add(fillerGameState);
+        //}
 
-        ScenarioState lastCalculatedState = projectedGameStates.Last().scenarioState;
+        //ScenarioState lastCalculatedState = projectedGameStates.Last().scenarioState;
 
-        lastCalculatedState.UpdateStagnation(board);
-        lastCalculatedState.stagnatedPositions.ForEach(p =>
-        {
-            EntityData stagnatedEntity = lastCalculatedState.GetTileOccupant(p);
-            if (stagnatedEntity != null)
-            {
-                stagnatedEntity.DealDamage(1, lastCalculatedState);
-            }
-        });
+        //lastCalculatedState.UpdateStagnation(board);
+        //lastCalculatedState.stagnatedPositions.ForEach(p =>
+        //{
+        //    EntityData stagnatedEntity = lastCalculatedState.GetTileOccupant(p);
+        //    if (stagnatedEntity != null)
+        //    {
+        //        stagnatedEntity.DealDamage(1, lastCalculatedState);
+        //    }
+        //});
 
         return projectedGameStates;
     }
